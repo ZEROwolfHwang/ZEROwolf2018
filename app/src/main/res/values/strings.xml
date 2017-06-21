@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GreenRoad</string>
+    <string name="hint_password">请输入密码</string>
+    <string name="hint_username">请输入账号</string>
+    <string name="login">登录</string>
+    <string name="action_settings">设置</string>
+    <string name="navigation_drawer_open">打开侧滑栏</string>
+    <string name="navigation_drawer_close">关闭侧滑栏</string>
+    <string name="has_shot">已拍摄车辆</string>
+    <string name="has_not_sent">未上传车辆</string>
+
+</resources>
