@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -50,6 +51,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     private RoundedImageView mIv_car_number;
     private RoundedImageView mIv_car_body;
     private RoundedImageView mIv_car_goods;
+    private Button mBt_ok_send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +77,13 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         mShow_3_2_car_body = (CircleImageView) findViewById(R.id.show_3_2_car_body);
         mShow_3_3_car_goods = (CircleImageView) findViewById(R.id.show_3_3_car_goods);
 
+        mBt_ok_send = (Button) findViewById(R.id.bt_ok_send);
 
         mToggleButton.setOnClickListener(this);
         mIv_car_number.setOnClickListener(this);
         mIv_car_body.setOnClickListener(this);
         mIv_car_goods.setOnClickListener(this);
+        mBt_ok_send.setOnClickListener(this);
     }
 
     private void initActionBar() {
@@ -135,6 +139,10 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
             case R.id.iv_car_goods:
                 shutPhoto();
                 break;
+            case R.id.bt_ok_send:
+                shutPhoto();
+                break;
+
             default:
                 break;
 

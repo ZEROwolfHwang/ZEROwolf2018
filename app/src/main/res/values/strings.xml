@@ -15,5 +15,6 @@
     <string name="static_tv_operator">操作员</string>
     <string name="static_tv_space">剩余空间</string>
     <string name="static_tv_net_state">网络状态</string>
+    <string name="ok_send">确定</string>
 
 </resources>

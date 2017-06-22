@@ -20,12 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.view.CircleImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.zero.wolf.greenroad.R.id.title_text;
+import static com.zero.wolf.greenroad.R.id.tv_change;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -46,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LinearLayout mLayout_top;
     private LinearLayout mLayout_center;
     private LinearLayout mLayout_bottom;
+    private TextView mTv_number_has_send;
+    private TextView mTv_number_has_not_send;
+    private LinearLayout mMath_number_main_two;
+    private String mAvailSpace;
 
 
     @Override
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //mTvOperator.setText("功成名就");
 
+        initData();
         initView();
 
 
@@ -85,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    private void initData() {
+        mAvailSpace = SDcardSpace.getInstance().getAvailSpace();
     }
 
 
@@ -117,6 +128,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView textView3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
         textView3.setText(getString(R.string.static_tv_net_state));
 
+        //找到改变的TextView
+        TextView tv_change1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(tv_change);
+        TextView tv_change2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(tv_change);
+        TextView tv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
+
+
+        mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
+        mTv_number_has_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has).findViewById(R.id.tv_math_number_main_has);
+        mTv_number_has_not_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has_not).findViewById(R.id.tv_math_number_main_has_not);
+
+        mTv_number_has_send.setText("99");
+        mTv_number_has_not_send.setText("55");
+
+        tv_change1.setText("李树人");
+        tv_change2.setText("54G");
+        tv_change3.setText("良好");
     }
 
 

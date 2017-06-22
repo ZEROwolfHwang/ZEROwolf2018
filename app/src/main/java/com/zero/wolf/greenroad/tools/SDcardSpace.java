@@ -12,13 +12,12 @@ import android.text.format.Formatter;
 
 public class SDcardSpace {
 
-    private Context mContext;
-    private String path = Environment.getExternalStorageDirectory()
+    public Context mContext;
+    public  String path = Environment.getExternalStorageDirectory()
             .getAbsolutePath();
-    private SDcardSpace mSDcardSpace;
+    public static SDcardSpace mSDcardSpace;
 
-    public SDcardSpace getInstance(Context context) {
-        mContext = context;
+    public static SDcardSpace getInstance() {
         if (mSDcardSpace == null) {
             mSDcardSpace = new SDcardSpace();
         }

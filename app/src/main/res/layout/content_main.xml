@@ -82,89 +82,15 @@
 
     </LinearLayout>
 
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="80dp"
-            android:background="@drawable/shape_background"
-            android:paddingLeft="50dp"
-            android:paddingTop="20dp"
-            android:text="@string/has_shot"
-            android:textColor="#000"
-            android:textSize="14sp"/>
-
-
-        <ImageView
-            android:layout_width="80dp"
-
-            android:layout_height="80dp"
-            android:layout_gravity="right"
-            android:background="@drawable/numble_backgroup"/>
-
-        <TextView
-            android:id="@+id/send_car_number"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="right"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="#fff"
-            android:textSize="24sp"/>
-
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="80dp"
-            android:background="@drawable/shape_background"
-            android:paddingLeft="50dp"
-            android:paddingTop="20dp"
-            android:text="@string/has_not_sent"
-            android:textColor="#000"
-            android:textSize="14sp"/>
-
-        <ImageView
-            android:layout_width="80dp"
-
-            android:layout_height="80dp"
-            android:layout_gravity="right"
-            android:background="@drawable/numble_backgroup"/>
-
-        <TextView
-            android:id="@+id/unsend_car_number"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="right"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="#fff"
-            android:textSize="24sp"/>
-
-
-    </FrameLayout>
-
+    <include
+        android:id="@+id/math_number_main_two"
+        layout="@layout/math_number_main"/>
 
     <com.zero.wolf.greenroad.view.CircleImageView
         android:id="@+id/iv_camera"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:src="@drawable/demo"
         custom:imageType="circle"/>
 
