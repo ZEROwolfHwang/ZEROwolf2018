@@ -3,6 +3,7 @@ package com.zero.wolf.greenroad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,40 +16,36 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zero.wolf.greenroad.view.RoundImageView;
+import com.zero.wolf.greenroad.view.CircleImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.zero.wolf.greenroad.R.id.title_text;
 
 /**
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MainActivity";
+    private static final int REQ_0 = 001;
     private TextView mTitle_text;
 
-    @BindView(R.id.iv_operator)
-    RoundImageView mOperatorRound_view;
-
-    @BindView(R.id.tv_change_operator)
-    TextView mTvOperator;
-    @BindView(R.id.tv_change_space)
-    TextView mTvSpace;
-    @BindView(R.id.tv_change_net_state)
-    TextView mTvNetState;
     @BindView(R.id.iv_camera)
-    RoundImageView mIvCamera;
-    @BindView(R.id.send_car_number)
-    TextView mSendCarNumber;
-    @BindView(R.id.unsend_car_number)
+    CircleImageView mIvCamera;
+
     TextView mUnSendCarNumber;
-
-
-
+    private String mFilePath;
+    private AppCompatActivity mActivity;
+    private LinearLayout mLayout_top;
+    private LinearLayout mLayout_center;
+    private LinearLayout mLayout_bottom;
 
 
     @Override
@@ -57,17 +54,42 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mActivity = this;
 
+        mFilePath = Environment.getExternalStorageDirectory().getPath();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mTvOperator.setText("功成名就");
+        //mTvOperator.setText("功成名就");
 
+        initView();
+
+
+        mIvCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
+
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+
+    private void initView() {
+        //mIvCamera.setOnClickListener(this);
         ActionBar actionBar = getSupportActionBar();
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
@@ -80,20 +102,23 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         actionBar.setDisplayShowTitleEnabled(false);//去掉标题
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowCustomEnabled(true);
-        mTitle_text = (TextView) titleView.findViewById(R.id.title_text);
+        mTitle_text = (TextView) titleView.findViewById(title_text);
         mTitle_text.setText("泰安东收费站");
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
+        mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
+        mLayout_center= (LinearLayout) findViewById(R.id.layout_center);
 
-        initView();
+        //找到固定的textview
+        TextView textView1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
+        textView1.setText(getString(R.string.static_tv_operator));
+        TextView textView2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
+        textView2.setText(getString(R.string.static_tv_space));
+        TextView textView3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
+        textView3.setText(getString(R.string.static_tv_net_state));
+
     }
 
-    private void initView() {
-        mIvCamera.setOnClickListener(this);
-    }
 
     @Override
     public void onBackPressed() {
@@ -153,12 +178,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_camera:
-                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                startActivity(intent);
-        }
-    }
+
+
 }

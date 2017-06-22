@@ -8,7 +8,7 @@
         <enum name="round" value="1" />
     </attr>
 
-    <declare-styleable name="RoundImageView">
+    <declare-styleable name="CircleImageView">
         <attr name="borderRadius" />
         <attr name="imageType" />
     </declare-styleable>

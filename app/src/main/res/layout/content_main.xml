@@ -7,150 +7,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:padding="10dp"
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <FrameLayout
+
+    <LinearLayout
+        android:id="@+id/layout_top"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="80dp"
+        android:layout_marginTop="70dp"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/shape_backgroup"/>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/roud_view_operator"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="center"
+            android:src="@drawable/demo"
+            app:riv_border_width="3dip"
+            app:riv_corner_radius_bottom_left="20dp"
+            app:riv_corner_radius_top_right="20dp"
+            app:riv_oval="false"/>
 
+        <include
+            android:id="@+id/layout_group_main"
+            layout="@layout/layout_text_group_main"/>
 
-        <RelativeLayout
-            android:id="@+id/layout_top"
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
-
-
-            <com.zero.wolf.greenroad.view.RoundImageView
-                android:id="@+id/iv_operator"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/demo"
-                custom:borderRadius="1dp"
-                custom:imageType="round"/>
-
-
-            <TextView
-                android:id="@+id/tv_nochange_operator"
-                style="@style/text_static"
-                android:layout_toRightOf="@id/iv_operator"
-                android:text="操作员"/>
-
-            <ImageView
-                android:id="@+id/iv_static"
-                style="@style/rect_static"
-                android:layout_toRightOf="@id/tv_nochange_operator"/>
-
-
-            <TextView
-                android:id="@+id/tv_change_operator"
-                style="@style/text_active"
-                android:layout_toRightOf="@id/iv_static"
-                android:text="操作员"/>
-        </RelativeLayout>
-    </FrameLayout>
-
-    <FrameLayout
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_center"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/shape_backgroup"/>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/round_view_space"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="center"
+            android:src="@drawable/demo"
+            app:riv_border_width="3dip"
+            app:riv_corner_radius_bottom_left="20dp"
+            app:riv_corner_radius_top_right="20dp"
+            app:riv_oval="false"/>
 
+        <include
+            android:id="@+id/layout_group_main"
+            layout="@layout/layout_text_group_main"/>
 
-        <RelativeLayout
-            android:id="@+id/layout_center"
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-
-            <com.zero.wolf.greenroad.view.RoundImageView
-                android:id="@+id/iv_space"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/demo"
-                custom:borderRadius="1dp"
-                custom:imageType="round"/>
-
-
-            <TextView
-                android:id="@+id/tv_nochange_space"
-                style="@style/text_static"
-                android:layout_toRightOf="@id/iv_space"
-                android:text="剩余空间"/>
-
-            <ImageView
-                android:id="@+id/iv_static_center"
-                style="@style/rect_static"
-                android:layout_toRightOf="@id/tv_nochange_space"/>
-
-
-            <TextView
-                android:id="@+id/tv_change_space"
-                style="@style/text_active"
-                android:layout_toRightOf="@id/iv_static_center"
-                android:text="操作员"/>
-        </RelativeLayout>
-
-    </FrameLayout>
-
-    <FrameLayout
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/shape_backgroup"/>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/round_view_operator"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="center"
+            android:src="@drawable/demo"
+            app:riv_border_width="3dip"
+            app:riv_corner_radius_bottom_left="20dp"
+            app:riv_corner_radius_top_right="20dp"
+            app:riv_oval="false"/>
 
+        <include
+            android:id="@+id/layout_group_main"
+            layout="@layout/layout_text_group_main"/>
 
-        <RelativeLayout
-            android:id="@+id/layout_buttom"
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
+    </LinearLayout>
 
-
-            <com.zero.wolf.greenroad.view.RoundImageView
-                android:id="@+id/iv_net_state"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/demo"
-                custom:borderRadius="1dp"
-                custom:imageType="round"/>
-
-
-            <TextView
-                android:id="@+id/tv_nochange_net_state"
-                style="@style/text_static"
-                android:layout_toRightOf="@id/iv_net_state"
-                android:text="网络状态"/>
-
-            <ImageView
-                android:id="@+id/iv_static_net_state"
-                style="@style/rect_static"
-                android:layout_toRightOf="@id/tv_nochange_net_state"/>
-
-
-            <TextView
-                android:id="@+id/tv_change_net_state"
-                style="@style/text_active"
-                android:layout_toRightOf="@id/iv_static_net_state"
-                android:text="操作员"/>
-        </RelativeLayout>
-
-    </FrameLayout>
 
 
     <FrameLayout
@@ -163,7 +94,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginLeft="80dp"
-            android:background="@drawable/shape_backgroup"
+            android:background="@drawable/shape_background"
             android:paddingLeft="50dp"
             android:paddingTop="20dp"
             android:text="@string/has_shot"
@@ -201,7 +132,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginLeft="80dp"
-            android:background="@drawable/shape_backgroup"
+            android:background="@drawable/shape_background"
             android:paddingLeft="50dp"
             android:paddingTop="20dp"
             android:text="@string/has_not_sent"
@@ -229,14 +160,13 @@
     </FrameLayout>
 
 
-    <com.zero.wolf.greenroad.view.RoundImageView
+    <com.zero.wolf.greenroad.view.CircleImageView
         android:id="@+id/iv_camera"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/demo"
         custom:imageType="circle"/>
-
 
 </LinearLayout>
 

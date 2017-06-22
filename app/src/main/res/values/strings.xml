@@ -8,5 +8,12 @@
     <string name="navigation_drawer_close">关闭侧滑栏</string>
     <string name="has_shot">已拍摄车辆</string>
     <string name="has_not_sent">未上传车辆</string>
+    <string name="tv_car_number">车牌</string>
+    <string name="action_person_identify">人工识别</string>
+    <string name="tv_car_goods">货物</string>
+    <string name="tv_car_body">车身</string>
+    <string name="static_tv_operator">操作员</string>
+    <string name="static_tv_space">剩余空间</string>
+    <string name="static_tv_net_state">网络状态</string>
 
 </resources>

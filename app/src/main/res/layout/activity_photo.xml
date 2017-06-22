@@ -1,10 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.zero.wolf.greenroad.PhotoActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:background="@drawable/toggle_selector"
+        android:textOn="黄牌"
+        android:textOff="绿牌"
+        android:checked="true"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/layout_number"
+
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp">
+
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/shape_line_rect_13"
+            android:text="@string/tv_car_number"
+            style="@style/text_view_2_car"/>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:scaleType="center"
+            app:riv_corner_radius_top_left="20dp"
+            app:riv_corner_radius_bottom_right="20dp"
+            app:riv_border_width="3dip"
+            app:riv_oval="false"
+            android:id="@+id/iv_car_number"
+            android:src="@drawable/demo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:scaleType="center"
+            app:riv_corner_radius_top_right="20dp"
+            app:riv_corner_radius_bottom_left="20dp"
+            app:riv_border_width="3dip"
+            app:riv_oval="false"
+            android:id="@+id/iv_car_body"
+            android:src="@drawable/demo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+        <TextView
+            android:background="@drawable/shape_line_rect_2"
+            android:text="@string/tv_car_body"
+            android:layout_marginRight="20dp"
+            style="@style/text_view_2_car"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="100dp">
+
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/shape_line_rect_13"
+            android:text="@string/tv_car_goods"
+            style="@style/text_view_2_car"/>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:scaleType="center"
+            app:riv_corner_radius_top_left="20dp"
+            app:riv_corner_radius_bottom_right="20dp"
+            app:riv_border_width="3dip"
+            app:riv_oval="false"
+            android:id="@+id/iv_car_goods"
+            android:src="@drawable/demo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/show_3_car_camera"
+             android:id="@+id/layout_show_3_car"/>
+
+
+
+</LinearLayout>
