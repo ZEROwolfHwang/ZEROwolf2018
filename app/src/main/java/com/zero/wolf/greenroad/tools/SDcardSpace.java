@@ -15,14 +15,18 @@ public class SDcardSpace {
     public Context mContext;
     public  String path = Environment.getExternalStorageDirectory()
             .getAbsolutePath();
-    public static SDcardSpace mSDcardSpace;
+    public  SDcardSpace mSDcardSpace;
 
-    public static SDcardSpace getInstance() {
+    public SDcardSpace(Context context) {
+        mContext = context;
+    }
+
+ /*   public  SDcardSpace getInstance() {
         if (mSDcardSpace == null) {
             mSDcardSpace = new SDcardSpace();
         }
         return mSDcardSpace;
-    }
+    }*/
 
     public String getAvailSpace() {
         StatFs statFs = new StatFs(path);

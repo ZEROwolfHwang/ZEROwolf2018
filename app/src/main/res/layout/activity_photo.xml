@@ -6,8 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.zero.wolf.greenroad.PhotoActivity">
+    tools:context="com.zero.wolf.greenroad.PhotoActivity"
+    android:baselineAligned="false">
 
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_photo"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        style="@style/style_toolbar"/>
 
     <ToggleButton
         android:id="@+id/toggleButton"
@@ -24,7 +30,8 @@
 
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+        android:baselineAligned="false">
 
         <TextView
             android:layout_marginLeft="20dp"

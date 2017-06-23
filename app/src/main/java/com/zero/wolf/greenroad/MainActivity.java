@@ -1,18 +1,16 @@
 package com.zero.wolf.greenroad;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.view.CircleImageView;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.zero.wolf.greenroad.R.id.title_text;
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
 /**
@@ -39,8 +37,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQ_0 = 001;
     private TextView mTitle_text;
 
-    @BindView(R.id.iv_camera)
-    CircleImageView mIvCamera;
 
     TextView mUnSendCarNumber;
     private String mFilePath;
@@ -52,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView mTv_number_has_not_send;
     private LinearLayout mMath_number_main_two;
     private String mAvailSpace;
+    private NetWorkStateReceiver mNetWorkStateReceiver;
+    private TextView mTv_change3;
+    private CircleImageView mIvCamera;
 
 
     @Override
@@ -95,30 +94,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initData() {
-        mAvailSpace = SDcardSpace.getInstance().getAvailSpace();
+        SDcardSpace sDcardSpace = new SDcardSpace(mActivity);
+        mAvailSpace = sDcardSpace.getAvailSpace();
+        //Log.i(TAG, "initData: "+ mAvailSpace1);
     }
 
 
     private void initView() {
+
+        //得到拍照的按钮
+         mIvCamera = (CircleImageView) findViewById(R.id.iv_camera);
+
+
         //mIvCamera.setOnClickListener(this);
-        ActionBar actionBar = getSupportActionBar();
-        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-                ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View titleView = inflater.inflate(R.layout.action_bar_title, null);
-
-        actionBar.setCustomView(titleView, lp);
-
-        actionBar.setDisplayShowHomeEnabled(false);//去掉导航
-        actionBar.setDisplayShowTitleEnabled(false);//去掉标题
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setDisplayShowCustomEnabled(true);
-        mTitle_text = (TextView) titleView.findViewById(title_text);
-        mTitle_text.setText("泰安东收费站");
+        TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
+        title_text_view.setText("泰安东收费站");
 
         mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
         mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
-        mLayout_center= (LinearLayout) findViewById(R.id.layout_center);
+        mLayout_center = (LinearLayout) findViewById(R.id.layout_center);
 
         //找到固定的textview
         TextView textView1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
@@ -131,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //找到改变的TextView
         TextView tv_change1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(tv_change);
         TextView tv_change2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(tv_change);
-        TextView tv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
+        mTv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
 
 
         mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
@@ -142,8 +136,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mTv_number_has_not_send.setText("55");
 
         tv_change1.setText("李树人");
-        tv_change2.setText("54G");
-        tv_change3.setText("良好");
+        tv_change2.setText(mAvailSpace);
+        mTv_change3.setText("良好");
+
+        //得到版本号
+        TextView version_number = (TextView) findViewById(R.id.version_number);
+        version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
+
     }
 
 
@@ -159,31 +158,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Toast.makeText(MainActivity.this, "点击了设置", Toast.LENGTH_SHORT).show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
@@ -205,6 +197,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    //在onResume()方法注册
+    @Override
+    protected void onResume() {
+        if (mNetWorkStateReceiver == null) {
+            mNetWorkStateReceiver = new NetWorkStateReceiver(mTv_change3);
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mNetWorkStateReceiver, filter);
 
+
+        System.out.println("注册");
+        super.onResume();
+    }
+
+    //onPause()方法注销
+    @Override
+    protected void onPause() {
+        unregisterReceiver(mNetWorkStateReceiver);
+        System.out.println("注销");
+        super.onPause();
+    }
 
 }

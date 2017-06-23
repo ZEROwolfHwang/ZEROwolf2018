@@ -63,4 +63,10 @@
         <item name="android:layout_height">60dp</item>
     </style>
 
+    <style name="style_toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:background">#8036ef</item>
+    </style>
+
 </resources>

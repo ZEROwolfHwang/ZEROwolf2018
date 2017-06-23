@@ -1,17 +1,14 @@
 package com.zero.wolf.greenroad;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,12 +18,12 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.zero.wolf.greenroad.activity.SureGoodsActivity;
+import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.view.CircleImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
-import static com.zero.wolf.greenroad.R.id.title_text;
 
 public class PhotoActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,7 +62,9 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initView() {
-        initActionBar();
+
+        initToolbar();
+
         //点击的
         mToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         mIv_car_number = (RoundedImageView) findViewById(R.id.iv_car_number);
@@ -86,22 +85,25 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         mBt_ok_send.setOnClickListener(this);
     }
 
-    private void initActionBar() {
-        ActionBar actionBar = mActivity.getSupportActionBar();
-        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-                ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View titleView = inflater.inflate(R.layout.action_bar_title_photo, null);
+    private void initToolbar() {
 
-        actionBar.setCustomView(titleView, lp);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_photo);
+        setSupportActionBar(toolbar);
 
-//       actionBar.setDisplayShowHomeEnabled(false);//去掉导航
-        actionBar.setDisplayShowTitleEnabled(false);//去掉标题
-//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setDisplayShowCustomEnabled(true);
-        mTitle_text = (TextView) titleView.findViewById(title_text);
-        mTitle_text.setText("拍摄照片");
+        TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
+        title_text_view.setText(getString(R.string.shut_camera));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,12 +111,13 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         getMenuInflater().inflate(R.menu.menu_photo, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_bar_person_definite) {
             Toast.makeText(PhotoActivity.this, "点击了人工识别", Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -129,7 +132,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
                 changeCarColor();
                 break;
             case R.id.iv_car_number:
-                Log.i(TAG, "onClick: "+"点击了拍车牌的照片");
+                Log.i(TAG, "onClick: " + "点击了拍车牌的照片");
                 shutPhoto();
                 break;
             case R.id.iv_car_body:
@@ -140,13 +143,20 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
                 shutPhoto();
                 break;
             case R.id.bt_ok_send:
-                shutPhoto();
+                enterSureGoodsActivity();
                 break;
 
             default:
                 break;
 
         }
+    }
+
+    private void enterSureGoodsActivity() {
+        Intent intent = new Intent(PhotoActivity.this, SureGoodsActivity.class);
+
+        startActivity(intent);
+
     }
 
     private void shutPhoto() {
@@ -170,9 +180,9 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-   /* public void heheda(View view) {
-        Toast.makeText(PhotoActivity.this, "被点击了", Toast.LENGTH_SHORT).show();
-    }*/
+    /* public void heheda(View view) {
+         Toast.makeText(PhotoActivity.this, "被点击了", Toast.LENGTH_SHORT).show();
+     }*/
    /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -201,38 +211,38 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }*/
-   @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       if (resultCode == NONE)
-           return;
-       // 拍照
-       if (requestCode == PHOTOHRAPH) {
-           //设置文件保存路径这里放在跟目录下
-           File picture = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");
-           startPhotoZoom(Uri.fromFile(picture));
-       }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == NONE)
+            return;
+        // 拍照
+        if (requestCode == PHOTOHRAPH) {
+            //设置文件保存路径这里放在跟目录下
+            File picture = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");
+            startPhotoZoom(Uri.fromFile(picture));
+        }
 
-       if (data == null)
-           return;
+        if (data == null)
+            return;
 
-       // 读取相册缩放图片
-       if (requestCode == PHOTOZOOM) {
-           startPhotoZoom(data.getData());
-       }
-       // 处理结果
-       if (requestCode == PHOTORESOULT) {
-           Bundle extras = data.getExtras();
-           if (extras != null) {
-               Bitmap photo = extras.getParcelable("data");
-               ByteArrayOutputStream stream = new ByteArrayOutputStream();
-               photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
-               mShow_3_1_car_number.setImageBitmap(photo);
-           }
+        // 读取相册缩放图片
+        if (requestCode == PHOTOZOOM) {
+            startPhotoZoom(data.getData());
+        }
+        // 处理结果
+        if (requestCode == PHOTORESOULT) {
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                Bitmap photo = extras.getParcelable("data");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
+                mShow_3_1_car_number.setImageBitmap(photo);
+            }
 
-       }
+        }
 
-       super.onActivityResult(requestCode, resultCode, data);
-   }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public void startPhotoZoom(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");

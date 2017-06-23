@@ -12,9 +12,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="#8036ef"
+            style="@style/style_toolbar"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     </android.support.design.widget.AppBarLayout>

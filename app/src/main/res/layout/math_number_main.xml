@@ -8,7 +8,6 @@
         android:id="@+id/math_number_main_has"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_height_dp60"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -38,7 +37,7 @@
         android:id="@+id/math_number_main_has_not"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_height_dp60"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <TextView
