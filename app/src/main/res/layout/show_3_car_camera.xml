@@ -4,39 +4,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/com.zero.wolf.greenroad.view.CircleImageView"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="@dimen/layout_margin10dp"
     android:id="@+id/show_3_photo"
     android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_weight="1"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="0dp"
     tools:showIn="@layout/activity_photo">
 
 
     <com.zero.wolf.greenroad.view.CircleImageView
+
         android:id="@+id/show_3_1_car_number"
         android:layout_weight="1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
         android:src="@drawable/demo"
+        android:scaleType="fitCenter"
         custom:imageType="circle"/>
     <com.zero.wolf.greenroad.view.CircleImageView
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitCenter"
         android:id="@+id/show_3_2_car_body"
         android:layout_weight="1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
         android:src="@drawable/demo"
         custom:imageType="circle"/>
     <com.zero.wolf.greenroad.view.CircleImageView
         android:id="@+id/show_3_3_car_goods"
         android:layout_weight="1"
-        android:layout_width="0dp"
+        android:scaleType="fitCenter"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
         android:src="@drawable/demo"
         custom:imageType="circle"/>
-
-
 
 </LinearLayout>

@@ -13,11 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.view.CircleImageView;
@@ -25,7 +27,11 @@ import com.zero.wolf.greenroad.view.CircleImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-public class PhotoActivity extends AppCompatActivity implements View.OnClickListener {
+public class PhotoActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+    public static final int TYPE_NUMBER = 101;
+    public static final int TYPE_BODY = 102;
+    public static final int TYPE_GOODS = 103;
 
     public static final int NONE = 0;
     public static final int PHOTOHRAPH = 1;// 拍照
@@ -35,11 +41,24 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     public static final String IMAGE_UNSPECIFIED = "image/*";
 
     private static final String TAG = "PhotoActivity";
-    private static int REQ_0 = 001;
-    private TextView mTitle_text;
+    private static final int PHOTOHRAPH_NUMBER = 111;
+    private static final int PHOTOHRAPH_BODY = 112;
+    private static final int PHOTOHRAPH_GOODS = 113;
+    private static final int PHOTORESOULT_1 = 221;
+    private static final int PHOTORESOULT_2 = 222;
+    private static final int PHOTORESOULT_3 = 223;
+    private static final int COLOR_GREEN= 331;
+    private static final int COLOR_YELLOW = 332;
+    private static final int SHUT_CAMERA= 441;
+    private static final int SHUT_RECORDING= 442;
+
+    private static int currentColor = COLOR_GREEN;
+    private static int currentShut = SHUT_CAMERA;
+
+    private int LicensePlateColor;
+
     private AppCompatActivity mActivity;
     private ToggleButton mToggleButton;
-    private String mFilePath;
     //private RoundedImageView mShow_3_1_car_number;
     private CircleImageView mShow_3_1_car_number;
     private CircleImageView mShow_3_2_car_body;
@@ -50,12 +69,19 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     private RoundedImageView mIv_car_goods;
     private Button mBt_ok_send;
 
+
+    private Uri mPhotoUri;
+    private String mFilePath;
+    private ToggleButton mToggleButton_color;
+    private ToggleButton mToggleButton_shut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+
+
         mActivity = this;
-        mFilePath = Environment.getExternalStorageDirectory().getPath();
 
         initView();
 
@@ -65,8 +91,14 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 
         initToolbar();
 
+        //车牌颜色的按钮
+        mToggleButton_color = (ToggleButton) findViewById(R.id.toggleButton_color);
+
+        //拍照或者摄影的按钮
+        mToggleButton_shut = (ToggleButton) findViewById(R.id.toggleButton_shut);
+
         //点击的
-        mToggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+
         mIv_car_number = (RoundedImageView) findViewById(R.id.iv_car_number);
         mIv_car_body = (RoundedImageView) findViewById(R.id.iv_car_body);
         mIv_car_goods = (RoundedImageView) findViewById(R.id.iv_car_goods);
@@ -78,7 +110,8 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 
         mBt_ok_send = (Button) findViewById(R.id.bt_ok_send);
 
-        mToggleButton.setOnClickListener(this);
+        mToggleButton_color.setOnCheckedChangeListener(this);
+        mToggleButton_shut.setOnCheckedChangeListener(this);
         mIv_car_number.setOnClickListener(this);
         mIv_car_body.setOnClickListener(this);
         mIv_car_goods.setOnClickListener(this);
@@ -128,19 +161,16 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.toggleButton:
-                changeCarColor();
-                break;
             case R.id.iv_car_number:
                 Log.i(TAG, "onClick: " + "点击了拍车牌的照片");
-                shutPhoto();
+                shutPhoto(TYPE_NUMBER);
                 break;
             case R.id.iv_car_body:
-                shutPhoto();
+                shutPhoto(TYPE_BODY);
                 break;
 
             case R.id.iv_car_goods:
-                shutPhoto();
+                shutPhoto(TYPE_GOODS);
                 break;
             case R.id.bt_ok_send:
                 enterSureGoodsActivity();
@@ -159,7 +189,7 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void shutPhoto() {
+    private void shutPhoto(int type_int) {
       /*  Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mFilePath = mFilePath + "/"+System.currentTimeMillis()
                 + ".jpg";
@@ -167,59 +197,40 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 //        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
         startActivityForResult(intent,REQ_0);*/
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp.jpg")));
-        startActivityForResult(intent, PHOTOHRAPH);
-    }
+        if (mFilePath != null) {
+            mFilePath = null;
+            mFilePath = Environment.getExternalStorageDirectory().toString();
+        }
+        mFilePath = mFilePath + "/"+System.currentTimeMillis()
+                + ".jpg";
+        mPhotoUri = Uri.fromFile(new File(mFilePath));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+        if (type_int == TYPE_NUMBER) {
+            startActivityForResult(intent, PHOTOHRAPH_NUMBER);
+        } else if (type_int == TYPE_BODY) {
+            startActivityForResult(intent, PHOTOHRAPH_BODY);
+        } else if (type_int == TYPE_GOODS) {
+            startActivityForResult(intent, PHOTOHRAPH_GOODS);
 
-    private void changeCarColor() {
-        boolean checked = mToggleButton.isChecked();
-        if (checked) {
-            mToggleButton.setTextOff("1242349");
-        } else {
-            mToggleButton.setTextOn("jhsfdue");
         }
     }
 
-    /* public void heheda(View view) {
-         Toast.makeText(PhotoActivity.this, "被点击了", Toast.LENGTH_SHORT).show();
-     }*/
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_OK) {
-            if (requestCode == REQ_0) {
-                FileInputStream fis = null;
-*//*
-                try {
-                    fis = new FileInputStream(mFilePath);
-                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                    mShow_3_1_car_number.setImageBitmap(bitmap);
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }*//*
-                Bundle bundle = data.getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
-                mShow_3_1_car_number.setImageBitmap(bitmap);
-
-            }
-        }
-    }*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
         if (resultCode == NONE)
             return;
         // 拍照
-        if (requestCode == PHOTOHRAPH) {
+        if (requestCode == PHOTOHRAPH_NUMBER) {
             //设置文件保存路径这里放在跟目录下
-            File picture = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");
-            startPhotoZoom(Uri.fromFile(picture));
+            savePictrue(TYPE_NUMBER);
+
+        } else if (requestCode == PHOTOHRAPH_BODY) {
+            savePictrue(TYPE_BODY);
+        } else if (requestCode == PHOTOHRAPH_GOODS) {
+            savePictrue(TYPE_GOODS);
         }
 
         if (data == null)
@@ -227,24 +238,44 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
 
         // 读取相册缩放图片
         if (requestCode == PHOTOZOOM) {
-            startPhotoZoom(data.getData());
+            startPhotoZoom(data.getData(), TYPE_NUMBER);
         }
         // 处理结果
-        if (requestCode == PHOTORESOULT) {
-            Bundle extras = data.getExtras();
-            if (extras != null) {
-                Bitmap photo = extras.getParcelable("data");
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
-                mShow_3_1_car_number.setImageBitmap(photo);
-            }
-
+        if (requestCode == PHOTORESOULT_1) {
+            showPicture(data, TYPE_NUMBER);
+        } else if (requestCode == PHOTORESOULT_2) {
+            showPicture(data, TYPE_BODY);
+        } else if (requestCode == PHOTORESOULT_3) {
+            showPicture(data, TYPE_GOODS);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void startPhotoZoom(Uri uri) {
+    private void showPicture(Intent data, int type_int) {
+        Bundle extras = data.getExtras();
+        if (extras != null) {
+            Bitmap photo = extras.getParcelable("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
+
+            if (type_int == TYPE_NUMBER) {
+                mShow_3_1_car_number.setImageBitmap(photo);
+            } else if (type_int == TYPE_BODY) {
+                mShow_3_2_car_body.setImageBitmap(photo);
+            } else if (type_int == TYPE_GOODS) {
+                mShow_3_3_car_goods.setImageBitmap(photo);
+            }
+        }
+    }
+
+    private void savePictrue(int type_int) {
+        //File picture = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");
+        startPhotoZoom(mPhotoUri, type_int);
+        Intent intent = getIntent();
+    }
+
+    public void startPhotoZoom(Uri uri, int type_int) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, IMAGE_UNSPECIFIED);
         intent.putExtra("crop", "true");
@@ -255,6 +286,48 @@ public class PhotoActivity extends AppCompatActivity implements View.OnClickList
         intent.putExtra("outputX", 64);
         intent.putExtra("outputY", 64);
         intent.putExtra("return-data", true);
-        startActivityForResult(intent, PHOTORESOULT);
+        if (type_int == TYPE_NUMBER) {
+            startActivityForResult(intent, PHOTORESOULT_1);
+        } else if (type_int == TYPE_BODY) {
+            startActivityForResult(intent, PHOTORESOULT_2);
+        } else if (type_int == TYPE_GOODS) {
+            startActivityForResult(intent, PHOTORESOULT_3);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.toggleButton_color:
+                analyzeCarColor(isChecked);
+                break;
+            case R.id.toggleButton_shut:
+                analyzeCarShut(isChecked);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void analyzeCarShut(boolean isChecked) {
+        if (isChecked) {
+            currentShut = SHUT_CAMERA;
+            Logger.i("当前是拍照");
+        } else {
+            currentColor = SHUT_RECORDING;
+            Logger.i("当前是录制视频");
+        }
+    }
+
+    private void analyzeCarColor(boolean isChecked) {
+
+        if (isChecked) {
+            currentColor = COLOR_GREEN;
+            Logger.i("当前是绿牌");
+        } else {
+            currentColor = COLOR_YELLOW;
+            Logger.i("当前是黄牌");
+        }
+
     }
 }

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zero.wolf.greenroad.BaseActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
-public class SureGoodsActivity extends AppCompatActivity {
+public class SureGoodsActivity extends BaseActivity {
 
     private RecyclerView mRecycler_view_goods;
     private ArrayList<String> mList;

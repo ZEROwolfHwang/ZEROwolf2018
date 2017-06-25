@@ -5,115 +5,133 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context="com.zero.wolf.greenroad.PhotoActivity"
-    android:baselineAligned="false">
+    tools:context="com.zero.wolf.greenroad.PhotoActivity">
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_photo"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        style="@style/style_toolbar"/>
+        style="@style/style_toolbar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-    <ToggleButton
-        android:id="@+id/toggleButton"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:background="@drawable/toggle_selector"
-        android:textOn="黄牌"
-        android:textOff="绿牌"
-        android:checked="true"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ToggleButton
+            android:layout_alignParentLeft="true"
+            android:id="@+id/toggleButton_color"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:background="@drawable/toggle_selector"
+            android:checked="true"
+            android:textOff="绿牌"
+            android:textOn="黄牌"/>
+
+        <ToggleButton
+            android:layout_alignParentRight="true"
+            android:id="@+id/toggleButton_shut"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:background="@drawable/toggle_selector"
+            android:textOn="拍照"
+            android:textOff="摄影"
+            android:checked="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:id="@+id/layout_number"
-
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="100dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <TextView
+            style="@style/text_view_2_car"
             android:layout_marginLeft="20dp"
             android:background="@drawable/shape_line_rect_13"
-            android:text="@string/tv_car_number"
-            style="@style/text_view_2_car"/>
+            android:text="@string/tv_car_number"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:scaleType="center"
-            app:riv_corner_radius_top_left="20dp"
-            app:riv_corner_radius_bottom_right="20dp"
-            app:riv_border_width="3dip"
-            app:riv_oval="false"
             android:id="@+id/iv_car_number"
-            android:src="@drawable/demo"
             android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:scaleType="center"
+            android:src="@drawable/demo"
+            app:riv_border_width="3dip"
+            app:riv_corner_radius_bottom_right="20dp"
+            app:riv_corner_radius_top_left="20dp"
+            app:riv_oval="false"/>
 
 
     </LinearLayout>
+
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+        android:orientation="horizontal">
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:scaleType="center"
-            app:riv_corner_radius_top_right="20dp"
-            app:riv_corner_radius_bottom_left="20dp"
-            app:riv_border_width="3dip"
-            app:riv_oval="false"
             android:id="@+id/iv_car_body"
-            android:src="@drawable/demo"
             android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:scaleType="center"
+            android:src="@drawable/demo"
+            app:riv_border_width="3dip"
+            app:riv_corner_radius_bottom_left="20dp"
+            app:riv_corner_radius_top_right="20dp"
+            app:riv_oval="false"/>
 
         <TextView
-            android:background="@drawable/shape_line_rect_2"
-            android:text="@string/tv_car_body"
+            style="@style/text_view_2_car"
             android:layout_marginRight="20dp"
-            style="@style/text_view_2_car"/>
+            android:background="@drawable/shape_line_rect_2"
+            android:text="@string/tv_car_body"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+        android:orientation="horizontal">
 
         <TextView
+            style="@style/text_view_2_car"
             android:layout_marginLeft="20dp"
             android:background="@drawable/shape_line_rect_13"
-            android:text="@string/tv_car_goods"
-            style="@style/text_view_2_car"/>
+            android:text="@string/tv_car_goods"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:scaleType="center"
-            app:riv_corner_radius_top_left="20dp"
-            app:riv_corner_radius_bottom_right="20dp"
-            app:riv_border_width="3dip"
-            app:riv_oval="false"
             android:id="@+id/iv_car_goods"
-            android:src="@drawable/demo"
             android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:scaleType="center"
+            android:src="@drawable/demo"
+            app:riv_border_width="3dip"
+            app:riv_corner_radius_bottom_right="20dp"
+            app:riv_corner_radius_top_left="20dp"
+            app:riv_oval="false"/>
 
     </LinearLayout>
 
-    <include layout="@layout/show_3_car_camera"
-             android:id="@+id/layout_show_3_car"/>
+    <include
+        android:id="@+id/layout_show_3_car"
+        layout="@layout/show_3_car_camera"/>
 
 
     <Button
         android:id="@+id/bt_ok_send"
-        android:text="@string/ok_send"
-        android:textSize="@dimen/text24"
-        android:gravity="center"
-        android:background="@color/yellow"
-        android:layout_margin="@dimen/layout_margin20dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/main_height_dp60"/>
+        android:layout_height="@dimen/main_height_dp60"
+        android:layout_marginBottom="@dimen/layout_margin5dp"
+        android:layout_marginLeft="@dimen/layout_margin20dp"
+        android:layout_marginRight="@dimen/layout_margin20dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:background="@color/yellow"
+        android:gravity="center"
+        android:text="@string/ok_send"
+        android:textSize="@dimen/text24"/>
 
 </LinearLayout>

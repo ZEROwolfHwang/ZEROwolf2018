@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
@@ -31,7 +32,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mActivity = this;
+
+        Logger.i("123324");
 
         mFilePath = Environment.getExternalStorageDirectory().getPath();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tv_change1.setText("李树人");
         tv_change2.setText(mAvailSpace);
-        mTv_change3.setText("良好");
+       // mTv_change3.setText("良好");
 
         //得到版本号
         TextView version_number = (TextView) findViewById(R.id.version_number);

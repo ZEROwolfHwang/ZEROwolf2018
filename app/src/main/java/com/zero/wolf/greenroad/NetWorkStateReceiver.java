@@ -82,4 +82,5 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
         mTextView = textView;
     }
 
+
 }
