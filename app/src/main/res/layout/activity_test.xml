@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/com.zero.wolf.greenroad.view.CircleImageView"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.zero.wolf.greenroad.activity.TestActivity">
+
+    <Button
+        android:text="录制视频"
+        android:onClick="luzhi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.zero.wolf.greenroad.view.CircleImageView
+
+        android:id="@+id/show_3_1_car_number"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/demo"
+        android:scaleType="fitCenter"
+        custom:imageType="circle"/>
+
+
+
+</LinearLayout>
