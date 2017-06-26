@@ -37,6 +37,7 @@ public class SureGoodsActivity extends BaseActivity {
     private EditText mEt_change1;
     private AppCompatActivity mActivity;
     private ArrayList<String> mList_local;
+    private SpinnerPopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,15 +100,20 @@ public class SureGoodsActivity extends BaseActivity {
         mEt_change1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SpinnerPopupWindow s = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                mPopupWindow = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
                         .setmLayoutManager(null)
-                        .setmAdapter(new SureCarNumberAdapter(mActivity,mList_local,mEt_change1))
+                        .setmAdapter(new SureCarNumberAdapter(mActivity, mList_local,  new SureCarNumberAdapter.onItemClick() {
+                            @Override
+                            public void itemClick(int position) {
+                                updatePupop(position);
+                            }
+                        }))
                         .setmHeight(500).setmWidth(500)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
 
-                s.showPopWindowCenter(v);
+                mPopupWindow.showPopWindowCenter(v);
 
             }
         });
@@ -154,6 +160,13 @@ public class SureGoodsActivity extends BaseActivity {
                 dialog.show();
             }
         });
+    }
+
+    private void updatePupop(int position) {
+        mEt_change1.setText(mList_local.get(position) + "abc");
+        mEt_change1.setSelection((mList_local.get(position) + "abc").length());
+        mPopupWindow.dismissPopWindow();
+
     }
 
     private void initToolbar() {

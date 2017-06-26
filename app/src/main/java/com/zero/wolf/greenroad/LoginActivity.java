@@ -3,6 +3,7 @@ package com.zero.wolf.greenroad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
+
 
     private ImageButton mPopup_button;
     private Context mContext;
@@ -57,7 +59,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 initData();
                 mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
                         .setmLayoutManager(null)
-                        .setmAdapter(new SpinnerAdapter())
+                        .setmAdapter(new SpinnerAdapter(this,mList, new onItemClick() {
+                            @Override
+                            public void itemClick(int position) {
+                                updatePopup(position);
+                            }
+                        }))
                         .setmHeight(500).setmWidth(500)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
@@ -72,6 +79,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
         }
+    }
+
+    private void updatePopup(int position) {
+        mEt_user_name.setText(mList.get(position));
+        mPopupWindow.dismissPopWindow();
+        
     }
 
     private void initData() {
@@ -92,6 +105,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHolder> {
+
+        private final AppCompatActivity mActivity;
+
+        private final ArrayList<String> mList_adapter;
+        private final onItemClick mItemClick;
+
+        public SpinnerAdapter(AppCompatActivity activity, ArrayList<String> list, onItemClick itemClick) {
+            mItemClick = itemClick;
+            mActivity = activity;
+            mList_adapter = list;
+        }
+
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
@@ -101,32 +126,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, final int position) {
-            holder.tv.setText(mList.get(position));
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
+            holder.tv.setText(LoginActivity.this.mList.get(position));
             holder.tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(LoginActivity.this, "第"+position+"个条目被点击了", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "第" + position + "个条目被点击了", Toast.LENGTH_SHORT).show();
+                  //  int layoutPosition = holder.getLayoutPosition();
+                    notifyDataSetChanged();
+                    mItemClick.itemClick(position);
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return mList.size();
+            return mList_adapter.size();
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
 
             TextView tv;
 
-            public MyViewHolder(View view)
-            {
+            public MyViewHolder(View view) {
                 super(view);
                 tv = (TextView) view.findViewById(R.id.test1);
-                mPopupWindow.dismissPopWindow();
+                //     mPopupWindow.dismissPopWindow();
 
             }
         }
+
     }
+        public interface onItemClick {
+            void itemClick(int position);
+        }
 }

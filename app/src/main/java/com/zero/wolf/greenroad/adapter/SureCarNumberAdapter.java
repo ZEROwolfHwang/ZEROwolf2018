@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
@@ -21,13 +20,15 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
     private final AppCompatActivity mActivity;
     private final ArrayList<String> mListLocal;
-    private final EditText mEt_change1;
+
+    private onItemClick itemClick;
+    private int selectedItem;
 
     public SureCarNumberAdapter(AppCompatActivity activity,
-                                ArrayList<String> list_local, EditText et_change1) {
-        mEt_change1 = et_change1;
+                                ArrayList<String> list_local, onItemClick itemClick) {
         mActivity = activity;
         mListLocal = list_local;
+        this.itemClick = itemClick;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
     @Override
     public void onBindViewHolder(SureCarNumberHolder holder, int position) {
         String s = mListLocal.get(position);
-        holder.bindHolder(s);
+        holder.bindHolder(s,position,holder);
     }
 
     @Override
@@ -60,20 +61,28 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
             super(itemView);
             mTextView = (TextView) itemView.findViewById(R.id.test1);
 
+
         }
 
-        public void bindHolder(final String s) {
+        public void bindHolder(final String s, final int position, final SureCarNumberHolder holder) {
             mTextView.setText(s);
+
+           // mTextView.setSelected(position == selectedItem);
             mTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mEt_change1.setText(s);
-                    mEt_change1.setSelection(s.length());
 
+              //      selectedItem = holder.getLayoutPosition();
+                    notifyDataSetChanged();
+                    itemClick.itemClick(position);
                 }
             });
         }
 
     }
 
+
+    public interface onItemClick {
+        void itemClick(int position);
+    }
 }
