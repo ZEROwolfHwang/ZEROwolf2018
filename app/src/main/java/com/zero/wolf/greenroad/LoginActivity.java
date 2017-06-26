@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void updatePopup(int position) {
         mEt_user_name.setText(mList.get(position));
         mPopupWindow.dismissPopWindow();
-        
+
     }
 
     private void initData() {
