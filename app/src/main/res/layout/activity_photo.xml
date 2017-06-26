@@ -15,31 +15,19 @@
         style="@style/style_toolbar"
         app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <ToggleButton
-            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/layout_margin5dp"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
             android:id="@+id/toggleButton_color"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="@string/yellow_car"
+            android:textOff="@string/blue_car"
+            android:textSize="@dimen/text18"
+            android:textStyle="bold"
             android:background="@drawable/toggle_selector"
-            android:checked="true"
-            android:textOff="绿牌"
-            android:textOn="黄牌"/>
-
-        <ToggleButton
-            android:layout_alignParentRight="true"
-            android:id="@+id/toggleButton_shut"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:background="@drawable/toggle_selector"
-            android:textOn="拍照"
-            android:textOff="摄影"
             android:checked="true"/>
 
-    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layout_number"
@@ -50,7 +38,7 @@
 
         <TextView
             style="@style/text_view_2_car"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="40dp"
             android:background="@drawable/shape_line_rect_13"
             android:text="@string/tv_car_number"/>
 
@@ -58,11 +46,14 @@
             android:id="@+id/iv_car_number"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:scaleType="center"
-            android:src="@drawable/demo"
-            app:riv_border_width="3dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/car_number_dark"
+            app:riv_border_width="3dp"
+            app:riv_border_color="@color/toolbar_color"
+            app:riv_mutate_background="true"
             app:riv_corner_radius_bottom_right="20dp"
             app:riv_corner_radius_top_left="20dp"
+            android:paddingRight="@dimen/layout_margin10dp"
             app:riv_oval="false"/>
 
 
@@ -77,9 +68,11 @@
             android:id="@+id/iv_car_body"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:scaleType="center"
-            android:src="@drawable/demo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/car_body_dark"
             app:riv_border_width="3dip"
+            app:riv_border_color="@color/toolbar_color"
+            android:paddingLeft="@dimen/layout_margin10dp"
             app:riv_corner_radius_bottom_left="20dp"
             app:riv_corner_radius_top_right="20dp"
             app:riv_oval="false"/>
@@ -107,8 +100,9 @@
             android:id="@+id/iv_car_goods"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:scaleType="center"
-            android:src="@drawable/demo"
+            android:scaleType="fitCenter"
+            app:riv_border_color="@color/toolbar_color"
+            android:src="@drawable/car_goods_dark"
             app:riv_border_width="3dip"
             app:riv_corner_radius_bottom_right="20dp"
             app:riv_corner_radius_top_left="20dp"
@@ -129,7 +123,7 @@
         android:layout_marginLeft="@dimen/layout_margin20dp"
         android:layout_marginRight="@dimen/layout_margin20dp"
         android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="@color/yellow"
+        android:background="@drawable/sure_button_select"
         android:gravity="center"
         android:text="@string/ok_send"
         android:textSize="@dimen/text24"/>

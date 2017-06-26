@@ -21,4 +21,5 @@
     <dimen name="text12">12sp</dimen>
     <dimen name="layout_margin5dp">5dp</dimen>
     <dimen name="layout_margin10dp">10dp</dimen>
+    <dimen name="layout_margin40dp">40dp</dimen>
 </resources>

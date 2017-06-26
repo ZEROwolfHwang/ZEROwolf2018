@@ -32,6 +32,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     EditText mEt_user_name;
     @BindView(R.id.text_password)
     EditText mEt_password;
+    private SpinnerPopupWindow mPopupWindow;
 
 
     @Override
@@ -54,7 +55,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.popup_button:
                 initData();
-                SpinnerPopupWindow s = new SpinnerPopupWindow.Builder(LoginActivity.this)
+                mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
                         .setmLayoutManager(null)
                         .setmAdapter(new SpinnerAdapter())
                         .setmHeight(500).setmWidth(500)
@@ -62,7 +63,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         .setFocusable(true)
                         .build();
 
-                s.showPopWindowCenter(v);
+                mPopupWindow.showPopWindowCenter(v);
                 break;
             case R.id.bt_login:
                 startMainActivity();
@@ -123,6 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             {
                 super(view);
                 tv = (TextView) view.findViewById(R.id.test1);
+                mPopupWindow.dismissPopWindow();
 
             }
         }

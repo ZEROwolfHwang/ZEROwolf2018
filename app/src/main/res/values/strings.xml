@@ -27,5 +27,7 @@
     <string name="shut_camera">拍摄照片</string>
     <string name="sure_goods_type">确定货物种类</string>
     <string name="menu_bar_title_cancer">取消</string>
+    <string name="yellow_car">黄牌</string>
+    <string name="blue_car">蓝牌</string>
 
 </resources>

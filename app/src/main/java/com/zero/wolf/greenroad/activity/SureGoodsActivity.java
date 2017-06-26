@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.zero.wolf.greenroad.BaseActivity;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.SpinnerPopupWindow;
+import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 
@@ -34,6 +36,7 @@ public class SureGoodsActivity extends BaseActivity {
     private EditText mEt_change3;
     private EditText mEt_change1;
     private AppCompatActivity mActivity;
+    private ArrayList<String> mList_local;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,12 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private void initData() {
-
+        String[] car_local = {"豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
+                , "粤C", "粤D", "皖A", "皖B", "皖C", "皖D"};
+        mList_local = new ArrayList<>();
+        for (int i = 0; i < car_local.length; i++) {
+            mList_local.add(car_local[i]);
+        }
     }
 
     private void initRecycler() {
@@ -83,9 +91,26 @@ public class SureGoodsActivity extends BaseActivity {
         et_change2.setText("泰安东收费站");
         mEt_change3.setHint("西兰花");
 
-        mEt_change1.setFocusable(false);
-        et_change2.setFocusable(false);
-        mEt_change3.setFocusable(true);
+//        mEt_change1.setFocusable(false);
+//        et_change2.setFocusable(false);
+//        mEt_change3.setFocusable(true);
+
+
+        mEt_change1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SpinnerPopupWindow s = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                        .setmLayoutManager(null)
+                        .setmAdapter(new SureCarNumberAdapter(mActivity,mList_local,mEt_change1))
+                        .setmHeight(500).setmWidth(500)
+                        .setOutsideTouchable(true)
+                        .setFocusable(true)
+                        .build();
+
+                s.showPopWindowCenter(v);
+
+            }
+        });
 
 
         mRecycler_view_goods = (RecyclerView) findViewById(R.id.recycler_view_goods);

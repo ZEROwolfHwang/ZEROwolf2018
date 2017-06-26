@@ -20,7 +20,7 @@
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/demo"
+        android:src="@drawable/car_number_light"
         android:scaleType="fitCenter"
         custom:imageType="circle"/>
     <com.zero.wolf.greenroad.view.CircleImageView
@@ -31,7 +31,7 @@
         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/demo"
+        android:src="@drawable/car_body_light"
         custom:imageType="circle"/>
     <com.zero.wolf.greenroad.view.CircleImageView
         android:id="@+id/show_3_3_car_goods"
@@ -39,7 +39,7 @@
         android:scaleType="fitCenter"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/demo"
+        android:src="@drawable/car_goods_light"
         custom:imageType="circle"/>
 
 </LinearLayout>

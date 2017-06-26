@@ -14,18 +14,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
+
         </activity>
         <activity
             android:name=".PhotoActivity"
+
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:name=".activity.SureGoodsActivity"
             android:parentActivityName=".PhotoActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -38,11 +47,7 @@
         </receiver>
 
         <activity android:name=".activity.TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
     </application>
 

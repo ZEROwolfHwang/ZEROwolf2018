@@ -52,6 +52,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private static final int SHUT_CAMERA= 441;
     private static final int SHUT_RECORDING= 442;
 
+    private static final int enter_sure_person = 551;
+    private static final int enter_sure_smart= 552;
+
     private static int currentColor = COLOR_GREEN;
     private static int currentShut = SHUT_CAMERA;
 
@@ -94,8 +97,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         //车牌颜色的按钮
         mToggleButton_color = (ToggleButton) findViewById(R.id.toggleButton_color);
 
-        //拍照或者摄影的按钮
-        mToggleButton_shut = (ToggleButton) findViewById(R.id.toggleButton_shut);
+//        拍照或者摄影的按钮
+//        mToggleButton_shut = (ToggleButton) findViewById(R.id.toggleButton_shut);
 
         //点击的
 
@@ -111,11 +114,14 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         mBt_ok_send = (Button) findViewById(R.id.bt_ok_send);
 
         mToggleButton_color.setOnCheckedChangeListener(this);
-        mToggleButton_shut.setOnCheckedChangeListener(this);
+//        mToggleButton_shut.setOnCheckedChangeListener(this);
         mIv_car_number.setOnClickListener(this);
         mIv_car_body.setOnClickListener(this);
         mIv_car_goods.setOnClickListener(this);
         mBt_ok_send.setOnClickListener(this);
+
+        //初始化黄色车牌
+        mToggleButton_color.setPadding(0, 0, 70, 0);
     }
 
     private void initToolbar() {
@@ -152,10 +158,15 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_bar_person_definite) {
             Toast.makeText(PhotoActivity.this, "点击了人工识别", Toast.LENGTH_SHORT).show();
+            personDefinite();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void personDefinite() {
+        enterSureGoodsActivity();
     }
 
     @Override
@@ -184,7 +195,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
     private void enterSureGoodsActivity() {
         Intent intent = new Intent(PhotoActivity.this, SureGoodsActivity.class);
-
         startActivity(intent);
 
     }
@@ -299,11 +309,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.toggleButton_color:
-                analyzeCarColor(isChecked);
+                analyzeCarColor(buttonView,isChecked);
                 break;
-            case R.id.toggleButton_shut:
+         /*   case R.id.toggleButton_shut:
                 analyzeCarShut(isChecked);
-                break;
+                break;*/
             default:
                 break;
         }
@@ -319,14 +329,20 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void analyzeCarColor(boolean isChecked) {
+    private void analyzeCarColor(CompoundButton buttonView, boolean isChecked) {
 
+        int paddingLeft = buttonView.getPaddingLeft();
         if (isChecked) {
-            currentColor = COLOR_GREEN;
-            Logger.i("当前是绿牌");
-        } else {
+            paddingLeft = 0;
             currentColor = COLOR_YELLOW;
+            buttonView.setPadding(0,0,70,0);
             Logger.i("当前是黄牌");
+
+        } else {
+            paddingLeft = 0;
+            currentColor = COLOR_GREEN;
+            buttonView.setPadding(80, 0, 0, 0);
+            Logger.i("当前是蓝牌");
         }
 
     }
