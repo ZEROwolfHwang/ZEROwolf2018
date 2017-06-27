@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.litepalbean.GetServiceData;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
@@ -104,6 +105,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initLitePal() {
         LitePal.getDatabase();
+        GetServiceData.getInstance();
+
 
 
     }

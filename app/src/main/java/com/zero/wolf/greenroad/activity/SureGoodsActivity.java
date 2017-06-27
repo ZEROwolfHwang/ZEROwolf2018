@@ -22,12 +22,11 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
+import com.zero.wolf.greenroad.bean.CarStation;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.Session;
-
-import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +38,11 @@ public class SureGoodsActivity extends BaseActivity {
 
     String[] car_local = {"津A", "津B", "津C", "津D", "豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
             , "粤C", "粤D", "皖A", "皖B", "皖C", "皖D"};
+    String[] station_names = {"泰安东收费站", "公明收费站", "松岗收费站", "南山收费站", "宝安收费站", "长安收费站", "东莞收费站", "深圳收费站"};
+
 
     private List<Session> sessionList = new ArrayList<>();
+    private List<CarStation> stationList = new ArrayList<>();
 
     private RecyclerView mRecycler_view_goods;
     private ArrayList<String> mList;
@@ -69,8 +71,9 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private void initData() {
-
-
+        /**
+         * 加载并缓存车牌号头的数据
+         * */
         ArrayList<Session> sessions = (ArrayList<Session>) ACache.get(mActivity).getAsObject("sessions");
         if (sessions!=null)
             sessionList.addAll(sessions);
@@ -81,6 +84,20 @@ public class SureGoodsActivity extends BaseActivity {
                 sessionList.add(session);
             }
         }
+        /**
+         * 加载收费站名的数据
+         * */
+        ArrayList<CarStation> stations = (ArrayList<CarStation>) ACache.get(mActivity).getAsObject("stations");
+        if (stations!=null)
+            stationList.addAll(stations);
+        else {
+            for (int i = 0; i < station_names.length; i++) {
+                CarStation carStation = new CarStation();
+                carStation.setStationName(station_names[i]);
+                stationList.add(carStation);
+            }
+        }
+
        // sessionList.remove(sessionList.size()-1);
        // sessionList.add(new Session(sessionList.size()));
         ////////////////////////////////////////////////////////
@@ -288,7 +305,6 @@ public class SureGoodsActivity extends BaseActivity {
         Collections.sort(sessionList);
         mAdapter.notifyDataSetChanged();
 
-
     }
 
     private void updatePupop(int position) {
@@ -387,6 +403,7 @@ public class SureGoodsActivity extends BaseActivity {
         super.onDestroy();
         //存入缓存
         ACache.get(mActivity).put("sessions",(ArrayList<Session>) sessionList);
+        ACache.get(mActivity).put("stations",(ArrayList<CarStation>) stationList);
 
     }
 }
