@@ -33,4 +33,5 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    compile 'org.litepal.android:core:1.5.1'
 }

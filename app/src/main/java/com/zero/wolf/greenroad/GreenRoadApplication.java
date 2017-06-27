@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad;
 
 import android.app.Application;
 
+import org.litepal.LitePal;
 
 
 /**
@@ -21,6 +22,8 @@ public class GreenRoadApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApplication = this;
+
+        LitePal.initialize(this);
 
     }
 }

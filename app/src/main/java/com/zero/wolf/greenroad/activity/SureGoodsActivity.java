@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,13 +23,20 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
+import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
 public class SureGoodsActivity extends BaseActivity {
+
+    private BaseAdapter adapter;
 
     private RecyclerView mRecycler_view_goods;
     private ArrayList<String> mList;
@@ -38,6 +46,8 @@ public class SureGoodsActivity extends BaseActivity {
     private AppCompatActivity mActivity;
     private ArrayList<String> mList_local;
     private SpinnerPopupWindow mPopupWindow;
+    private List<CarNumberHead> mHeadList;
+    private ArrayList<String> mRecycler_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +64,33 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private void initData() {
-        String[] car_local = {"豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
+        LitePal.getDatabase();
+
+        String[] car_local = {"津A", "津D", "津C", "津D", "豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
                 , "粤C", "粤D", "皖A", "皖B", "皖C", "皖D"};
-        mList_local = new ArrayList<>();
+     /*   mList_local = new ArrayList<>();
         for (int i = 0; i < car_local.length; i++) {
             mList_local.add(car_local[i]);
+        }*/
+
+        initLitePal(car_local);
+
+        mHeadList = DataSupport.findAll(CarNumberHead.class);
+        mRecycler_list = new ArrayList<>();
+        for (int i = 0; i < mHeadList.size(); i++) {
+            mRecycler_list.add(mHeadList.get(i).getHeadName());
+        }
+
+    }
+
+    private void initLitePal(String[] car_local) {
+        for (int i = 0; i < car_local.length; i++) {
+            CarNumberHead head = new CarNumberHead();
+            head.setHeadName(car_local[i]);
+            head.save();
         }
     }
+
 
     private void initRecycler() {
 
@@ -102,7 +132,7 @@ public class SureGoodsActivity extends BaseActivity {
             public void onClick(View v) {
                 mPopupWindow = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
                         .setmLayoutManager(null)
-                        .setmAdapter(new SureCarNumberAdapter(mActivity, mList_local,  new SureCarNumberAdapter.onItemClick() {
+                        .setmAdapter(new SureCarNumberAdapter(mActivity, mRecycler_list,  new SureCarNumberAdapter.onItemClick() {
                             @Override
                             public void itemClick(int position) {
                                 updatePupop(position);
@@ -163,8 +193,8 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private void updatePupop(int position) {
-        mEt_change1.setText(mList_local.get(position) + "abc");
-        mEt_change1.setSelection((mList_local.get(position) + "abc").length());
+        mEt_change1.setText(mRecycler_list.get(position));
+        mEt_change1.setSelection(mRecycler_list.get(position).length());
         mPopupWindow.dismissPopWindow();
 
     }
@@ -248,5 +278,6 @@ public class SureGoodsActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
 

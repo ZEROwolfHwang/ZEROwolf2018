@@ -19,15 +19,15 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
 
     private final AppCompatActivity mActivity;
-    private final ArrayList<String> mListLocal;
+    private final   ArrayList<String>  mListLocal;
 
     private onItemClick itemClick;
     private int selectedItem;
 
     public SureCarNumberAdapter(AppCompatActivity activity,
-                                ArrayList<String> list_local, onItemClick itemClick) {
+                                ArrayList<String> list_head, onItemClick itemClick) {
         mActivity = activity;
-        mListLocal = list_local;
+        mListLocal = list_head;
         this.itemClick = itemClick;
     }
 
@@ -71,6 +71,7 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
             mTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
 
               //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
