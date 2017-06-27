@@ -24,6 +24,8 @@ import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.view.CircleImageView;
 
+import org.litepal.LitePal;
+
 import butterknife.ButterKnife;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
@@ -59,6 +61,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
         ButterKnife.bind(this);
         mActivity = this;
 
@@ -70,6 +75,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         //mTvOperator.setText("功成名就");
 
+        initLitePal();
         initData();
         initView();
 
@@ -93,6 +99,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private void initLitePal() {
+        LitePal.getDatabase();
+
 
     }
 

@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.tools.Session;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/6/26.
@@ -18,16 +20,17 @@ import java.util.ArrayList;
 public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdapter.SureCarNumberHolder>{
 
 
+
     private final AppCompatActivity mActivity;
-    private final   ArrayList<String>  mListLocal;
+    private final   ArrayList<Session>  mListLocal;
 
     private onItemClick itemClick;
     private int selectedItem;
 
     public SureCarNumberAdapter(AppCompatActivity activity,
-                                ArrayList<String> list_head, onItemClick itemClick) {
+                                List<Session> list_head, onItemClick itemClick) {
         mActivity = activity;
-        mListLocal = list_head;
+        mListLocal = (ArrayList<Session>) list_head;
         this.itemClick = itemClick;
     }
 
@@ -44,8 +47,8 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
     @Override
     public void onBindViewHolder(SureCarNumberHolder holder, int position) {
-        String s = mListLocal.get(position);
-        holder.bindHolder(s,position,holder);
+        Session session = mListLocal.get(position);
+        holder.bindHolder(session,position,holder);
     }
 
     @Override
@@ -64,8 +67,8 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
         }
 
-        public void bindHolder(final String s, final int position, final SureCarNumberHolder holder) {
-            mTextView.setText(s);
+        public void bindHolder(final Session session, final int position, final SureCarNumberHolder holder) {
+            mTextView.setText(session.getName());
 
            // mTextView.setSelected(position == selectedItem);
             mTextView.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +78,8 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
               //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
-                    itemClick.itemClick(position);
+                    itemClick.itemClick(session,position);
+                    itemClick.onTop(session);
                 }
             });
         }
@@ -84,6 +88,10 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
 
     public interface onItemClick {
-        void itemClick(int position);
+        void itemClick(Session session, int position);
+        void onTop(Session session);
+
+        void onCancel(Session session);
     }
+
 }

@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,19 +23,24 @@ import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
+import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.Session;
 
 import org.litepal.LitePal;
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
 public class SureGoodsActivity extends BaseActivity {
 
-    private BaseAdapter adapter;
+    String[] car_local = {"津A", "津B", "津C", "津D", "豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
+            , "粤C", "粤D", "皖A", "皖B", "皖C", "皖D"};
+
+    private List<Session> sessionList = new ArrayList<>();
 
     private RecyclerView mRecycler_view_goods;
     private ArrayList<String> mList;
@@ -45,9 +49,12 @@ public class SureGoodsActivity extends BaseActivity {
     private EditText mEt_change1;
     private AppCompatActivity mActivity;
     private ArrayList<String> mList_local;
-    private SpinnerPopupWindow mPopupWindow;
-    private List<CarNumberHead> mHeadList;
-    private ArrayList<String> mRecycler_list;
+    private SpinnerPopupWindow mPopupWindow_1;
+    private SpinnerPopupWindow mPopupWindow_2;
+
+
+    private RecyclerView.Adapter mAdapter;
+    private EditText mEt_change2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,6 @@ public class SureGoodsActivity extends BaseActivity {
         setContentView(R.layout.activity_sure_goods);
         mContext = this;
         mActivity = this;
-
-
         initData();
         initView();
         initRecycler();
@@ -64,10 +69,22 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private void initData() {
-        LitePal.getDatabase();
 
-        String[] car_local = {"津A", "津D", "津C", "津D", "豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
-                , "粤C", "粤D", "皖A", "皖B", "皖C", "皖D"};
+
+        ArrayList<Session> sessions = (ArrayList<Session>) ACache.get(mActivity).getAsObject("sessions");
+        if (sessions!=null)
+            sessionList.addAll(sessions);
+        else {
+            for (int i = 0; i < car_local.length; i++) {
+                Session session = new Session();
+                session.setName(car_local[i]);
+                sessionList.add(session);
+            }
+        }
+       // sessionList.remove(sessionList.size()-1);
+       // sessionList.add(new Session(sessionList.size()));
+        ////////////////////////////////////////////////////////
+
      /*   mList_local = new ArrayList<>();
         for (int i = 0; i < car_local.length; i++) {
             mList_local.add(car_local[i]);
@@ -75,14 +92,28 @@ public class SureGoodsActivity extends BaseActivity {
 
         initLitePal(car_local);
 
-        mHeadList = DataSupport.findAll(CarNumberHead.class);
-        mRecycler_list = new ArrayList<>();
-        for (int i = 0; i < mHeadList.size(); i++) {
-            mRecycler_list.add(mHeadList.get(i).getHeadName());
+       // TypedArray typedArray = this.getResources().obtainTypedArray(R.array.icon_array);
+       /* sessionList = new ArrayList<>();
+        for (int i = 0; i < car_local.length; i++) {
+            Session session = new Session();
+            session.setName(car_local[i]);
+            sessionList.add(session);
         }
+
+        for (int i = 0; i < sessionList.size(); i++) {
+            Logger.i(sessionList.get(i).getName());
+        }*/
+       /* mRecycler_list = new ArrayList<>();
+        for (int i = 0; i < mHeadList.size(); i++) {
+           mRecycler_list.add(mHeadList.get(i).getHeadName());
+        }*/
 
     }
 
+    /**
+     * 填充数据库
+     * @param car_local
+     */
     private void initLitePal(String[] car_local) {
         for (int i = 0; i < car_local.length; i++) {
             CarNumberHead head = new CarNumberHead();
@@ -114,41 +145,102 @@ public class SureGoodsActivity extends BaseActivity {
 
         //找到改变的TextView
         mEt_change1 = (EditText) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(tv_change);
-        EditText et_change2 = (EditText) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(tv_change);
+        mEt_change2 = (EditText) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(tv_change);
         mEt_change3 = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
 
 
-        mEt_change1.setText("鲁A888888");
-        et_change2.setText("泰安东收费站");
+        //mEt_change1.setText("鲁A888888");
+
+        mEt_change1.setText(sessionList.get(0).getName());
+        mEt_change2.setText("泰安东收费站");
         mEt_change3.setHint("西兰花");
 
 //        mEt_change1.setFocusable(false);
 //        et_change2.setFocusable(false);
 //        mEt_change3.setFocusable(true);
 
-
+        /**
+         *车牌号的点击事件
+         * */
         mEt_change1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPopupWindow = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
-                        .setmLayoutManager(null)
-                        .setmAdapter(new SureCarNumberAdapter(mActivity, mRecycler_list,  new SureCarNumberAdapter.onItemClick() {
+
+                mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                        .setmLayoutManager(null,1)
+                        .setmAdapter(new SureCarNumberAdapter(mActivity, sessionList, new SureCarNumberAdapter.onItemClick() {
                             @Override
-                            public void itemClick(int position) {
+                            public void itemClick(Session session, int position) {
                                 updatePupop(position);
                             }
+
+                            @Override
+                            public void onTop(Session session) {
+                                session.setTop(1);
+                                session.setTime(System.currentTimeMillis());
+                                refreshView();
+                            }
+
+                            @Override
+                            public void onCancel(Session session) {
+                            }
                         }))
-                        .setmHeight(500).setmWidth(500)
+                        .setmHeight(700).setmWidth(800)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
 
-                mPopupWindow.showPopWindowCenter(v);
 
+                mAdapter = SpinnerPopupWindow.Builder.getmAdapter();
+
+                mPopupWindow_1.showPopWindowCenter(v);
             }
         });
 
+        /**
+         * 收费站名称点击事件
+         */
+         mEt_change2.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                         .setmLayoutManager(null,0)
+                         .setmAdapter(new SureCarNumberAdapter(mActivity, sessionList, new SureCarNumberAdapter.onItemClick() {
+                             @Override
+                             public void itemClick(Session session, int position) {
+                                 updatePupop(position);
+                             }
 
+                             @Override
+                             public void onTop(Session session) {
+                                 session.setTop(1);
+                                 session.setTime(System.currentTimeMillis());
+                                 refreshView();
+                             }
+
+                             @Override
+                             public void onCancel(Session session) {
+                             }
+                         }))
+                         .setmHeight(700).setmWidth(800)
+                         .setOutsideTouchable(true)
+                         .setFocusable(true)
+                         .build();
+
+
+                 mAdapter = SpinnerPopupWindow.Builder.getmAdapter();
+
+                 mPopupWindow_2.showPopWindowCenter(v);
+             }
+         });
+
+
+
+
+
+         /**
+          * 货物的点击事件
+         */
         mRecycler_view_goods = (RecyclerView) findViewById(R.id.recycler_view_goods);
         // mRecycler_view_goods.setVisibility(View.INVISIBLE);
         initRecyclerData();
@@ -192,10 +284,21 @@ public class SureGoodsActivity extends BaseActivity {
         });
     }
 
+    private void refreshView() {
+        Collections.sort(sessionList);
+        mAdapter.notifyDataSetChanged();
+
+
+    }
+
     private void updatePupop(int position) {
-        mEt_change1.setText(mRecycler_list.get(position));
-        mEt_change1.setSelection(mRecycler_list.get(position).length());
-        mPopupWindow.dismissPopWindow();
+        mEt_change1.setText(sessionList.get(position).getName());
+        mEt_change1.setSelection((sessionList.get(position).getName()).length());
+
+        //指定操作
+
+
+        mPopupWindow_1.dismissPopWindow();
 
     }
 
@@ -279,5 +382,12 @@ public class SureGoodsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //存入缓存
+        ACache.get(mActivity).put("sessions",(ArrayList<Session>) sessionList);
+
+    }
 }
 

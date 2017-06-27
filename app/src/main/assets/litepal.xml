@@ -33,6 +33,7 @@
         -->
         <list>
             <mapping class="com.zero.wolf.greenroad.litepalbean.CarNumberHead" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.CarStationName" />
 
         </list>
 

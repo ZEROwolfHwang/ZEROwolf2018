@@ -58,7 +58,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.popup_button:
                 initData();
                 mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
-                        .setmLayoutManager(null)
+                        .setmLayoutManager(null,0)
                         .setmAdapter(new SpinnerAdapter(this,mList, new onItemClick() {
                             @Override
                             public void itemClick(int position) {
