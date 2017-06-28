@@ -35,7 +35,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NetWorkStateReceiver.NetworkStation {
 
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -196,23 +196,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 更新客户端
+     */
+    private void upDateApp() {
+        //判断网络是否连接
+
     }
 
     //在onResume()方法注册
@@ -224,9 +220,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
-
-
-        System.out.println("注册");
+        mNetWorkStateReceiver.setNetworkStationListener(this);
         super.onResume();
     }
 
@@ -234,8 +228,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onPause() {
         unregisterReceiver(mNetWorkStateReceiver);
-        System.out.println("注销");
         super.onPause();
     }
 
+    /**
+     * 得到网络状态的回调
+     * @param netStation
+     */
+    @Override
+    public void onStation(String netStation) {
+        Logger.i(netStation);
+        mTv_change3.setText(netStation);
+
+    }
 }

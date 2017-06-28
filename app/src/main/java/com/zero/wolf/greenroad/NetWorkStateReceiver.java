@@ -14,11 +14,12 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
     private static final String TAG = "NetWorkStateReceiver";
 
     private final TextView mTextView;
+    private NetworkStation mListener;
+    private StringBuilder mSb;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        System.out.println("网络状态发生变化");
         //检测API是不是小于21，因为到了API21之后getNetworkInfo(int networkType)方法被弃用
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
 
@@ -55,12 +56,12 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
             Network[] networks = connMgr.getAllNetworks();
           
             //用于存放网络连接信息
-            StringBuilder sb = new StringBuilder();
+            mSb = new StringBuilder();
             //通过循环将网络信息逐个取出来
             for (int i = 0; i < networks.length; i++) {
                 //获取ConnectivityManager对象对应的NetworkInfo对象
                 NetworkInfo networkInfo = connMgr.getNetworkInfo(networks[i]);
-               sb.append(networkInfo.getTypeName() + networkInfo.isConnected());
+               mSb.append(networkInfo.getTypeName() + networkInfo.isConnected());
                 //networkInfo.getType()+networkInfo.isConnected()
                 Log.i(TAG, "onReceive: " + networkInfo.getType()+networkInfo.isConnected());
             }
@@ -68,13 +69,13 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
                 mTextView.setText("网络无连接");
                 mTextView.setTextColor(Color.RED);
 
-            }else if (sb.toString().contains("MOBILE")) {
+            }else if (mSb.toString().contains("MOBILE")) {
                 //// TODO: 2017/6/23
                 mTextView.setText("数据连接");
                 mTextView.setTextColor(Color.BLUE);
             }
-
         }
+        mListener.onStation("heheda");
     }
 
     public NetWorkStateReceiver(TextView textView) {
@@ -82,5 +83,13 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
         mTextView = textView;
     }
 
+    public interface NetworkStation {
+
+        void onStation(String netStation);
+    }
+
+    public void setNetworkStationListener(NetworkStation stationListener) {
+        mListener = stationListener;
+    }
 
 }

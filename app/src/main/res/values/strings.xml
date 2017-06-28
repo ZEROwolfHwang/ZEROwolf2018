@@ -29,5 +29,7 @@
     <string name="menu_bar_title_cancer">取消</string>
     <string name="yellow_car">黄牌</string>
     <string name="blue_car">蓝牌</string>
+    <string name="update_APP">更新</string>
+    <string name="about_APP">关于</string>
 
 </resources>
