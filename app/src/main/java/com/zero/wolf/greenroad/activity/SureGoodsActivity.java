@@ -75,7 +75,7 @@ public class SureGoodsActivity extends BaseActivity {
          * 加载并缓存车牌号头的数据
          * */
         ArrayList<Session> sessions = (ArrayList<Session>) ACache.get(mActivity).getAsObject("sessions");
-        if (sessions!=null)
+        if (sessions != null)
             sessionList.addAll(sessions);
         else {
             for (int i = 0; i < car_local.length; i++) {
@@ -88,7 +88,7 @@ public class SureGoodsActivity extends BaseActivity {
          * 加载收费站名的数据
          * */
         ArrayList<CarStation> stations = (ArrayList<CarStation>) ACache.get(mActivity).getAsObject("stations");
-        if (stations!=null)
+        if (stations != null)
             stationList.addAll(stations);
         else {
             for (int i = 0; i < station_names.length; i++) {
@@ -98,8 +98,8 @@ public class SureGoodsActivity extends BaseActivity {
             }
         }
 
-       // sessionList.remove(sessionList.size()-1);
-       // sessionList.add(new Session(sessionList.size()));
+        // sessionList.remove(sessionList.size()-1);
+        // sessionList.add(new Session(sessionList.size()));
         ////////////////////////////////////////////////////////
 
      /*   mList_local = new ArrayList<>();
@@ -109,7 +109,7 @@ public class SureGoodsActivity extends BaseActivity {
 
         initLitePal(car_local);
 
-       // TypedArray typedArray = this.getResources().obtainTypedArray(R.array.icon_array);
+        // TypedArray typedArray = this.getResources().obtainTypedArray(R.array.icon_array);
        /* sessionList = new ArrayList<>();
         for (int i = 0; i < car_local.length; i++) {
             Session session = new Session();
@@ -129,6 +129,7 @@ public class SureGoodsActivity extends BaseActivity {
 
     /**
      * 填充数据库
+     *
      * @param car_local
      */
     private void initLitePal(String[] car_local) {
@@ -184,7 +185,7 @@ public class SureGoodsActivity extends BaseActivity {
             public void onClick(View v) {
 
                 mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
-                        .setmLayoutManager(null,1)
+                        .setmLayoutManager(null, 1)
                         .setmAdapter(new SureCarNumberAdapter(mActivity, sessionList, new SureCarNumberAdapter.onItemClick() {
                             @Override
                             public void itemClick(Session session, int position) {
@@ -195,7 +196,7 @@ public class SureGoodsActivity extends BaseActivity {
                             public void onTop(Session session) {
                                 session.setTop(1);
                                 session.setTime(System.currentTimeMillis());
-                                refreshView();
+                                refreshView(001);
                             }
 
                             @Override
@@ -214,49 +215,39 @@ public class SureGoodsActivity extends BaseActivity {
             }
         });
 
-        /**
+       /* *//**
          * 收费站名称点击事件
-         */
-         mEt_change2.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
-                         .setmLayoutManager(null,0)
-                         .setmAdapter(new SureCarNumberAdapter(mActivity, sessionList, new SureCarNumberAdapter.onItemClick() {
-                             @Override
-                             public void itemClick(Session session, int position) {
-                                 updatePupop(position);
-                             }
-
-                             @Override
-                             public void onTop(Session session) {
-                                 session.setTop(1);
-                                 session.setTime(System.currentTimeMillis());
-                                 refreshView();
-                             }
-
-                             @Override
-                             public void onCancel(Session session) {
-                             }
-                         }))
-                         .setmHeight(700).setmWidth(800)
-                         .setOutsideTouchable(true)
-                         .setFocusable(true)
-                         .build();
+         *//*
+        mEt_change2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                        .setmLayoutManager(null, 0)
+                        .setmAdapter(new SureCarStationAdapter(mActivity,
+                                stationList,
+                                new SureBaseAdapter.onItemClick<CarStation>() {
+                                    @Override
+                                    public void itemClick(int position, CarStation carStation) {
+                                            updatePupop(position);
+                                            carStation.setTop(1);
+                                            refreshView(002);
+                                    }
+                                }))
+                                .setmHeight(500).setmWidth(800)
+                                .setOutsideTouchable(true)
+                                .setFocusable(true)
+                                .build();
 
 
-                 mAdapter = SpinnerPopupWindow.Builder.getmAdapter();
+                mAdapter = SpinnerPopupWindow.Builder.getmAdapter();
 
-                 mPopupWindow_2.showPopWindowCenter(v);
-             }
-         });
+                mPopupWindow_2.showPopWindowCenter(v);
+            }
+        });
+*/
 
-
-
-
-
-         /**
-          * 货物的点击事件
+        /**
+         * 货物的点击事件
          */
         mRecycler_view_goods = (RecyclerView) findViewById(R.id.recycler_view_goods);
         // mRecycler_view_goods.setVisibility(View.INVISIBLE);
@@ -301,9 +292,15 @@ public class SureGoodsActivity extends BaseActivity {
         });
     }
 
-    private void refreshView() {
-        Collections.sort(sessionList);
-        mAdapter.notifyDataSetChanged();
+    private void refreshView(int stype) {
+        if (stype == 001) {
+            Collections.sort(sessionList);
+            mAdapter.notifyDataSetChanged();
+        }
+        if (stype == 002) {
+            Collections.sort(stationList);
+            mAdapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -385,6 +382,7 @@ public class SureGoodsActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_sure, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -402,8 +400,8 @@ public class SureGoodsActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         //存入缓存
-        ACache.get(mActivity).put("sessions",(ArrayList<Session>) sessionList);
-        ACache.get(mActivity).put("stations",(ArrayList<CarStation>) stationList);
+        ACache.get(mActivity).put("sessions", (ArrayList<Session>) sessionList);
+        ACache.get(mActivity).put("stations", (ArrayList<CarStation>) stationList);
 
     }
 }
