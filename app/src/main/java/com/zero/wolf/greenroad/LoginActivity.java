@@ -1,6 +1,5 @@
 package com.zero.wolf.greenroad;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,13 +22,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     private ImageButton mPopup_button;
-    private Context mContext;
-    private View mConverView;
-    private RecyclerView mRecyclerView;
     private ArrayList<String> mList;
-    private static final String TAG = "MainActivity";
     private Button mBt_login;
-
     @BindView(R.id.text_user_name)
     EditText mEt_user_name;
     @BindView(R.id.text_password)
@@ -43,7 +37,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        mContext = this;
 
         mPopup_button = (ImageButton) findViewById(R.id.popup_button);
         mPopup_button.setOnClickListener(this);

@@ -20,13 +20,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.litepalbean.GetServiceData;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
+import com.zero.wolf.greenroad.update.HttpMethods;
+import com.zero.wolf.greenroad.update.ProgressSubscriber;
+import com.zero.wolf.greenroad.update.Subject;
+import com.zero.wolf.greenroad.update.SubscriberOnNextListener;
 import com.zero.wolf.greenroad.view.CircleImageView;
 
 import org.litepal.LitePal;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import ezy.boost.update.ICheckAgent;
@@ -41,7 +46,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener ,SubscriberOnNextListener<List<Subject>>{
 
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -64,6 +69,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private TextView mTv_change3;
     private CircleImageView mIvCamera;
 
+
+    private SubscriberOnNextListener getTopMovieOnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +120,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initLitePal() {
         LitePal.getDatabase();
-        GetServiceData.getInstance();
-
-
 
     }
 
@@ -213,14 +217,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_about) {
-            updateVersion();
+            openCoon();
         } else if (id == R.id.nav_update) {
+            updateVersion();
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 开启网络请求
+     */
+    private void openCoon() {
+        getTopMovieOnNext = new SubscriberOnNextListener<List<Subject>>() {
+            @Override
+            public void onNext(List<Subject> subjects) {
+                Logger.i(subjects.toString());
+            }
+        };
+        HttpMethods.getInstance().getTopMovie(new ProgressSubscriber(getTopMovieOnNext, MainActivity.this), 0, 10);
     }
 
     /**
@@ -296,4 +314,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onPause();
     }
 
+    @Override
+    public void onNext(List<Subject> subjects) {
+
+    }
 }
