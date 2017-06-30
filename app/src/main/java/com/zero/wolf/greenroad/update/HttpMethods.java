@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
  */
 public class HttpMethods {
 
-    public static final String BASE_URL = "https://api.douban.com/v2/movie/";
+    public static final String BASE_URL = "http://192.168.2.122/lvsetondao/index.php/Home/Login/";
 
     private static final int DEFAULT_TIMEOUT = 5;
 

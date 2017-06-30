@@ -21,6 +21,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
+import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.update.HttpMethods;
 import com.zero.wolf.greenroad.update.ProgressSubscriber;
 import com.zero.wolf.greenroad.update.Subject;
@@ -44,7 +45,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener ,SubscriberOnNextListener<List<Subject>>{
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SubscriberOnNextListener<List<Subject>> {
 
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -77,7 +78,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
 
 
-
         ButterKnife.bind(this);
         mActivity = this;
 
@@ -88,9 +88,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setSupportActionBar(toolbar);
 
 
-
         //mTvOperator.setText("功成名就");
 
+        initSp();
         initLitePal();
         initData();
         initView();
@@ -118,6 +118,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+
     private void initLitePal() {
         LitePal.getDatabase();
 
@@ -133,7 +134,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initView() {
 
         //得到拍照的按钮
-         mIvCamera = (CircleImageView) findViewById(R.id.iv_camera);
+        mIvCamera = (CircleImageView) findViewById(R.id.iv_camera);
 
 
         //mIvCamera.setOnClickListener(this);
@@ -158,16 +159,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
 
 
-        mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
-        mTv_number_has_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has).findViewById(R.id.tv_math_number_main_has);
-        mTv_number_has_not_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has_not).findViewById(R.id.tv_math_number_main_has_not);
-
-        mTv_number_has_send.setText("99");
-        mTv_number_has_not_send.setText("55");
-
         tv_change1.setText("李树人");
         tv_change2.setText(mAvailSpace);
-       // mTv_change3.setText("良好");
+        // mTv_change3.setText("良好");
 
     /*    mNetWorkStateReceiver.setNetworkStationListener(new NetWorkStateReceiver.NetworkStation() {
             @Override
@@ -180,7 +174,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         TextView version_number = (TextView) findViewById(R.id.version_number);
         version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
 
+
+
+
     }
+
+    private void initSp() {
+        //如果cra_count为空则创建，否则不创建
+        if (SPUtils.get(getApplicationContext(), SPUtils.CAR_COUNT, 0) == null) {
+            Logger.i("zoule?");
+            SPUtils.putAndApply(getApplicationContext(),SPUtils.CAR_COUNT, 0);
+        }
+        //如果cra_not_count为空则创建，否则不创建
+        if (SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0) == null) {
+            Logger.i("zoule?"+"ma");
+            SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
+        }
+    }
+    private void initCount() {
+        //找到两个计数的textview
+        mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
+        mTv_number_has_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has).findViewById(R.id.tv_math_number_main_has);
+        mTv_number_has_not_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has_not).findViewById(R.id.tv_math_number_main_has_not);
+
+
+        int count_shut = (int) SPUtils.get(getApplicationContext(),SPUtils.CAR_COUNT, 0);
+        int count_cut = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
+
+        mTv_number_has_send.setText(String.valueOf(count_shut));
+        mTv_number_has_not_send.setText(String.valueOf(count_cut));
+    }
+
 
 
     @Override
@@ -256,6 +280,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     /**
      * 检查更新
+     *
      * @param isManual
      * @param hasUpdate
      * @param isForce
@@ -299,7 +324,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
+
 */
+        initCount();
         super.onResume();
     }
 

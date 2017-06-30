@@ -82,8 +82,9 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="0dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_goods"
@@ -100,7 +101,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/layout_margin20dp"
         android:layout_marginRight="@dimen/layout_margin20dp"
-        android:background="@color/yellow"
+        android:background="@drawable/sure_button_select"
         android:gravity="center"
         android:text="@string/ok_send"
         android:textSize="@dimen/text24"/>

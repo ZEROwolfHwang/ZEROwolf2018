@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.BaseActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.SpinnerPopupWindow;
@@ -26,6 +27,7 @@ import com.zero.wolf.greenroad.bean.CarStation;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.Session;
 
 import java.util.ArrayList;
@@ -268,12 +270,6 @@ public class SureGoodsActivity extends BaseActivity {
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(SureGoodsActivity.this);
                 dialog.setTitle(getString(R.string.dialog_title_sure));
-               /* dialog.setItems(new String[]{"123", "456", "789"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });*/
                 dialog.setMessage(getDialogSendMessage());
                 dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
                     @Override
@@ -288,8 +284,19 @@ public class SureGoodsActivity extends BaseActivity {
                     }
                 });
                 dialog.show();
+
+                CarNumberCut();
             }
         });
+    }
+
+    /**
+     * 将未上传车辆的数字减去一
+     */
+    private void CarNumberCut() {
+        SPUtils.cut_one(mActivity,SPUtils.CAR_NOT_COUNT);
+        int cra_not_count = (int) SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0);
+        Logger.i("cra_not_count------------"+cra_not_count);
     }
 
     private void refreshView(int stype) {
