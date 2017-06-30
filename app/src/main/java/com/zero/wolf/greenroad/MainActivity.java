@@ -1,8 +1,6 @@
 package com.zero.wolf.greenroad;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -89,6 +87,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         //mTvOperator.setText("功成名就");
 
         initLitePal();
@@ -169,6 +169,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tv_change2.setText(mAvailSpace);
        // mTv_change3.setText("良好");
 
+    /*    mNetWorkStateReceiver.setNetworkStationListener(new NetWorkStateReceiver.NetworkStation() {
+            @Override
+            public void onStation(String netStation) {
+                mTv_change3.setText(netStation);
+            }
+        });
+*/
         //得到版本号
         TextView version_number = (TextView) findViewById(R.id.version_number);
         version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
@@ -208,15 +215,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_about) {
+        if (id == R.id.nav_about) {
             openCoon();
         } else if (id == R.id.nav_update) {
             updateVersion();
@@ -232,10 +231,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * 开启网络请求
      */
     private void openCoon() {
-        getTopMovieOnNext = new SubscriberOnNextListener<List<Subject>>() {
+        getTopMovieOnNext = new SubscriberOnNextListener<String>() {
             @Override
-            public void onNext(List<Subject> subjects) {
-                Logger.i(subjects.toString());
+            public void onNext(String s) {
+                Logger.i(s.toString());
             }
         };
         HttpMethods.getInstance().getTopMovie(new ProgressSubscriber(getTopMovieOnNext, MainActivity.this), 0, 10);
@@ -294,23 +293,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //在onResume()方法注册
     @Override
     protected void onResume() {
-        if (mNetWorkStateReceiver == null) {
+        /*if (mNetWorkStateReceiver == null) {
             mNetWorkStateReceiver = new NetWorkStateReceiver(mTv_change3);
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
-
-
-        System.out.println("注册");
+*/
         super.onResume();
     }
 
     //onPause()方法注销
     @Override
     protected void onPause() {
-        unregisterReceiver(mNetWorkStateReceiver);
-        System.out.println("注销");
+       /* unregisterReceiver(mNetWorkStateReceiver);
+*/
         super.onPause();
     }
 
