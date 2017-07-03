@@ -34,6 +34,7 @@
         <list>
             <mapping class="com.zero.wolf.greenroad.litepalbean.CarNumberHead" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.CarStationName" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.PhotoLite" />
 
         </list>
 

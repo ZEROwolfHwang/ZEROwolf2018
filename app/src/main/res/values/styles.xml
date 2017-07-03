@@ -8,6 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- 弹出关于的对话框-->
+    <style name="ActivityAboutStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_activity_round
+        </item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textSize">@dimen/text20</item>
+    </style>
+
+    <!-- 弹出激活码的对话框-->
+    <style name="MyDialogStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_activity_round
+        </item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textSize">@dimen/text18</item>
+    </style>
+
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -69,4 +85,5 @@
         <item name="android:background">#8036ef</item>
     </style>
 
+    <dimen name="text20">20sp</dimen>
 </resources>

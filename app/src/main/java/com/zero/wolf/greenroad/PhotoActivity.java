@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +28,8 @@ import com.zero.wolf.greenroad.view.CircleImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class PhotoActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -219,12 +222,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void shutPhoto(int type_int) {
-      /*  Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        mFilePath = mFilePath + "/"+System.currentTimeMillis()
-                + ".jpg";
-//        Uri photoUri = Uri.fromFile(new File(mFilePath));
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-        startActivityForResult(intent,REQ_0);*/
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (mFilePath != null) {
@@ -242,7 +240,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                     + "goods.jpg";
 
         }
-
 
         mPhotoUri = Uri.fromFile(new File(mFilePath));
 
@@ -262,8 +259,30 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        if (resultCode == RESULT_OK) {
+            if (requestCode == TYPE_NUMBER) {
+
+                FileInputStream fis = null;
+                try {
+                    Logger.i(mFilePath);
+                    fis = new FileInputStream(mFilePath);
+                    Logger.i(fis.toString());
+                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                    Logger.i(bitmap.toString());
+                    mShow_3_1_car_number.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+
+                }
+            }
+
+        }
+
+       /* Logger.i(String.valueOf(resultCode == NONE));
+
         if (resultCode == NONE)
-            return;
+            return;*/
+/*
         // 拍照
         if (requestCode == TYPE_NUMBER) {
             //设置文件保存路径这里放在跟目录下
@@ -273,23 +292,23 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         } else if (requestCode == TYPE_GOODS) {
             startPhotoZoom(mPhotoUri, TYPE_GOODS);
         }
-
-        if (data == null)
-            return;
+*/
+       /* if (data == null)
+            return;*/
 
       /*  // 读取相册缩放图片
         if (requestCode == PHOTOZOOM) {
             startPhotoZoom(data.getData(), TYPE_NUMBER);
         }*/
 
-        // 处理结果
-        if (requestCode == PHOTOHRAPH_NUMBER) {
+      /*  // 处理结果
+        if (requestCode == TYPE_NUMBER) {
             showPicture(data, PHOTOHRAPH_NUMBER);
-        } else if (requestCode == PHOTOHRAPH_BODY) {
+        } else if (requestCode == TYPE_BODY) {
             showPicture(data, PHOTOHRAPH_BODY);
-        } else if (requestCode == PHOTOHRAPH_GOODS) {
+        } else if (requestCode == TYPE_GOODS) {
             showPicture(data, PHOTOHRAPH_GOODS);
-        }
+        }*/
 
         super.onActivityResult(requestCode, resultCode, data);
     }

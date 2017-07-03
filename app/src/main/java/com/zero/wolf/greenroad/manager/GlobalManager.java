@@ -11,5 +11,6 @@ package com.zero.wolf.greenroad.manager;
  */
 
 public class GlobalManager {
+    public static int REQUEST_ACTIVATION = 1 * 111;
 
 }

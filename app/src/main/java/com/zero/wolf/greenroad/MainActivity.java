@@ -1,5 +1,6 @@
 package com.zero.wolf.greenroad;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -7,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,12 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.activity.AboutActivity;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPUtils;
-import com.zero.wolf.greenroad.update.HttpMethods;
-import com.zero.wolf.greenroad.update.ProgressSubscriber;
 import com.zero.wolf.greenroad.update.Subject;
 import com.zero.wolf.greenroad.update.SubscriberOnNextListener;
 import com.zero.wolf.greenroad.view.CircleImageView;
@@ -240,10 +241,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         int id = item.getItemId();
 
         if (id == R.id.nav_about) {
-            openCoon();
+            navAbout();
         } else if (id == R.id.nav_update) {
             updateVersion();
 
+        } else if (id == R.id.nav_cancer) {
+            cancelCount();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -252,23 +255,51 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
-     * 开启网络请求
+     * 关于的方法
      */
-    private void openCoon() {
-        getTopMovieOnNext = new SubscriberOnNextListener<String>() {
-            @Override
-            public void onNext(String s) {
-                Logger.i(s.toString());
-            }
-        };
-        HttpMethods.getInstance().getTopMovie(new ProgressSubscriber(getTopMovieOnNext, MainActivity.this), 0, 10);
+    private void navAbout() {
+        Intent intent = new Intent(mActivity, AboutActivity.class);
+        mActivity.startActivity(intent);
     }
+
+    /**
+     * 将拍照车辆的计数以及上传车辆的计数归零
+     */
+    private void cancelCount() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog.setTitle("清楚车辆计数");
+        dialog.setMessage("是否对拍摄车辆以及上传车辆进行重新计数");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("清空", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SPUtils.cancel_count(getApplicationContext(),SPUtils.CAR_COUNT);
+                SPUtils.cancel_count(getApplicationContext(),SPUtils.CAR_NOT_COUNT);
+                refresh();
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
+    /**
+     * 刷新当前页面的数据
+     */
+    private void refresh() {
+        onResume();
+    }
+
 
     /**
      * 根据版本号判断要不要更新
      */
     private void updateVersion() {
-
 
         UpdateManager.setDebuggable(true);
         UpdateManager.setWifiOnly(false);

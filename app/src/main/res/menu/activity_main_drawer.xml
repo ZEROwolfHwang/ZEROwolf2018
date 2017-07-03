@@ -2,7 +2,16 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:checkableBehavior="single">
+<group>
 
+
+    <item
+        android:title="@string/cancel_count"
+        android:icon="@drawable/cancel_count"
+        android:id="@+id/nav_cancer">
+
+    </item>
+</group>
     <item android:title="Communicate">
         <menu>
             <item

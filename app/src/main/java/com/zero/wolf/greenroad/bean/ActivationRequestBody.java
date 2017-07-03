@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad.presenter;
+package com.zero.wolf.greenroad.bean;
 
 /**
  * @author sineom

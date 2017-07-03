@@ -31,5 +31,15 @@
     <string name="blue_car">蓝牌</string>
     <string name="about_app">关于</string>
     <string name="update_app">更新</string>
+    <string name="cancel_count">清除计数</string>
+    <string name="activity_about_version">版本号:</string>
+    <string name="activity_about_Activation_code">认证ID：</string>
+    <string name="prompt_activation_code">该设备的ID</string>
+    <string name="activation_tips">勾选即同意用户协议内容</string>
+    <string name="activation_network_info">注意：激活时请确保网络已正常连接。</string>
+    <string name="action_sign_in">激活</string>
+    <string name="action_sign_out">退出</string>
+    <string name="key_used">激活码已使用</string>
+    <string name="Invalid_Key">激活码无效</string>
 
 </resources>

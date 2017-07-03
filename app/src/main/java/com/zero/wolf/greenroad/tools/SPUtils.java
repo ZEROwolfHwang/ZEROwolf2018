@@ -13,7 +13,12 @@ import java.util.Map;
 
 public class SPUtils {
 
-    public static String  CAR_COUNT = "car_count";
+
+    public static final String ISFIRSTACTIVATION= "isfirstactivation";
+
+    public static final String SHAREDPRENAME = "activation";
+    public static String CODE = "ActivationCode";
+    public static String CAR_COUNT = "car_count";
     public static String CAR_NOT_COUNT = "car_not_count";
 
     /**
@@ -67,6 +72,14 @@ public class SPUtils {
         } else {
             return null;
         }
+    }
+
+    public static void cancel_count(Context context, String key) {
+        SharedPreferences sp = context.getSharedPreferences(getSpName(context), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(key, 0);
+        SharedPreferencesCompat.apply(editor);
+
     }
 
     //值+1操作
