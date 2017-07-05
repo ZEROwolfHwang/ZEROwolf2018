@@ -22,13 +22,17 @@ import com.zero.wolf.greenroad.BaseActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
+import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.CarStation;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
+import com.zero.wolf.greenroad.litepalbean.StationInfo;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.Session;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,10 +41,6 @@ import java.util.List;
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
 public class SureGoodsActivity extends BaseActivity {
-
-    String[] car_local = {"津A", "津B", "津C", "津D", "豫A", "豫B", "豫C", "豫D", "豫E", "粤A", "粤B"
-            , "粤C", "粤D", "皖A", "皖B", "皖C", "皖D"};
-    String[] station_names = {"泰安东收费站", "公明收费站", "松岗收费站", "南山收费站", "宝安收费站", "长安收费站", "东莞收费站", "深圳收费站"};
 
 
     private List<Session> sessionList = new ArrayList<>();
@@ -57,8 +57,9 @@ public class SureGoodsActivity extends BaseActivity {
     private SpinnerPopupWindow mPopupWindow_2;
 
 
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mHeadAdapter;
     private EditText mEt_change2;
+    private RecyclerView.Adapter mStationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,10 @@ public class SureGoodsActivity extends BaseActivity {
         initData();
         initView();
         initRecycler();
+        initSend();
+    }
+
+    private void initSend() {
 
     }
 
@@ -76,69 +81,57 @@ public class SureGoodsActivity extends BaseActivity {
         /**
          * 加载并缓存车牌号头的数据
          * */
+
+        List<CarNumberHead> headList = DataSupport.findAll(CarNumberHead.class);
+
         ArrayList<Session> sessions = (ArrayList<Session>) ACache.get(mActivity).getAsObject("sessions");
-        if (sessions != null)
+        Logger.i(sessions.get(5).getName());
+
+
+        //如果跟数据库长度相同则不作更改，不然则更新
+        if (sessions.size() == headList.size())
             sessionList.addAll(sessions);
+            //更新数据需要删除缓存
         else {
-            for (int i = 0; i < car_local.length; i++) {
+            sessions.clear();
+            Logger.i("" + headList.size());
+            for (int i = 0; i < headList.size(); i++) {
                 Session session = new Session();
-                session.setName(car_local[i]);
+                Logger.i("" + headList.get(i).getHeadName());
+                session.setName(headList.get(i).getHeadName());
                 sessionList.add(session);
             }
         }
+
+        List<StationInfo> stationInfos = DataSupport.findAll(StationInfo.class);
+
         /**
          * 加载收费站名的数据
          * */
         ArrayList<CarStation> stations = (ArrayList<CarStation>) ACache.get(mActivity).getAsObject("stations");
-        if (stations != null)
-            stationList.addAll(stations);
-        else {
-            for (int i = 0; i < station_names.length; i++) {
-                CarStation carStation = new CarStation();
-                carStation.setStationName(station_names[i]);
-                stationList.add(carStation);
+
+        if (stations != null) {
+            if (stations.size() == stationInfos.size()) {
+                stationList.addAll(stations);
+            } else {
+                stations.clear();
+                addStationData(stationInfos);
             }
+        } else {
+            addStationData(stationInfos);
+
         }
-
-        // sessionList.remove(sessionList.size()-1);
-        // sessionList.add(new Session(sessionList.size()));
-        ////////////////////////////////////////////////////////
-
-     /*   mList_local = new ArrayList<>();
-        for (int i = 0; i < car_local.length; i++) {
-            mList_local.add(car_local[i]);
-        }*/
-
-        initLitePal(car_local);
-
-        // TypedArray typedArray = this.getResources().obtainTypedArray(R.array.icon_array);
-       /* sessionList = new ArrayList<>();
-        for (int i = 0; i < car_local.length; i++) {
-            Session session = new Session();
-            session.setName(car_local[i]);
-            sessionList.add(session);
-        }
-
-        for (int i = 0; i < sessionList.size(); i++) {
-            Logger.i(sessionList.get(i).getName());
-        }*/
-       /* mRecycler_list = new ArrayList<>();
-        for (int i = 0; i < mHeadList.size(); i++) {
-           mRecycler_list.add(mHeadList.get(i).getHeadName());
-        }*/
-
     }
 
     /**
-     * 填充数据库
-     *
-     * @param car_local
+     * 填充station的数据
+     * @param stationInfos
      */
-    private void initLitePal(String[] car_local) {
-        for (int i = 0; i < car_local.length; i++) {
-            CarNumberHead head = new CarNumberHead();
-            head.setHeadName(car_local[i]);
-            head.save();
+    private void addStationData(List<StationInfo> stationInfos) {
+        for (int i = 0; i < stationInfos.size(); i++) {
+            CarStation carStation = new CarStation();
+            carStation.setStationName(stationInfos.get(i).getStationName());
+            stationList.add(carStation);
         }
     }
 
@@ -172,7 +165,7 @@ public class SureGoodsActivity extends BaseActivity {
         //mEt_change1.setText("鲁A888888");
 
         mEt_change1.setText(sessionList.get(0).getName());
-        mEt_change2.setText("泰安东收费站");
+        mEt_change2.setText(stationList.get(0).getStationName());
         mEt_change3.setHint("西兰花");
 
 //        mEt_change1.setFocusable(false);
@@ -191,7 +184,7 @@ public class SureGoodsActivity extends BaseActivity {
                         .setmAdapter(new SureCarNumberAdapter(mActivity, sessionList, new SureCarNumberAdapter.onItemClick() {
                             @Override
                             public void itemClick(Session session, int position) {
-                                updatePupop(position);
+                                updatePupop(position, 001);
                             }
 
                             @Override
@@ -211,42 +204,36 @@ public class SureGoodsActivity extends BaseActivity {
                         .build();
 
 
-                mAdapter = SpinnerPopupWindow.Builder.getmAdapter();
+                mHeadAdapter = SpinnerPopupWindow.Builder.getmAdapter();
 
                 mPopupWindow_1.showPopWindowCenter(v);
             }
         });
 
-       /* *//**
-         * 收费站名称点击事件
-         *//*
         mEt_change2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
                         .setmLayoutManager(null, 0)
-                        .setmAdapter(new SureCarStationAdapter(mActivity,
-                                stationList,
-                                new SureBaseAdapter.onItemClick<CarStation>() {
-                                    @Override
-                                    public void itemClick(int position, CarStation carStation) {
-                                            updatePupop(position);
-                                            carStation.setTop(1);
-                                            refreshView(002);
-                                    }
-                                }))
-                                .setmHeight(500).setmWidth(800)
-                                .setOutsideTouchable(true)
-                                .setFocusable(true)
-                                .build();
+                        .setmAdapter(new SureCarStationAdapter(mActivity, stationList, new SureCarStationAdapter.onItemClick() {
+                            @Override
+                            public void itemClick(CarStation station, int position) {
+                                updatePupop(position, 002);
+                                station.setIsTop(1);
+                                station.setTime(System.currentTimeMillis());
+                                refreshView(002);
+                            }
+                        }))
+                        .setmHeight(700).setmWidth(800)
+                        .setOutsideTouchable(true)
+                        .setFocusable(true)
+                        .build();
 
-
-                mAdapter = SpinnerPopupWindow.Builder.getmAdapter();
-
+                mStationAdapter = SpinnerPopupWindow.Builder.getmAdapter();
                 mPopupWindow_2.showPopWindowCenter(v);
             }
+
         });
-*/
 
         /**
          * 货物的点击事件
@@ -294,31 +281,36 @@ public class SureGoodsActivity extends BaseActivity {
      * 将未上传车辆的数字减去一
      */
     private void CarNumberCut() {
-        SPUtils.cut_one(mActivity,SPUtils.CAR_NOT_COUNT);
+        SPUtils.cut_one(mActivity, SPUtils.CAR_NOT_COUNT);
         int cra_not_count = (int) SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0);
-        Logger.i("cra_not_count------------"+cra_not_count);
+        Logger.i("cra_not_count------------" + cra_not_count);
     }
 
     private void refreshView(int stype) {
         if (stype == 001) {
             Collections.sort(sessionList);
-            mAdapter.notifyDataSetChanged();
+            mHeadAdapter.notifyDataSetChanged();
         }
         if (stype == 002) {
             Collections.sort(stationList);
-            mAdapter.notifyDataSetChanged();
+            mStationAdapter.notifyDataSetChanged();
         }
 
     }
 
-    private void updatePupop(int position) {
-        mEt_change1.setText(sessionList.get(position).getName());
-        mEt_change1.setSelection((sessionList.get(position).getName()).length());
+    private void updatePupop(int position, int type) {
+        if (type == 001) {
+            mEt_change1.setText(sessionList.get(position).getName());
+            mEt_change1.setSelection((sessionList.get(position).getName()).length());
+            mPopupWindow_1.dismissPopWindow();
+        } else if (type == 002) {
+            mEt_change2.setText(stationList.get(position).getStationName());
+            mEt_change2.setSelection((stationList.get(position).getStationName()).length());
+            mPopupWindow_2.dismissPopWindow();
+        }
 
         //指定操作
 
-
-        mPopupWindow_1.dismissPopWindow();
 
     }
 

@@ -1,12 +1,16 @@
 package com.zero.wolf.greenroad;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,15 +27,18 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.ImageProcessor;
 import com.zero.wolf.greenroad.tools.SPUtils;
-import com.zero.wolf.greenroad.view.CircleImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class PhotoActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     public static final int TYPE_NUMBER = 101;
     public static final int TYPE_BODY = 102;
@@ -65,11 +72,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private int LicensePlateColor;
 
     private AppCompatActivity mActivity;
-    private ToggleButton mToggleButton;
+
     //private RoundedImageView mShow_3_1_car_number;
-    private CircleImageView mShow_3_1_car_number;
-    private CircleImageView mShow_3_2_car_body;
-    private CircleImageView mShow_3_3_car_goods;
+    private RoundedImageView mShow_3_1_car_number;
+    private RoundedImageView mShow_3_2_car_body;
+    private RoundedImageView mShow_3_3_car_goods;
 
     private RoundedImageView mIv_car_number;
     private RoundedImageView mIv_car_body;
@@ -80,13 +87,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private Uri mPhotoUri;
     private String mFilePath;
     private ToggleButton mToggleButton_color;
-    private ToggleButton mToggleButton_shut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-
 
         mActivity = this;
         mFilePath = Environment.getExternalStorageState().toString();
@@ -113,9 +119,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         mIv_car_goods = (RoundedImageView) findViewById(R.id.iv_car_goods);
         //展示的
         //mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
-        mShow_3_1_car_number = (CircleImageView) findViewById(R.id.show_3_1_car_number);
-        mShow_3_2_car_body = (CircleImageView) findViewById(R.id.show_3_2_car_body);
-        mShow_3_3_car_goods = (CircleImageView) findViewById(R.id.show_3_3_car_goods);
+        mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
+        mShow_3_2_car_body = (RoundedImageView) findViewById(R.id.show_3_2_car_body);
+        mShow_3_3_car_goods = (RoundedImageView) findViewById(R.id.show_3_3_car_goods);
 
         mBt_ok_send = (Button) findViewById(R.id.bt_ok_send);
 
@@ -199,6 +205,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+
     private void enterSureGoodsActivity() {
 
         carNumberCount();
@@ -227,11 +234,13 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         if (mFilePath != null) {
             mFilePath = null;
-            mFilePath = Environment.getExternalStorageDirectory().toString();
+            mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
         }
         if (type_int == TYPE_NUMBER) {
             mFilePath = mFilePath + "/" + System.currentTimeMillis()
                     + "number.jpg";
+            Logger.i(mFilePath);
         } else if (type_int == TYPE_BODY) {
             mFilePath = mFilePath + "/" + System.currentTimeMillis()
                     + "body.jpg";
@@ -245,6 +254,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
 
+        verifyStoragePermissions(mActivity);
         if (type_int == TYPE_NUMBER) {
             startActivityForResult(intent, TYPE_NUMBER);
         } else if (type_int == TYPE_BODY) {
@@ -261,100 +271,25 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         if (resultCode == RESULT_OK) {
             if (requestCode == TYPE_NUMBER) {
-
-                FileInputStream fis = null;
-                try {
-                    Logger.i(mFilePath);
-                    fis = new FileInputStream(mFilePath);
-                    Logger.i(fis.toString());
-                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                    Logger.i(bitmap.toString());
-                    mShow_3_1_car_number.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-
-                }
+                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
+                ImageProcessor processor = new ImageProcessor(bitmap);
+                Bitmap bitmap1 = processor.scale((float) 0.2);
+                mShow_3_1_car_number.setImageBitmap(bitmap1);
+            } else if (requestCode == TYPE_BODY) {
+                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
+                ImageProcessor processor = new ImageProcessor(bitmap);
+                Bitmap bitmap1 = processor.scale((float) 0.2);
+                mShow_3_2_car_body.setImageBitmap(bitmap1);
+            } else {
+                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
+                ImageProcessor processor = new ImageProcessor(bitmap);
+                Bitmap bitmap1 = processor.scale((float) 0.2);
+                mShow_3_3_car_goods.setImageBitmap(bitmap1);
             }
-
         }
-
-       /* Logger.i(String.valueOf(resultCode == NONE));
-
-        if (resultCode == NONE)
-            return;*/
-/*
-        // 拍照
-        if (requestCode == TYPE_NUMBER) {
-            //设置文件保存路径这里放在跟目录下
-            startPhotoZoom(mPhotoUri, TYPE_NUMBER);
-        } else if (requestCode == TYPE_BODY) {
-            startPhotoZoom(mPhotoUri, TYPE_BODY);
-        } else if (requestCode == TYPE_GOODS) {
-            startPhotoZoom(mPhotoUri, TYPE_GOODS);
-        }
-*/
-       /* if (data == null)
-            return;*/
-
-      /*  // 读取相册缩放图片
-        if (requestCode == PHOTOZOOM) {
-            startPhotoZoom(data.getData(), TYPE_NUMBER);
-        }*/
-
-      /*  // 处理结果
-        if (requestCode == TYPE_NUMBER) {
-            showPicture(data, PHOTOHRAPH_NUMBER);
-        } else if (requestCode == TYPE_BODY) {
-            showPicture(data, PHOTOHRAPH_BODY);
-        } else if (requestCode == TYPE_GOODS) {
-            showPicture(data, PHOTOHRAPH_GOODS);
-        }*/
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showPicture(Intent data, int type_int) {
-        Bundle extras = data.getExtras();
-        if (extras != null) {
-            Bitmap photo = extras.getParcelable("data");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
-
-            if (type_int == PHOTOHRAPH_NUMBER) {
-                mShow_3_1_car_number.setImageBitmap(photo);
-            } else if (type_int == PHOTOHRAPH_BODY) {
-                mShow_3_2_car_body.setImageBitmap(photo);
-            } else if (type_int == PHOTOHRAPH_GOODS) {
-                mShow_3_3_car_goods.setImageBitmap(photo);
-            }
-        }
-    }
-
- /*   private void savePictrue(int type_int) {
-        //File picture = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");
-        startPhotoZoom(mPhotoUri, type_int);
-        //Intent intent = getIntent();
-    }*/
-
-    public void startPhotoZoom(Uri uri, int type_int) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, IMAGE_UNSPECIFIED);
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 64);
-        intent.putExtra("outputY", 64);
-        intent.putExtra("return-data", true);
-        if (type_int == TYPE_NUMBER) {
-            startActivityForResult(intent, PHOTOHRAPH_NUMBER);
-        } else if (type_int == TYPE_BODY) {
-            startActivityForResult(intent, PHOTOHRAPH_BODY);
-        } else if (type_int == TYPE_GOODS) {
-            startActivityForResult(intent, PHOTOHRAPH_GOODS);
-        }
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -362,21 +297,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             case R.id.toggleButton_color:
                 analyzeCarColor(buttonView, isChecked);
                 break;
-         /*   case R.id.toggleButton_shut:
-                analyzeCarShut(isChecked);
-                break;*/
             default:
                 break;
-        }
-    }
-
-    private void analyzeCarShut(boolean isChecked) {
-        if (isChecked) {
-            currentShut = SHUT_CAMERA;
-            Logger.i("当前是拍照");
-        } else {
-            currentColor = SHUT_RECORDING;
-            Logger.i("当前是录制视频");
         }
     }
 
@@ -396,5 +318,24 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             Logger.i("当前是蓝牌");
         }
 
+    }
+
+
+
+    /**android API23过后需要动态的申请权限
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }

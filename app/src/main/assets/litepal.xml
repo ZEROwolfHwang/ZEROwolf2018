@@ -8,7 +8,7 @@
             For example:
             <dbname value="demo" />
         -->
-        <dbname value="numberplate" />
+        <dbname value="green" />
 
         <!--
             Define the version of your database. Each time you want
@@ -33,8 +33,9 @@
         -->
         <list>
             <mapping class="com.zero.wolf.greenroad.litepalbean.CarNumberHead" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.CarStationName" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.PhotoLite" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.StationInfo" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.GoodsInfo" />
 
         </list>
 

@@ -21,6 +21,15 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.AboutActivity;
+import com.zero.wolf.greenroad.bean.GoodsLite;
+import com.zero.wolf.greenroad.bean.NumberLite;
+import com.zero.wolf.greenroad.bean.StationDataBean;
+import com.zero.wolf.greenroad.bean.StationLite;
+import com.zero.wolf.greenroad.interfacy.HttpMethods;
+import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
+import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
+import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
+import com.zero.wolf.greenroad.litepalbean.StationInfo;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
@@ -30,6 +39,7 @@ import com.zero.wolf.greenroad.update.SubscriberOnNextListener;
 import com.zero.wolf.greenroad.view.CircleImageView;
 
 import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -39,6 +49,11 @@ import ezy.boost.update.IUpdateChecker;
 import ezy.boost.update.IUpdateParser;
 import ezy.boost.update.UpdateInfo;
 import ezy.boost.update.UpdateManager;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
@@ -71,6 +86,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
     private SubscriberOnNextListener getTopMovieOnNext;
+    private String mOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +98,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         mActivity = this;
 
-        Logger.i("123324");
 
         mFilePath = Environment.getExternalStorageDirectory().getPath();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,9 +106,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         //mTvOperator.setText("功成名就");
 
+        initData();
         initSp();
         initLitePal();
-        initData();
         initView();
 
 
@@ -123,12 +138,156 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initLitePal() {
         LitePal.getDatabase();
 
+        initStation();
+
+        initCarNumber();
+
+        HttpUtilsApi utilsApi = HttpMethods.getInstance().getApi();
+        Observable<GoodsLite<List<GoodsLite.DataBean>>> goodsInfo = utilsApi.getGoodsInfo();
+
+        goodsInfo.subscribeOn(Schedulers.io())
+                .map(new Func1<GoodsLite<List<GoodsLite.DataBean>>, List<GoodsLite.DataBean>>() {
+                    @Override
+                    public List<GoodsLite.DataBean> call(GoodsLite<List<GoodsLite.DataBean>> listGoodsLite) {
+                        return listGoodsLite.getData();
+                    }
+
+                }).unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<GoodsLite.DataBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        Logger.i("完成");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+
+                    }
+
+                    @Override
+                    public void onNext(List<GoodsLite.DataBean> dataBeen) {
+
+                    /*    List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
+                        boolean b = goodsInfo == null;
+                        Logger.i(""+b);*/
+                        /*if (goodsInfos.size() != 0) {
+                            if (dataBeen.size() == goodsInfos.size()) {
+                                Logger.i("返回");
+                            } else {*/
+                        for (int i = 0; i < dataBeen.size(); i++) {
+                            Logger.i("数据更新");
+                            GoodsInfo info = new GoodsInfo();
+                            info.setKind(dataBeen.get(i).getKind());
+                            info.setAlias(dataBeen.get(i).getAlias());
+                            info.setScientificname(dataBeen.get(i).getScientificname());
+                            info.setCargoid(dataBeen.get(i).getCargoid());
+                            info.save();
+                        }
+                    }
+                });
+
+    }
+
+    /**
+     * 接收到的车牌牌头的数据
+     */
+    private void initCarNumber() {
+        Observable<NumberLite<List<NumberLite.DataBean>>> numberInfo = HttpMethods.getInstance().getApi().getNumberInfo();
+        numberInfo.subscribeOn(Schedulers.io())
+                .map(new Func1<NumberLite<List<NumberLite.DataBean>>, List<NumberLite.DataBean>>() {
+                    @Override
+                    public List<NumberLite.DataBean> call(NumberLite<List<NumberLite.DataBean>> listNumberLite) {
+                        return listNumberLite.getData();
+                    }
+
+                })
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<NumberLite.DataBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(List<NumberLite.DataBean> dataBeen) {
+                        Logger.i(dataBeen.get(0).getPac());
+                        DataSupport.deleteAll(CarNumberHead.class);
+
+                        for (int i = 0; i < dataBeen.size(); i++) {
+                            CarNumberHead numberHead = new CarNumberHead();
+                            numberHead.setHeadName(dataBeen.get(i).getPac());
+                            numberHead.save();
+                        }
+
+                    }
+                });
+    }
+
+    /**
+     * 接收到的收费站站名的数据
+     */
+    private void initStation() {
+        HttpMethods httpMethods = HttpMethods.getInstance();
+        Observable<StationLite<List<StationDataBean>>> stationInfo = httpMethods.getApi().getStationInfo();
+
+        stationInfo.subscribeOn(Schedulers.io())
+                .map(new Func1<StationLite<List<StationDataBean>>, List<StationDataBean>>() {
+                    @Override
+                    public List<StationDataBean> call(StationLite<List<StationDataBean>> listStationLite) {
+                        return listStationLite.getData();
+                    }
+                })
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<StationDataBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<StationDataBean> stationDataBeen) {
+                        Logger.i("" + stationDataBeen.get(0).getId());
+                        Logger.i(stationDataBeen.get(0).getZhanname());
+                        Logger.i("" + stationDataBeen.get(1).getId());
+                        Logger.i(stationDataBeen.get(1).getZhanname());
+                        Logger.i("" + stationDataBeen.get(2).getId());
+                        Logger.i(stationDataBeen.get(2).getZhanname());
+
+                        DataSupport.deleteAll(StationInfo.class);
+                        for (int i = 0; i < stationDataBeen.size(); i++) {
+                            StationInfo info = new StationInfo();
+                            Logger.i(stationDataBeen.get(i).toString());
+                            info.setStationId(stationDataBeen.get(i).getId());
+                            info.setStationName(stationDataBeen.get(i).getZhanname());
+                            info.save();
+                        }
+
+                    }
+                });
     }
 
     private void initData() {
         SDcardSpace sDcardSpace = new SDcardSpace(mActivity);
         mAvailSpace = sDcardSpace.getAvailSpace();
         //Log.i(TAG, "initData: "+ mAvailSpace1);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        mOperator = (String) extras.get("operator");
     }
 
 
@@ -176,22 +335,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
 
 
-
-
     }
 
     private void initSp() {
         //如果cra_count为空则创建，否则不创建
         if (SPUtils.get(getApplicationContext(), SPUtils.CAR_COUNT, 0) == null) {
             Logger.i("zoule?");
-            SPUtils.putAndApply(getApplicationContext(),SPUtils.CAR_COUNT, 0);
+            SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_COUNT, 0);
         }
         //如果cra_not_count为空则创建，否则不创建
         if (SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0) == null) {
-            Logger.i("zoule?"+"ma");
+            Logger.i("zoule?" + "ma");
             SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
         }
     }
+
     private void initCount() {
         //找到两个计数的textview
         mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
@@ -199,13 +357,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTv_number_has_not_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has_not).findViewById(R.id.tv_math_number_main_has_not);
 
 
-        int count_shut = (int) SPUtils.get(getApplicationContext(),SPUtils.CAR_COUNT, 0);
+        int count_shut = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_COUNT, 0);
         int count_cut = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
 
         mTv_number_has_send.setText(String.valueOf(count_shut));
         mTv_number_has_not_send.setText(String.valueOf(count_cut));
     }
-
 
 
     @Override
@@ -273,8 +430,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         dialog.setPositiveButton("清空", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SPUtils.cancel_count(getApplicationContext(),SPUtils.CAR_COUNT);
-                SPUtils.cancel_count(getApplicationContext(),SPUtils.CAR_NOT_COUNT);
+                SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
+                SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
                 refresh();
             }
         });

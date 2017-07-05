@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
+import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
 
 import java.util.concurrent.TimeUnit;
 

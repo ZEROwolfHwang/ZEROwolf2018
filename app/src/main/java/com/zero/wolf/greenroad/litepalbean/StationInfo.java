@@ -3,12 +3,12 @@ package com.zero.wolf.greenroad.litepalbean;
 import org.litepal.crud.DataSupport;
 
 /**
- * Created by Administrator on 2017/6/27.
+ * Created by Administrator on 2017/7/5.
  */
 
-public class CarStationName extends DataSupport {
-
+public class StationInfo extends DataSupport{
     private String stationName;
+    private int stationId;
 
     public String getStationName() {
         return stationName;
@@ -16,5 +16,13 @@ public class CarStationName extends DataSupport {
 
     public void setStationName(String stationName) {
         this.stationName = stationName;
+    }
+
+    public int getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(int stationId) {
+        this.stationId = stationId;
     }
 }

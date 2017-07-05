@@ -1,7 +1,5 @@
 package com.zero.wolf.greenroad.bean;
 
-import com.zero.wolf.greenroad.tools.Session;
-
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -31,13 +29,12 @@ public class CarStation implements Serializable, Comparable {
 
     public long time;
 
-
-    public int isTop() {
+    public int getIsTop() {
         return isTop;
     }
 
-    public void setTop(int top) {
-        isTop = top;
+    public void setIsTop(int isTop) {
+        this.isTop = isTop;
     }
 
     public String getStationName() {
@@ -50,18 +47,18 @@ public class CarStation implements Serializable, Comparable {
 
     @Override
     public int compareTo(Object another) {
-        if (another == null || !(another instanceof Session)) {
+        if (another == null || !(another instanceof CarStation)) {
             return -1;
         }
 
-        Session otherSession = (Session) another;
+        CarStation otherSession = (CarStation) another;
         /**置顶判断 ArrayAdapter是按照升序从上到下排序的，就是默认的自然排序
          * 如果是相等的情况下返回0，包括都置顶或者都不置顶，返回0的情况下要
          * 再做判断，拿它们置顶时间进行判断
          * 如果是不相等的情况下，otherSession是置顶的，则当前session是非置顶的，应该在otherSession下面，所以返回1
          *  同样，session是置顶的，则当前otherSession是非置顶的，应该在otherSession上面，所以返回-1
          * */
-        int result = 0 - (isTop - otherSession.getTop());
+        int result = 0 - (isTop - otherSession.getIsTop());
         if (result == 0) {
             result = 0 - compareToTime(time, otherSession.getTime());
         }

@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/com.zero.wolf.greenroad.view.CircleImageView"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="@dimen/layout_margin10dp"
     android:id="@+id/show_3_photo"
-    android:orientation="horizontal"
-    android:gravity="center"
-    android:layout_weight="1"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:layout_marginTop="@dimen/layout_margin10dp"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="horizontal"
     tools:showIn="@layout/activity_photo">
 
 
-    <com.zero.wolf.greenroad.view.CircleImageView
+    <com.makeramen.roundedimageview.RoundedImageView
 
         android:id="@+id/show_3_1_car_number"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="center"
         android:src="@drawable/car_number_light"
-        android:scaleType="fitCenter"
-        custom:imageType="circle"/>
-    <com.zero.wolf.greenroad.view.CircleImageView
+        app:riv_corner_radius="@dimen/layout_margin10dp"
+        app:riv_oval="true"/>
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/show_3_2_car_body"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:scaleType="fitCenter"
-        android:id="@+id/show_3_2_car_body"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:scaleType="center"
         android:src="@drawable/car_body_light"
-        custom:imageType="circle"/>
-    <com.zero.wolf.greenroad.view.CircleImageView
+        app:riv_corner_radius="@dimen/layout_margin10dp"
+        app:riv_oval="true"/>
+
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/show_3_3_car_goods"
-        android:layout_weight="1"
-        android:scaleType="fitCenter"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="center"
         android:src="@drawable/car_goods_light"
-        custom:imageType="circle"/>
+        app:riv_corner_radius="@dimen/layout_margin10dp"
+        app:riv_oval="true"/>
 
 </LinearLayout>

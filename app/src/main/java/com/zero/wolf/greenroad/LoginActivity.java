@@ -13,10 +13,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.bean.LoginName;
+import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
+import com.zero.wolf.greenroad.tools.ToastUtils;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -51,8 +62,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.popup_button:
                 initData();
                 mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
-                        .setmLayoutManager(null,0)
-                        .setmAdapter(new SpinnerAdapter(this,mList, new onItemClick() {
+                        .setmLayoutManager(null, 0)
+                        .setmAdapter(new SpinnerAdapter(this, mList, new onItemClick() {
                             @Override
                             public void itemClick(int position) {
                                 updatePopup(position);
@@ -88,13 +99,85 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void startMainActivity() {
-        if (mEt_user_name.getText().toString().equals("123456") &&
+
+        String username = mEt_user_name.getText().toString();
+        String password = mEt_password.getText().toString();
+
+        Retrofit.Builder builder = new Retrofit.Builder();
+        Retrofit retrofit = builder.baseUrl("http://192.168.2.122/lvsetondao/index.php/Home/Login/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        HttpUtilsApi httpUtilsApi = retrofit.create(HttpUtilsApi.class);
+        Call<LoginName> login = httpUtilsApi.login(username, password);
+        login.enqueue(new Callback<LoginName>() {
+            @Override
+            public void onResponse(Call<LoginName> call, Response<LoginName> response) {
+                int code = response.code();
+                int code1 = response.body().getCode();
+                String msg = response.body().getMsg();
+                String name = response.body().getData();
+                Logger.i(""+code);
+                Logger.i(""+code1);
+                Logger.i(""+msg);
+                Logger.i(""+name);
+                if (code == 200) {
+                    if (code1 == 200) {
+                        ToastUtils.singleToast(msg);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("operator", name);
+                        startActivity(intent);
+                    } else if (code1 == 201) {
+                        ToastUtils.singleToast(msg);
+
+                    } else if (code1 == 202) {
+
+                        ToastUtils.singleToast(msg);
+                    } else if (code1 == 203) {
+
+                        ToastUtils.singleToast(msg);
+                    } else if (code1 == 204) {
+                        ToastUtils.singleToast(msg);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginName> call, Throwable t) {
+                Logger.i(t.getMessage());
+            }
+        });
+
+       /* Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Home/Login/")
+              //  .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+        HttpUtilsApi httpUtilsApi = retrofit.create(HttpUtilsApi.class);
+
+        Call<ResultCar> doPost = httpUtilsApi.doPost("admin", "admin");
+        doPost.enqueue(new Callback<ResultCar>() {
+            @Override
+            public void onResponse(Call<ResultCar> call, Response<ResultCar> response) {
+                Logger.i(""+response.code());
+                Logger.i(""+response.isSuccessful());
+                Logger.i(""+response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResultCar> call, Throwable t) {
+                Logger.i(t.getMessage());
+            }
+        });
+*/
+        /*if (mEt_user_name.getText().toString().equals("123456") &&
                 mEt_password.getText().toString().equals("abc")) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
             Toast.makeText(LoginActivity.this, "账号密码错误", Toast.LENGTH_SHORT).show();
-        } 
+        } */
     }
 
     class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHolder> {
@@ -125,7 +208,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(LoginActivity.this, "第" + position + "个条目被点击了", Toast.LENGTH_SHORT).show();
-                  //  int layoutPosition = holder.getLayoutPosition();
+                    //  int layoutPosition = holder.getLayoutPosition();
                     notifyDataSetChanged();
                     mItemClick.itemClick(position);
                 }
@@ -150,7 +233,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
     }
-        public interface onItemClick {
-            void itemClick(int position);
-        }
+
+    public interface onItemClick {
+        void itemClick(int position);
+    }
 }
