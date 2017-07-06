@@ -1,7 +1,10 @@
-package com.zero.wolf.greenroad;
+package com.zero.wolf.greenroad.activity;
 
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.NavigationView;
@@ -20,7 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.activity.AboutActivity;
+import com.zero.wolf.greenroad.NetWorkStateReceiver;
+import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.GoodsLite;
 import com.zero.wolf.greenroad.bean.NumberLite;
 import com.zero.wolf.greenroad.bean.StationDataBean;
@@ -30,6 +34,7 @@ import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
 import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
 import com.zero.wolf.greenroad.litepalbean.StationInfo;
+import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
@@ -87,7 +92,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private SubscriberOnNextListener getTopMovieOnNext;
     private String mOperator;
+    private boolean mIsConnected;
+    private String mUsername;
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -116,6 +124,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                intent.putExtra("username", mUsername);
                 startActivity(intent);
 
             }
@@ -142,6 +151,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         initCarNumber();
 
+        initGoodsLite();
+    }
+
+    /**
+     * 更新goods数据库
+     */
+    private void initGoodsLite() {
         HttpUtilsApi utilsApi = HttpMethods.getInstance().getApi();
         Observable<GoodsLite<List<GoodsLite.DataBean>>> goodsInfo = utilsApi.getGoodsInfo();
 
@@ -169,30 +185,43 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     @Override
                     public void onNext(List<GoodsLite.DataBean> dataBeen) {
 
-                    /*    List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
+                        List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
                         boolean b = goodsInfo == null;
-                        Logger.i(""+b);*/
-                        /*if (goodsInfos.size() != 0) {
+                        Logger.i("" + b);
+                        if (goodsInfos.size() != 0) {
                             if (dataBeen.size() == goodsInfos.size()) {
+                                Logger.i("该方法走了没1");
                                 Logger.i("返回");
-                            } else {*/
-                        for (int i = 0; i < dataBeen.size(); i++) {
-                            Logger.i("数据更新");
-                            GoodsInfo info = new GoodsInfo();
-                            info.setKind(dataBeen.get(i).getKind());
-                            info.setAlias(dataBeen.get(i).getAlias());
-                            info.setScientificname(dataBeen.get(i).getScientificname());
-                            info.setCargoid(dataBeen.get(i).getCargoid());
-                            info.save();
+                                return;
+                            } else {
+                                Logger.i("该方法走了没2");
+                                DataSupport.deleteAll(GoodsInfo.class);
+                                goodsInfoFore(dataBeen);
+                            }
+                        } else {
+                            goodsInfoFore(dataBeen);
                         }
                     }
-                });
 
+                });
+    }
+
+    private void goodsInfoFore(List<GoodsLite.DataBean> dataBeen) {
+        for (int i = 0; i < dataBeen.size(); i++) {
+            Logger.i("该方法走了没3");
+            Logger.i("数据更新");
+            GoodsInfo info = new GoodsInfo();
+            info.setAlias(dataBeen.get(i).getAlias());
+            info.setScientificname(dataBeen.get(i).getScientificname());
+            info.setCargoid(dataBeen.get(i).getCargoid());
+            info.save();
+        }
     }
 
     /**
      * 接收到的车牌牌头的数据
      */
+
     private void initCarNumber() {
         Observable<NumberLite<List<NumberLite.DataBean>>> numberInfo = HttpMethods.getInstance().getApi().getNumberInfo();
         numberInfo.subscribeOn(Schedulers.io())
@@ -220,7 +249,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     public void onNext(List<NumberLite.DataBean> dataBeen) {
                         Logger.i(dataBeen.get(0).getPac());
                         DataSupport.deleteAll(CarNumberHead.class);
-
                         for (int i = 0; i < dataBeen.size(); i++) {
                             CarNumberHead numberHead = new CarNumberHead();
                             numberHead.setHeadName(dataBeen.get(i).getPac());
@@ -288,6 +316,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         mOperator = (String) extras.get("operator");
+        mUsername = (String) extras.get("username");
+
     }
 
 
@@ -319,10 +349,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
 
 
-        tv_change1.setText("李树人");
+        tv_change1.setText(mOperator);
         tv_change2.setText(mAvailSpace);
         // mTv_change3.setText("良好");
-
+        mIsConnected = NetWorkManager.isnetworkConnected(mActivity);
+        if (mIsConnected) {
+            mTv_change3.setText("良好");
+            mTv_change3.setTextColor(Color.BLUE);
+        } else {
+            mTv_change3.setText("网络未连接");
+            mTv_change3.setTextColor(Color.RED);
+        }
     /*    mNetWorkStateReceiver.setNetworkStationListener(new NetWorkStateReceiver.NetworkStation() {
             @Override
             public void onStation(String netStation) {
@@ -365,6 +402,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -391,6 +429,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -25,7 +25,7 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
     private final   ArrayList<Session>  mListLocal;
 
     private onItemClick itemClick;
-    private int selectedItem;
+
 
     public SureCarNumberAdapter(AppCompatActivity activity,
                                 List<Session> list_head, onItemClick itemClick) {

@@ -81,18 +81,19 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_weight="1"
+    <!-- <LinearLayout
+         android:layout_weight="1"
+         android:layout_width="match_parent"
+         android:layout_height="0dp">-->
+
+    <!--  </LinearLayout>-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_goods"
         android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="0dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_goods"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+    </android.support.v7.widget.RecyclerView>
 
     <Button
         android:id="@+id/bt_ok_msg"

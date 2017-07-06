@@ -1,5 +1,6 @@
 package com.zero.wolf.greenroad.interfacy;
 
+import com.zero.wolf.greenroad.bean.AcceptResult;
 import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
 import com.zero.wolf.greenroad.bean.GoodsLite;
@@ -10,13 +11,16 @@ import com.zero.wolf.greenroad.bean.StationLite;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import rx.Observable;
 
 /**
@@ -65,6 +69,18 @@ public interface HttpUtilsApi {
 
     @GET("goods")
     Observable<GoodsLite<List<GoodsLite.DataBean>>> getGoodsInfo();
+
+    @Multipart
+    @POST("accept")
+    Observable<AcceptResult> postAccept(@Part MultipartBody.Part file);
+
+    @Multipart
+    @POST("image")
+    Observable<AcceptResult> postOneImg(@Part MultipartBody.Part file);
+
+    @Multipart
+    @POST("image")
+    Observable<AcceptResult> postThreeImg(@Part List<MultipartBody.Part> partList);
 
 
 }

@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zero.wolf.greenroad.BasicActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
@@ -18,7 +17,7 @@ import com.zero.wolf.greenroad.tools.SPUtils;
  * Created by Administrator on 2017/7/3.
  */
 
-public class AboutActivity extends BasicActivity {
+public class AboutActivity extends BaseActivity {
 
 /*    @BindView(R.id.activity_about_user_agreement)
     TextView mActivityAboutUserAgreement;*/

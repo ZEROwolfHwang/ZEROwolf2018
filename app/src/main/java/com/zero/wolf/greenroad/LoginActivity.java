@@ -11,14 +11,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.activity.BaseActivity;
+import com.zero.wolf.greenroad.activity.MainActivity;
 import com.zero.wolf.greenroad.bean.LoginName;
 import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
+import com.zero.wolf.greenroad.litepalbean.LoginUserInfo;
+import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +47,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.text_password)
     EditText mEt_password;
     private SpinnerPopupWindow mPopupWindow;
+    private boolean mIsConnected;
+    private List<LoginUserInfo> mLoginUserInfos;
 
 
     @Override
@@ -48,6 +57,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        Connector.getDatabase();
 
         mPopup_button = (ImageButton) findViewById(R.id.popup_button);
         mPopup_button.setOnClickListener(this);
@@ -63,7 +74,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 initData();
                 mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
                         .setmLayoutManager(null, 0)
-                        .setmAdapter(new SpinnerAdapter(this, mList, new onItemClick() {
+                        .setmAdapter(new SpinnerAdapter(this, mLoginUserInfos, new onItemClick() {
                             @Override
                             public void itemClick(int position) {
                                 updatePopup(position);
@@ -86,16 +97,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void updatePopup(int position) {
-        mEt_user_name.setText(mList.get(position));
+        mEt_user_name.setText(mLoginUserInfos.get(position).getUsername());
+        mEt_password.setText(mLoginUserInfos.get(position).getPassword());
         mPopupWindow.dismissPopWindow();
 
     }
 
     private void initData() {
-        mList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            mList.add("title" + i);
-        }
+        Connector.getDatabase();
+        mLoginUserInfos = DataSupport.findAll(LoginUserInfo.class);
     }
 
     private void startMainActivity() {
@@ -103,6 +113,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String username = mEt_user_name.getText().toString();
         String password = mEt_password.getText().toString();
 
+        mIsConnected = NetWorkManager.isnetworkConnected(this);
+        if (mIsConnected) {
+            loginFromNet(username, password);
+        } else {
+            List<LoginUserInfo> userInfos = DataSupport
+                    .where("username=? and password = ?", username, password)
+                    .find(LoginUserInfo.class);
+            if (userInfos.size() == 0) {
+                ToastUtils.singleToast("无网络连接状态下本地库未存储该账号");
+            } else if (userInfos.size() == 1) {
+                String operator = userInfos.get(0).getOperator();
+                login2MainActivity(operator, username);
+                ToastUtils.singleToast("无网络连接状态登陆成功");
+            }
+        }
+    }
+
+    /**
+     * 有网络的状态下登录
+     * @param username
+     * @param password
+     */
+    private void loginFromNet(String username, String password) {
         Retrofit.Builder builder = new Retrofit.Builder();
         Retrofit retrofit = builder.baseUrl("http://192.168.2.122/lvsetondao/index.php/Home/Login/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -117,16 +150,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 int code1 = response.body().getCode();
                 String msg = response.body().getMsg();
                 String name = response.body().getData();
-                Logger.i(""+code);
-                Logger.i(""+code1);
-                Logger.i(""+msg);
-                Logger.i(""+name);
+                Logger.i("" + code);
+                Logger.i("" + code1);
+                Logger.i("" + msg);
+                Logger.i("" + name);
                 if (code == 200) {
                     if (code1 == 200) {
+
+                        List<LoginUserInfo> userInfos = DataSupport
+                                .where("username=? and password = ? and operator = ?", username, password,name)
+                                .find(LoginUserInfo.class);
+                        if (userInfos.size() == 0) {
+                            LoginUserInfo userInfo = new LoginUserInfo();
+                            userInfo.setUsername(username);
+                            userInfo.setPassword(password);
+                            userInfo.setOperator(name);
+                            userInfo.save();
+                        }
+
                         ToastUtils.singleToast(msg);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("operator", name);
-                        startActivity(intent);
+                        login2MainActivity(name,username);
                     } else if (code1 == 201) {
                         ToastUtils.singleToast(msg);
 
@@ -147,50 +190,30 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Logger.i(t.getMessage());
             }
         });
+    }
 
-       /* Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Home/Login/")
-              //  .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-
-        HttpUtilsApi httpUtilsApi = retrofit.create(HttpUtilsApi.class);
-
-        Call<ResultCar> doPost = httpUtilsApi.doPost("admin", "admin");
-        doPost.enqueue(new Callback<ResultCar>() {
-            @Override
-            public void onResponse(Call<ResultCar> call, Response<ResultCar> response) {
-                Logger.i(""+response.code());
-                Logger.i(""+response.isSuccessful());
-                Logger.i(""+response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<ResultCar> call, Throwable t) {
-                Logger.i(t.getMessage());
-            }
-        });
-*/
-        /*if (mEt_user_name.getText().toString().equals("123456") &&
-                mEt_password.getText().toString().equals("abc")) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-        } else {
-            Toast.makeText(LoginActivity.this, "账号密码错误", Toast.LENGTH_SHORT).show();
-        } */
+    /**
+     * 登录成功进入mainActivity
+     */
+    private void login2MainActivity(String name, String username) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("operator", name);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 
     class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHolder> {
 
         private final AppCompatActivity mActivity;
 
-        private final ArrayList<String> mList_adapter;
-        private final onItemClick mItemClick;
 
-        public SpinnerAdapter(AppCompatActivity activity, ArrayList<String> list, onItemClick itemClick) {
+        private final onItemClick mItemClick;
+        private final List<LoginUserInfo> mList;
+
+        public SpinnerAdapter(AppCompatActivity activity, List<LoginUserInfo> list, onItemClick itemClick) {
             mItemClick = itemClick;
             mActivity = activity;
-            mList_adapter = list;
+            mList = list;
         }
 
         @Override
@@ -203,11 +226,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         @Override
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            holder.tv.setText(LoginActivity.this.mList.get(position));
+            holder.tv.setText(mList.get(position).getUsername());
             holder.tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(LoginActivity.this, "第" + position + "个条目被点击了", Toast.LENGTH_SHORT).show();
                     //  int layoutPosition = holder.getLayoutPosition();
                     notifyDataSetChanged();
                     mItemClick.itemClick(position);
@@ -217,7 +239,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         @Override
         public int getItemCount() {
-            return mList_adapter.size();
+            return mList.size();
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {

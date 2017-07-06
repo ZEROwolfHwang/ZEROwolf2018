@@ -1,6 +1,6 @@
 package com.zero.wolf.greenroad.litepalbean;
 
-import android.graphics.Bitmap;
+import java.util.UUID;
 
 /**
  * Created by Administrator on 2017/7/3.
@@ -8,56 +8,63 @@ import android.graphics.Bitmap;
 
 public class PhotoLite {
 
-    private int id;
-    private Bitmap bitmap_number;
-    private Bitmap bitmap_body;
-    private Bitmap bitmap_goods;
-
-
+    private UUID uuid;
+    private String photoPath1;
+    private String photoPath2;
+    private String photoPath3;
     private String license_color;
-    private String name;
+    private String username;
     private String station;
     private String license_plate;
     private String goods;
 
-    public int getId() {
-        return id;
+
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
-    public Bitmap getBitmap_number() {
-        return bitmap_number;
+    public String getPhotoPath1() {
+        return photoPath1;
     }
 
-    public void setBitmap_number(Bitmap bitmap_number) {
-        this.bitmap_number = bitmap_number;
+    public void setPhotoPath1(String photoPath1) {
+        this.photoPath1 = photoPath1;
     }
 
-    public Bitmap getBitmap_body() {
-        return bitmap_body;
+    public String getPhotoPath2() {
+        return photoPath2;
     }
 
-    public void setBitmap_body(Bitmap bitmap_body) {
-        this.bitmap_body = bitmap_body;
+    public void setPhotoPath2(String photoPath2) {
+        this.photoPath2 = photoPath2;
     }
 
-    public Bitmap getBitmap_goods() {
-        return bitmap_goods;
+    public String getPhotoPath3() {
+        return photoPath3;
     }
 
-    public void setBitmap_goods(Bitmap bitmap_goods) {
-        this.bitmap_goods = bitmap_goods;
+    public void setPhotoPath3(String photoPath3) {
+        this.photoPath3 = photoPath3;
     }
 
-    public String getName() {
-        return name;
+    public String getLicense_color() {
+        return license_color;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLicense_color(String license_color) {
+        this.license_color = license_color;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getStation() {
@@ -82,12 +89,5 @@ public class PhotoLite {
 
     public void setGoods(String goods) {
         this.goods = goods;
-    }
-    public String getLicense_color() {
-        return license_color;
-    }
-
-    public void setLicense_color(String license_color) {
-        this.license_color = license_color;
     }
 }

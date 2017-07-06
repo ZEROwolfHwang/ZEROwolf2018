@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".MainActivity"
+    tools:context=".activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
 

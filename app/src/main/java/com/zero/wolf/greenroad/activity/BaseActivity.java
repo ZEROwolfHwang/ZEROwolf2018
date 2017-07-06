@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad;
+package com.zero.wolf.greenroad.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context="com.zero.wolf.greenroad.PhotoActivity">
+    android:background="@drawable/comment_layout_backgroup"
+    tools:context="com.zero.wolf.greenroad.activity.PhotoActivity">
 
 
     <android.support.v7.widget.Toolbar
@@ -32,7 +33,7 @@
     <LinearLayout
         android:id="@+id/layout_number"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
@@ -44,8 +45,8 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_car_number"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="fitCenter"
             android:src="@drawable/car_number_dark"
             app:riv_border_width="3dp"
@@ -61,13 +62,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:orientation="horizontal">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_car_body"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="fitCenter"
             android:src="@drawable/car_body_dark"
             app:riv_border_width="3dip"
@@ -87,7 +88,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="@dimen/layout_margin40dp"
         android:orientation="horizontal">
 
         <TextView
@@ -98,14 +100,16 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_car_goods"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="fitCenter"
-            app:riv_border_color="@color/toolbar_color"
             android:src="@drawable/car_goods_dark"
-            app:riv_border_width="3dip"
+            app:riv_border_width="3dp"
+            app:riv_border_color="@color/toolbar_color"
+            app:riv_mutate_background="true"
             app:riv_corner_radius_bottom_right="20dp"
             app:riv_corner_radius_top_left="20dp"
+            android:paddingRight="@dimen/layout_margin10dp"
             app:riv_oval="false"/>
 
     </LinearLayout>

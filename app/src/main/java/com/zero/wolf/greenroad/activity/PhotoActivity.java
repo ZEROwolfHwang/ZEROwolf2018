@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad;
+package com.zero.wolf.greenroad.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,7 +25,7 @@ import android.widget.ToggleButton;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.activity.SureGoodsActivity;
+import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -86,7 +86,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
     private Uri mPhotoUri;
     private String mFilePath;
+    private String mFilePath1;
+    private String mFilePath2;
+    private String mFilePath3;
     private ToggleButton mToggleButton_color;
+    private String mUsername;
 
 
     @Override
@@ -95,9 +99,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_photo);
 
         mActivity = this;
-        mFilePath = Environment.getExternalStorageState().toString();
+        mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-
+        Intent intent = getIntent();
+        mUsername = intent.getStringExtra("username");
         initView();
 
     }
@@ -210,8 +215,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         carNumberCount();
 
-        Intent intent = new Intent(PhotoActivity.this, SureGoodsActivity.class);
-        startActivity(intent);
+        SureGoodsActivity.actionStart(PhotoActivity.this,
+                mUsername, mFilePath1, mFilePath2, mFilePath3);
 
     }
 
@@ -232,27 +237,25 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if (mFilePath != null) {
+   /*     if (mFilePath != null) {
             mFilePath = null;
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        }
+        }*/
         if (type_int == TYPE_NUMBER) {
-            mFilePath = mFilePath + "/" + System.currentTimeMillis()
+            mFilePath1 = mFilePath + "/" + System.currentTimeMillis()
                     + "number.jpg";
+            savePath(mFilePath1, intent);
             Logger.i(mFilePath);
         } else if (type_int == TYPE_BODY) {
-            mFilePath = mFilePath + "/" + System.currentTimeMillis()
+            mFilePath2 = mFilePath + "/" + System.currentTimeMillis()
                     + "body.jpg";
+            savePath(mFilePath2, intent);
         } else if (type_int == TYPE_GOODS) {
-            mFilePath = mFilePath + "/" + System.currentTimeMillis()
+            mFilePath3 = mFilePath + "/" + System.currentTimeMillis()
                     + "goods.jpg";
-
+            savePath(mFilePath3, intent);
         }
-
-        mPhotoUri = Uri.fromFile(new File(mFilePath));
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
 
         verifyStoragePermissions(mActivity);
         if (type_int == TYPE_NUMBER) {
@@ -265,29 +268,32 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    private void savePath(String filePath, Intent intent) {
+        Uri mPhotoUri = Uri.fromFile(new File(filePath));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == TYPE_NUMBER) {
-                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
-                ImageProcessor processor = new ImageProcessor(bitmap);
-                Bitmap bitmap1 = processor.scale((float) 0.2);
-                mShow_3_1_car_number.setImageBitmap(bitmap1);
+                showBitmap(mFilePath1,mShow_3_1_car_number);
             } else if (requestCode == TYPE_BODY) {
-                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
-                ImageProcessor processor = new ImageProcessor(bitmap);
-                Bitmap bitmap1 = processor.scale((float) 0.2);
-                mShow_3_2_car_body.setImageBitmap(bitmap1);
+                showBitmap(mFilePath2,mShow_3_2_car_body);
             } else {
-                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
-                ImageProcessor processor = new ImageProcessor(bitmap);
-                Bitmap bitmap1 = processor.scale((float) 0.2);
-                mShow_3_3_car_goods.setImageBitmap(bitmap1);
+                showBitmap(mFilePath3,mShow_3_3_car_goods);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showBitmap(String filePath,RoundedImageView view) {
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        ImageProcessor processor = new ImageProcessor(bitmap);
+        Bitmap bitmap1 = processor.scale((float) 0.2);
+        view.setImageBitmap(bitmap1);
     }
 
 
@@ -321,8 +327,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-
-    /**android API23过后需要动态的申请权限
+    /**
+     * android API23过后需要动态的申请权限
+     *
      * @param activity
      */
     public static void verifyStoragePermissions(Activity activity) {

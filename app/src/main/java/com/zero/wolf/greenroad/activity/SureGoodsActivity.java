@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,14 +19,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.BaseActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
+import com.zero.wolf.greenroad.bean.AcceptResult;
+import com.zero.wolf.greenroad.bean.CarGoods;
 import com.zero.wolf.greenroad.bean.CarStation;
+import com.zero.wolf.greenroad.interfacy.HttpMethods;
+import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
+import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
 import com.zero.wolf.greenroad.litepalbean.StationInfo;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -34,9 +39,18 @@ import com.zero.wolf.greenroad.tools.Session;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
@@ -45,14 +59,13 @@ public class SureGoodsActivity extends BaseActivity {
 
     private List<Session> sessionList = new ArrayList<>();
     private List<CarStation> stationList = new ArrayList<>();
+    private List<CarGoods> goodsList = new ArrayList<>();
 
     private RecyclerView mRecycler_view_goods;
-    private ArrayList<String> mList;
     private Context mContext;
     private EditText mEt_change3;
     private EditText mEt_change1;
     private AppCompatActivity mActivity;
-    private ArrayList<String> mList_local;
     private SpinnerPopupWindow mPopupWindow_1;
     private SpinnerPopupWindow mPopupWindow_2;
 
@@ -60,6 +73,15 @@ public class SureGoodsActivity extends BaseActivity {
     private RecyclerView.Adapter mHeadAdapter;
     private EditText mEt_change2;
     private RecyclerView.Adapter mStationAdapter;
+    private List<GoodsInfo> mGoodsInfoList;
+    private SureGoodsAdapter mGoodsAdapter;
+    private String mUsername;
+    private String mPhotoPath1;
+    private String mPhotoPath2;
+    private String mPhotoPath3;
+    private String mCar_number;
+    private String mCar_goods;
+    private String mCar_station;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +92,22 @@ public class SureGoodsActivity extends BaseActivity {
         initData();
         initView();
         initRecycler();
-        initSend();
     }
 
-    private void initSend() {
-
+    public static void actionStart(Context context, String username
+            , String photoPath1, String photoPath2, String photoPath3) {
+        Intent intent = new Intent(context, SureGoodsActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("photoPath1", photoPath1);
+        intent.putExtra("photoPath2", photoPath2);
+        intent.putExtra("photoPath3", photoPath3);
+        context.startActivity(intent);
     }
+
 
     private void initData() {
+
+        getIntentData();
         /**
          * 加载并缓存车牌号头的数据
          * */
@@ -103,11 +133,11 @@ public class SureGoodsActivity extends BaseActivity {
             }
         }
 
-        List<StationInfo> stationInfos = DataSupport.findAll(StationInfo.class);
 
         /**
          * 加载收费站名的数据
          * */
+        List<StationInfo> stationInfos = DataSupport.findAll(StationInfo.class);
         ArrayList<CarStation> stations = (ArrayList<CarStation>) ACache.get(mActivity).getAsObject("stations");
 
         if (stations != null) {
@@ -121,10 +151,55 @@ public class SureGoodsActivity extends BaseActivity {
             addStationData(stationInfos);
 
         }
+
+
+        /**
+         * 加载货物的数据及缓存
+         * */
+        List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
+        Logger.i(""+goodsInfos.size());
+        ArrayList<CarGoods> goods = (ArrayList<CarGoods>) ACache.get(mActivity).getAsObject("goods");
+        Logger.i("" + goods.size());
+        if (goods != null) {
+            if (goods.size() == goodsInfos.size()) {
+                goodsList.addAll(goods);
+            } else {
+                goods.clear();
+                addGoodsData(goodsInfos);
+            }
+        } else {
+            addGoodsData(goodsInfos);
+        }
+    }
+
+    /**
+     * 得到从上一个activity中拿到的数据
+     */
+    private void getIntentData() {
+        Intent intent = getIntent();
+        mUsername = intent.getStringExtra("username");
+        mPhotoPath1 = intent.getStringExtra("photoPath1");
+        mPhotoPath2 = intent.getStringExtra("photoPath3");
+        mPhotoPath3 = intent.getStringExtra("photoPath3");
+        Logger.i(mUsername);
+        Logger.i(mPhotoPath1);
+        Logger.i(mPhotoPath2);
+        Logger.i(mPhotoPath3);
+    }
+
+    private void addGoodsData(List<GoodsInfo> goodsInfos) {
+        for (int i = 0; i < goodsInfos.size(); i++) {
+            CarGoods carGoods = new CarGoods();
+            carGoods.setScientific_name(goodsInfos.get(i).getScientificname());
+            carGoods.setAlias(goodsInfos.get(i).getAlias());
+            //// TODO: 2017/7/6 填充图片
+            goodsList.add(carGoods);
+        }
     }
 
     /**
      * 填充station的数据
+     *
      * @param stationInfos
      */
     private void addStationData(List<StationInfo> stationInfos) {
@@ -136,7 +211,35 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
 
+    /**
+     * 加载货物的布局以及填充数据
+     */
     private void initRecycler() {
+        mGoodsInfoList = DataSupport.findAll(GoodsInfo.class);
+
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mRecycler_view_goods.setLayoutManager(manager);
+
+        mGoodsAdapter = new SureGoodsAdapter(mContext, goodsList, new SureGoodsAdapter.onItemClick() {
+            @Override
+            public void itemClick(CarGoods carGoods, int position) {
+                updataRecycler(carGoods, position);
+            }
+        });
+        mRecycler_view_goods.setAdapter(mGoodsAdapter);
+
+    }
+
+    private void updataRecycler(CarGoods carGoods, int position) {
+        carGoods.setTop(1);
+        carGoods.setTime(System.currentTimeMillis());
+        mEt_change3.setText(goodsList.get(position).getScientific_name());
+        mEt_change3.setSelection(goodsList.get(position).getScientific_name().length());
+
+        Collections.sort(goodsList);
+        mGoodsAdapter.notifyDataSetChanged();
 
     }
 
@@ -162,15 +265,7 @@ public class SureGoodsActivity extends BaseActivity {
         mEt_change3 = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
 
 
-        //mEt_change1.setText("鲁A888888");
-
-        mEt_change1.setText(sessionList.get(0).getName());
-        mEt_change2.setText(stationList.get(0).getStationName());
-        mEt_change3.setHint("西兰花");
-
-//        mEt_change1.setFocusable(false);
-//        et_change2.setFocusable(false);
-//        mEt_change3.setFocusable(true);
+        initEditText();
 
         /**
          *车牌号的点击事件
@@ -198,7 +293,7 @@ public class SureGoodsActivity extends BaseActivity {
                             public void onCancel(Session session) {
                             }
                         }))
-                        .setmHeight(700).setmWidth(800)
+                        .setmHeight(700).setmWidth(500)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
@@ -224,7 +319,7 @@ public class SureGoodsActivity extends BaseActivity {
                                 refreshView(002);
                             }
                         }))
-                        .setmHeight(700).setmWidth(800)
+                        .setmHeight(500).setmWidth(500)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
@@ -240,8 +335,7 @@ public class SureGoodsActivity extends BaseActivity {
          */
         mRecycler_view_goods = (RecyclerView) findViewById(R.id.recycler_view_goods);
         // mRecycler_view_goods.setVisibility(View.INVISIBLE);
-        initRecyclerData();
-        initRecyclerView();
+        initRecycler();
 
         mEt_change3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,7 +355,7 @@ public class SureGoodsActivity extends BaseActivity {
                 dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(SureGoodsActivity.this, "querenfasong", Toast.LENGTH_SHORT).show();
+                        postAccept();
                     }
                 });
                 dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
@@ -275,6 +369,26 @@ public class SureGoodsActivity extends BaseActivity {
                 CarNumberCut();
             }
         });
+    }
+
+
+
+    private void initEditText() {
+        if (sessionList.size() == 0) {
+            mEt_change1.setText("粤B");
+        } else {
+            mEt_change1.setText(sessionList.get(0).getName());
+        }
+        if (stationList.size() == 0) {
+            mEt_change2.setText("泰安东收费站");
+        } else {
+            mEt_change2.setText(stationList.get(0).getStationName());
+        }
+        if (goodsList.size() == 0) {
+            mEt_change3.setText("西兰花");
+        } else {
+            mEt_change3.setText(goodsList.get(0).getScientific_name());
+        }
     }
 
     /**
@@ -332,48 +446,17 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private String getDialogSendMessage() {
-        String car_number = mEt_change1.getText().toString();
-        String car_goods = mEt_change3.getText().toString();
+        mCar_number = mEt_change1.getText().toString();
+        mCar_station = mEt_change2.getText().toString();
+        mCar_goods = mEt_change3.getText().toString();
 
-        String dialog_message = "车  牌  号：" + car_number + "\n"
-                + "货物名称：" + car_goods + "\n"
+        String dialog_message = "车  牌  号：" + mCar_number + "\n"
+                + "货物名称：" + mCar_goods + "\n"
                 + "点击“确认”将提交信息" + "\n"
                 + "点击“取消”可再次修改";
         return dialog_message;
     }
 
-    /**
-     * 初始化RecyclerView的数据
-     */
-    private void initRecyclerData() {
-        mList = new ArrayList<>();
-        for (int i = 0; i < 60; i++) {
-            if (i < 20) {
-                mList.add("title" + i);
-            }
-            if (i < 40) {
-                mList.add("absd" + i);
-            }
-            if (i < 60) {
-                mList.add("1287239" + i);
-            }
-
-        }
-    }
-
-    /**
-     * 初始化RecyclerView的显示
-     */
-    private void initRecyclerView() {
-        LinearLayoutManager manager = new LinearLayoutManager(mContext);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        mRecycler_view_goods.setLayoutManager(manager);
-
-        SureGoodsAdapter adapter = new SureGoodsAdapter(mContext, mList, mEt_change3);
-        mRecycler_view_goods.setAdapter(adapter);
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -401,7 +484,102 @@ public class SureGoodsActivity extends BaseActivity {
         //存入缓存
         ACache.get(mActivity).put("sessions", (ArrayList<Session>) sessionList);
         ACache.get(mActivity).put("stations", (ArrayList<CarStation>) stationList);
+        ACache.get(mActivity).put("goods", (ArrayList<CarGoods>) goodsList);
 
     }
+
+    /**
+     * 向服务器Post所有的信息
+     */
+    private void postAccept() {
+
+        //SimplePhoto();
+        List<String> pathList = getPathList();
+        Logger.i("" + getPathList().size());
+        Logger.i("" + pathList.size());
+
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+
+        for (int i = 0; i < pathList.size(); i++) {
+            File file = new File(pathList.get(i));//filePath 图片地址
+            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            builder.addFormDataPart("image"+i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
+        }
+        List<MultipartBody.Part> parts = builder.build().parts();
+
+        HttpUtilsApi httpUtilsApi = HttpMethods.getInstance().getApi();
+
+        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg(parts);
+        postThreeImg.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AcceptResult>() {
+                    @Override
+                    public void onCompleted() {
+                        Logger.i("三张照片上传成功");
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+                    }
+                    @Override
+                    public void onNext(AcceptResult acceptResult) {
+                        int code = acceptResult.getCode();
+                        String msg = acceptResult.getMsg();
+                        Logger.i("" + code);
+                        Logger.i("" + msg);
+                    }
+                });
+    }
+
+    /**
+     * 获取多张待上传图片的地址列表
+     *
+     * @return
+     */
+    private List<String> getPathList() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(mPhotoPath1);
+        list.add(mPhotoPath2);
+        list.add(mPhotoPath3);
+        return list;
+    }
+
+    /*private void SimplePhoto() {
+        File file1 = new File(mPhotoPath1);
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file1);
+        Logger.i(file1.getPath().toString());
+        Logger.i(file1.getName());
+        Logger.i(requestFile.contentType().toString());
+        Logger.i(requestFile.contentType().type().toString());
+        Logger.i(String.valueOf(requestFile.contentType()));
+        MultipartBody.Part part = MultipartBody.Part.createFormData("image1", file1.getName(), requestFile);
+
+        HttpUtilsApi httpUtilsApi = HttpMethods.getInstance().getApi();
+
+        Observable<AcceptResult> postOneImg = httpUtilsApi.postOneImg(part);
+        postOneImg.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AcceptResult>() {
+                    @Override
+                    public void onCompleted() {
+                        Logger.i("一张图片post成功");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(AcceptResult acceptResult) {
+                        int code = acceptResult.getCode();
+                        String msg = acceptResult.getMsg();
+
+                        Logger.i("" + code);
+                        Logger.i("" + msg);
+                    }
+                });
+    }*/
 }
 

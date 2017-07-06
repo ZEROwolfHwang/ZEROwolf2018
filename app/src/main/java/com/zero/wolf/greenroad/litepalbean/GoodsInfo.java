@@ -10,7 +10,7 @@ public class GoodsInfo extends DataSupport{
     private String cargoid;
     private String scientificname;
     private String alias;
-    private String kind;
+
 
     public String getCargoid() {
         return cargoid;
@@ -37,11 +37,4 @@ public class GoodsInfo extends DataSupport{
         this.alias = alias;
     }
 
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
 }

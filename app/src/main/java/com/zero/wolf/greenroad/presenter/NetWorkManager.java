@@ -80,7 +80,7 @@ public class NetWorkManager {
      * @param context
      * @return
      */
-    public boolean isnetworkConnected(Context context) {
+    public static boolean isnetworkConnected(Context context) {
         if (context != null) {
             ConnectivityManager maneger = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = maneger.getActiveNetworkInfo();
