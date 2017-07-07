@@ -36,6 +36,7 @@ import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.Session;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -94,7 +95,7 @@ public class SureGoodsActivity extends BaseActivity {
         initRecycler();
     }
 
-    public static void actionStart(Context context, String username
+    public static void actionStart(Context context, String color, String username
             , String photoPath1, String photoPath2, String photoPath3) {
         Intent intent = new Intent(context, SureGoodsActivity.class);
         intent.putExtra("username", username);
@@ -115,16 +116,23 @@ public class SureGoodsActivity extends BaseActivity {
         List<CarNumberHead> headList = DataSupport.findAll(CarNumberHead.class);
 
         ArrayList<Session> sessions = (ArrayList<Session>) ACache.get(mActivity).getAsObject("sessions");
-        Logger.i(sessions.get(5).getName());
-
 
         //如果跟数据库长度相同则不作更改，不然则更新
-        if (sessions.size() == headList.size())
-            sessionList.addAll(sessions);
-            //更新数据需要删除缓存
-        else {
-            sessions.clear();
-            Logger.i("" + headList.size());
+        if (sessions != null) {
+            if (sessions.size() == headList.size()) {
+                sessionList.addAll(sessions);
+            } else {
+                //更新数据需要删除缓存
+                sessions.clear();
+                Logger.i("" + headList.size());
+                for (int i = 0; i < headList.size(); i++) {
+                    Session session = new Session();
+                    Logger.i("" + headList.get(i).getHeadName());
+                    session.setName(headList.get(i).getHeadName());
+                    sessionList.add(session);
+                }
+            }
+        } else {
             for (int i = 0; i < headList.size(); i++) {
                 Session session = new Session();
                 Logger.i("" + headList.get(i).getHeadName());
@@ -132,7 +140,6 @@ public class SureGoodsActivity extends BaseActivity {
                 sessionList.add(session);
             }
         }
-
 
         /**
          * 加载收费站名的数据
@@ -149,7 +156,6 @@ public class SureGoodsActivity extends BaseActivity {
             }
         } else {
             addStationData(stationInfos);
-
         }
 
 
@@ -157,9 +163,8 @@ public class SureGoodsActivity extends BaseActivity {
          * 加载货物的数据及缓存
          * */
         List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
-        Logger.i(""+goodsInfos.size());
+        Logger.i("" + goodsInfos.size());
         ArrayList<CarGoods> goods = (ArrayList<CarGoods>) ACache.get(mActivity).getAsObject("goods");
-        Logger.i("" + goods.size());
         if (goods != null) {
             if (goods.size() == goodsInfos.size()) {
                 goodsList.addAll(goods);
@@ -365,12 +370,9 @@ public class SureGoodsActivity extends BaseActivity {
                     }
                 });
                 dialog.show();
-
-                CarNumberCut();
             }
         });
     }
-
 
 
     private void initEditText() {
@@ -505,7 +507,7 @@ public class SureGoodsActivity extends BaseActivity {
         for (int i = 0; i < pathList.size(); i++) {
             File file = new File(pathList.get(i));//filePath 图片地址
             RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
-            builder.addFormDataPart("image"+i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
+            builder.addFormDataPart("image" + i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
            /* File file = new File(pathList.get(i));
             bodyMap.put("image"+i+"\"; filename=\""+file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"),file));*/
         }
@@ -518,7 +520,7 @@ public class SureGoodsActivity extends BaseActivity {
         Logger.i(mLicense_plate);
         Logger.i(mCar_goods);
 
-        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg("123","456aaa", mLicense_plate,mCar_goods,parts);
+        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg(mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
         postThreeImg.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<AcceptResult>() {
@@ -526,14 +528,24 @@ public class SureGoodsActivity extends BaseActivity {
                     public void onCompleted() {
                         Logger.i("三张照片上传成功");
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         Logger.i(e.getMessage());
                     }
+
                     @Override
                     public void onNext(AcceptResult acceptResult) {
                         int code = acceptResult.getCode();
                         String msg = acceptResult.getMsg();
+                        if (code == 200) {
+                            CarNumberCut();
+                            Intent intent = new Intent(SureGoodsActivity.this, PhotoActivity.class);
+                            startActivity(intent);
+                        } else if (code == 300) {
+                            ToastUtils.singleToast("上传失败");
+                            // TODO: 2017/7/7 上传失败需要保存到数据库
+                        }
                         Logger.i("" + code);
                         Logger.i("" + msg);
                     }
@@ -565,42 +577,6 @@ public class SureGoodsActivity extends BaseActivity {
         return list;
     }
 
-    /*private void SimplePhoto() {
-        File file1 = new File(mPhotoPath1);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file1);
-        Logger.i(file1.getPath().toString());
-        Logger.i(file1.getName());
-        Logger.i(requestFile.contentType().toString());
-        Logger.i(requestFile.contentType().type().toString());
-        Logger.i(String.valueOf(requestFile.contentType()));
-        MultipartBody.Part part = MultipartBody.Part.createFormData("image1", file1.getName(), requestFile);
-
-        HttpUtilsApi httpUtilsApi = HttpMethods.getInstance().getApi();
-
-        Observable<AcceptResult> postOneImg = httpUtilsApi.postOneImg(part);
-        postOneImg.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AcceptResult>() {
-                    @Override
-                    public void onCompleted() {
-                        Logger.i("一张图片post成功");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(AcceptResult acceptResult) {
-                        int code = acceptResult.getCode();
-                        String msg = acceptResult.getMsg();
-
-                        Logger.i("" + code);
-                        Logger.i("" + msg);
-                    }
-                });
-    }*/
 }
 

@@ -22,4 +22,9 @@
     <dimen name="layout_margin5dp">5dp</dimen>
     <dimen name="layout_margin10dp">10dp</dimen>
     <dimen name="layout_margin40dp">40dp</dimen>
+    <dimen name="text20">20sp</dimen>
+    <dimen name="layout_margin2dp">2dp</dimen>
+
+    <integer name="abc_max_action_buttons">2</integer>
+
 </resources>

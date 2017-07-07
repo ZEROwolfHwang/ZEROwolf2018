@@ -36,10 +36,10 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:name=".activity.SureGoodsActivity"
             android:parentActivityName=".activity.PhotoActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden">
         </activity>
 
         <receiver
@@ -52,14 +52,15 @@
 
         </activity>
 
-        <activity android:name=".activity.AboutActivity"
+        <activity
+            android:name=".activity.AboutActivity"
             android:theme="@style/ActivityAboutStyle">
 
         </activity>
 
         <activity
-            android:theme="@style/MyDialogStyle"
-            android:name=".activity.ActivationCodeActivity">
+            android:name=".activity.ActivationCodeActivity"
+            android:theme="@style/MyDialogStyle">
 
         </activity>
     </application>

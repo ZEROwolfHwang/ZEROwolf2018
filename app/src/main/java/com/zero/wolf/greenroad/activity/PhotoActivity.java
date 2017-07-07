@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,10 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
@@ -32,7 +33,7 @@ import com.zero.wolf.greenroad.tools.SPUtils;
 
 import java.io.File;
 
-public class PhotoActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PhotoActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -58,18 +59,18 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private static final int PHOTORESOULT_1 = 221;
     private static final int PHOTORESOULT_2 = 222;
     private static final int PHOTORESOULT_3 = 223;
-    private static final int COLOR_GREEN = 331;
-    private static final int COLOR_YELLOW = 332;
+    private static final String COLOR_GREEN = "绿牌";
+    private static final String COLOR_YELLOW = "黄牌";
+    private static final String COLOR_BLUE = "蓝牌";
+    private static final String COLOR_BLACK = "黑牌";
+    private static final String COLOR_WHITE = "白牌";
     private static final int SHUT_CAMERA = 441;
     private static final int SHUT_RECORDING = 442;
 
     private static final int enter_sure_person = 551;
     private static final int enter_sure_smart = 552;
-
-    private static int currentColor = COLOR_GREEN;
     private static int currentShut = SHUT_CAMERA;
 
-    private int LicensePlateColor;
 
     private AppCompatActivity mActivity;
 
@@ -83,14 +84,14 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private RoundedImageView mIv_car_goods;
     private Button mBt_ok_send;
 
-
-    private Uri mPhotoUri;
     private String mFilePath;
     private String mFilePath1;
     private String mFilePath2;
     private String mFilePath3;
-    private ToggleButton mToggleButton_color;
     private String mUsername;
+    private RadioButton mLicense_yellow;
+    private String mCurrent_color;
+    private RadioGroup mRadio_group_color;
 
 
     @Override
@@ -99,25 +100,28 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_photo);
 
         mActivity = this;
+
+        initData();
+        initView();
+
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
         mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
         Intent intent = getIntent();
         mUsername = intent.getStringExtra("username");
-        initView();
-
     }
 
     private void initView() {
 
         initToolbar();
 
+        initRadioColor();
         //车牌颜色的按钮
-        mToggleButton_color = (ToggleButton) findViewById(R.id.toggleButton_color);
-
-//        拍照或者摄影的按钮
-//        mToggleButton_shut = (ToggleButton) findViewById(R.id.toggleButton_shut);
-
-        //点击的
 
         mIv_car_number = (RoundedImageView) findViewById(R.id.iv_car_number);
         mIv_car_body = (RoundedImageView) findViewById(R.id.iv_car_body);
@@ -130,7 +134,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         mBt_ok_send = (Button) findViewById(R.id.bt_ok_send);
 
-        mToggleButton_color.setOnCheckedChangeListener(this);
+//        mToggleButton_color.setOnCheckedChangeListener(this);
 //        mToggleButton_shut.setOnCheckedChangeListener(this);
         mIv_car_number.setOnClickListener(this);
         mIv_car_body.setOnClickListener(this);
@@ -138,8 +142,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         mBt_ok_send.setOnClickListener(this);
 
         //初始化黄色车牌
-        mToggleButton_color.setPadding(0, 0, 70, 0);
+//        mToggleButton_color.setPadding(0, 0, 70, 0);
     }
+
 
     private void initToolbar() {
 
@@ -215,7 +220,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         carNumberCount();
 
-        SureGoodsActivity.actionStart(PhotoActivity.this,
+        SureGoodsActivity.actionStart(PhotoActivity.this, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
 
     }
@@ -279,51 +284,21 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         if (resultCode == RESULT_OK) {
             if (requestCode == TYPE_NUMBER) {
-                showBitmap(mFilePath1,mShow_3_1_car_number);
+                showBitmap(mFilePath1, mShow_3_1_car_number);
             } else if (requestCode == TYPE_BODY) {
-                showBitmap(mFilePath2,mShow_3_2_car_body);
+                showBitmap(mFilePath2, mShow_3_2_car_body);
             } else {
-                showBitmap(mFilePath3,mShow_3_3_car_goods);
+                showBitmap(mFilePath3, mShow_3_3_car_goods);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showBitmap(String filePath,RoundedImageView view) {
+    private void showBitmap(String filePath, RoundedImageView view) {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
         ImageProcessor processor = new ImageProcessor(bitmap);
         Bitmap bitmap1 = processor.scale((float) 0.2);
         view.setImageBitmap(bitmap1);
-    }
-
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.toggleButton_color:
-                analyzeCarColor(buttonView, isChecked);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void analyzeCarColor(CompoundButton buttonView, boolean isChecked) {
-
-        int paddingLeft = buttonView.getPaddingLeft();
-        if (isChecked) {
-            paddingLeft = 0;
-            currentColor = COLOR_YELLOW;
-            buttonView.setPadding(0, 0, 70, 0);
-            Logger.i("当前是黄牌");
-
-        } else {
-            paddingLeft = 0;
-            currentColor = COLOR_GREEN;
-            buttonView.setPadding(80, 0, 0, 0);
-            Logger.i("当前是蓝牌");
-        }
-
     }
 
 
@@ -343,6 +318,51 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
+        }
+    }
+
+    /**
+     * //初始化将黄牌设为按下状态等
+     */
+    private void initRadioColor() {
+        mLicense_yellow = (RadioButton) findViewById(R.id.license_yellow);
+        mLicense_yellow.setChecked(true);
+        mCurrent_color = "黄牌";
+
+        mRadio_group_color = (RadioGroup) findViewById(R.id.radio_group_color);
+        mRadio_group_color.setOnCheckedChangeListener(this);
+    }
+    /**
+     * 车牌颜色选择的RadioGroup的点击事件
+     * @param group
+     * @param checkedId
+     */
+    @Override
+    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        switch (checkedId) {
+            case R.id.license_yellow:
+                mCurrent_color = COLOR_YELLOW;
+                Logger.i(mCurrent_color);
+                break;
+            case R.id.license_blue:
+                mCurrent_color = COLOR_BLUE;
+                Logger.i(mCurrent_color);
+                break;
+            case R.id.license_black:
+                mCurrent_color = COLOR_BLACK;
+                Logger.i(mCurrent_color);
+                break;
+            case R.id.license_green:
+                mCurrent_color = COLOR_GREEN;
+                Logger.i(mCurrent_color);
+                break;
+            case R.id.license_white:
+                Logger.i(mCurrent_color);
+                mCurrent_color = COLOR_WHITE;
+                break;
+
+            default:
+                break;
         }
     }
 }

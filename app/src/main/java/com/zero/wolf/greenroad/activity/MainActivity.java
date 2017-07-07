@@ -382,7 +382,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         //如果cra_not_count为空则创建，否则不创建
         if (SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0) == null) {
-            Logger.i("zoule?" + "ma");
             SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
         }
     }

@@ -10,6 +10,7 @@ public class GoodsInfo extends DataSupport{
     private String cargoid;
     private String scientificname;
     private String alias;
+    private int goodsId;
 
 
     public String getCargoid() {

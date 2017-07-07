@@ -30,29 +30,55 @@
         android:textStyle="bold"/>-->
 
     <RadioGroup
-        android:orientation="horizontal"
+        android:id="@+id/radio_group_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/layout_margin5dp"
+        android:paddingRight="@dimen/layout_margin5dp"
+        android:paddingTop="@dimen/layout_margin5dp">
+
 
         <RadioButton
-            android:background="@drawable/sure_button_select"
-            android:text="黄牌"
-            android:layout_width="@dimen/layout_margin40dp"
-            android:layout_height="@dimen/layout_margin40dp"/>
-        <RadioButton
-            android:text="绿牌"
-            android:layout_width="@dimen/layout_margin40dp"
-            android:layout_height="@dimen/layout_margin40dp"/>
-        <RadioButton
+            style="@style/RadioButtonStyle"
+            android:id="@+id/license_black"
+            android:background="@drawable/rb_black_selector"
             android:text="黑牌"
-            android:layout_width="@dimen/layout_margin40dp"
-            android:layout_height="@dimen/layout_margin40dp"/>
+            />
+
         <RadioButton
-            android:text="蓝牌"
-            android:layout_width="@dimen/layout_margin40dp"
-            android:layout_height="@dimen/layout_margin40dp"/>
+            style="@style/RadioButtonStyle"
+            android:layout_marginLeft="@dimen/layout_margin2dp"
+            android:layout_marginRight="@dimen/layout_margin2dp"
+            android:background="@drawable/rb_blue_selector"
+            android:id="@+id/license_blue"
+
+            android:text="蓝牌"/>
+
+        <RadioButton
+            style="@style/RadioButtonStyle"
+            android:background="@drawable/rb_yellow_selector"
+            android:text="黄牌"
+            android:id="@+id/license_yellow"
+            />
 
 
+        <RadioButton
+
+            android:id="@+id/license_green"
+            style="@style/RadioButtonStyle"
+            android:layout_marginLeft="@dimen/layout_margin2dp"
+
+            android:layout_marginRight="@dimen/layout_margin2dp"
+            android:background="@drawable/rb_green_selector"
+            android:text="绿牌"/>
+
+        <RadioButton
+            android:id="@+id/license_white"
+            android:textColor="@color/black"
+            style="@style/RadioButtonStyle"
+            android:background="@drawable/rb_white_selector"
+            android:text="白牌"/>
     </RadioGroup>
 
     <LinearLayout
@@ -147,7 +173,7 @@
     <Button
         android:id="@+id/bt_ok_send"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/main_height_dp60"
+        android:layout_height="@dimen/main_height_dp40"
         android:layout_marginBottom="@dimen/layout_margin5dp"
         android:layout_marginLeft="@dimen/layout_margin20dp"
         android:layout_marginRight="@dimen/layout_margin20dp"

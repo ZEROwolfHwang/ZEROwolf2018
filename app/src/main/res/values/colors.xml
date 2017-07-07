@@ -10,4 +10,5 @@
     <color name="yellow">#ff0</color>
     <color name="toolbar_color">#7c00f7</color>
     <color name="gray">#bdbdbd</color>
+    <color name="transparent">#007c00f7</color>
 </resources>

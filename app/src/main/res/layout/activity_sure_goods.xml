@@ -104,7 +104,7 @@
         <Button
             android:id="@+id/bt_ok_msg"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_height_dp60"
+            android:layout_height="@dimen/layout_margin40dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/layout_margin20dp"
             android:layout_marginRight="@dimen/layout_margin20dp"
