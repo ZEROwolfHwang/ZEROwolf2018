@@ -41,5 +41,6 @@
     <string name="action_sign_out">退出</string>
     <string name="key_used">激活码已使用</string>
     <string name="Invalid_Key">激活码无效</string>
+    <string name="back_up_app">退出</string>
 
 </resources>

@@ -6,17 +6,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/content_layout_backgroud"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".activity.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context=".activity.MainActivity">
 
 
     <LinearLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="55dp"
         android:orientation="horizontal">
 
         <com.makeramen.roundedimageview.RoundedImageView

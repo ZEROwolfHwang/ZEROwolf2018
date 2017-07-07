@@ -74,13 +74,22 @@ public interface HttpUtilsApi {
     @POST("accept")
     Observable<AcceptResult> postAccept(@Part MultipartBody.Part file);
 
-    @Multipart
+  /*  @Multipart
     @POST("image")
     Observable<AcceptResult> postOneImg(@Part MultipartBody.Part file);
-
+*/
+   /* @Multipart
+    @POST("image")
+    Observable<AcceptResult> postThreeImg(@PartMap Map<String, RequestBody> params);
+*/
     @Multipart
     @POST("image")
-    Observable<AcceptResult> postThreeImg(@Part List<MultipartBody.Part> partList);
+    Observable<AcceptResult> postThreeImg(@Part("username") String username,
+                                          @Part("station") String station,
+                                          @Part("license_plate") String license_plate,
+                                          @Part("goods") String goods,
+                                          @Part List<MultipartBody.Part> file);
+
 
 
 }

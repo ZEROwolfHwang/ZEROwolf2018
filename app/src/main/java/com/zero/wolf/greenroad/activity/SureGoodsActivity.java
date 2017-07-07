@@ -79,7 +79,7 @@ public class SureGoodsActivity extends BaseActivity {
     private String mPhotoPath1;
     private String mPhotoPath2;
     private String mPhotoPath3;
-    private String mCar_number;
+    private String mLicense_plate;
     private String mCar_goods;
     private String mCar_station;
 
@@ -446,11 +446,11 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private String getDialogSendMessage() {
-        mCar_number = mEt_change1.getText().toString();
+        mLicense_plate = mEt_change1.getText().toString();
         mCar_station = mEt_change2.getText().toString();
         mCar_goods = mEt_change3.getText().toString();
 
-        String dialog_message = "车  牌  号：" + mCar_number + "\n"
+        String dialog_message = "车  牌  号：" + mLicense_plate + "\n"
                 + "货物名称：" + mCar_goods + "\n"
                 + "点击“确认”将提交信息" + "\n"
                 + "点击“取消”可再次修改";
@@ -500,16 +500,25 @@ public class SureGoodsActivity extends BaseActivity {
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
 
+//        Map<String, RequestBody> bodyMap = new HashMap<>();
+
         for (int i = 0; i < pathList.size(); i++) {
             File file = new File(pathList.get(i));//filePath 图片地址
-            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
             builder.addFormDataPart("image"+i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
+           /* File file = new File(pathList.get(i));
+            bodyMap.put("image"+i+"\"; filename=\""+file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"),file));*/
         }
         List<MultipartBody.Part> parts = builder.build().parts();
 
         HttpUtilsApi httpUtilsApi = HttpMethods.getInstance().getApi();
 
-        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg(parts);
+        Logger.i(mUsername);
+        Logger.i(mCar_station);
+        Logger.i(mLicense_plate);
+        Logger.i(mCar_goods);
+
+        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg("123","456aaa", mLicense_plate,mCar_goods,parts);
         postThreeImg.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<AcceptResult>() {
@@ -537,10 +546,22 @@ public class SureGoodsActivity extends BaseActivity {
      * @return
      */
     private List<String> getPathList() {
-        ArrayList<String> list = new ArrayList<>();
+
+
+        /*ArrayList<String> list = new ArrayList<>();
         list.add(mPhotoPath1);
         list.add(mPhotoPath2);
         list.add(mPhotoPath3);
+        */
+        String file11 = "/mnt/sdcard/Download/car_body_light.png";
+        String file22 = "/mnt/sdcard/Download/car_goods_light.png";
+        String file33 = "/mnt/sdcard/Download/car_station_light.png";
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add(file11);
+        list.add(file22);
+        list.add(file33);
+
         return list;
     }
 

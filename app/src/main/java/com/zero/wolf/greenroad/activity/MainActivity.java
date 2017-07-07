@@ -443,11 +443,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         } else if (id == R.id.nav_cancer) {
             cancelCount();
+        } else if (id == R.id.nav_backup) {
+            buckUpApp();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 退出程序
+     */
+    private void buckUpApp() {
+
     }
 
     /**

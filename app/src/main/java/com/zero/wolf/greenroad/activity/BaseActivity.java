@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.tools.ActivityCollector;
 
 /**
  * @author sineom
@@ -23,7 +24,15 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ActivityCollector.addActivity(this);
+
         Logger.init(TAG).logLevel(LogLevel.FULL);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

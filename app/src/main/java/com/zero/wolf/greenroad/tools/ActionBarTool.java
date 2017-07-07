@@ -1,6 +1,7 @@
 package com.zero.wolf.greenroad.tools;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -9,8 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-
-import static com.zero.wolf.greenroad.R.id.title_text;
 
 /**
  * Created by Administrator on 2017/6/23.
@@ -44,7 +43,8 @@ public class ActionBarTool {
         actionBar.setDisplayShowTitleEnabled(false);//去掉标题
 //        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowCustomEnabled(true);
-        mTitle_text = (TextView) titleView.findViewById(title_text);
+        mTitle_text = (TextView) titleView.findViewById(R.id.title_text);
+        mTitle_text.setTextColor(Color.WHITE);
         return mTitle_text;
     }
 }

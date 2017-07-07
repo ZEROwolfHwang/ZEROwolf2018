@@ -22,6 +22,11 @@
                 android:id="@+id/nav_update"
                 android:icon="@drawable/update_app"
                 android:title="@string/update_app"/>
+            <item
+                android:id="@+id/nav_backup"
+                android:icon="@drawable/back_up_app"
+                android:title="@string/back_up_app"/>
+
         </menu>
     </item>
 </menu>

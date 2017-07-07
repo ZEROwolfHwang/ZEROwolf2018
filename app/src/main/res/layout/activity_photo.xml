@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/content_layout_backgroud"
     android:baselineAligned="false"
     android:orientation="vertical"
-    android:background="@drawable/comment_layout_backgroup"
     tools:context="com.zero.wolf.greenroad.activity.PhotoActivity">
 
 
@@ -16,19 +16,44 @@
         style="@style/style_toolbar"
         app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-        <ToggleButton
-            android:layout_marginTop="@dimen/layout_margin5dp"
-            android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:id="@+id/toggleButton_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOn="@string/yellow_car"
-            android:textOff="@string/blue_car"
-            android:textSize="@dimen/text18"
-            android:textStyle="bold"
-            android:background="@drawable/toggle_selector"
-            android:checked="true"/>
+   <!-- <ToggleButton
+        android:id="@+id/toggleButton_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margin10dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:background="@drawable/toggle_selector"
+        android:checked="true"
+        android:textOff="@string/blue_car"
+        android:textOn="@string/yellow_car"
+        android:textSize="@dimen/text18"
+        android:textStyle="bold"/>-->
 
+    <RadioGroup
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:background="@drawable/sure_button_select"
+            android:text="黄牌"
+            android:layout_width="@dimen/layout_margin40dp"
+            android:layout_height="@dimen/layout_margin40dp"/>
+        <RadioButton
+            android:text="绿牌"
+            android:layout_width="@dimen/layout_margin40dp"
+            android:layout_height="@dimen/layout_margin40dp"/>
+        <RadioButton
+            android:text="黑牌"
+            android:layout_width="@dimen/layout_margin40dp"
+            android:layout_height="@dimen/layout_margin40dp"/>
+        <RadioButton
+            android:text="蓝牌"
+            android:layout_width="@dimen/layout_margin40dp"
+            android:layout_height="@dimen/layout_margin40dp"/>
+
+
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/layout_number"
@@ -47,14 +72,14 @@
             android:id="@+id/iv_car_number"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:paddingRight="@dimen/layout_margin10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/car_number_dark"
-            app:riv_border_width="3dp"
             app:riv_border_color="@color/toolbar_color"
-            app:riv_mutate_background="true"
+            app:riv_border_width="3dp"
             app:riv_corner_radius_bottom_right="20dp"
             app:riv_corner_radius_top_left="20dp"
-            android:paddingRight="@dimen/layout_margin10dp"
+            app:riv_mutate_background="true"
             app:riv_oval="false"/>
 
 
@@ -69,11 +94,11 @@
             android:id="@+id/iv_car_body"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:paddingLeft="@dimen/layout_margin10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/car_body_dark"
-            app:riv_border_width="3dip"
             app:riv_border_color="@color/toolbar_color"
-            android:paddingLeft="@dimen/layout_margin10dp"
+            app:riv_border_width="3dip"
             app:riv_corner_radius_bottom_left="20dp"
             app:riv_corner_radius_top_right="20dp"
             app:riv_oval="false"/>
@@ -102,14 +127,14 @@
             android:id="@+id/iv_car_goods"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:paddingRight="@dimen/layout_margin10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/car_goods_dark"
-            app:riv_border_width="3dp"
             app:riv_border_color="@color/toolbar_color"
-            app:riv_mutate_background="true"
+            app:riv_border_width="3dp"
             app:riv_corner_radius_bottom_right="20dp"
             app:riv_corner_radius_top_left="20dp"
-            android:paddingRight="@dimen/layout_margin10dp"
+            app:riv_mutate_background="true"
             app:riv_oval="false"/>
 
     </LinearLayout>
