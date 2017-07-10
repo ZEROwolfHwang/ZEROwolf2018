@@ -85,15 +85,16 @@
         android:id="@+id/math_number_main_two"
         layout="@layout/math_number_main"/>
 
-    <com.zero.wolf.greenroad.view.CircleImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:scaleType="fitCenter"
-        android:layout_weight="1"
         android:src="@drawable/main_shut_selector"
         android:id="@+id/iv_camera"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_gravity="center"
-        custom:imageType="circle"/>
+        app:riv_border_width="3dip"
+        app:riv_corner_radius="50dp"
+        app:riv_oval="true"/>
 
     <LinearLayout
         android:orientation="horizontal"

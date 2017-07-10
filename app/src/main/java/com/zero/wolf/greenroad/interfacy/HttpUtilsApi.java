@@ -8,6 +8,7 @@ import com.zero.wolf.greenroad.bean.LoginName;
 import com.zero.wolf.greenroad.bean.NumberLite;
 import com.zero.wolf.greenroad.bean.StationDataBean;
 import com.zero.wolf.greenroad.bean.StationLite;
+import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -70,6 +72,10 @@ public interface HttpUtilsApi {
     @GET("goods")
     Observable<GoodsLite<List<GoodsLite.DataBean>>> getGoodsInfo();
 
+    @GET("update")
+    Observable<UpdateAppInfo> update(@Query("appname") String appname,
+                                     @Query("appversion") String appversion);
+
     @Multipart
     @POST("accept")
     Observable<AcceptResult> postAccept(@Part MultipartBody.Part file);
@@ -84,7 +90,8 @@ public interface HttpUtilsApi {
 */
     @Multipart
     @POST("image")
-    Observable<AcceptResult> postThreeImg(@Part("username") String username,
+    Observable<AcceptResult> postThreeImg(@Part("shuttime") String shuttime,
+                                          @Part("username") String username,
                                           @Part("station") String station,
                                           @Part("license_plate") String license_plate,
                                           @Part("goods") String goods,

@@ -31,6 +31,7 @@ import com.zero.wolf.greenroad.interfacy.HttpMethods;
 import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
 import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
+import com.zero.wolf.greenroad.litepalbean.PhotoLite;
 import com.zero.wolf.greenroad.litepalbean.StationInfo;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -41,9 +42,12 @@ import com.zero.wolf.greenroad.tools.ToastUtils;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -83,6 +87,10 @@ public class SureGoodsActivity extends BaseActivity {
     private String mLicense_plate;
     private String mCar_goods;
     private String mCar_station;
+    private String mFile1;
+    private String mFile2;
+    private String mFile3;
+    private String mColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +110,8 @@ public class SureGoodsActivity extends BaseActivity {
         intent.putExtra("photoPath1", photoPath1);
         intent.putExtra("photoPath2", photoPath2);
         intent.putExtra("photoPath3", photoPath3);
+        intent.putExtra("color", color);
+
         context.startActivity(intent);
     }
 
@@ -183,6 +193,7 @@ public class SureGoodsActivity extends BaseActivity {
     private void getIntentData() {
         Intent intent = getIntent();
         mUsername = intent.getStringExtra("username");
+        mColor = intent.getStringExtra("color");
         mPhotoPath1 = intent.getStringExtra("photoPath1");
         mPhotoPath2 = intent.getStringExtra("photoPath3");
         mPhotoPath3 = intent.getStringExtra("photoPath3");
@@ -198,6 +209,7 @@ public class SureGoodsActivity extends BaseActivity {
             carGoods.setScientific_name(goodsInfos.get(i).getScientificname());
             carGoods.setAlias(goodsInfos.get(i).getAlias());
             //// TODO: 2017/7/6 填充图片
+
             goodsList.add(carGoods);
         }
     }
@@ -360,7 +372,9 @@ public class SureGoodsActivity extends BaseActivity {
                 dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        postAccept();
+                        //saveLocalLite();
+                        String currentTime = getCurrentTime();
+                        postAccept(currentTime);
                     }
                 });
                 dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
@@ -372,6 +386,35 @@ public class SureGoodsActivity extends BaseActivity {
                 dialog.show();
             }
         });
+    }
+
+    /**
+     * 得到当前的系统时间
+     */
+    private String getCurrentTime() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());
+        String shutTime = formatter.format(curDate);
+        return shutTime;
+    }
+
+    /**
+     * 保存到本地数据库
+     * @param currentTime
+     */
+    private void saveLocalLite(String currentTime) {
+        PhotoLite photoLite = new PhotoLite();
+        photoLite.setShuttime(currentTime);
+        photoLite.setUuid(UUID.randomUUID());
+        photoLite.setUsername(mUsername);
+        photoLite.setGoods(mCar_goods);
+        photoLite.setLicense_plate(mLicense_plate);
+        photoLite.setStation(mCar_station);
+        photoLite.setPhotoPath1(mFile1);
+        photoLite.setPhotoPath2(mFile2);
+        photoLite.setPhotoPath3(mFile3);
+        photoLite.setLicense_color(mColor);
+        photoLite.save();
     }
 
 
@@ -480,20 +523,12 @@ public class SureGoodsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //存入缓存
-        ACache.get(mActivity).put("sessions", (ArrayList<Session>) sessionList);
-        ACache.get(mActivity).put("stations", (ArrayList<CarStation>) stationList);
-        ACache.get(mActivity).put("goods", (ArrayList<CarGoods>) goodsList);
-
-    }
 
     /**
      * 向服务器Post所有的信息
+     * @param currentTime
      */
-    private void postAccept() {
+    private void postAccept(String currentTime) {
 
         //SimplePhoto();
         List<String> pathList = getPathList();
@@ -520,7 +555,7 @@ public class SureGoodsActivity extends BaseActivity {
         Logger.i(mLicense_plate);
         Logger.i(mCar_goods);
 
-        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg(mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
+        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg(currentTime,mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
         postThreeImg.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<AcceptResult>() {
@@ -541,9 +576,11 @@ public class SureGoodsActivity extends BaseActivity {
                         if (code == 200) {
                             CarNumberCut();
                             Intent intent = new Intent(SureGoodsActivity.this, PhotoActivity.class);
+                            intent.putExtra("username", mUsername);
                             startActivity(intent);
                         } else if (code == 300) {
                             ToastUtils.singleToast("上传失败");
+                            saveLocalLite(currentTime);
                             // TODO: 2017/7/7 上传失败需要保存到数据库
                         }
                         Logger.i("" + code);
@@ -565,18 +602,32 @@ public class SureGoodsActivity extends BaseActivity {
         list.add(mPhotoPath2);
         list.add(mPhotoPath3);
         */
-        String file11 = "/mnt/sdcard/Download/car_body_light.png";
-        String file22 = "/mnt/sdcard/Download/car_goods_light.png";
-        String file33 = "/mnt/sdcard/Download/car_station_light.png";
+        mFile1 = "/mnt/sdcard/Download/car_body_light.png";
+        mFile2 = "/mnt/sdcard/Download/car_goods_light.png";
+        mFile3 = "/mnt/sdcard/Download/car_station_light.png";
 
         ArrayList<String> list = new ArrayList<>();
-        list.add(file11);
-        list.add(file22);
-        list.add(file33);
+        list.add(mFile1);
+        list.add(mFile2);
+        list.add(mFile3);
 
         return list;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //存入缓存
+        ACache.get(mActivity).put("sessions", (ArrayList<Session>) sessionList);
+        ACache.get(mActivity).put("stations", (ArrayList<CarStation>) stationList);
+        ACache.get(mActivity).put("goods", (ArrayList<CarGoods>) goodsList);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 
 }
 

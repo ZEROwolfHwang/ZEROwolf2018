@@ -1,12 +1,18 @@
 package com.zero.wolf.greenroad.activity;
 
-import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +20,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
@@ -29,6 +37,7 @@ import com.zero.wolf.greenroad.bean.GoodsLite;
 import com.zero.wolf.greenroad.bean.NumberLite;
 import com.zero.wolf.greenroad.bean.StationDataBean;
 import com.zero.wolf.greenroad.bean.StationLite;
+import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.interfacy.HttpMethods;
 import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
@@ -36,24 +45,26 @@ import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
 import com.zero.wolf.greenroad.litepalbean.StationInfo;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.update.AppInnerDownLoder;
+import com.zero.wolf.greenroad.update.CheckUpdateUtils;
 import com.zero.wolf.greenroad.update.Subject;
 import com.zero.wolf.greenroad.update.SubscriberOnNextListener;
-import com.zero.wolf.greenroad.view.CircleImageView;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import ezy.boost.update.ICheckAgent;
-import ezy.boost.update.IUpdateChecker;
-import ezy.boost.update.IUpdateParser;
-import ezy.boost.update.UpdateInfo;
-import ezy.boost.update.UpdateManager;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -67,6 +78,8 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  */
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SubscriberOnNextListener<List<Subject>> {
+
+    private long firstClick;
 
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -87,15 +100,40 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private String mAvailSpace;
     private NetWorkStateReceiver mNetWorkStateReceiver;
     private TextView mTv_change3;
-    private CircleImageView mIvCamera;
+    private RoundedImageView mIvCamera;
 
 
     private SubscriberOnNextListener getTopMovieOnNext;
     private String mOperator;
     private boolean mIsConnected;
     private String mUsername;
+    private boolean isNumberCompleted;
+    private boolean isStationCompleted;
+    private boolean isGoodsCompleted;
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {// handler接收到消息后就会执行此方法
+            // pd.dismiss();// 关闭ProgressDialog
+            String s = (String) msg.obj;
+            if (s == "123") {
+                isNumberCompleted = true;
+            } else if (s == "456") {
+                isStationCompleted = true;
+            } else if (s == "789") {
+                isGoodsCompleted = true;
+            } else if (s == "error") {
+                mProgressDialog.dismiss();
+            }
+            if (isGoodsCompleted && isNumberCompleted && isStationCompleted) {
+                mProgressDialog.dismiss();
+            }
+
+        }
+    };
+    private AlertDialog.Builder mDialog;
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -110,9 +148,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mFilePath = Environment.getExternalStorageDirectory().getPath();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        //mTvOperator.setText("功成名就");
 
         initData();
         initSp();
@@ -145,13 +180,34 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
     private void initLitePal() {
-        LitePal.getDatabase();
+        if (NetWorkManager.isnetworkConnected(mActivity)) {
 
-        initStation();
+            isNumberCompleted = false;
+            isStationCompleted = false;
+            isGoodsCompleted = false;
+            LitePal.getDatabase();
 
-        initCarNumber();
+            mProgressDialog = new ProgressDialog(mActivity);
+            mProgressDialog.setTitle("正在更新数据");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
 
-        initGoodsLite();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    initStation();
+                    initCarNumber();
+                    initGoodsLite();
+                }
+            }).start();
+        } else {
+            return;
+        }
     }
 
     /**
@@ -173,6 +229,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .subscribe(new Subscriber<List<GoodsLite.DataBean>>() {
                     @Override
                     public void onCompleted() {
+                        Message message = Message.obtain();
+                        message.obj = "789";
+                        handler.sendMessage(message);
                         Logger.i("完成");
                     }
 
@@ -186,8 +245,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     public void onNext(List<GoodsLite.DataBean> dataBeen) {
 
                         List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
-                        boolean b = goodsInfo == null;
-                        Logger.i("" + b);
                         if (goodsInfos.size() != 0) {
                             if (dataBeen.size() == goodsInfos.size()) {
                                 Logger.i("该方法走了没1");
@@ -208,14 +265,42 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void goodsInfoFore(List<GoodsLite.DataBean> dataBeen) {
         for (int i = 0; i < dataBeen.size(); i++) {
+
+          /*  String imgurl = dataBeen.get(i).getImgurl().toString();
+            Bitmap bitmap = getBitmap(imgurl);
+*/
             Logger.i("该方法走了没3");
             Logger.i("数据更新");
             GoodsInfo info = new GoodsInfo();
             info.setAlias(dataBeen.get(i).getAlias());
             info.setScientificname(dataBeen.get(i).getScientificname());
             info.setCargoid(dataBeen.get(i).getCargoid());
+         //   info.setBitmap(bitmap);
             info.save();
         }
+    }
+
+    public static Bitmap getBitmap(String path) {
+        URL url = null;
+        try {
+            url = new URL(path);
+            HttpURLConnection conn = null;
+            try {
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestMethod("GET");
+                if (conn.getResponseCode() == 200) {
+                    InputStream inputStream = conn.getInputStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    return bitmap;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -237,12 +322,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .subscribe(new Subscriber<List<NumberLite.DataBean>>() {
                     @Override
                     public void onCompleted() {
-
+                        //   mNumberListener.onCompleted(true);
+                        Message message = Message.obtain();
+                        message.obj = "123";
+                        handler.sendMessage(message);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        Logger.i(e.getMessage());
                     }
 
                     @Override
@@ -254,7 +343,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             numberHead.setHeadName(dataBeen.get(i).getPac());
                             numberHead.save();
                         }
-
+                        isNumberCompleted = true;
                     }
                 });
     }
@@ -278,22 +367,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .subscribe(new Subscriber<List<StationDataBean>>() {
                     @Override
                     public void onCompleted() {
-
+                        Message message = Message.obtain();
+                        message.obj = "456";
+                        handler.sendMessage(message);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Logger.i(e.getMessage());
+                        Message message = Message.obtain();
+                        message.obj = "error";
+                        handler.sendMessage(message);
                     }
 
                     @Override
                     public void onNext(List<StationDataBean> stationDataBeen) {
-                        Logger.i("" + stationDataBeen.get(0).getId());
-                        Logger.i(stationDataBeen.get(0).getZhanname());
-                        Logger.i("" + stationDataBeen.get(1).getId());
-                        Logger.i(stationDataBeen.get(1).getZhanname());
-                        Logger.i("" + stationDataBeen.get(2).getId());
-                        Logger.i(stationDataBeen.get(2).getZhanname());
 
                         DataSupport.deleteAll(StationInfo.class);
                         for (int i = 0; i < stationDataBeen.size(); i++) {
@@ -303,7 +391,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             info.setStationName(stationDataBeen.get(i).getZhanname());
                             info.save();
                         }
-
+                        isStationCompleted = true;
                     }
                 });
     }
@@ -324,7 +412,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initView() {
 
         //得到拍照的按钮
-        mIvCamera = (CircleImageView) findViewById(R.id.iv_camera);
+        mIvCamera = (RoundedImageView) findViewById(R.id.iv_camera);
 
 
         //mIvCamera.setOnClickListener(this);
@@ -400,8 +488,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTv_number_has_not_send.setText(String.valueOf(count_cut));
     }
 
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -428,8 +514,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -438,7 +522,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.nav_about) {
             navAbout();
         } else if (id == R.id.nav_update) {
-            updateVersion();
+            Logger.i("点击了更新按钮");
+            updateApp();
 
         } else if (id == R.id.nav_cancer) {
             cancelCount();
@@ -500,56 +585,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-    /**
-     * 根据版本号判断要不要更新
-     */
-    private void updateVersion() {
-
-        UpdateManager.setDebuggable(true);
-        UpdateManager.setWifiOnly(false);
-        UpdateManager.setUrl(mCheckUrl, "yyb");
-        UpdateManager.check(this);
-
-        check(true, true, false, false, false, 998);
-    }
-
-    /**
-     * 检查更新
-     *
-     * @param isManual
-     * @param hasUpdate
-     * @param isForce
-     * @param isSilent
-     * @param isIgnorable
-     * @param notifyId
-     */
-    public void check(boolean isManual, final boolean hasUpdate, final boolean isForce, final boolean isSilent, final boolean isIgnorable, final int
-            notifyId) {
-        UpdateManager.create(this).setChecker(new IUpdateChecker() {
-            @Override
-            public void check(ICheckAgent agent, String url) {
-                Log.e("ezy.update", "checking");
-                agent.setInfo("");
-            }
-        }).setUrl(mCheckUrl).setManual(isManual).setNotifyId(notifyId).setParser(new IUpdateParser() {
-            @Override
-            public UpdateInfo parse(String source) throws Exception {
-                UpdateInfo info = new UpdateInfo();
-                info.hasUpdate = hasUpdate;
-                info.updateContent = "• 支持文字、贴纸、背景音乐，尽情展现欢乐气氛；\n• 两人视频通话支持实时滤镜，丰富滤镜，多彩心情；\n• 图片编辑新增艺术滤镜，一键打造文艺画风；\n• 资料卡新增点赞排行榜，看好友里谁是魅力之王。";
-                info.versionCode = 587;
-                info.versionName = "v5.8.7";
-                info.url = mUpdateUrl;
-                info.md5 = "56cf48f10e4cf6043fbf53bbbc4009e3";
-                info.size = 10149314;
-                info.isForce = isForce;
-                info.isIgnorable = isIgnorable;
-                info.isSilent = isSilent;
-                return info;
-            }
-        }).check();
-    }
-
     //在onResume()方法注册
     @Override
     protected void onResume() {
@@ -576,5 +611,156 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onNext(List<Subject> subjects) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (System.currentTimeMillis() - firstClick > 2000) {
+                firstClick = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+                ;
+            } else {
+                ActivityCollector.finishAll();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 根据版本号判断要不要更新
+     */
+    private void updateApp() {
+        CheckUpdateUtils.checkUpdate("GreenRoad.apk", "1.0",
+                new CheckUpdateUtils.CheckCallBack() {
+                    @Override
+                    public void onSuccess(UpdateAppInfo updateInfo) {
+                        String isForce = updateInfo.getData().getLastfalse();//是否需要强制更新
+                        String downUrl = updateInfo.getData().getDownloadurl();//apk下载地址
+                        String updateinfo = updateInfo.getData().getUpdateinfo();//apk更新详情
+                        String appName = updateInfo.getData().getAppname();
+                        if (("1".equals(isForce)) && !TextUtils.isEmpty(updateinfo)) {//强制更新
+                            Logger.i("强制更新");
+                            forceUpdate(MainActivity.this, appName, downUrl, updateinfo);
+                        } else {//非强制更新
+                            //正常升级
+                            Logger.i("正常升级");
+                            normalUpdate(MainActivity.this, appName, downUrl, updateinfo);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        noneUpdate(MainActivity.this);
+                    }
+                });
+    }
+
+    /**
+     * 强制更新
+     *
+     * @param context
+     * @param appName
+     * @param downUrl
+     * @param updateinfo
+     */
+    private void forceUpdate(final Context context, final String appName, final String downUrl, final String updateinfo) {
+        mDialog = new AlertDialog.Builder(context);
+        mDialog.setTitle(appName + "又更新咯！");
+        mDialog.setMessage(updateinfo);
+        mDialog.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!canDownloadState()) {
+                    showDownloadSetting();
+                    return;
+                }
+                //   DownLoadApk.download(MainActivity.this,downUrl,updateinfo,appName);
+                AppInnerDownLoder.downLoadApk(MainActivity.this, downUrl, appName);
+            }
+        }).setCancelable(false).create().show();
+    }
+
+    /**
+     * 正常更新
+     *
+     * @param context
+     * @param appName
+     * @param downUrl
+     * @param updateinfo
+     */
+    private void normalUpdate(Context context, final String appName, final String downUrl, final String updateinfo) {
+        mDialog = new AlertDialog.Builder(context);
+        mDialog.setTitle(appName + "又更新咯！");
+        mDialog.setMessage(updateinfo);
+        mDialog.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!canDownloadState()) {
+                    showDownloadSetting();
+                    return;
+                }
+                AppInnerDownLoder.downLoadApk(MainActivity.this, downUrl, appName);
+                //  DownLoadApk.download(MainActivity.this,downUrl,updateinfo,appName);
+            }
+        }).setNegativeButton("暂不更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setCancelable(false).create().show();
+    }
+
+    /**
+     * 无需跟新
+     *
+     * @param context
+     */
+    private void noneUpdate(Context context) {
+        mDialog = new AlertDialog.Builder(context);
+        mDialog.setTitle("版本更新")
+                .setMessage("当前已是最新版本无需更新")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false).create().show();
+    }
+
+    private void showDownloadSetting() {
+        String packageName = "com.android.providers.downloads";
+        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + packageName));
+        if (intentAvailable(intent)) {
+            startActivity(intent);
+        }
+    }
+
+    private boolean intentAvailable(Intent intent) {
+        PackageManager packageManager = getPackageManager();
+        List list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
+    private boolean canDownloadState() {
+        try {
+            int state = this.getPackageManager().getApplicationEnabledSetting("com.android.providers.downloads");
+
+            if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+                    || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

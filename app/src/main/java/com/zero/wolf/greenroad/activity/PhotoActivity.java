@@ -92,6 +92,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private RadioButton mLicense_yellow;
     private String mCurrent_color;
     private RadioGroup mRadio_group_color;
+    private File mFile;
 
 
     @Override
@@ -110,7 +111,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
      * 初始化数据
      */
     private void initData() {
-        mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (mFile == null) {
+            mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            mFile = new File(mFilePath, "imggreen");
+            mFile.mkdirs();
+        }
 
         Intent intent = getIntent();
         mUsername = intent.getStringExtra("username");
@@ -220,6 +225,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         carNumberCount();
 
+
         SureGoodsActivity.actionStart(PhotoActivity.this, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
 
@@ -248,16 +254,16 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         }*/
         if (type_int == TYPE_NUMBER) {
-            mFilePath1 = mFilePath + "/" + System.currentTimeMillis()
+            mFilePath1 = mFile + "/" + System.currentTimeMillis()
                     + "number.jpg";
             savePath(mFilePath1, intent);
             Logger.i(mFilePath);
         } else if (type_int == TYPE_BODY) {
-            mFilePath2 = mFilePath + "/" + System.currentTimeMillis()
+            mFilePath2 = mFile + "/" + System.currentTimeMillis()
                     + "body.jpg";
             savePath(mFilePath2, intent);
         } else if (type_int == TYPE_GOODS) {
-            mFilePath3 = mFilePath + "/" + System.currentTimeMillis()
+            mFilePath3 = mFile + "/" + System.currentTimeMillis()
                     + "goods.jpg";
             savePath(mFilePath3, intent);
         }
@@ -326,14 +332,14 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
      */
     private void initRadioColor() {
         mLicense_yellow = (RadioButton) findViewById(R.id.license_yellow);
-        mLicense_yellow.setChecked(true);
-        mCurrent_color = "黄牌";
 
         mRadio_group_color = (RadioGroup) findViewById(R.id.radio_group_color);
         mRadio_group_color.setOnCheckedChangeListener(this);
     }
+
     /**
      * 车牌颜色选择的RadioGroup的点击事件
+     *
      * @param group
      * @param checkedId
      */

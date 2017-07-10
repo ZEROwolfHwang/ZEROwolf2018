@@ -15,6 +15,7 @@ public class GoodsLite<T>{
     private int code;
     private String msg;
     private T data;
+    private String imgurl;
 
     public int getCode() {
         return code;
@@ -53,6 +54,15 @@ public class GoodsLite<T>{
         private String scientificname;
         private String alias;
         private String kind;
+        private String imgurl;
+
+        public String getImgurl() {
+            return imgurl;
+        }
+
+        public void setImgurl(String imgurl) {
+            this.imgurl = imgurl;
+        }
 
         public String getCargoid() {
             return cargoid;

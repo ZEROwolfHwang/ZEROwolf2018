@@ -75,7 +75,6 @@
 
         <RadioButton
             android:id="@+id/license_white"
-            android:textColor="@color/black"
             style="@style/RadioButtonStyle"
             android:background="@drawable/rb_white_selector"
             android:text="白牌"/>

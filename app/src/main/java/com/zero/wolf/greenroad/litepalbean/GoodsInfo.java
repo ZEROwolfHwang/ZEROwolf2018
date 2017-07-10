@@ -1,5 +1,7 @@
 package com.zero.wolf.greenroad.litepalbean;
 
+import android.graphics.Bitmap;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -11,7 +13,23 @@ public class GoodsInfo extends DataSupport{
     private String scientificname;
     private String alias;
     private int goodsId;
+    private Bitmap bitmap;
 
+    public int getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(int goodsId) {
+        this.goodsId = goodsId;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
 
     public String getCargoid() {
         return cargoid;
