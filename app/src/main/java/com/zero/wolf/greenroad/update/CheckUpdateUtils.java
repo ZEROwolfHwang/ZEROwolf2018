@@ -2,7 +2,7 @@ package com.zero.wolf.greenroad.update;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
-import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
+import com.zero.wolf.greenroad.https.HttpUtilsApi;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

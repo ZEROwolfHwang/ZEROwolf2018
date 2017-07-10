@@ -4,20 +4,34 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 /**
- * Created by Administrator on 2017/6/27.
+ * Created by shadow on 2016/3/4.
  */
-
-public class CarStation implements Serializable, Comparable {
+public class SerializableNumber implements Serializable, Comparable {
 
     /**
      * 是否置顶
      */
-    public int isTop;
+    public int top;
 
     /**
-     * 收费站名
+     * 置顶时间
+     **/
+    public long time;
+
+    /**
+     * 头像
      */
-    public String stationName;
+    public String avatar;
+
+    public String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public long getTime() {
         return time;
@@ -27,40 +41,38 @@ public class CarStation implements Serializable, Comparable {
         this.time = time;
     }
 
-    public long time;
-
-    public int getIsTop() {
-        return isTop;
+    public int getTop() {
+        return top;
     }
 
-    public void setIsTop(int isTop) {
-        this.isTop = isTop;
+    public void setTop(int top) {
+        this.top = top;
     }
 
-    public String getStationName() {
-        return stationName;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override
     public int compareTo(Object another) {
-        if (another == null || !(another instanceof CarStation)) {
+        if (another == null || !(another instanceof SerializableNumber)) {
             return -1;
         }
 
-        CarStation otherSession = (CarStation) another;
+        SerializableNumber otherSerializableNumber = (SerializableNumber) another;
         /**置顶判断 ArrayAdapter是按照升序从上到下排序的，就是默认的自然排序
          * 如果是相等的情况下返回0，包括都置顶或者都不置顶，返回0的情况下要
          * 再做判断，拿它们置顶时间进行判断
          * 如果是不相等的情况下，otherSession是置顶的，则当前session是非置顶的，应该在otherSession下面，所以返回1
          *  同样，session是置顶的，则当前otherSession是非置顶的，应该在otherSession上面，所以返回-1
          * */
-        int result = 0 - (isTop - otherSession.getIsTop());
+        int result = 0 - (top - otherSerializableNumber.getTop());
         if (result == 0) {
-            result = 0 - compareToTime(time, otherSession.getTime());
+            result = 0 - compareToTime(time, otherSerializableNumber.getTime());
         }
         return result;
     }

@@ -1,7 +1,5 @@
 package com.zero.wolf.greenroad.bean;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -9,23 +7,17 @@ import java.util.Calendar;
  * Created by Administrator on 2017/6/27.
  */
 
-public class CarGoods implements Serializable, Comparable {
+public class SerializableStation implements Serializable, Comparable {
 
     /**
      * 是否置顶
      */
-    public int top;
+    public int isTop;
 
     /**
-     * 花名
+     * 收费站名
      */
-    public String scientific_name;
-
-    public String alias;
-
-    public Bitmap cargoimg;
-
-
+    public String stationName;
 
     public long getTime() {
         return time;
@@ -37,52 +29,36 @@ public class CarGoods implements Serializable, Comparable {
 
     public long time;
 
-    public int getTop() {
-        return top;
+    public int getIsTop() {
+        return isTop;
     }
 
-    public void setTop(int top) {
-        this.top = top;
+    public void setIsTop(int isTop) {
+        this.isTop = isTop;
     }
 
-    public String getScientific_name() {
-        return scientific_name;
+    public String getStationName() {
+        return stationName;
     }
 
-    public void setScientific_name(String scientific_name) {
-        this.scientific_name = scientific_name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    public Bitmap getCargoimg() {
-        return cargoimg;
-    }
-
-    public void setCargoimg(Bitmap cargoimg) {
-        this.cargoimg = cargoimg;
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
 
     @Override
     public int compareTo(Object another) {
-        if (another == null || !(another instanceof CarGoods)) {
+        if (another == null || !(another instanceof SerializableStation)) {
             return -1;
         }
 
-        CarGoods otherSession = (CarGoods) another;
+        SerializableStation otherSession = (SerializableStation) another;
         /**置顶判断 ArrayAdapter是按照升序从上到下排序的，就是默认的自然排序
          * 如果是相等的情况下返回0，包括都置顶或者都不置顶，返回0的情况下要
          * 再做判断，拿它们置顶时间进行判断
          * 如果是不相等的情况下，otherSession是置顶的，则当前session是非置顶的，应该在otherSession下面，所以返回1
          *  同样，session是置顶的，则当前otherSession是非置顶的，应该在otherSession上面，所以返回-1
          * */
-        int result = 0 - (top - otherSession.getTop());
+        int result = 0 - (isTop - otherSession.getIsTop());
         if (result == 0) {
             result = 0 - compareToTime(time, otherSession.getTime());
         }

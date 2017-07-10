@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.bean.CarStation;
+import com.zero.wolf.greenroad.bean.SerializableStation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +22,14 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
 
     private final AppCompatActivity mActivity;
-    private final   ArrayList<CarStation>  mListLocal;
+    private final   ArrayList<SerializableStation>  mListLocal;
 
     private onItemClick itemClick;
 
     public SureCarStationAdapter(AppCompatActivity activity,
-                                 List<CarStation> list_head, onItemClick itemClick) {
+                                 List<SerializableStation> list_head, onItemClick itemClick) {
         mActivity = activity;
-        mListLocal = (ArrayList<CarStation>) list_head;
+        mListLocal = (ArrayList<SerializableStation>) list_head;
         this.itemClick = itemClick;
     }
 
@@ -46,7 +46,7 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
     @Override
     public void onBindViewHolder(SureCarStationHolder holder, int position) {
-        CarStation station = mListLocal.get(position);
+        SerializableStation station = mListLocal.get(position);
         holder.bindHolder(station,position,holder);
     }
 
@@ -66,7 +66,7 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
         }
 
-        public void bindHolder(final CarStation station, final int position, final SureCarStationHolder holder) {
+        public void bindHolder(final SerializableStation station, final int position, final SureCarStationHolder holder) {
             mTextView.setText(station.getStationName());
 
            // mTextView.setSelected(position == selectedItem);
@@ -86,7 +86,7 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
 
     public interface onItemClick {
-        void itemClick(CarStation station, int position);
+        void itemClick(SerializableStation station, int position);
 
     }
 

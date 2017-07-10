@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.bean.CarGoods;
+import com.zero.wolf.greenroad.httpresultbean.SerializableGoods;
 
 import java.util.List;
 
@@ -22,11 +22,11 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
     private final Context mContext;
 
 
-    private final List<CarGoods> mList;
+    private final List<SerializableGoods> mList;
     private final onItemClick mItemClick;
 
 
-    public SureGoodsAdapter(Context context, List<CarGoods> list, onItemClick itemClick) {
+    public SureGoodsAdapter(Context context, List<SerializableGoods> list, onItemClick itemClick) {
         mContext = context;
         mList = list;
         mItemClick = itemClick;
@@ -46,8 +46,8 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
 
     @Override
     public void onBindViewHolder(SureGoodsHolder holder, int position) {
-        CarGoods carGoods = mList.get(position);
-        holder.bindHolder(carGoods,position);
+        SerializableGoods serializableGoods = mList.get(position);
+        holder.bindHolder(serializableGoods,position);
     }
 
     public class SureGoodsHolder extends RecyclerView.ViewHolder {
@@ -63,21 +63,21 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
             alias = (TextView) itemView.findViewById(R.id.tv_sure_recycler_alias);
         }
 
-        public void bindHolder(final CarGoods carGoods, int position) {
-            scientific_name.setText(carGoods.getScientific_name());
-            alias.setText(carGoods.getAlias());
+        public void bindHolder(final SerializableGoods serializableGoods, int position) {
+            scientific_name.setText(serializableGoods.getScientific_name());
+            alias.setText(serializableGoods.getAlias());
             //// TODO: 2017/7/6  imageview的填充
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemClick.itemClick(carGoods,position);
+                    mItemClick.itemClick(serializableGoods,position);
                 }
             });
         }
 
     }
     public interface onItemClick {
-        void itemClick(CarGoods carGoods, int position);
+        void itemClick(SerializableGoods serializableGoods, int position);
     }
 
 }

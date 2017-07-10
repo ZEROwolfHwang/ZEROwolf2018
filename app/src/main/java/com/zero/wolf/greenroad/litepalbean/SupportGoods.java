@@ -8,7 +8,7 @@ import org.litepal.crud.DataSupport;
  * Created by Administrator on 2017/7/5.
  */
 
-public class GoodsInfo extends DataSupport{
+public class SupportGoods extends DataSupport{
     private String cargoid;
     private String scientificname;
     private String alias;

@@ -1,13 +1,13 @@
-package com.zero.wolf.greenroad.interfacy;
+package com.zero.wolf.greenroad.https;
 
-import com.zero.wolf.greenroad.bean.AcceptResult;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
-import com.zero.wolf.greenroad.bean.GoodsLite;
-import com.zero.wolf.greenroad.bean.LoginName;
-import com.zero.wolf.greenroad.bean.NumberLite;
-import com.zero.wolf.greenroad.bean.StationDataBean;
-import com.zero.wolf.greenroad.bean.StationLite;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
+import com.zero.wolf.greenroad.bean.HttpResultNumber;
+import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultStation;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 
 import java.util.List;
@@ -61,16 +61,16 @@ public interface HttpUtilsApi {
 */
     @FormUrlEncoded
     @POST("listapi")
-    Call<LoginName> login(@Field("name") String name, @Field("password") String password);
+    Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
 
     @GET("site")
-    Observable<StationLite<List<StationDataBean>>> getStationInfo();
+    Observable<HttpResultStation<List<StationDataBean>>> getStationInfo();
 
     @GET("number")
-    Observable<NumberLite<List<NumberLite.DataBean>>> getNumberInfo();
+    Observable<HttpResultNumber<List<HttpResultNumber.DataBean>>> getNumberInfo();
 
     @GET("goods")
-    Observable<GoodsLite<List<GoodsLite.DataBean>>> getGoodsInfo();
+    Observable<HttpResultGoods<List<HttpResultGoods.DataBean>>> getGoodsInfo();
 
     @GET("update")
     Observable<UpdateAppInfo> update(@Query("appname") String appname,
@@ -78,7 +78,7 @@ public interface HttpUtilsApi {
 
     @Multipart
     @POST("accept")
-    Observable<AcceptResult> postAccept(@Part MultipartBody.Part file);
+    Observable<HttpResultPostImg> postAccept(@Part MultipartBody.Part file);
 
   /*  @Multipart
     @POST("image")
@@ -90,12 +90,12 @@ public interface HttpUtilsApi {
 */
     @Multipart
     @POST("image")
-    Observable<AcceptResult> postThreeImg(@Part("shuttime") String shuttime,
-                                          @Part("username") String username,
-                                          @Part("station") String station,
-                                          @Part("license_plate") String license_plate,
-                                          @Part("goods") String goods,
-                                          @Part List<MultipartBody.Part> file);
+    Observable<HttpResultPostImg> postThreeImg(@Part("shuttime") String shuttime,
+                                               @Part("username") String username,
+                                               @Part("station") String station,
+                                               @Part("license_plate") String license_plate,
+                                               @Part("goods") String goods,
+                                               @Part List<MultipartBody.Part> file);
 
 
 

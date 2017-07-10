@@ -15,16 +15,18 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.BaseActivity;
 import com.zero.wolf.greenroad.activity.MainActivity;
-import com.zero.wolf.greenroad.bean.LoginName;
-import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
-import com.zero.wolf.greenroad.litepalbean.LoginUserInfo;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
+import com.zero.wolf.greenroad.https.HttpUtilsApi;
+import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
+import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,7 +50,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     EditText mEt_password;
     private SpinnerPopupWindow mPopupWindow;
     private boolean mIsConnected;
-    private List<LoginUserInfo> mLoginUserInfos;
+    private List<SupportLoginUser> mSupportLoginUsers;
+    private static int TIMEGAP = 10;
 
 
     @Override
@@ -74,7 +77,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 initData();
                 mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
                         .setmLayoutManager(null, 0)
-                        .setmAdapter(new SpinnerAdapter(this, mLoginUserInfos, new onItemClick() {
+                        .setmAdapter(new SpinnerAdapter(this, mSupportLoginUsers, new onItemClick() {
                             @Override
                             public void itemClick(int position) {
                                 updatePopup(position);
@@ -97,15 +100,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void updatePopup(int position) {
-        mEt_user_name.setText(mLoginUserInfos.get(position).getUsername());
-        mEt_password.setText(mLoginUserInfos.get(position).getPassword());
+        mEt_user_name.setText(mSupportLoginUsers.get(position).getUsername());
+        mEt_password.setText(mSupportLoginUsers.get(position).getPassword());
         mPopupWindow.dismissPopWindow();
 
     }
 
     private void initData() {
         Connector.getDatabase();
-        mLoginUserInfos = DataSupport.findAll(LoginUserInfo.class);
+        mSupportLoginUsers = DataSupport.findAll(SupportLoginUser.class);
     }
 
     private void startMainActivity() {
@@ -117,21 +120,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (mIsConnected) {
             loginFromNet(username, password);
         } else {
-            List<LoginUserInfo> userInfos = DataSupport
+            List<SupportLoginUser> userInfos = DataSupport
                     .where("username=? and password = ?", username, password)
-                    .find(LoginUserInfo.class);
+                    .find(SupportLoginUser.class);
             if (userInfos.size() == 0) {
-                ToastUtils.singleToast("无网络连接状态下本地库未存储该账号");
+                ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
             } else if (userInfos.size() == 1) {
                 String operator = userInfos.get(0).getOperator();
-                login2MainActivity(operator, username);
-                ToastUtils.singleToast("无网络连接状态登陆成功");
+                Date currentDate = TimeUtil.getCurrentTimeToDate();
+                Date logindate = userInfos.get(0).getLogindate();
+                int timeGap = TimeUtil.differentDaysByMillisecond(currentDate, logindate);
+                if (timeGap > 10) {
+                    DataSupport.deleteAll(SupportLoginUser.class, "username=? and password = ?",
+                            username, password);
+                    ToastUtils.singleToast("账号已过期，请在有网状态下重新登录");
+                } else {
+                    login2MainActivity(operator, username);
+                    ToastUtils.singleToast("无网络连接状态登陆成功");
+                }
             }
         }
     }
 
     /**
      * 有网络的状态下登录
+     *
      * @param username
      * @param password
      */
@@ -142,10 +155,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         HttpUtilsApi httpUtilsApi = retrofit.create(HttpUtilsApi.class);
-        Call<LoginName> login = httpUtilsApi.login(username, password);
-        login.enqueue(new Callback<LoginName>() {
+        Call<HttpResultLoginName> login = httpUtilsApi.login(username, password);
+        login.enqueue(new Callback<HttpResultLoginName>() {
             @Override
-            public void onResponse(Call<LoginName> call, Response<LoginName> response) {
+            public void onResponse(Call<HttpResultLoginName> call, Response<HttpResultLoginName> response) {
                 int code = response.code();
                 int code1 = response.body().getCode();
                 String msg = response.body().getMsg();
@@ -157,11 +170,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 if (code == 200) {
                     if (code1 == 200) {
 
-                        List<LoginUserInfo> userInfos = DataSupport
-                                .where("username=? and password = ? and operator = ?", username, password,name)
-                                .find(LoginUserInfo.class);
+                        List<SupportLoginUser> userInfos = DataSupport
+                                .where("username=? and password = ? and operator = ?", username, password, name)
+                                .find(SupportLoginUser.class);
                         if (userInfos.size() == 0) {
-                            LoginUserInfo userInfo = new LoginUserInfo();
+                            SupportLoginUser userInfo = new SupportLoginUser();
+                            userInfo.setLogindate(TimeUtil.getCurrentTimeToDate());
                             userInfo.setUsername(username);
                             userInfo.setPassword(password);
                             userInfo.setOperator(name);
@@ -169,7 +183,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         }
 
                         ToastUtils.singleToast(msg);
-                        login2MainActivity(name,username);
+                        login2MainActivity(name, username);
                     } else if (code1 == 201) {
                         ToastUtils.singleToast(msg);
 
@@ -186,7 +200,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
 
             @Override
-            public void onFailure(Call<LoginName> call, Throwable t) {
+            public void onFailure(Call<HttpResultLoginName> call, Throwable t) {
                 Logger.i(t.getMessage());
             }
         });
@@ -208,9 +222,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
         private final onItemClick mItemClick;
-        private final List<LoginUserInfo> mList;
+        private final List<SupportLoginUser> mList;
 
-        public SpinnerAdapter(AppCompatActivity activity, List<LoginUserInfo> list, onItemClick itemClick) {
+        public SpinnerAdapter(AppCompatActivity activity, List<SupportLoginUser> list, onItemClick itemClick) {
             mItemClick = itemClick;
             mActivity = activity;
             mList = list;

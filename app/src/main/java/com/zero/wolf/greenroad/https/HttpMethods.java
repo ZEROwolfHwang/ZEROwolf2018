@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad.interfacy;
+package com.zero.wolf.greenroad.https;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,7 +52,7 @@ public class HttpMethods {
         return httpUtilsApi;
     }
 
-    private <T> void toSubscribe(Observable<T> o, Subscriber<T> s){
+    public <T> void toSubscribe(Observable<T> o, Subscriber<T> s){
          o.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

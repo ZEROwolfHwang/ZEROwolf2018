@@ -6,7 +6,7 @@ import org.litepal.crud.DataSupport;
  * Created by Administrator on 2017/6/27.
  */
 
-public class CarNumberHead extends DataSupport {
+public class SupportCarNumber extends DataSupport {
 
     private String headName;
 

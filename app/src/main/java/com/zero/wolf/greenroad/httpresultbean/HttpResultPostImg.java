@@ -1,10 +1,10 @@
-package com.zero.wolf.greenroad.bean;
+package com.zero.wolf.greenroad.httpresultbean;
 
 /**
  * Created by Administrator on 2017/7/6.
  */
 
-public class AcceptResult {
+public class HttpResultPostImg {
 
     /**
      * code : 301

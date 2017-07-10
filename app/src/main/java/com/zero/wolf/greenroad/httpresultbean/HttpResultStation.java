@@ -1,10 +1,10 @@
-package com.zero.wolf.greenroad.bean;
+package com.zero.wolf.greenroad.httpresultbean;
 
 /**
  * Created by Administrator on 2017/7/5.
  */
 
-public class StationLite<T> {
+public class HttpResultStation<T> {
 
 
 

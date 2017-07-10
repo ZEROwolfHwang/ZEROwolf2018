@@ -8,7 +8,7 @@ import java.util.UUID;
  * Created by Administrator on 2017/7/3.
  */
 
-public class PhotoLite extends DataSupport {
+public class SupportPhotoLite extends DataSupport {
 
     private String shuttime;
 

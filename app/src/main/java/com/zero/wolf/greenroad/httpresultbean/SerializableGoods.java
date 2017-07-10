@@ -1,12 +1,15 @@
-package com.zero.wolf.greenroad.tools;
+package com.zero.wolf.greenroad.httpresultbean;
+
+import android.graphics.Bitmap;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
 /**
- * Created by shadow on 2016/3/4.
+ * Created by Administrator on 2017/6/27.
  */
-public class Session implements Serializable, Comparable {
+
+public class SerializableGoods implements Serializable, Comparable {
 
     /**
      * 是否置顶
@@ -14,24 +17,15 @@ public class Session implements Serializable, Comparable {
     public int top;
 
     /**
-     * 置顶时间
-     **/
-    public long time;
-
-    /**
-     * 头像
+     * 花名
      */
-    public String avatar;
+    public String scientific_name;
 
-    public String name;
+    public String alias;
 
-    public String getName() {
-        return name;
-    }
+    public Bitmap cargoimg;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+
 
     public long getTime() {
         return time;
@@ -41,6 +35,8 @@ public class Session implements Serializable, Comparable {
         this.time = time;
     }
 
+    public long time;
+
     public int getTop() {
         return top;
     }
@@ -49,21 +45,37 @@ public class Session implements Serializable, Comparable {
         this.top = top;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getScientific_name() {
+        return scientific_name;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setScientific_name(String scientific_name) {
+        this.scientific_name = scientific_name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Bitmap getCargoimg() {
+        return cargoimg;
+    }
+
+    public void setCargoimg(Bitmap cargoimg) {
+        this.cargoimg = cargoimg;
     }
 
     @Override
     public int compareTo(Object another) {
-        if (another == null || !(another instanceof Session)) {
+        if (another == null || !(another instanceof SerializableGoods)) {
             return -1;
         }
 
-        Session otherSession = (Session) another;
+        SerializableGoods otherSession = (SerializableGoods) another;
         /**置顶判断 ArrayAdapter是按照升序从上到下排序的，就是默认的自然排序
          * 如果是相等的情况下返回0，包括都置顶或者都不置顶，返回0的情况下要
          * 再做判断，拿它们置顶时间进行判断

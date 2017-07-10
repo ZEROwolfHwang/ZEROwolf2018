@@ -6,7 +6,7 @@ import org.litepal.crud.DataSupport;
  * Created by Administrator on 2017/7/5.
  */
 
-public class StationInfo extends DataSupport{
+public class SupportStation extends DataSupport{
     private String stationName;
     private int stationId;
 

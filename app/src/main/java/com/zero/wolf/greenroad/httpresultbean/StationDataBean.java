@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad.bean;
+package com.zero.wolf.greenroad.httpresultbean;
 
 /**
  * Created by Administrator on 2017/7/5.

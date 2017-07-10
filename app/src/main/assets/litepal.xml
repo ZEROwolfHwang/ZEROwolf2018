@@ -32,11 +32,11 @@
             </list>
         -->
         <list>
-            <mapping class="com.zero.wolf.greenroad.litepalbean.CarNumberHead" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.PhotoLite" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.StationInfo" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.GoodsInfo" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.LoginUserInfo" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportCarNumber" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportPhotoLite" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportStation" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportGoods" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportLoginUser" />
 
         </list>
 

@@ -24,28 +24,27 @@ import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
-import com.zero.wolf.greenroad.bean.AcceptResult;
-import com.zero.wolf.greenroad.bean.CarGoods;
-import com.zero.wolf.greenroad.bean.CarStation;
-import com.zero.wolf.greenroad.interfacy.HttpMethods;
-import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
-import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
-import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
-import com.zero.wolf.greenroad.litepalbean.PhotoLite;
-import com.zero.wolf.greenroad.litepalbean.StationInfo;
+import com.zero.wolf.greenroad.bean.SerializableNumber;
+import com.zero.wolf.greenroad.bean.SerializableStation;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
+import com.zero.wolf.greenroad.httpresultbean.SerializableGoods;
+import com.zero.wolf.greenroad.https.HttpMethods;
+import com.zero.wolf.greenroad.https.HttpUtilsApi;
+import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
+import com.zero.wolf.greenroad.litepalbean.SupportGoods;
+import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
+import com.zero.wolf.greenroad.litepalbean.SupportStation;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.SPUtils;
-import com.zero.wolf.greenroad.tools.Session;
+import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,9 +61,9 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
 public class SureGoodsActivity extends BaseActivity {
 
 
-    private List<Session> sessionList = new ArrayList<>();
-    private List<CarStation> stationList = new ArrayList<>();
-    private List<CarGoods> goodsList = new ArrayList<>();
+    private List<SerializableNumber> mSerializableNumberList = new ArrayList<>();
+    private List<SerializableStation> stationList = new ArrayList<>();
+    private List<SerializableGoods> goodsList = new ArrayList<>();
 
     private RecyclerView mRecycler_view_goods;
     private Context mContext;
@@ -78,7 +77,7 @@ public class SureGoodsActivity extends BaseActivity {
     private RecyclerView.Adapter mHeadAdapter;
     private EditText mEt_change2;
     private RecyclerView.Adapter mStationAdapter;
-    private List<GoodsInfo> mGoodsInfoList;
+    private List<SupportGoods> mSupportGoodsList;
     private SureGoodsAdapter mGoodsAdapter;
     private String mUsername;
     private String mPhotoPath1;
@@ -123,67 +122,67 @@ public class SureGoodsActivity extends BaseActivity {
          * 加载并缓存车牌号头的数据
          * */
 
-        List<CarNumberHead> headList = DataSupport.findAll(CarNumberHead.class);
+        List<SupportCarNumber> headList = DataSupport.findAll(SupportCarNumber.class);
 
-        ArrayList<Session> sessions = (ArrayList<Session>) ACache.get(mActivity).getAsObject("sessions");
+        ArrayList<SerializableNumber> serializableNumbers = (ArrayList<SerializableNumber>) ACache.get(mActivity).getAsObject("sessions");
 
         //如果跟数据库长度相同则不作更改，不然则更新
-        if (sessions != null) {
-            if (sessions.size() == headList.size()) {
-                sessionList.addAll(sessions);
+        if (serializableNumbers != null) {
+            if (serializableNumbers.size() == headList.size()) {
+                mSerializableNumberList.addAll(serializableNumbers);
             } else {
                 //更新数据需要删除缓存
-                sessions.clear();
+                serializableNumbers.clear();
                 Logger.i("" + headList.size());
                 for (int i = 0; i < headList.size(); i++) {
-                    Session session = new Session();
+                    SerializableNumber serializableNumber = new SerializableNumber();
                     Logger.i("" + headList.get(i).getHeadName());
-                    session.setName(headList.get(i).getHeadName());
-                    sessionList.add(session);
+                    serializableNumber.setName(headList.get(i).getHeadName());
+                    mSerializableNumberList.add(serializableNumber);
                 }
             }
         } else {
             for (int i = 0; i < headList.size(); i++) {
-                Session session = new Session();
+                SerializableNumber serializableNumber = new SerializableNumber();
                 Logger.i("" + headList.get(i).getHeadName());
-                session.setName(headList.get(i).getHeadName());
-                sessionList.add(session);
+                serializableNumber.setName(headList.get(i).getHeadName());
+                mSerializableNumberList.add(serializableNumber);
             }
         }
 
         /**
          * 加载收费站名的数据
          * */
-        List<StationInfo> stationInfos = DataSupport.findAll(StationInfo.class);
-        ArrayList<CarStation> stations = (ArrayList<CarStation>) ACache.get(mActivity).getAsObject("stations");
+        List<SupportStation> supportStations = DataSupport.findAll(SupportStation.class);
+        ArrayList<SerializableStation> stations = (ArrayList<SerializableStation>) ACache.get(mActivity).getAsObject("stations");
 
         if (stations != null) {
-            if (stations.size() == stationInfos.size()) {
+            if (stations.size() == supportStations.size()) {
                 stationList.addAll(stations);
             } else {
                 stations.clear();
-                addStationData(stationInfos);
+                addStationData(supportStations);
             }
         } else {
-            addStationData(stationInfos);
+            addStationData(supportStations);
         }
 
 
         /**
          * 加载货物的数据及缓存
          * */
-        List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
-        Logger.i("" + goodsInfos.size());
-        ArrayList<CarGoods> goods = (ArrayList<CarGoods>) ACache.get(mActivity).getAsObject("goods");
+        List<SupportGoods> supportGoodses = DataSupport.findAll(SupportGoods.class);
+        Logger.i("" + supportGoodses.size());
+        ArrayList<SerializableGoods> goods = (ArrayList<SerializableGoods>) ACache.get(mActivity).getAsObject("goods");
         if (goods != null) {
-            if (goods.size() == goodsInfos.size()) {
+            if (goods.size() == supportGoodses.size()) {
                 goodsList.addAll(goods);
             } else {
                 goods.clear();
-                addGoodsData(goodsInfos);
+                addGoodsData(supportGoodses);
             }
         } else {
-            addGoodsData(goodsInfos);
+            addGoodsData(supportGoodses);
         }
     }
 
@@ -203,27 +202,27 @@ public class SureGoodsActivity extends BaseActivity {
         Logger.i(mPhotoPath3);
     }
 
-    private void addGoodsData(List<GoodsInfo> goodsInfos) {
-        for (int i = 0; i < goodsInfos.size(); i++) {
-            CarGoods carGoods = new CarGoods();
-            carGoods.setScientific_name(goodsInfos.get(i).getScientificname());
-            carGoods.setAlias(goodsInfos.get(i).getAlias());
+    private void addGoodsData(List<SupportGoods> supportGoodses) {
+        for (int i = 0; i < supportGoodses.size(); i++) {
+            SerializableGoods serializableGoods = new SerializableGoods();
+            serializableGoods.setScientific_name(supportGoodses.get(i).getScientificname());
+            serializableGoods.setAlias(supportGoodses.get(i).getAlias());
             //// TODO: 2017/7/6 填充图片
 
-            goodsList.add(carGoods);
+            goodsList.add(serializableGoods);
         }
     }
 
     /**
      * 填充station的数据
      *
-     * @param stationInfos
+     * @param supportStations
      */
-    private void addStationData(List<StationInfo> stationInfos) {
-        for (int i = 0; i < stationInfos.size(); i++) {
-            CarStation carStation = new CarStation();
-            carStation.setStationName(stationInfos.get(i).getStationName());
-            stationList.add(carStation);
+    private void addStationData(List<SupportStation> supportStations) {
+        for (int i = 0; i < supportStations.size(); i++) {
+            SerializableStation serializableStation = new SerializableStation();
+            serializableStation.setStationName(supportStations.get(i).getStationName());
+            stationList.add(serializableStation);
         }
     }
 
@@ -232,7 +231,7 @@ public class SureGoodsActivity extends BaseActivity {
      * 加载货物的布局以及填充数据
      */
     private void initRecycler() {
-        mGoodsInfoList = DataSupport.findAll(GoodsInfo.class);
+        mSupportGoodsList = DataSupport.findAll(SupportGoods.class);
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -241,17 +240,17 @@ public class SureGoodsActivity extends BaseActivity {
 
         mGoodsAdapter = new SureGoodsAdapter(mContext, goodsList, new SureGoodsAdapter.onItemClick() {
             @Override
-            public void itemClick(CarGoods carGoods, int position) {
-                updataRecycler(carGoods, position);
+            public void itemClick(SerializableGoods serializableGoods, int position) {
+                updataRecycler(serializableGoods, position);
             }
         });
         mRecycler_view_goods.setAdapter(mGoodsAdapter);
 
     }
 
-    private void updataRecycler(CarGoods carGoods, int position) {
-        carGoods.setTop(1);
-        carGoods.setTime(System.currentTimeMillis());
+    private void updataRecycler(SerializableGoods serializableGoods, int position) {
+        serializableGoods.setTop(1);
+        serializableGoods.setTime(System.currentTimeMillis());
         mEt_change3.setText(goodsList.get(position).getScientific_name());
         mEt_change3.setSelection(goodsList.get(position).getScientific_name().length());
 
@@ -293,21 +292,21 @@ public class SureGoodsActivity extends BaseActivity {
 
                 mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
                         .setmLayoutManager(null, 1)
-                        .setmAdapter(new SureCarNumberAdapter(mActivity, sessionList, new SureCarNumberAdapter.onItemClick() {
+                        .setmAdapter(new SureCarNumberAdapter(mActivity, mSerializableNumberList, new SureCarNumberAdapter.onItemClick() {
                             @Override
-                            public void itemClick(Session session, int position) {
+                            public void itemClick(SerializableNumber serializableNumber, int position) {
                                 updatePupop(position, 001);
                             }
 
                             @Override
-                            public void onTop(Session session) {
-                                session.setTop(1);
-                                session.setTime(System.currentTimeMillis());
+                            public void onTop(SerializableNumber serializableNumber) {
+                                serializableNumber.setTop(1);
+                                serializableNumber.setTime(System.currentTimeMillis());
                                 refreshView(001);
                             }
 
                             @Override
-                            public void onCancel(Session session) {
+                            public void onCancel(SerializableNumber serializableNumber) {
                             }
                         }))
                         .setmHeight(700).setmWidth(500)
@@ -329,7 +328,7 @@ public class SureGoodsActivity extends BaseActivity {
                         .setmLayoutManager(null, 0)
                         .setmAdapter(new SureCarStationAdapter(mActivity, stationList, new SureCarStationAdapter.onItemClick() {
                             @Override
-                            public void itemClick(CarStation station, int position) {
+                            public void itemClick(SerializableStation station, int position) {
                                 updatePupop(position, 002);
                                 station.setIsTop(1);
                                 station.setTime(System.currentTimeMillis());
@@ -373,7 +372,7 @@ public class SureGoodsActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //saveLocalLite();
-                        String currentTime = getCurrentTime();
+                        String currentTime = TimeUtil.getCurrentTimeTos();
                         postAccept(currentTime);
                     }
                 });
@@ -388,41 +387,32 @@ public class SureGoodsActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 得到当前的系统时间
-     */
-    private String getCurrentTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
-        Date curDate = new Date(System.currentTimeMillis());
-        String shutTime = formatter.format(curDate);
-        return shutTime;
-    }
 
     /**
      * 保存到本地数据库
      * @param currentTime
      */
     private void saveLocalLite(String currentTime) {
-        PhotoLite photoLite = new PhotoLite();
-        photoLite.setShuttime(currentTime);
-        photoLite.setUuid(UUID.randomUUID());
-        photoLite.setUsername(mUsername);
-        photoLite.setGoods(mCar_goods);
-        photoLite.setLicense_plate(mLicense_plate);
-        photoLite.setStation(mCar_station);
-        photoLite.setPhotoPath1(mFile1);
-        photoLite.setPhotoPath2(mFile2);
-        photoLite.setPhotoPath3(mFile3);
-        photoLite.setLicense_color(mColor);
-        photoLite.save();
+        SupportPhotoLite supportPhotoLite = new SupportPhotoLite();
+        supportPhotoLite.setShuttime(currentTime);
+        supportPhotoLite.setUuid(UUID.randomUUID());
+        supportPhotoLite.setUsername(mUsername);
+        supportPhotoLite.setGoods(mCar_goods);
+        supportPhotoLite.setLicense_plate(mLicense_plate);
+        supportPhotoLite.setStation(mCar_station);
+        supportPhotoLite.setPhotoPath1(mFile1);
+        supportPhotoLite.setPhotoPath2(mFile2);
+        supportPhotoLite.setPhotoPath3(mFile3);
+        supportPhotoLite.setLicense_color(mColor);
+        supportPhotoLite.save();
     }
 
 
     private void initEditText() {
-        if (sessionList.size() == 0) {
+        if (mSerializableNumberList.size() == 0) {
             mEt_change1.setText("粤B");
         } else {
-            mEt_change1.setText(sessionList.get(0).getName());
+            mEt_change1.setText(mSerializableNumberList.get(0).getName());
         }
         if (stationList.size() == 0) {
             mEt_change2.setText("泰安东收费站");
@@ -447,7 +437,7 @@ public class SureGoodsActivity extends BaseActivity {
 
     private void refreshView(int stype) {
         if (stype == 001) {
-            Collections.sort(sessionList);
+            Collections.sort(mSerializableNumberList);
             mHeadAdapter.notifyDataSetChanged();
         }
         if (stype == 002) {
@@ -459,8 +449,8 @@ public class SureGoodsActivity extends BaseActivity {
 
     private void updatePupop(int position, int type) {
         if (type == 001) {
-            mEt_change1.setText(sessionList.get(position).getName());
-            mEt_change1.setSelection((sessionList.get(position).getName()).length());
+            mEt_change1.setText(mSerializableNumberList.get(position).getName());
+            mEt_change1.setSelection((mSerializableNumberList.get(position).getName()).length());
             mPopupWindow_1.dismissPopWindow();
         } else if (type == 002) {
             mEt_change2.setText(stationList.get(position).getStationName());
@@ -555,10 +545,10 @@ public class SureGoodsActivity extends BaseActivity {
         Logger.i(mLicense_plate);
         Logger.i(mCar_goods);
 
-        Observable<AcceptResult> postThreeImg = httpUtilsApi.postThreeImg(currentTime,mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
+        Observable<HttpResultPostImg> postThreeImg = httpUtilsApi.postThreeImg(currentTime,mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
         postThreeImg.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AcceptResult>() {
+                .subscribe(new Subscriber<HttpResultPostImg>() {
                     @Override
                     public void onCompleted() {
                         Logger.i("三张照片上传成功");
@@ -570,9 +560,9 @@ public class SureGoodsActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(AcceptResult acceptResult) {
-                        int code = acceptResult.getCode();
-                        String msg = acceptResult.getMsg();
+                    public void onNext(HttpResultPostImg httpResultPostImg) {
+                        int code = httpResultPostImg.getCode();
+                        String msg = httpResultPostImg.getMsg();
                         if (code == 200) {
                             CarNumberCut();
                             Intent intent = new Intent(SureGoodsActivity.this, PhotoActivity.class);
@@ -618,9 +608,9 @@ public class SureGoodsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         //存入缓存
-        ACache.get(mActivity).put("sessions", (ArrayList<Session>) sessionList);
-        ACache.get(mActivity).put("stations", (ArrayList<CarStation>) stationList);
-        ACache.get(mActivity).put("goods", (ArrayList<CarGoods>) goodsList);
+        ACache.get(mActivity).put("sessions", (ArrayList<SerializableNumber>) mSerializableNumberList);
+        ACache.get(mActivity).put("stations", (ArrayList<SerializableStation>) stationList);
+        ACache.get(mActivity).put("goods", (ArrayList<SerializableGoods>) goodsList);
     }
 
     @Override

@@ -33,16 +33,16 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.bean.GoodsLite;
-import com.zero.wolf.greenroad.bean.NumberLite;
-import com.zero.wolf.greenroad.bean.StationDataBean;
-import com.zero.wolf.greenroad.bean.StationLite;
+import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
-import com.zero.wolf.greenroad.interfacy.HttpMethods;
-import com.zero.wolf.greenroad.interfacy.HttpUtilsApi;
-import com.zero.wolf.greenroad.litepalbean.CarNumberHead;
-import com.zero.wolf.greenroad.litepalbean.GoodsInfo;
-import com.zero.wolf.greenroad.litepalbean.StationInfo;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultStation;
+import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
+import com.zero.wolf.greenroad.https.HttpMethods;
+import com.zero.wolf.greenroad.https.RequestLiteGoods;
+import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
+import com.zero.wolf.greenroad.litepalbean.SupportGoods;
+import com.zero.wolf.greenroad.litepalbean.SupportStation;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
@@ -214,19 +214,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * 更新goods数据库
      */
     private void initGoodsLite() {
-        HttpUtilsApi utilsApi = HttpMethods.getInstance().getApi();
-        Observable<GoodsLite<List<GoodsLite.DataBean>>> goodsInfo = utilsApi.getGoodsInfo();
+        /*HttpUtilsApi utilsApi = HttpMethods.getInstance().getApi();
+        Observable<HttpResultGoods<List<HttpResultGoods.DataBean>>> goodsInfo = utilsApi.getGoodsInfo();
 
         goodsInfo.subscribeOn(Schedulers.io())
-                .map(new Func1<GoodsLite<List<GoodsLite.DataBean>>, List<GoodsLite.DataBean>>() {
+                .map(new Func1<HttpResultGoods<List<HttpResultGoods.DataBean>>, List<HttpResultGoods.DataBean>>() {
                     @Override
-                    public List<GoodsLite.DataBean> call(GoodsLite<List<GoodsLite.DataBean>> listGoodsLite) {
-                        return listGoodsLite.getData();
+                    public List<HttpResultGoods.DataBean> call(HttpResultGoods<List<HttpResultGoods.DataBean>> listHttpResultGoods) {
+                        return listHttpResultGoods.getData();
                     }
 
                 }).unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<GoodsLite.DataBean>>() {
+                .subscribe(new Subscriber<List<HttpResultGoods.DataBean>>() {
                     @Override
                     public void onCompleted() {
                         Message message = Message.obtain();
@@ -242,17 +242,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
 
                     @Override
-                    public void onNext(List<GoodsLite.DataBean> dataBeen) {
+                    public void onNext(List<HttpResultGoods.DataBean> dataBeen) {
 
-                        List<GoodsInfo> goodsInfos = DataSupport.findAll(GoodsInfo.class);
-                        if (goodsInfos.size() != 0) {
-                            if (dataBeen.size() == goodsInfos.size()) {
+                        List<SupportGoods> supportGoodses = DataSupport.findAll(SupportGoods.class);
+                        if (supportGoodses.size() != 0) {
+                            if (dataBeen.size() == supportGoodses.size()) {
                                 Logger.i("该方法走了没1");
                                 Logger.i("返回");
                                 return;
                             } else {
                                 Logger.i("该方法走了没2");
-                                DataSupport.deleteAll(GoodsInfo.class);
+                                DataSupport.deleteAll(SupportGoods.class);
                                 goodsInfoFore(dataBeen);
                             }
                         } else {
@@ -260,10 +260,40 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         }
                     }
 
+                });*/
+        RequestLiteGoods.getInstance()
+                .doGetGoodsInfo(new Subscriber<List<HttpResultGoods.DataBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<HttpResultGoods.DataBean> dataBeen) {
+                        List<SupportGoods> supportGoods = DataSupport.findAll(SupportGoods.class);
+                        if (supportGoods.size() != 0) {
+                            if (dataBeen.size() == supportGoods.size()) {
+                                Logger.i("该方法走了没1");
+                                Logger.i("返回");
+                                return;
+                            } else {
+                                Logger.i("该方法走了没2");
+                                DataSupport.deleteAll(SupportGoods.class);
+                                goodsInfoFore(dataBeen);
+                            }
+                        } else {
+                            goodsInfoFore(dataBeen);
+                        }
+                    }
                 });
     }
 
-    private void goodsInfoFore(List<GoodsLite.DataBean> dataBeen) {
+    private void goodsInfoFore(List<HttpResultGoods.DataBean> dataBeen) {
         for (int i = 0; i < dataBeen.size(); i++) {
 
           /*  String imgurl = dataBeen.get(i).getImgurl().toString();
@@ -271,7 +301,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 */
             Logger.i("该方法走了没3");
             Logger.i("数据更新");
-            GoodsInfo info = new GoodsInfo();
+            SupportGoods info = new SupportGoods();
             info.setAlias(dataBeen.get(i).getAlias());
             info.setScientificname(dataBeen.get(i).getScientificname());
             info.setCargoid(dataBeen.get(i).getCargoid());
@@ -308,18 +338,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
 
     private void initCarNumber() {
-        Observable<NumberLite<List<NumberLite.DataBean>>> numberInfo = HttpMethods.getInstance().getApi().getNumberInfo();
+        Observable<HttpResultNumber<List<HttpResultNumber.DataBean>>> numberInfo = HttpMethods.getInstance().getApi().getNumberInfo();
         numberInfo.subscribeOn(Schedulers.io())
-                .map(new Func1<NumberLite<List<NumberLite.DataBean>>, List<NumberLite.DataBean>>() {
+                .map(new Func1<HttpResultNumber<List<HttpResultNumber.DataBean>>, List<HttpResultNumber.DataBean>>() {
                     @Override
-                    public List<NumberLite.DataBean> call(NumberLite<List<NumberLite.DataBean>> listNumberLite) {
-                        return listNumberLite.getData();
+                    public List<HttpResultNumber.DataBean> call(HttpResultNumber<List<HttpResultNumber.DataBean>> listHttpResultNumber) {
+                        return listHttpResultNumber.getData();
                     }
 
                 })
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<NumberLite.DataBean>>() {
+                .subscribe(new Subscriber<List<HttpResultNumber.DataBean>>() {
                     @Override
                     public void onCompleted() {
                         //   mNumberListener.onCompleted(true);
@@ -335,11 +365,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
 
                     @Override
-                    public void onNext(List<NumberLite.DataBean> dataBeen) {
+                    public void onNext(List<HttpResultNumber.DataBean> dataBeen) {
                         Logger.i(dataBeen.get(0).getPac());
-                        DataSupport.deleteAll(CarNumberHead.class);
+                        DataSupport.deleteAll(SupportCarNumber.class);
                         for (int i = 0; i < dataBeen.size(); i++) {
-                            CarNumberHead numberHead = new CarNumberHead();
+                            SupportCarNumber numberHead = new SupportCarNumber();
                             numberHead.setHeadName(dataBeen.get(i).getPac());
                             numberHead.save();
                         }
@@ -353,13 +383,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void initStation() {
         HttpMethods httpMethods = HttpMethods.getInstance();
-        Observable<StationLite<List<StationDataBean>>> stationInfo = httpMethods.getApi().getStationInfo();
+        Observable<HttpResultStation<List<StationDataBean>>> stationInfo = httpMethods.getApi().getStationInfo();
 
         stationInfo.subscribeOn(Schedulers.io())
-                .map(new Func1<StationLite<List<StationDataBean>>, List<StationDataBean>>() {
+                .map(new Func1<HttpResultStation<List<StationDataBean>>, List<StationDataBean>>() {
                     @Override
-                    public List<StationDataBean> call(StationLite<List<StationDataBean>> listStationLite) {
-                        return listStationLite.getData();
+                    public List<StationDataBean> call(HttpResultStation<List<StationDataBean>> listHttpResultStation) {
+                        return listHttpResultStation.getData();
                     }
                 })
                 .unsubscribeOn(Schedulers.io())
@@ -383,9 +413,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     @Override
                     public void onNext(List<StationDataBean> stationDataBeen) {
 
-                        DataSupport.deleteAll(StationInfo.class);
+                        DataSupport.deleteAll(SupportStation.class);
                         for (int i = 0; i < stationDataBeen.size(); i++) {
-                            StationInfo info = new StationInfo();
+                            SupportStation info = new SupportStation();
                             Logger.i(stationDataBeen.get(i).toString());
                             info.setStationId(stationDataBeen.get(i).getId());
                             info.setStationName(stationDataBeen.get(i).getZhanname());

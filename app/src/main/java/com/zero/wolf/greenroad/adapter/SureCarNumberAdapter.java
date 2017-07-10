@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.tools.Session;
+import com.zero.wolf.greenroad.bean.SerializableNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +22,15 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
 
     private final AppCompatActivity mActivity;
-    private final   ArrayList<Session>  mListLocal;
+    private final   ArrayList<SerializableNumber>  mListLocal;
 
     private onItemClick itemClick;
 
 
     public SureCarNumberAdapter(AppCompatActivity activity,
-                                List<Session> list_head, onItemClick itemClick) {
+                                List<SerializableNumber> list_head, onItemClick itemClick) {
         mActivity = activity;
-        mListLocal = (ArrayList<Session>) list_head;
+        mListLocal = (ArrayList<SerializableNumber>) list_head;
         this.itemClick = itemClick;
     }
 
@@ -47,8 +47,8 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
     @Override
     public void onBindViewHolder(SureCarNumberHolder holder, int position) {
-        Session session = mListLocal.get(position);
-        holder.bindHolder(session,position,holder);
+        SerializableNumber serializableNumber = mListLocal.get(position);
+        holder.bindHolder(serializableNumber,position,holder);
     }
 
     @Override
@@ -67,8 +67,8 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
         }
 
-        public void bindHolder(final Session session, final int position, final SureCarNumberHolder holder) {
-            mTextView.setText(session.getName());
+        public void bindHolder(final SerializableNumber serializableNumber, final int position, final SureCarNumberHolder holder) {
+            mTextView.setText(serializableNumber.getName());
 
            // mTextView.setSelected(position == selectedItem);
             mTextView.setOnClickListener(new View.OnClickListener() {
@@ -78,8 +78,8 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
               //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
-                    itemClick.itemClick(session,position);
-                    itemClick.onTop(session);
+                    itemClick.itemClick(serializableNumber,position);
+                    itemClick.onTop(serializableNumber);
                 }
             });
         }
@@ -88,10 +88,10 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
 
     public interface onItemClick {
-        void itemClick(Session session, int position);
-        void onTop(Session session);
+        void itemClick(SerializableNumber serializableNumber, int position);
+        void onTop(SerializableNumber serializableNumber);
 
-        void onCancel(Session session);
+        void onCancel(SerializableNumber serializableNumber);
     }
 
 }

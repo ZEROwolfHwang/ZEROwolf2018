@@ -2,15 +2,26 @@ package com.zero.wolf.greenroad.litepalbean;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 2017/7/6.
  */
 
-public class LoginUserInfo extends DataSupport {
+public class SupportLoginUser extends DataSupport {
 
+    private Date logindate;
     private String username;
     private String password;
     private String operator;
+
+    public Date getLogindate() {
+        return logindate;
+    }
+
+    public void setLogindate(Date logindate) {
+        this.logindate = logindate;
+    }
 
     public String getOperator() {
         return operator;

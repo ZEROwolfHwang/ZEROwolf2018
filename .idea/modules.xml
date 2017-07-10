@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GreenRoadgai.iml" filepath="$PROJECT_DIR$/GreenRoadgai.iml" />
       <module fileurl="file://$PROJECT_DIR$/GreenRoadgai7_9.iml" filepath="$PROJECT_DIR$/GreenRoadgai7_9.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GreenRoadgai7_9.iml" filepath="$PROJECT_DIR$/GreenRoadgai7_9.iml" />
       <module fileurl="file://$PROJECT_DIR$/GreenRoadgaiZero.iml" filepath="$PROJECT_DIR$/GreenRoadgaiZero.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

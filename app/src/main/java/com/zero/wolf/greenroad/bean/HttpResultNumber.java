@@ -4,7 +4,7 @@ package com.zero.wolf.greenroad.bean;
  * Created by Administrator on 2017/7/5.
  */
 
-public class NumberLite<T> {
+public class HttpResultNumber<T> {
 
     /**
      * code : 300

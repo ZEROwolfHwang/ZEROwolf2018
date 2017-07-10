@@ -9,8 +9,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
-import com.zero.wolf.greenroad.bean.LogBean;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -32,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -732,24 +729,6 @@ public class FileUtils {
         int lastSep = filePath.lastIndexOf(File.separator);
         if (lastPoi == -1 || lastSep >= lastPoi) return "";
         return filePath.substring(lastPoi + 1);
-    }
-
-
-    public static void save2Propertites(LogBean logBean, String path) {
-        Properties properties = new Properties();
-        properties.put("ExMessage", logBean.getExMessage());
-        properties.put("ExStack", logBean.getExStack());
-        properties.put("MachineInfo", logBean.getMachineInfo());
-        properties.put("RegKey", logBean.getRegKey());
-        try {
-            FileOutputStream outputStream = new FileOutputStream(path, false);
-            properties.store(outputStream, "");
-            close(outputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
