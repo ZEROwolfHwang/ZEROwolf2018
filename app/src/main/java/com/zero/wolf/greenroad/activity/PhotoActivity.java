@@ -29,7 +29,6 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
-import com.zero.wolf.greenroad.tools.SPUtils;
 
 import java.io.File;
 
@@ -156,6 +155,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_photo);
         setSupportActionBar(toolbar);
 
+        toolbar.setNavigationIcon(R.drawable.back_up_app);
+
+
         TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
         title_text_view.setText(getString(R.string.shut_camera));
 
@@ -223,26 +225,30 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
     private void enterSureGoodsActivity() {
 
-        carNumberCount();
-
+/*
+        if (mCurrent_color == null) {
+            ToastUtils.singleToast("请确定车牌颜色");
+            return;
+        } else if (mFilePath1 == null) {
+            ToastUtils.singleToast("请拍摄车牌");
+            return;
+        } else if (mFilePath2 == null) {
+            ToastUtils.singleToast("请拍摄车身");
+            return;
+        } else if (mFilePath3 == null) {
+            ToastUtils.singleToast("请拍摄货物");
+            return;
+        } else if (mUsername == null) {
+            ToastUtils.singleToast("当前账号异常,请重新登录");
+            return;
+        }*/
 
         SureGoodsActivity.actionStart(PhotoActivity.this, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
 
     }
 
-    /**
-     * 对已拍摄车辆以及未上传车辆进行计数
-     */
-    private void carNumberCount() {
-        SPUtils.add_one(mActivity, SPUtils.CAR_COUNT);
-        int car_count = (int) SPUtils.get(mActivity, SPUtils.CAR_COUNT, 0);
-        Logger.i("car_count------------" + car_count);
 
-        SPUtils.add_one(mActivity, SPUtils.CAR_NOT_COUNT);
-        int car_not_count = (int) SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0);
-        Logger.i("car_not_count------------" + car_not_count);
-    }
 
     private void shutPhoto(int type_int) {
 
@@ -255,7 +261,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         }*/
         if (type_int == TYPE_NUMBER) {
             mFilePath1 = mFile + "/" + System.currentTimeMillis()
-                    + "number.jpg";
+                    + "mAlias.jpg";
             savePath(mFilePath1, intent);
             Logger.i(mFilePath);
         } else if (type_int == TYPE_BODY) {

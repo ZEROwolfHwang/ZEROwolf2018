@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
         <!--
-            Define the database name of your application.
-            By default each database name should be end with .db.
-            If you didn't name your database end with .db,
+            Define the database mScientificname of your application.
+            By default each database mScientificname should be end with .db.
+            If you didn't mScientificname your database end with .db,
             LitePal would plus the suffix automatically for you.
             For example:
             <dbname value="demo" />
@@ -19,7 +19,7 @@
                 For example:
             <version value="1" />
         -->
-        <version value="8" />
+        <version value="10" />
 
         <!--
             Define your models in the list with mapping tag, LitePal will

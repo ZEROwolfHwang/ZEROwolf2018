@@ -15,28 +15,46 @@
         android:id="@+id/tv_no_change"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:layout_gravity="center"
         android:textColor="@color/black"
+        android:focusable="false"
         android:textSize="@dimen/text14"/>
 
 
     <ImageView
-        android:background="@drawable/shape_static"
         android:layout_width="4dp"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp"
+        android:focusable="false"
+        android:background="@drawable/shape_static"/>
 
-
-    <EditText
-        android:layout_gravity="center"
-        android:id="@+id/tv_change"
+    <FrameLayout
+        android:id="@+id/layoutContainer"
         android:layout_width="0dp"
-        android:gravity="center"
-        android:layout_height="match_parent"
         android:layout_weight="2"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text18"/>
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/tv_change"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:focusable="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text18"/>
 
+        <ImageView
+            android:id="@+id/iv_clear_Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:padding="4dp"
+            android:src="@drawable/clear_button"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
 
 </LinearLayout>

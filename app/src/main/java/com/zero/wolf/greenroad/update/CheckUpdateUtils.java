@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
  * @version :
  */
 public class CheckUpdateUtils {
-    private static final String BASEURL="http://192.168.2.122/lvsetondao/index.php/Home/Apiversion/";
+    private static final String BASEURL="http://192.168.2.122/lvsetondao/index.php/Interfacy/Apiversion/";
 
     /**
      * 检查更新

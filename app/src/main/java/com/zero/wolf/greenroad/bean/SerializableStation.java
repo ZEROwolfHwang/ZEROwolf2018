@@ -15,9 +15,35 @@ public class SerializableStation implements Serializable, Comparable {
     public int isTop;
 
     /**
+     * 简拼
+     */
+    public String simpleSpell;
+    /**
+     * 全拼
+     */
+    public String wholeSpell;
+
+    /**
      * 收费站名
      */
     public String stationName;
+    public long time;
+
+    public String getSimpleSpell() {
+        return simpleSpell;
+    }
+
+    public void setSimpleSpell(String simpleSpell) {
+        this.simpleSpell = simpleSpell;
+    }
+
+    public String getWholeSpell() {
+        return wholeSpell;
+    }
+
+    public void setWholeSpell(String wholeSpell) {
+        this.wholeSpell = wholeSpell;
+    }
 
     public long getTime() {
         return time;
@@ -27,7 +53,6 @@ public class SerializableStation implements Serializable, Comparable {
         this.time = time;
     }
 
-    public long time;
 
     public int getIsTop() {
         return isTop;

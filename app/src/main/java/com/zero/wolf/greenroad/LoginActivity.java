@@ -127,21 +127,42 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
             } else if (userInfos.size() == 1) {
                 String operator = userInfos.get(0).getOperator();
-                Date currentDate = TimeUtil.getCurrentTimeToDate();
-                Date logindate = userInfos.get(0).getLogindate();
-                int timeGap = TimeUtil.differentDaysByMillisecond(currentDate, logindate);
-                if (timeGap > 10) {
-                    DataSupport.deleteAll(SupportLoginUser.class, "username=? and password = ?",
-                            username, password);
-                    ToastUtils.singleToast("账号已过期，请在有网状态下重新登录");
-                } else {
-                    login2MainActivity(operator, username);
-                    ToastUtils.singleToast("无网络连接状态登陆成功");
-                }
+                getTimeGap(username, password, userInfos, operator, mIsConnected);
             }
         }
     }
 
+    /**
+     * 根据有无网络连接判断时间差内登陆的情形
+     *
+     * @param username
+     * @param password
+     * @param userInfos
+     * @param operator
+     * @param isConnected
+     */
+    private void getTimeGap(String username, String password, List<SupportLoginUser> userInfos, String operator, boolean isConnected) {
+        //// TODO: 2017/7/11 ceshi
+        Date currentDate = TimeUtil.getCurrentTimeToDate();
+        Date logindate = userInfos.get(0).getLogindate();
+        int timeGap = TimeUtil.differentDaysByMillisecond(currentDate, logindate);
+        if (timeGap > 10) {
+            DataSupport.deleteAll(SupportLoginUser.class, "username=? and password = ?",
+                    username, password);
+            if (mIsConnected) {
+                ToastUtils.singleToast("账号已过期，请重新输入密码");
+            } else {
+                ToastUtils.singleToast("账号已过期，请在有网状态下重新登录");
+            }
+        } else {
+            login2MainActivity(operator, username);
+            if (mIsConnected) {
+                ToastUtils.singleToast("登陆成功");
+            } else {
+                ToastUtils.singleToast("无网络连接状态登陆成功");
+            }
+        }
+    }
     /**
      * 有网络的状态下登录
      *
@@ -150,7 +171,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      */
     private void loginFromNet(String username, String password) {
         Retrofit.Builder builder = new Retrofit.Builder();
-        Retrofit retrofit = builder.baseUrl("http://192.168.2.122/lvsetondao/index.php/Home/Login/")
+        Retrofit retrofit = builder.baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Login/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -169,9 +190,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Logger.i("" + name);
                 if (code == 200) {
                     if (code1 == 200) {
-
                         List<SupportLoginUser> userInfos = DataSupport
-                                .where("username=? and password = ? and operator = ?", username, password, name)
+                                .where("username=? and password = ?", username, password)
                                 .find(SupportLoginUser.class);
                         if (userInfos.size() == 0) {
                             SupportLoginUser userInfo = new SupportLoginUser();
@@ -180,12 +200,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             userInfo.setPassword(password);
                             userInfo.setOperator(name);
                             userInfo.save();
+                        } else {
+                            getTimeGap(username, password, userInfos, name, mIsConnected);
                         }
-
-                        ToastUtils.singleToast(msg);
                         login2MainActivity(name, username);
                     } else if (code1 == 201) {
                         ToastUtils.singleToast(msg);
+                        login2MainActivity(name, username);
 
                     } else if (code1 == 202) {
 
@@ -219,8 +240,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHolder> {
 
         private final AppCompatActivity mActivity;
-
-
         private final onItemClick mItemClick;
         private final List<SupportLoginUser> mList;
 

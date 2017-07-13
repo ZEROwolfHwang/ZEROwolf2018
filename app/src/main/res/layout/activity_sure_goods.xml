@@ -23,6 +23,7 @@
             android:id="@+id/layout_top_sure"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:focusable="false"
             android:layout_marginTop="10dp">
 
             <com.makeramen.roundedimageview.RoundedImageView
@@ -31,6 +32,7 @@
                 android:layout_height="@dimen/main_height_dp70"
                 android:scaleType="fitCenter"
                 android:src="@drawable/car_number_light"
+                android:focusable="false"
                 app:riv_border_width="2dp"
                 app:riv_corner_radius="15dp"
                 app:riv_oval="false"/>
@@ -54,6 +56,7 @@
                 android:layout_height="@dimen/main_height_dp70"
                 android:scaleType="fitCenter"
                 android:src="@drawable/car_station_light"
+                android:focusable="false"
                 app:riv_border_width="2dp"
                 app:riv_corner_radius="15dp"
                 app:riv_oval="false"/>
@@ -78,6 +81,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/car_goods_light"
                 app:riv_border_width="2dp"
+                android:focusable="false"
                 app:riv_corner_radius="15dp"
                 app:riv_oval="false"/>
 
@@ -94,10 +98,9 @@
 
         <!--  </LinearLayout>-->
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_goods"
+            android:id="@+id/recycler_goods_sure"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="220dp">
 
         </android.support.v7.widget.RecyclerView>
 

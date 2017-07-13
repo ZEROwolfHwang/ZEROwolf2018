@@ -54,6 +54,14 @@ public class SpinnerPopupWindow {
         buildPopupWindow(b);
     }
 
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
     private void buildPopupWindow(Builder b) {
         initParams(b);
 
@@ -159,6 +167,15 @@ public class SpinnerPopupWindow {
      */
     public void dismissPopWindow() {
         mPopWindow.dismiss();
+    }
+
+    public void setFocusable(boolean isFocusable) {
+        if (isFocusable) {
+            mPopWindow.setFocusable(true);
+        } else {
+            mPopWindow.setFocusable(false);
+        }
+
     }
 
     public boolean isShowing() {

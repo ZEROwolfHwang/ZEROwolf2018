@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad.litepalbean;
+package com.zero.wolf.greenroad.bean;
 
 import org.litepal.crud.DataSupport;
 
@@ -6,20 +6,12 @@ import org.litepal.crud.DataSupport;
  * Created by Administrator on 2017/7/5.
  */
 
-public class SupportGoods extends DataSupport{
-    private String cargoid;
+public class GoodsSmartBean extends DataSupport{
+
     private String scientificname;
     private String alias;
-    private String kind;
     private String imgurl;
 
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
 
     public String getImgurl() {
         return imgurl;
@@ -27,14 +19,6 @@ public class SupportGoods extends DataSupport{
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
-    }
-
-    public String getCargoid() {
-        return cargoid;
-    }
-
-    public void setCargoid(String cargoid) {
-        this.cargoid = cargoid;
     }
 
 

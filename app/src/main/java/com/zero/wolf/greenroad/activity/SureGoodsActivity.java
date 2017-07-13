@@ -3,17 +3,22 @@ package com.zero.wolf.greenroad.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,15 +32,17 @@ import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
-import com.zero.wolf.greenroad.httpresultbean.SerializableGoods;
 import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.litepalbean.SupportStation;
+import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
+import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.PingYinUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
@@ -61,9 +68,9 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
 public class SureGoodsActivity extends BaseActivity {
 
 
-    private List<SerializableNumber> mSerializableNumberList = new ArrayList<>();
-    private List<SerializableStation> stationList = new ArrayList<>();
-    private List<SerializableGoods> goodsList = new ArrayList<>();
+    private List<SerializableNumber> mNumberList = new ArrayList<>();
+    private List<SerializableStation> mStationList = new ArrayList<>();
+    private List<SortModel> mGoodsList = new ArrayList<>();
 
     private RecyclerView mRecycler_view_goods;
     private Context mContext;
@@ -74,11 +81,9 @@ public class SureGoodsActivity extends BaseActivity {
     private SpinnerPopupWindow mPopupWindow_2;
 
 
-    private RecyclerView.Adapter mHeadAdapter;
     private EditText mEt_change2;
-    private RecyclerView.Adapter mStationAdapter;
     private List<SupportGoods> mSupportGoodsList;
-    private SureGoodsAdapter mGoodsAdapter;
+
     private String mUsername;
     private String mPhotoPath1;
     private String mPhotoPath2;
@@ -90,6 +95,29 @@ public class SureGoodsActivity extends BaseActivity {
     private String mFile2;
     private String mFile3;
     private String mColor;
+    private List<SupportGoods> mSupportGoodses;
+
+    private SureGoodsAdapter mGoodsAdapter;
+
+
+    /**
+     * 根据拼音来排列ListView里面的数据类
+     */
+    private PinyinComparator pinyinComparator;
+
+
+    private ArrayList<SerializableNumber> mAcacheNumbers;
+    private ArrayList<SerializableStation> mAcacheStations;
+    private ArrayList<SortModel> mAcacheGoods;
+    private SureCarStationAdapter mStationAdapter;
+    private SureCarNumberAdapter mNumberAdapter;
+    private ArrayList<SerializableNumber> mSerializableNumberArrayList;
+    private ImageView mIvClearText_station;
+    private ImageView mIvClearText_number;
+    private ImageView mIvClearText_goods;
+
+    private int pop_1_currentState;
+    private Button mBt_ok_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +125,14 @@ public class SureGoodsActivity extends BaseActivity {
         setContentView(R.layout.activity_sure_goods);
         mContext = this;
         mActivity = this;
+        pop_1_currentState = 222;
+
+
         initData();
         initView();
-        initRecycler();
+        //initRecycler();
+        initListener();
+
     }
 
     public static void actionStart(Context context, String color, String username
@@ -118,73 +151,129 @@ public class SureGoodsActivity extends BaseActivity {
     private void initData() {
 
         getIntentData();
-        /**
-         * 加载并缓存车牌号头的数据
-         * */
 
+        mAcacheNumbers = (ArrayList<SerializableNumber>) ACache
+                .get(mActivity).getAsObject("sessions");
+
+        mAcacheStations = (ArrayList<SerializableStation>) ACache
+                .get(mActivity).getAsObject("stations");
+
+        mAcacheGoods = (ArrayList<SortModel>) ACache
+                .get(mActivity).getAsObject("goods");
+
+        initGoodsData();
+        iniNumberData();
+        initStationData();
+
+        initAdapter();
+
+    }
+
+    private void initAdapter() {
+        mNumberAdapter = new SureCarNumberAdapter(mActivity, mNumberList, new SureCarNumberAdapter.onItemClick() {
+            @Override
+            public void itemClick(SerializableNumber serializableNumber) {
+
+                if (mPopupWindow_1.isShowing()) {
+                    mPopupWindow_1.dismissPopWindow();
+                }
+
+                mEt_change1.setText(serializableNumber.getName());
+                mEt_change1.setSelection((serializableNumber.getName().length()));
+                serializableNumber.setTop(1);
+                serializableNumber.setTime(System.currentTimeMillis());
+                refreshView(001);
+            }
+        });
+
+        mStationAdapter = new SureCarStationAdapter(mActivity, mStationList, new SureCarStationAdapter.onItemClick() {
+            @Override
+            public void itemClick(SerializableStation station) {
+                mEt_change2.setText(station.getStationName());
+                mEt_change2.setSelection(station.getStationName().length());
+                if (mPopupWindow_2.isShowing()) {
+                    mPopupWindow_2.dismissPopWindow();
+                }
+                station.setIsTop(1);
+                station.setTime(System.currentTimeMillis());
+                refreshView(002);
+            }
+        });
+
+
+    }
+
+    /**
+     * 加载并缓存车牌号头的数据
+     */
+    private void iniNumberData() {
         List<SupportCarNumber> headList = DataSupport.findAll(SupportCarNumber.class);
 
-        ArrayList<SerializableNumber> serializableNumbers = (ArrayList<SerializableNumber>) ACache.get(mActivity).getAsObject("sessions");
-
         //如果跟数据库长度相同则不作更改，不然则更新
-        if (serializableNumbers != null) {
-            if (serializableNumbers.size() == headList.size()) {
-                mSerializableNumberList.addAll(serializableNumbers);
+        if (mAcacheNumbers != null) {
+            if (mAcacheNumbers.size() == headList.size()) {
+                mNumberList.addAll(mAcacheNumbers);
             } else {
                 //更新数据需要删除缓存
-                serializableNumbers.clear();
+                mAcacheNumbers.clear();
                 Logger.i("" + headList.size());
-                for (int i = 0; i < headList.size(); i++) {
-                    SerializableNumber serializableNumber = new SerializableNumber();
-                    Logger.i("" + headList.get(i).getHeadName());
-                    serializableNumber.setName(headList.get(i).getHeadName());
-                    mSerializableNumberList.add(serializableNumber);
-                }
+                addNumberData(headList);
             }
         } else {
-            for (int i = 0; i < headList.size(); i++) {
-                SerializableNumber serializableNumber = new SerializableNumber();
-                Logger.i("" + headList.get(i).getHeadName());
-                serializableNumber.setName(headList.get(i).getHeadName());
-                mSerializableNumberList.add(serializableNumber);
-            }
+            addNumberData(headList);
         }
+    }
 
-        /**
-         * 加载收费站名的数据
-         * */
+    /**
+     * 加载收费站名的数据
+     */
+    private void initStationData() {
         List<SupportStation> supportStations = DataSupport.findAll(SupportStation.class);
-        ArrayList<SerializableStation> stations = (ArrayList<SerializableStation>) ACache.get(mActivity).getAsObject("stations");
 
-        if (stations != null) {
-            if (stations.size() == supportStations.size()) {
-                stationList.addAll(stations);
+        if (mAcacheStations != null) {
+            if (mAcacheStations.size() == supportStations.size()) {
+                mStationList.addAll(mAcacheStations);
             } else {
-                stations.clear();
+                mAcacheStations.clear();
                 addStationData(supportStations);
             }
         } else {
             addStationData(supportStations);
         }
+    }
 
+    private void addNumberData(List<SupportCarNumber> headList) {
+        for (int i = 0; i < headList.size(); i++) {
+            String headName = headList.get(i).getHeadName();
+            SerializableNumber serializableNumber = new SerializableNumber();
 
-        /**
-         * 加载货物的数据及缓存
-         * */
+            serializableNumber.setName(headName);
+            String sortKey = PingYinUtil.format(headName);
+            serializableNumber.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+            serializableNumber.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
+
+            mNumberList.add(serializableNumber);
+        }
+    }
+
+    /**
+     * 加载货物的数据及缓存
+     */
+    private void initGoodsData() {
         List<SupportGoods> supportGoodses = DataSupport.findAll(SupportGoods.class);
-        Logger.i("" + supportGoodses.size());
-        ArrayList<SerializableGoods> goods = (ArrayList<SerializableGoods>) ACache.get(mActivity).getAsObject("goods");
-        if (goods != null) {
-            if (goods.size() == supportGoodses.size()) {
-                goodsList.addAll(goods);
+
+        if (mAcacheGoods != null) {
+            if (mAcacheGoods.size() == supportGoodses.size()) {
+                mGoodsList.addAll(mAcacheGoods);
             } else {
-                goods.clear();
+                mAcacheGoods.clear();
                 addGoodsData(supportGoodses);
             }
         } else {
             addGoodsData(supportGoodses);
         }
     }
+
 
     /**
      * 得到从上一个activity中拿到的数据
@@ -196,22 +285,35 @@ public class SureGoodsActivity extends BaseActivity {
         mPhotoPath1 = intent.getStringExtra("photoPath1");
         mPhotoPath2 = intent.getStringExtra("photoPath3");
         mPhotoPath3 = intent.getStringExtra("photoPath3");
-        Logger.i(mUsername);
-        Logger.i(mPhotoPath1);
-        Logger.i(mPhotoPath2);
-        Logger.i(mPhotoPath3);
     }
 
     private void addGoodsData(List<SupportGoods> supportGoodses) {
         for (int i = 0; i < supportGoodses.size(); i++) {
-            SerializableGoods serializableGoods = new SerializableGoods();
-            serializableGoods.setScientific_name(supportGoodses.get(i).getScientificname());
-            serializableGoods.setAlias(supportGoodses.get(i).getAlias());
-            //// TODO: 2017/7/6 填充图片
 
-            goodsList.add(serializableGoods);
+            String scientificname = supportGoodses.get(i).getScientificname();
+            String alias = supportGoodses.get(i).getAlias();
+            String imgurl = supportGoodses.get(i).getImgurl();
+
+            SortModel sortModel = new SortModel();
+            sortModel.setScientificname(scientificname);
+            sortModel.setAlias(alias);
+            sortModel.setImgurl(imgurl);
+
+            String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientificname);
+            if (sortLetters == null) {
+                sortLetters = PingYinUtil.getInstance().getSortLetter(alias);
+            }
+            sortModel.setSortLetters(sortLetters);
+
+            String sortKey = PingYinUtil.format(scientificname + alias);
+            sortModel.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+            sortModel.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
+
+            mGoodsList.add(sortModel);
         }
+        Logger.i("" + mGoodsList.size());
     }
+
 
     /**
      * 填充station的数据
@@ -220,44 +322,67 @@ public class SureGoodsActivity extends BaseActivity {
      */
     private void addStationData(List<SupportStation> supportStations) {
         for (int i = 0; i < supportStations.size(); i++) {
+
+            String stationName = supportStations.get(i).getStationName();
+
             SerializableStation serializableStation = new SerializableStation();
-            serializableStation.setStationName(supportStations.get(i).getStationName());
-            stationList.add(serializableStation);
+
+            serializableStation.setStationName(stationName);
+
+            String sortKey = PingYinUtil.format(stationName);
+            serializableStation.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+            serializableStation.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
+
+            mStationList.add(serializableStation);
         }
     }
-
 
     /**
      * 加载货物的布局以及填充数据
      */
     private void initRecycler() {
-        mSupportGoodsList = DataSupport.findAll(SupportGoods.class);
+        // mListView = (ListView) findViewById(R.id.lv_view_goods);
+        mRecycler_view_goods = (RecyclerView) findViewById(R.id.recycler_goods_sure);
+
+        pinyinComparator = new PinyinComparator();
+
+        Collections.sort(mGoodsList, pinyinComparator);// 根据a-z进行排序源数据
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-
         mRecycler_view_goods.setLayoutManager(manager);
 
-        mGoodsAdapter = new SureGoodsAdapter(mContext, goodsList, new SureGoodsAdapter.onItemClick() {
+        mGoodsAdapter = new SureGoodsAdapter(this, mGoodsList, new SureGoodsAdapter.onItemClick() {
             @Override
-            public void itemClick(SerializableGoods serializableGoods, int position) {
-                updataRecycler(serializableGoods, position);
+            public void itemClick(SortModel sortModel, int position) {
+                if ((mPopupWindow_1 == null || !mPopupWindow_1.isShowing())
+                        && (mPopupWindow_2 == null || !mPopupWindow_2.isShowing())
+                        &&(!mEt_change1.hasFocus())
+                        &&(!mEt_change2.hasFocus())) {
+                    String scientificname = sortModel.getScientificname();
+                    mEt_change3.setText(scientificname);
+                    mGoodsAdapter.updateListView(mGoodsList);
+                    mEt_change3.setSelection(scientificname.length());
+                } else {
+                    return;
+                }
             }
         });
+        // mListView.setAdapter(mGoodsAdapter);
         mRecycler_view_goods.setAdapter(mGoodsAdapter);
-
     }
 
-    private void updataRecycler(SerializableGoods serializableGoods, int position) {
-        serializableGoods.setTop(1);
-        serializableGoods.setTime(System.currentTimeMillis());
-        mEt_change3.setText(goodsList.get(position).getScientific_name());
-        mEt_change3.setSelection(goodsList.get(position).getScientific_name().length());
-
-        Collections.sort(goodsList);
-        mGoodsAdapter.notifyDataSetChanged();
-
+    /**
+     * 取消Edittext的焦点
+     *
+     * @param editText
+     */
+    private void dissmissFocus(EditText editText) {
+        if (editText.hasFocus()) {
+            editText.setFocusable(false);
+        }
     }
+
 
     private void initView() {
 
@@ -280,89 +405,38 @@ public class SureGoodsActivity extends BaseActivity {
         mEt_change2 = (EditText) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(tv_change);
         mEt_change3 = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
 
+        //找到清除text的控件
+        mIvClearText_number = (ImageView) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
+        mIvClearText_number.setOnClickListener((v -> mEt_change1.setText("")));
+
+        mIvClearText_station = (ImageView) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
+        mIvClearText_station.setOnClickListener((v -> mEt_change2.setText("")));
+
+        mIvClearText_goods = (ImageView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
+        mIvClearText_goods.setOnClickListener((v -> mEt_change3.setText("")));
+
+        mBt_ok_msg = (Button) findViewById(R.id.bt_ok_msg);
 
         initEditText();
 
-        /**
-         *车牌号的点击事件
-         * */
-        mEt_change1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
-                        .setmLayoutManager(null, 1)
-                        .setmAdapter(new SureCarNumberAdapter(mActivity, mSerializableNumberList, new SureCarNumberAdapter.onItemClick() {
-                            @Override
-                            public void itemClick(SerializableNumber serializableNumber, int position) {
-                                updatePupop(position, 001);
-                            }
-
-                            @Override
-                            public void onTop(SerializableNumber serializableNumber) {
-                                serializableNumber.setTop(1);
-                                serializableNumber.setTime(System.currentTimeMillis());
-                                refreshView(001);
-                            }
-
-                            @Override
-                            public void onCancel(SerializableNumber serializableNumber) {
-                            }
-                        }))
-                        .setmHeight(700).setmWidth(500)
-                        .setOutsideTouchable(true)
-                        .setFocusable(true)
-                        .build();
-
-
-                mHeadAdapter = SpinnerPopupWindow.Builder.getmAdapter();
-
-                mPopupWindow_1.showPopWindowCenter(v);
-            }
-        });
-
-        mEt_change2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
-                        .setmLayoutManager(null, 0)
-                        .setmAdapter(new SureCarStationAdapter(mActivity, stationList, new SureCarStationAdapter.onItemClick() {
-                            @Override
-                            public void itemClick(SerializableStation station, int position) {
-                                updatePupop(position, 002);
-                                station.setIsTop(1);
-                                station.setTime(System.currentTimeMillis());
-                                refreshView(002);
-                            }
-                        }))
-                        .setmHeight(500).setmWidth(500)
-                        .setOutsideTouchable(true)
-                        .setFocusable(true)
-                        .build();
-
-                mStationAdapter = SpinnerPopupWindow.Builder.getmAdapter();
-                mPopupWindow_2.showPopWindowCenter(v);
-            }
-
-        });
 
         /**
          * 货物的点击事件
          */
-        mRecycler_view_goods = (RecyclerView) findViewById(R.id.recycler_view_goods);
+
         // mRecycler_view_goods.setVisibility(View.INVISIBLE);
+
         initRecycler();
 
-        mEt_change3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecycler_view_goods.setVisibility(View.VISIBLE);
 
-            }
-        });
+    }
 
-        Button bt_ok_msg = (Button) findViewById(R.id.bt_ok_msg);
-        bt_ok_msg.setOnClickListener(new View.OnClickListener() {
+    private void initListener() {
+        editFocusListener();
+        editClickListener();
+        editAddTextListener();
+
+        mBt_ok_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(SureGoodsActivity.this);
@@ -372,6 +446,7 @@ public class SureGoodsActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //saveLocalLite();
+                        carNumberCount();
                         String currentTime = TimeUtil.getCurrentTimeTos();
                         postAccept(currentTime);
                     }
@@ -387,9 +462,236 @@ public class SureGoodsActivity extends BaseActivity {
         });
     }
 
+    private void editAddTextListener() {
+        mEt_change1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String stationString = showAndDismiss_clear_text(mEt_change1, mIvClearText_number);
+                if (stationString.length() > 0) {
+                    List<SerializableNumber> fileterList = PingYinUtil.getInstance()
+                            .search_numbers(mNumberList, stationString);
+                    Logger.i(fileterList.toString());
+                    mNumberAdapter.updateListView(fileterList);
+                    //mAdapter.updateData(mContacts);
+                } else {
+                    if (mNumberAdapter != null) {
+                        mNumberAdapter.updateListView(mNumberList);
+                    }
+                }
+            }
+        });
+        mEt_change2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String stationString = showAndDismiss_clear_text(mEt_change2, mIvClearText_station);
+                if (stationString.length() > 0) {
+                    List<SerializableStation> fileterList = PingYinUtil.getInstance()
+                            .search_station(mStationList, stationString);
+                    Logger.i(fileterList.toString());
+                    mStationAdapter.updateListView(fileterList);
+                    //mAdapter.updateData(mContacts);
+                } else {
+                    if (mStationAdapter != null) {
+                        mStationAdapter.updateListView(mStationList);
+                    }
+                }
+            }
+        });
+        mEt_change3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String stationString = showAndDismiss_clear_text(mEt_change3, mIvClearText_goods);
+                if (stationString.length() > 0) {
+                    List<SortModel> fileterList = PingYinUtil.getInstance()
+                            .search_goods(mGoodsList, stationString);
+                    Logger.i(fileterList.toString());
+                    mGoodsAdapter.updateListView(fileterList);
+                    //mAdapter.updateData(mContacts);
+                } else {
+                    if (mGoodsAdapter != null) {
+                        mGoodsAdapter.updateListView(mGoodsList);
+                    }
+                }
+            }
+        });
+    }
+
+    private void editFocusListener() {
+        mEt_change1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showAndDismiss_clear(mEt_change1, mIvClearText_number);
+                    dissmissFocus(mEt_change2);
+                    dissmissFocus(mEt_change3);
+                    dissmissPop(mPopupWindow_2);
+                } else {
+                    mIvClearText_number.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        mEt_change2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showAndDismiss_clear(mEt_change2, mIvClearText_station);
+                    dissmissFocus(mEt_change1);
+                    dissmissFocus(mEt_change3);
+                    dissmissPop(mPopupWindow_1);
+                } else
+
+                {
+                    mIvClearText_station.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        mEt_change3.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mIvClearText_goods.setVisibility(View.VISIBLE);
+                } else {
+                    mIvClearText_goods.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
+    }
+
+    private void dissmissPop(SpinnerPopupWindow popupWindow) {
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismissPopWindow();
+        }
+    }
+
+    private void editClickListener() {
+        /**
+         *车牌号的点击事件
+         * */
+        mEt_change1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mPopupWindow_1 != null) {
+                    if (mPopupWindow_1.isShowing()) {
+                        return;
+                    }
+                }
+                dissmissFocus(mEt_change2);
+                dissmissFocus(mEt_change3);
+               /* if (mIvClearText_goods.getVisibility() == View.VISIBLE) {
+                    mIvClearText_goods.setVisibility(View.INVISIBLE);
+                }*/
+                mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                        .setmLayoutManager(null, 1)
+                        .setmAdapter(mNumberAdapter)
+                        //  .setmHeight(450).setmWidth(500)
+                        .setmHeight(500).setmWidth(400)
+                        .setOutsideTouchable(false)
+                        .setmDrawable(new BitmapDrawable())
+                        .setFocusable(false)
+                        .build();
+
+                if (!mPopupWindow_1.isShowing()) {
+                    mPopupWindow_1.showPopWindowCenter(v);
+                }
+            }
+        });
+
+        mEt_change2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mPopupWindow_2 != null) {
+                    if (mPopupWindow_2.isShowing()) {
+                        return;
+                    }
+                }
+
+                dissmissFocus(mEt_change1);
+                dissmissFocus(mEt_change3);
+                /*if (mIvClearText_goods.getVisibility() == View.VISIBLE) {
+                    mIvClearText_goods.setVisibility(View.INVISIBLE);
+                }*/
+
+                mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                        .setmLayoutManager(null, 0)
+                        .setmAdapter(mStationAdapter)
+                        .setmHeight(400).setmWidth(500)
+                        .setOutsideTouchable(false)
+                        .setmDrawable(new BitmapDrawable())
+                        .setFocusable(false)
+                        .build();
+
+                mPopupWindow_2.showPopWindowCenter(v);
+            }
+
+        });
+        mEt_change3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dissmissFocus(mEt_change1);
+                dissmissFocus(mEt_change2);
+                showAndDismiss_clear(mEt_change3, mIvClearText_goods);
+            }
+        });
+    }
+
+    private String showAndDismiss_clear_text(EditText editText, ImageView imageView) {
+        String content = editText.getText().toString();
+        if ("".equals(content)) {
+            imageView.setVisibility(View.INVISIBLE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+        }
+        return content;
+    }
+
+    @NonNull
+    private void showAndDismiss_clear(EditText editText, ImageView imageView) {
+        String content = editText.getText().toString();
+        if ("".equals(content)) {
+            imageView.setVisibility(View.INVISIBLE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * 保存到本地数据库
+     *
      * @param currentTime
      */
     private void saveLocalLite(String currentTime) {
@@ -409,20 +711,22 @@ public class SureGoodsActivity extends BaseActivity {
 
 
     private void initEditText() {
-        if (mSerializableNumberList.size() == 0) {
+        if (mNumberList.size() == 0) {
             mEt_change1.setText("粤B");
         } else {
-            mEt_change1.setText(mSerializableNumberList.get(0).getName());
+            mEt_change1.setText(mNumberList.get(0).getName());
+            mEt_change1.setSelection(mNumberList.get(0).getName().length());
         }
-        if (stationList.size() == 0) {
+        if (mStationList.size() == 0) {
             mEt_change2.setText("泰安东收费站");
         } else {
-            mEt_change2.setText(stationList.get(0).getStationName());
+            mEt_change2.setText(mStationList.get(0).getStationName());
+            mEt_change2.setSelection(mStationList.get(0).getStationName().length());
         }
-        if (goodsList.size() == 0) {
+        if (mGoodsList.size() == 0) {
             mEt_change3.setText("西兰花");
         } else {
-            mEt_change3.setText(goodsList.get(0).getScientific_name());
+            mEt_change3.setText(mGoodsList.get(0).getScientificname());
         }
     }
 
@@ -436,32 +740,23 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
     private void refreshView(int stype) {
+        /*if (stype == 001) {
+            Collections.sort(mNumberList);
+            mNumberAdapter.notifyDataSetChanged();
+        }
+        */
         if (stype == 001) {
-            Collections.sort(mSerializableNumberList);
-            mHeadAdapter.notifyDataSetChanged();
+            Collections.sort(mNumberList);
+            mNumberAdapter.updateListView(mNumberList);
         }
+
         if (stype == 002) {
-            Collections.sort(stationList);
-            mStationAdapter.notifyDataSetChanged();
+            Collections.sort(mStationList);
+            mStationAdapter.updateListView(mStationList);
         }
 
     }
 
-    private void updatePupop(int position, int type) {
-        if (type == 001) {
-            mEt_change1.setText(mSerializableNumberList.get(position).getName());
-            mEt_change1.setSelection((mSerializableNumberList.get(position).getName()).length());
-            mPopupWindow_1.dismissPopWindow();
-        } else if (type == 002) {
-            mEt_change2.setText(stationList.get(position).getStationName());
-            mEt_change2.setSelection((stationList.get(position).getStationName()).length());
-            mPopupWindow_2.dismissPopWindow();
-        }
-
-        //指定操作
-
-
-    }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sure);
@@ -516,6 +811,7 @@ public class SureGoodsActivity extends BaseActivity {
 
     /**
      * 向服务器Post所有的信息
+     *
      * @param currentTime
      */
     private void postAccept(String currentTime) {
@@ -545,7 +841,7 @@ public class SureGoodsActivity extends BaseActivity {
         Logger.i(mLicense_plate);
         Logger.i(mCar_goods);
 
-        Observable<HttpResultPostImg> postThreeImg = httpUtilsApi.postThreeImg(currentTime,mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
+        Observable<HttpResultPostImg> postThreeImg = httpUtilsApi.postThreeImg(currentTime, mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
         postThreeImg.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<HttpResultPostImg>() {
@@ -571,12 +867,24 @@ public class SureGoodsActivity extends BaseActivity {
                         } else if (code == 300) {
                             ToastUtils.singleToast("上传失败");
                             saveLocalLite(currentTime);
-                            // TODO: 2017/7/7 上传失败需要保存到数据库
                         }
                         Logger.i("" + code);
                         Logger.i("" + msg);
                     }
                 });
+    }
+
+    /**
+     * 对已拍摄车辆以及未上传车辆进行计数
+     */
+    private void carNumberCount() {
+        SPUtils.add_one(mActivity, SPUtils.CAR_COUNT);
+        int car_count = (int) SPUtils.get(mActivity, SPUtils.CAR_COUNT, 0);
+        Logger.i("car_count------------" + car_count);
+
+        SPUtils.add_one(mActivity, SPUtils.CAR_NOT_COUNT);
+        int car_not_count = (int) SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0);
+        Logger.i("car_not_count------------" + car_not_count);
     }
 
     /**
@@ -608,9 +916,9 @@ public class SureGoodsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         //存入缓存
-        ACache.get(mActivity).put("sessions", (ArrayList<SerializableNumber>) mSerializableNumberList);
-        ACache.get(mActivity).put("stations", (ArrayList<SerializableStation>) stationList);
-        ACache.get(mActivity).put("goods", (ArrayList<SerializableGoods>) goodsList);
+        ACache.get(mActivity).put("sessions", (ArrayList<SerializableNumber>) mNumberList);
+        ACache.get(mActivity).put("stations", (ArrayList<SerializableStation>) mStationList);
+        ACache.get(mActivity).put("goods", (ArrayList<SortModel>) mGoodsList);
     }
 
     @Override
@@ -618,6 +926,7 @@ public class SureGoodsActivity extends BaseActivity {
         super.onDestroy();
 
     }
+
 
 }
 

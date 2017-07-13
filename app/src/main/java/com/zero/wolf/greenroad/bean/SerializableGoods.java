@@ -1,6 +1,4 @@
-package com.zero.wolf.greenroad.httpresultbean;
-
-import android.graphics.Bitmap;
+package com.zero.wolf.greenroad.bean;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -23,9 +21,17 @@ public class SerializableGoods implements Serializable, Comparable {
 
     public String alias;
 
-    public Bitmap cargoimg;
+    public String imageurl;
 
+    public long time;
 
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
 
     public long getTime() {
         return time;
@@ -34,8 +40,6 @@ public class SerializableGoods implements Serializable, Comparable {
     public void setTime(long time) {
         this.time = time;
     }
-
-    public long time;
 
     public int getTop() {
         return top;
@@ -61,13 +65,6 @@ public class SerializableGoods implements Serializable, Comparable {
         this.alias = alias;
     }
 
-    public Bitmap getCargoimg() {
-        return cargoimg;
-    }
-
-    public void setCargoimg(Bitmap cargoimg) {
-        this.cargoimg = cargoimg;
-    }
 
     @Override
     public int compareTo(Object another) {

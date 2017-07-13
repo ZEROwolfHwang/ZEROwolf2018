@@ -324,7 +324,7 @@ public class ACache {
      * Cache for a stream
      *
      * @param key
-     *            the file name.
+     *            the file mScientificname.
      * @return OutputStream stream for writing data.
      * @throws FileNotFoundException
      *             if the file can not be created.
@@ -336,7 +336,7 @@ public class ACache {
     /**
      *
      * @param key
-     *            the file name.
+     *            the file mScientificname.
      * @return (InputStream or null) stream previously saved in cache.
      * @throws FileNotFoundException
      *             if the file can not be opened

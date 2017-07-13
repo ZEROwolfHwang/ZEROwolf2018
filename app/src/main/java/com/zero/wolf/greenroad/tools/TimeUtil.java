@@ -27,14 +27,14 @@ public class TimeUtil {
      * 得到当前的系统时间
      */
     public static String getCurrentTimeTos() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
         Date curDate = new Date(System.currentTimeMillis());
         String shutTime = formatter.format(curDate);
         return shutTime;
     }
 
     public static Date getCurrentTimeToDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
         Date curDate = new Date(System.currentTimeMillis());
         // String shutTime = formatter.format(curDate);
         return curDate;

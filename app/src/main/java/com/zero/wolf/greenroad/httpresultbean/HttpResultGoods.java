@@ -6,16 +6,10 @@ package com.zero.wolf.greenroad.httpresultbean;
 
 public class HttpResultGoods<T>{
 
-    /**
-     * code : 400
-     * msg : 返回成功
-     * data : [{"cargoid":"1","cargoimg":"","scientificname":"番茄","alias":"西红柿","kind":"蔬菜瓜果"},{"cargoid":"4","cargoimg":"Thegoodspicture/2017-07-05/149924515729333.jpg","scientificname":"西瓜","alias":"青门绿玉房","kind":"蔬菜瓜果"},{"cargoid":"5","cargoimg":"Thegoodspicture/2017-07-05/149924566233513.jpg","scientificname":"甜瓜","alias":"甜瓜皮","kind":"蔬菜瓜果"}]
-     */
 
     private int code;
     private String msg;
     private T data;
-    private String imgurl;
 
     public int getCode() {
         return code;
@@ -43,26 +37,18 @@ public class HttpResultGoods<T>{
 
     public static class DataBean {
         /**
-         * cargoid : 1
-         * cargoimg :
-         * scientificname : 番茄
-         * alias : 西红柿
-         * kind : 蔬菜瓜果
+         * cargoid : 12
+         * imgurl : http://192.168.2.122/lvsetondao/Public/Home/149968460463439.jpg
+         * scientificname : 水蜜桃
+         * mAlias : 水水水水
+         * kind : 水果
          */
 
         private String cargoid;
+        private String imgurl;
         private String scientificname;
         private String alias;
         private String kind;
-        private String imgurl;
-
-        public String getImgurl() {
-            return imgurl;
-        }
-
-        public void setImgurl(String imgurl) {
-            this.imgurl = imgurl;
-        }
 
         public String getCargoid() {
             return cargoid;
@@ -72,6 +58,13 @@ public class HttpResultGoods<T>{
             this.cargoid = cargoid;
         }
 
+        public String getImgurl() {
+            return imgurl;
+        }
+
+        public void setImgurl(String imgurl) {
+            this.imgurl = imgurl;
+        }
 
         public String getScientificname() {
             return scientificname;

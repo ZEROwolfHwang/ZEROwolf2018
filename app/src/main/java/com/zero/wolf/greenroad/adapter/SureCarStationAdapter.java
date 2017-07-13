@@ -22,7 +22,7 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
 
     private final AppCompatActivity mActivity;
-    private final   ArrayList<SerializableStation>  mListLocal;
+    private ArrayList<SerializableStation>  mListLocal;
 
     private onItemClick itemClick;
 
@@ -55,6 +55,15 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
         return mListLocal.size();
     }
 
+    public void updateListView(List<SerializableStation> stationList) {
+        if (stationList == null) {
+            this.mListLocal = new ArrayList<SerializableStation>();
+        } else {
+            this.mListLocal = (ArrayList<SerializableStation>) stationList;
+        }
+        notifyDataSetChanged();
+    }
+
     public class SureCarStationHolder extends RecyclerView.ViewHolder {
 
         private final TextView mTextView;
@@ -73,11 +82,9 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
             mTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
               //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
-                    itemClick.itemClick(station,position);
+                    itemClick.itemClick(station);
                 }
             });
         }
@@ -86,7 +93,7 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
 
     public interface onItemClick {
-        void itemClick(SerializableStation station, int position);
+        void itemClick(SerializableStation station);
 
     }
 

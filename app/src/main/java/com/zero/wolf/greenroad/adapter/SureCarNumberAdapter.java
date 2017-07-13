@@ -22,7 +22,7 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
 
     private final AppCompatActivity mActivity;
-    private final   ArrayList<SerializableNumber>  mListLocal;
+    private ArrayList<SerializableNumber>  mListLocal;
 
     private onItemClick itemClick;
 
@@ -78,20 +78,29 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
               //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
-                    itemClick.itemClick(serializableNumber,position);
-                    itemClick.onTop(serializableNumber);
+                    itemClick.itemClick(serializableNumber);
                 }
             });
         }
 
     }
 
-
-    public interface onItemClick {
-        void itemClick(SerializableNumber serializableNumber, int position);
-        void onTop(SerializableNumber serializableNumber);
-
-        void onCancel(SerializableNumber serializableNumber);
+    /**
+     * 当ListView数据发生变化时,调用此方法来更新ListView
+     *
+     * @param list
+     */
+    public void updateListView(List<SerializableNumber> list) {
+        if (list == null) {
+            this.mListLocal = new ArrayList<SerializableNumber>();
+        } else {
+            this.mListLocal = (ArrayList<SerializableNumber>) list;
+        }
+        notifyDataSetChanged();
     }
 
+
+    public interface onItemClick {
+        void itemClick(SerializableNumber serializableNumber);
+    }
 }

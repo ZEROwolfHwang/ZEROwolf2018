@@ -137,7 +137,7 @@ public class Subject {
 
         @Override
         public String toString() {
-            return "cast.id=" + id + " cast.name=" + name + " | ";
+            return "cast.id=" + id + " cast.mScientificname=" + name + " | ";
         }
     }
 

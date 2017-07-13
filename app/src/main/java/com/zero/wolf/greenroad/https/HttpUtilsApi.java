@@ -61,7 +61,7 @@ public interface HttpUtilsApi {
 */
     @FormUrlEncoded
     @POST("listapi")
-    Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
+    Call<HttpResultLoginName> login(@Field("mScientificname") String name, @Field("password") String password);
 
     @GET("site")
     Observable<HttpResultStation<List<StationDataBean>>> getStationInfo();

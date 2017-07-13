@@ -1,6 +1,8 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.httpresultbean.SerializableGoods;
+import com.zero.wolf.greenroad.smartsearch.SortModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,17 +23,13 @@ import java.util.List;
 public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.SureGoodsHolder> {
 
     private final Context mContext;
+    private List<SortModel> mList;
+    private onItemClick mItemClick;
 
-
-    private final List<SerializableGoods> mList;
-    private final onItemClick mItemClick;
-
-
-    public SureGoodsAdapter(Context context, List<SerializableGoods> list, onItemClick itemClick) {
+    public SureGoodsAdapter(Context context, List<SortModel> allContactsList, onItemClick itemClick) {
         mContext = context;
-        mList = list;
+        mList = allContactsList;
         mItemClick = itemClick;
-
     }
 
     @Override
@@ -46,9 +45,24 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
 
     @Override
     public void onBindViewHolder(SureGoodsHolder holder, int position) {
-        SerializableGoods serializableGoods = mList.get(position);
-        holder.bindHolder(serializableGoods,position);
+        SortModel serializableGoods = mList.get(position);
+        holder.bindHolder(serializableGoods, position);
     }
+
+    /**
+     * 当ListView数据发生变化时,调用此方法来更新ListView
+     *
+     * @param list
+     */
+    public void updateListView(List<SortModel> list) {
+        if (list == null) {
+            this.mList = new ArrayList<SortModel>();
+        } else {
+            this.mList = list;
+        }
+        notifyDataSetChanged();
+    }
+
 
     public class SureGoodsHolder extends RecyclerView.ViewHolder {
 
@@ -63,21 +77,22 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
             alias = (TextView) itemView.findViewById(R.id.tv_sure_recycler_alias);
         }
 
-        public void bindHolder(final SerializableGoods serializableGoods, int position) {
-            scientific_name.setText(serializableGoods.getScientific_name());
-            alias.setText(serializableGoods.getAlias());
-            //// TODO: 2017/7/6  imageview的填充
+        public void bindHolder(final SortModel model, int position) {
+            scientific_name.setText(model.getScientificname());
+            alias.setText(model.getAlias());
+             Bitmap bitmap = BitmapFactory.decodeFile(model.getImgurl());
+            mImageView.setImageBitmap(bitmap);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemClick.itemClick(serializableGoods,position);
+                    mItemClick.itemClick(model, position);
                 }
             });
         }
-
     }
+
     public interface onItemClick {
-        void itemClick(SerializableGoods serializableGoods, int position);
+        void itemClick(SortModel serializableGoods, int position);
     }
 
 }

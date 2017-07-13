@@ -24,6 +24,31 @@ public class SerializableNumber implements Serializable, Comparable {
     public String avatar;
 
     public String name;
+    /**
+     * 显示数据拼音的首字母
+     */
+    public String sortLetters;
+    /**
+     * 简拼
+     */
+    public String simpleSpell;
+    /**
+     * 全拼
+     */
+    public String wholeSpell;
+
+
+    public void setSimpleSpell(String simpleSpell) {
+        this.simpleSpell = simpleSpell;
+    }
+
+    public String getWholeSpell() {
+        return wholeSpell;
+    }
+
+    public void setWholeSpell(String wholeSpell) {
+        this.wholeSpell = wholeSpell;
+    }
 
     public String getName() {
         return name;
