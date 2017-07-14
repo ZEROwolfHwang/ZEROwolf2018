@@ -10,24 +10,24 @@ package com.zero.wolf.greenroad.bean;
  */
 public class ActivationRequestBody {
 
-    private String macCode;
-    private String mCode;
+    private String macID;
+    private String macName;
     private String regKey;
 
-    public String getMacCode() {
-        return macCode;
+    public String getMacID() {
+        return macID;
     }
 
-    public void setMacCode(String macCode) {
-        this.macCode = macCode;
+    public void setMacID(String macID) {
+        this.macID = macID;
     }
 
-    public String getMCode() {
-        return mCode;
+    public String getMacName() {
+        return macName;
     }
 
-    public void setMCode(String mCode) {
-        this.mCode = mCode;
+    public void setMacName(String macName) {
+        this.macName = macName;
     }
 
     public String getRegKey() {

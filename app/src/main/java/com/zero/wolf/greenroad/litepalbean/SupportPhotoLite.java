@@ -2,8 +2,6 @@ package com.zero.wolf.greenroad.litepalbean;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.UUID;
-
 /**
  * Created by Administrator on 2017/7/3.
  */
@@ -20,7 +18,7 @@ public class SupportPhotoLite extends DataSupport {
         this.shuttime = shuttime;
     }
 
-    private UUID uuid;
+    private String car_type;
     private String photoPath1;
     private String photoPath2;
     private String photoPath3;
@@ -29,23 +27,15 @@ public class SupportPhotoLite extends DataSupport {
     private String station;
     private String license_plate;
     private String goods;
-    private int is_post;
 
-    public int getIs_post() {
-        return is_post;
+    public String getCar_type() {
+        return car_type;
     }
 
-    public void setIs_post(int is_post) {
-        this.is_post = is_post;
+    public void setCar_type(String car_type) {
+        this.car_type = car_type;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
 
     public String getPhotoPath1() {
         return photoPath1;

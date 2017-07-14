@@ -1,8 +1,10 @@
 package com.zero.wolf.greenroad.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
+import com.zero.wolf.greenroad.tools.Md5Util;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -45,7 +49,8 @@ public class ActivationCodeActivity extends AppCompatActivity {
     EditText mActivationThreeCode;
     @BindView(R.id.activation_fourCode)
     EditText mActivationFourCode;
-
+    @BindView(R.id.activation_fiveCode)
+    EditText mActivationFiveCode;
     @BindView(R.id.activation_sign_in_button)
     Button mSignInButton;
     @BindView(R.id.activation_sign_out_button)
@@ -55,7 +60,6 @@ public class ActivationCodeActivity extends AppCompatActivity {
     @BindView(R.id.activation_agreement_text)
     TextView mActivationAgreementText;
     private DevicesInfoUtils mInfoUtils;
-    private String mMacAddress;
     private File mFile;
     private File mTempFile;
     private ActivationRequestBody mBody;
@@ -64,6 +68,8 @@ public class ActivationCodeActivity extends AppCompatActivity {
     private Observable<ActivationResult> mVerificationCode;
     private Subscriber<ActivationResult> mSubscriber;
     private String mANDROID_id;
+    private String macID;
+    private String mPhoneName;
 
 
     @Override
@@ -80,14 +86,14 @@ public class ActivationCodeActivity extends AppCompatActivity {
         mNetWorkManager = NetWorkManager.getInstane();
         mIsNetConnected = mNetWorkManager.isnetworkConnected(this);
 
-        codeFromAndroid();
 
-        mInfoUtils = DevicesInfoUtils.getInstance();
-        mMacAddress = mInfoUtils.getMacAddress(this);
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        macID = tm.getDeviceId();
+        mPhoneName = android.os.Build.MODEL;
 
         mBody = new ActivationRequestBody();
 
-        SPUtils.putAndApply(getApplicationContext(), SPUtils.ISFIRSTACTIVATION, false);
+   //     SPUtils.putAndApply(getApplicationContext(), SPUtils.ISFIRSTACTIVATION, false);
 
     }
 
@@ -98,95 +104,92 @@ public class ActivationCodeActivity extends AppCompatActivity {
         final String secondCode = mActivationSecondCode.getText().toString().trim();
         final String threeCode = mActivationThreeCode.getText().toString().trim();
         final String fourCode = mActivationFourCode.getText().toString().trim();
+        final String fiveCode = mActivationFiveCode.getText().toString().trim();
 
         if (!TextUtils.isEmpty(firstCode) && !TextUtils.isEmpty(secondCode)
                 && !TextUtils.isEmpty(threeCode) && !TextUtils.isEmpty(fourCode)
-                && !TextUtils.isEmpty(mMacAddress)) {
-            mBody.setMacCode(mMacAddress);
-            mBody.setMCode(mMacAddress);
+                && !TextUtils.isEmpty(macID)) {
+            mBody.setMacID(macID);
+            mBody.setMacName(mPhoneName);
             mBody.setRegKey(firstCode + "-" + secondCode + "-" + threeCode + "-"
-                    + fourCode );
+                    + fourCode + "-"+fiveCode);
             if (mIsNetConnected) {
-                mVerificationCode = mNetWorkManager.verificationCode(mBody);
+                mSignInButton.setEnabled(true);
+                mVerificationCode = mNetWorkManager.verificationCode(mBody.getMacID(),mBody.getMacName(),mBody.getRegKey());
                 mSubscriber = new Subscriber<ActivationResult>() {
                     @Override
                     public void onCompleted() {
-                        mSignInButton.setEnabled(true);
+                        mSignInButton.setEnabled(false);
+                        Logger.i("激活完成");
+                        closeActivity(0);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
                     }
 
                     @Override
                     public void onNext(ActivationResult requestResult) {
-                        if (ActivationResult.SUCCESS_CODE.equals(requestResult.getCode())) {
-                            SPUtils.putAndApply(getApplicationContext(), SPUtils.SHAREDPRENAME, requestResult.getDetail().replaceAll(" ", ""));
-                            SPUtils.putAndApply(getApplicationContext(), SPUtils.CODE, firstCode + "-" + secondCode + "-"
-                                    + threeCode + "-" + fourCode);
-                        } else if (ActivationResult.FAILD_CODE.equals(requestResult.getCode())) {
-                            if (ActivationResult.FAILD_CODE_USED_KEY.equals(requestResult.getDetail())) {
-                            } else {
-                                ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.key_used));
-                            }
-                        } else {
-                            ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.Invalid_Key));
+                            Logger.i(requestResult.getCode());
 
+                        if (ActivationResult.SUCCESS_CODE.equals(requestResult.getCode())) {
+                            SPUtils.putAndApply(getApplicationContext(), SPUtils.CODE, firstCode  + secondCode
+                                    + threeCode  + fourCode+fiveCode);
+                            SPUtils.putAndApply(getApplicationContext(), SPUtils.ISACTIVATIONSUCCESS, Md5Util.md5Password(macID));
+
+                        } else if (ActivationResult.FAILD_CODE_USED_KEY.equals(requestResult.getCode())) {
+
+                            ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.key_used));
+                        } else if (ActivationResult.FAILD_CODE_INVALID_KEY.equals(requestResult.getCode())) {
+                            ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.Invalid_Key));
+                        } else {
+                            ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.Retry));
                         }
+
                     }
                 };
                 mVerificationCode.subscribe(mSubscriber);
             } else {
-                mSignInButton.setEnabled(true);
+                ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.network_error));
+                mSignInButton.setEnabled(false);
                 return;
             }
         } else {
-            mSignInButton.setEnabled(true);
+            mSignInButton.setEnabled(false);
+            ToastUtils.singleToast( ActivationCodeActivity.this.getString(R.string.Wrong_format_key));
         }
+
     }
-
-    private void codeFromAndroid() {
-        mANDROID_id = Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID);
-
-        char c = mANDROID_id.charAt(0);
-        Logger.i(String.valueOf(c));
-        Logger.i(mANDROID_id);
-
-        String OneText = "";
-        String TwoText = "";
-        String ThreeText = "";
-        String FourText = "";
-
-
-     for (int i =0;i<4;i++) {
-         OneText =OneText+ String.valueOf(mANDROID_id.charAt(i));
-     }
-     for (int i =4;i<8;i++) {
-         TwoText =TwoText+ String.valueOf(mANDROID_id.charAt(i));
-     }
-     for (int i =8;i<12;i++) {
-         ThreeText = ThreeText+String.valueOf(mANDROID_id.charAt(i));
-     }
-     for (int i =12;i<16;i++) {
-         FourText = FourText+String.valueOf(mANDROID_id.charAt(i));
-     }
-
-        mActivationFirstCode.setText(OneText);
-        mActivationSecondCode.setText(TwoText);
-        mActivationThreeCode.setText(ThreeText);
-        mActivationFourCode.setText(FourText);
-        boolean isfirstactivation = (boolean) SPUtils.get(getApplicationContext(), SPUtils.ISFIRSTACTIVATION, false);
-
-        if (!isfirstactivation) {
+    @OnClick(R.id.activation_agree_checkbox)
+    public void isChecked() {
+        boolean checked = mActivationAgreeCheckbox.isChecked();
+        if (checked) {
+            mSignInButton.setEnabled(true);
             mSignInButton.setClickable(true);
-            mSignInButton.setEnabled(true);
-
-            mSignInButton.setOnClickListener((View view)->{
-                // TODO: 2017/7/3  在这里实现客户端设备ID与服务端的认证
-            });
+        } else {
+            mSignInButton.setEnabled(false);
+            mSignInButton.setClickable(false);
         }
     }
 
+    @OnClick(R.id.activation_sign_out_button)
+    public void sign_out() {
+        closeActivity(0);
+    }
+
+    /**
+     * @param type 1表示跳转并关闭 其他表示仅关闭
+     */
+    private void closeActivity(int type) {
+        this.finish();
+        if (type == 1) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+        if (mSubscriber != null)
+            mSubscriber.unsubscribe();
+    }
 
 }
 

@@ -1,8 +1,20 @@
 package com.zero.wolf.greenroad.smartsearch;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 public class SortModel  implements Serializable {
+
+    public Bitmap mBitmap;
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+    }
 
     /**
      * 显示数据拼音的首字母
@@ -20,7 +32,7 @@ public class SortModel  implements Serializable {
 
     public String scientificname;
     public String alias;
-    public String imgurl;
+  //  public String imgurl;
 
     public SortModel() {
 
@@ -84,23 +96,23 @@ public class SortModel  implements Serializable {
         this.alias = alias;
     }
 
-    public String getImgurl() {
+  /*  public String getImgurl() {
         return imgurl;
     }
 
     public void setImgurl(String imgurl) {
         this.imgurl = imgurl;
-    }
+    }*/
 
     @Override
     public String toString() {
         return "SortModel{" +
-                "sortLetters='" + sortLetters + '\'' +
+                "mBitmap=" + mBitmap +
+                ", sortLetters='" + sortLetters + '\'' +
                 ", simpleSpell='" + simpleSpell + '\'' +
                 ", wholeSpell='" + wholeSpell + '\'' +
                 ", scientificname='" + scientificname + '\'' +
                 ", alias='" + alias + '\'' +
-                ", imgurl='" + imgurl + '\'' +
                 '}';
     }
 }

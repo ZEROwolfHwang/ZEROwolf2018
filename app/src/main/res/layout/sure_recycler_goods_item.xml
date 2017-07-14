@@ -7,7 +7,6 @@
 
     <ImageView
         android:id="@+id/iv_recycler_goods"
-        android:background="@drawable/demo"
         android:layout_width="@dimen/main_height_dp40"
         android:layout_height="@dimen/layout_margin40dp"/>
 

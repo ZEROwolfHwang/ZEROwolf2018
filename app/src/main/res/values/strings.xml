@@ -34,7 +34,7 @@
     <string name="cancel_count">清除计数</string>
     <string name="activity_about_version">版本号:</string>
     <string name="activity_about_Activation_code">认证ID：</string>
-    <string name="prompt_activation_code">该设备的ID</string>
+    <string name="prompt_activation_code">终端ID</string>
     <string name="activation_tips">勾选即同意用户协议内容</string>
     <string name="activation_network_info">注意：激活时请确保网络已正常连接。</string>
     <string name="action_sign_in">激活</string>
@@ -42,5 +42,11 @@
     <string name="key_used">激活码已使用</string>
     <string name="Invalid_Key">激活码无效</string>
     <string name="back_up_app">退出</string>
+    <string name="Retry">请重试</string>
+    <string name="network_error">网络无连接</string>
+    <string name="Wrong_format_key">激活码格式不正确</string>
+    <string name="sure_number">请输入完整车牌号</string>
+    <string name="sure_station">请确定站名</string>
+    <string name="post_upload_not">提交为上传的信息</string>
 
 </resources>

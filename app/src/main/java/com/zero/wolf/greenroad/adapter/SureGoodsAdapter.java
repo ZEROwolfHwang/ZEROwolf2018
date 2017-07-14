@@ -1,8 +1,6 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +23,7 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
     private final Context mContext;
     private List<SortModel> mList;
     private onItemClick mItemClick;
+
 
     public SureGoodsAdapter(Context context, List<SortModel> allContactsList, onItemClick itemClick) {
         mContext = context;
@@ -78,10 +77,12 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
         }
 
         public void bindHolder(final SortModel model, int position) {
-            scientific_name.setText(model.getScientificname());
+
+            String scientificname = model.getScientificname();
+            scientific_name.setText(scientificname);
             alias.setText(model.getAlias());
-             Bitmap bitmap = BitmapFactory.decodeFile(model.getImgurl());
-            mImageView.setImageBitmap(bitmap);
+
+            mImageView.setImageBitmap(model.getBitmap());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

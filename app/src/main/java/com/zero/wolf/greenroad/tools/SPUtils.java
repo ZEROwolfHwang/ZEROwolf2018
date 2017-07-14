@@ -14,7 +14,7 @@ import java.util.Map;
 public class SPUtils {
 
 
-    public static final String ISFIRSTACTIVATION= "isfirstactivation";
+    public static final String ISACTIVATIONSUCCESS= "isactivationsuccess";
 
     public static final String SHAREDPRENAME = "activation";
     public static String CODE = "ActivationCode";

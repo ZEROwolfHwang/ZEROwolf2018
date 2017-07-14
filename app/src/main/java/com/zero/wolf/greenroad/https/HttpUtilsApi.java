@@ -1,24 +1,21 @@
 package com.zero.wolf.greenroad.https;
 
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
-import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
+import com.zero.wolf.greenroad.bean.HttpResultNumber;
+import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
-import com.zero.wolf.greenroad.bean.HttpResultNumber;
-import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultStation;
-import com.zero.wolf.greenroad.bean.UpdateAppInfo;
+import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -36,9 +33,12 @@ import rx.Observable;
 public interface HttpUtilsApi {
 
     //激活码
-    @Headers("Content-BaseIWBType: application/json;charset=utf-8")
-    @POST("RegSrv/UBMRegService.svc/Android/regpost")
-    Observable<ActivationResult> activation(@Body ActivationRequestBody body);
+
+    @FormUrlEncoded
+    @POST("activation")
+    Observable<ActivationResult> activation(@Field("macID") String macId,
+                                            @Field("macName") String macName,
+                                            @Field("regKey") String regKey);
 
     /* //更新
      //TODO:需要添加UBMVersion字段用于区分是哪个版本的更新（xiahua、ruijie、pad等oem版本和分支版本）
@@ -61,7 +61,7 @@ public interface HttpUtilsApi {
 */
     @FormUrlEncoded
     @POST("listapi")
-    Call<HttpResultLoginName> login(@Field("mScientificname") String name, @Field("password") String password);
+    Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
 
     @GET("site")
     Observable<HttpResultStation<List<StationDataBean>>> getStationInfo();
@@ -90,7 +90,9 @@ public interface HttpUtilsApi {
 */
     @Multipart
     @POST("image")
-    Observable<HttpResultPostImg> postThreeImg(@Part("shuttime") String shuttime,
+    Observable<HttpResultPostImg> postThreeImg(@Part("car_type") String car_type,
+                                               @Part("license_color") String licence_color,
+                                               @Part("shuttime") String shuttime,
                                                @Part("username") String username,
                                                @Part("station") String station,
                                                @Part("license_plate") String license_plate,

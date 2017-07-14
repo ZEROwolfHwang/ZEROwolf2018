@@ -10,36 +10,25 @@ package com.zero.wolf.greenroad.bean;
  */
 public class ActivationResult {
     public static final String SUCCESS_CODE = "Success";
-    public static final String FAILD_CODE = "Failure";
-    public static final String RETRY = "Retry";
-    public static final String FAILD_CODE_INVALID_KEY = "Invalid Key";
-    public static final String FAILD_CODE_USED_KEY = "Used Key";
+    public static final String FAILD_CODE_INVALID_KEY = "InvalidKey";
+    public static final String FAILD_CODE_USED_KEY = "UsedKey";
 
     private String code;
-    private String detail;
-    private boolean PostLogResult;
+    private String msg;
 
-    public boolean isPostLogResult() {
-        return PostLogResult;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setPostLogResult(boolean postLogResult) {
-        PostLogResult = postLogResult;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getCode() {
         return code;
     }
-
     public void setCode(String code) {
         this.code = code;
     }
 
-    public String getDetail() {
-        return detail;
-    }
-
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
 }

@@ -9,8 +9,13 @@
         android:title="@string/cancel_count"
         android:icon="@drawable/cancel_count"
         android:id="@+id/nav_cancer">
-
     </item>
+    <item
+        android:title="@string/post_upload_not"
+        android:icon="@drawable/cancel_count"
+        android:id="@+id/nav_post">
+    </item>
+
 </group>
     <item android:title="Communicate">
         <menu>

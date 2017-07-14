@@ -32,7 +32,7 @@
             android:id="@+id/activation_firstCode"
             android:layout_width="65dp"
             android:layout_height="30dp"
-            android:background="@drawable/activationcode_bg"
+            android:background="#3d93c1"
             android:gravity="center"
             android:maxLength="4"
             android:textSize="@dimen/text18"
@@ -53,7 +53,7 @@
             android:id="@+id/activation_secondCode"
             android:layout_width="65dp"
             android:layout_height="30dp"
-            android:background="@drawable/activationcode_bg"
+            android:background="#3d93c1"
             android:gravity="center"
             android:maxLength="4"
             android:textSize="@dimen/text18"
@@ -61,20 +61,20 @@
             android:typeface="monospace"
             />
 
-        <TextView
-            android:layout_width="10dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:text="-"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="@dimen/layout_margin5dp">
 
         <EditText
             android:id="@+id/activation_threeCode"
             android:layout_width="65dp"
             android:layout_height="30dp"
-            android:background="@drawable/activationcode_bg"
+            android:background="#3d93c1"
             android:gravity="center"
             android:maxLength="4"
             android:textSize="@dimen/text18"
@@ -95,7 +95,7 @@
             android:id="@+id/activation_fourCode"
             android:layout_width="65dp"
             android:layout_height="30dp"
-            android:background="@drawable/activationcode_bg"
+            android:background="#3d93c1"
             android:gravity="center"
             android:maxLength="4"
             android:textSize="@dimen/text18"
@@ -103,7 +103,7 @@
             android:typeface="monospace"
             />
 
-      <!--  <TextView
+        <TextView
             android:layout_width="10dp"
             android:layout_height="30dp"
             android:gravity="center"
@@ -116,13 +116,13 @@
             android:id="@+id/activation_fiveCode"
             android:layout_width="65dp"
             android:layout_height="30dp"
-            android:background="@drawable/activationcode_bg"
+            android:background="#3d93c1"
             android:gravity="center"
             android:maxLength="4"
             android:textSize="20sp"
             android:textStyle="bold"
             android:typeface="monospace"
-            />-->
+            />
 
     </LinearLayout>
 

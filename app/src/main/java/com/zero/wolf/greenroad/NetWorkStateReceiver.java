@@ -32,20 +32,20 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
             //获取移动数据连接的信息
             NetworkInfo dataNetworkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if (mSb == null) {
-                mSb = new StringBuilder();
+              //  mSb = new StringBuilder();
             }
-            mSb = null;
+          //  mSb = null;
             if (wifiNetworkInfo.isConnected() && dataNetworkInfo.isConnected()) {
-                mSb.append("WIFIandDATA");
+              //  mSb.append("WIFIandDATA");
             } else {
                 if (wifiNetworkInfo.isConnected() && !dataNetworkInfo.isConnected()) {
-                    mSb.append("WIFI");
+                   // mSb.append("WIFI");
 
                 } else {
                     if (!wifiNetworkInfo.isConnected() && dataNetworkInfo.isConnected()) {
-                        mSb.append("DATA");
+                    //    mSb.append("DATA");
                     } else {
-                        mSb.append("");
+                  //      mSb.append("");
                     }
                 }
             }

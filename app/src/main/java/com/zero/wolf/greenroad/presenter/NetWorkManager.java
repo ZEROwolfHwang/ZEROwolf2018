@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 
@@ -28,7 +27,8 @@ import rx.schedulers.Schedulers;
  */
 public class NetWorkManager {
 
-    public static final String BASEURL = "http://update.geit.com.cn/";
+   // public static final String BASEURL = "http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/";
+    public static final String BASEURL = "http://greenft.githubshop.com/lvsetondao/index.php/Interfacy/Api/";
 
     private static NetWorkManager mNetWorkManager;
 
@@ -62,12 +62,9 @@ public class NetWorkManager {
 
     /**
      * 激活
-     *
-     * @param body 激活码以及机器数据
-     * @return
      */
-    public Observable<ActivationResult> verificationCode(ActivationRequestBody body) {
-        return mHttpUtilsApi.activation(body)
+    public Observable<ActivationResult> verificationCode(String id,String name,String key) {
+        return mHttpUtilsApi.activation(id,name,key)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

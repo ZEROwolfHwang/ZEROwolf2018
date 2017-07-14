@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -35,20 +36,28 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
+import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.https.RequestLiteGoods;
 import com.zero.wolf.greenroad.https.RequestLiteNumber;
 import com.zero.wolf.greenroad.https.RequestLiteStation;
 import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
+import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.litepalbean.SupportStation;
+import com.zero.wolf.greenroad.manager.CarNumberCount;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
+import com.zero.wolf.greenroad.tools.Md5Util;
+import com.zero.wolf.greenroad.tools.PathUtil;
+import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
 import com.zero.wolf.greenroad.update.CheckUpdateUtils;
 import com.zero.wolf.greenroad.update.Subject;
@@ -62,9 +71,12 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import okhttp3.MultipartBody;
+import rx.Observable;
 import rx.Subscriber;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
+import static org.litepal.crud.DataSupport.findAll;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -128,6 +140,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private ProgressDialog mProgressDialog;
     private File mGoodsFile;
     private String mGoodsFilePath;
+    private String mDeviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +157,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mDeviceId = tm.getDeviceId();
+
         initData();
         initSp();
         initLitePal();
@@ -153,9 +169,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mIvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                intent.putExtra("username", mUsername);
-                startActivity(intent);
+                String macID = (String) SPUtils.get(mActivity, SPUtils.ISACTIVATIONSUCCESS, "");
+                if (Md5Util.md5Password(mDeviceId).equals(macID)) {
+
+                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                    intent.putExtra("username", mUsername);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -227,7 +250,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
                     @Override
                     public void onNext(List<HttpResultGoods.DataBean> dataBeen) {
-                        List<SupportGoods> supportGoods = DataSupport.findAll(SupportGoods.class);
+                        List<SupportGoods> supportGoods = findAll(SupportGoods.class);
                         if (supportGoods.size() != 0) {
                             if (dataBeen.size() == supportGoods.size()) {
                                 Logger.i("该方法走了没1");
@@ -242,7 +265,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                         goodsInfoFore(dataBeen);
                                     }
                                 }).start();
-                                List<SupportGoods> supportGoods1 = DataSupport.findAll(SupportGoods.class);
+                                List<SupportGoods> supportGoods1 = findAll(SupportGoods.class);
                                 Logger.i(supportGoods1.size() + "");
                             }
                         } else {
@@ -252,7 +275,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                     goodsInfoFore(dataBeen);
                                 }
                             }).start();
-                            List<SupportGoods> supportGoods1 = DataSupport.findAll(SupportGoods.class);
+                            List<SupportGoods> supportGoods1 = findAll(SupportGoods.class);
                             Logger.i(supportGoods1.size() + "");
                         }
                     }
@@ -286,7 +309,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             info.setCargoid(dataBeen.get(i).getCargoid());
             info.setKind(dataBeen.get(i).getKind());
             //   info.setBitmap(bitmap);
-            info.setImgurl(mGoodsFilePath + "/"+fileName);//本地数据库保存的图片路径
+            info.setImgurl(mGoodsFilePath + "/" + fileName);//本地数据库保存的图片路径
             info.save();
 
         }
@@ -353,7 +376,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }*/
                 //isNumberCompleted = true;
 
-                List<SupportCarNumber> supportCarNumbers = DataSupport.findAll(SupportCarNumber.class);
+                List<SupportCarNumber> supportCarNumbers = findAll(SupportCarNumber.class);
                 if (supportCarNumbers.size() != 0) {
                     if (dataBeen.size() == supportCarNumbers.size()) {
                         Logger.i("该方法走了没1");
@@ -363,12 +386,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         Logger.i("该方法走了没2");
                         DataSupport.deleteAll(SupportCarNumber.class);
                         numbersInfoFore(dataBeen);
-                        List<SupportCarNumber> supportCarNumbers1 = DataSupport.findAll(SupportCarNumber.class);
+                        List<SupportCarNumber> supportCarNumbers1 = findAll(SupportCarNumber.class);
                         Logger.i(supportCarNumbers1.size() + "");
                     }
                 } else {
                     numbersInfoFore(dataBeen);
-                    List<SupportCarNumber> supportCarNumbers1 = DataSupport.findAll(SupportCarNumber.class);
+                    List<SupportCarNumber> supportCarNumbers1 = findAll(SupportCarNumber.class);
                     Logger.i(supportCarNumbers1.size() + "");
                 }
             }
@@ -397,7 +420,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onNext(List<StationDataBean> dataBeen) {
-                List<SupportStation> supportStations = DataSupport.findAll(SupportStation.class);
+                List<SupportStation> supportStations = findAll(SupportStation.class);
                 if (supportStations.size() != 0) {
                     if (dataBeen.size() == supportStations.size()) {
                         Logger.i("该方法走了没1");
@@ -407,12 +430,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         Logger.i("该方法走了没2");
                         DataSupport.deleteAll(SupportStation.class);
                         stationsInfoFore(dataBeen);
-                        List<SupportStation> supportStations1 = DataSupport.findAll(SupportStation.class);
+                        List<SupportStation> supportStations1 = findAll(SupportStation.class);
                         Logger.i(supportStations1.size() + "");
                     }
                 } else {
                     stationsInfoFore(dataBeen);
-                    List<SupportStation> supportStations1 = DataSupport.findAll(SupportStation.class);
+                    List<SupportStation> supportStations1 = findAll(SupportStation.class);
                     Logger.i(supportStations1.size() + "");
                 }
             }
@@ -559,11 +582,65 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             cancelCount();
         } else if (id == R.id.nav_backup) {
             buckUpApp();
+        } else if (id == R.id.nav_post) {
+            post_not_upload();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void post_not_upload() {
+        List<SupportPhotoLite> liteList = DataSupport
+                //.where("is_post==?", "NO").find(SupportPhotoLite.class);
+                .findAll(SupportPhotoLite.class);
+        for (int i = 0; i < liteList.size(); i++) {
+            String goods = liteList.get(i).getGoods();
+            String license_color = liteList.get(i).getLicense_color();
+            String license_plate = liteList.get(i).getLicense_plate();
+            String photoPath1 = liteList.get(i).getPhotoPath1();
+            String photoPath2 = liteList.get(i).getPhotoPath2();
+            String photoPath3 = liteList.get(i).getPhotoPath3();
+            String shuttime = liteList.get(i).getShuttime();
+            String station = liteList.get(i).getStation();
+            String username = liteList.get(i).getUsername();
+            String car_type = liteList.get(i).getCar_type();
+
+            if (photoPath1 == null) {
+                return;
+            }
+
+            List<MultipartBody.Part> parts = PathUtil
+                    .getMultipartBodyPart(photoPath1, photoPath2, photoPath3);
+            Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi().postThreeImg("大货车", license_color,
+                    shuttime, username, station, license_plate, goods, parts);
+            observable.compose(RxHolder.io_main()).subscribe(new Subscriber<HttpResultPostImg>() {
+                @Override
+                public void onCompleted() {
+                    Logger.i("三张照片上传成功");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Logger.i(e.getMessage());
+                }
+
+                @Override
+                public void onNext(HttpResultPostImg httpResultPostImg) {
+                    int code = httpResultPostImg.getCode();
+                    String msg = httpResultPostImg.getMsg();
+                    if (code == 200) {
+                        CarNumberCount.CarNumberCut(mActivity);
+                        DataSupport.deleteAll(SupportPhotoLite.class,"shuttime=?", shuttime);
+                        Logger.i("shangchuan成功");
+                    } else if (code == 300) {
+                        ToastUtils.singleToast("上传失败");
+                    }
+                }
+            });
+        }
+
     }
 
     /**
@@ -618,23 +695,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //在onResume()方法注册
     @Override
     protected void onResume() {
-        /*if (mNetWorkStateReceiver == null) {
+       /* if (mNetWorkStateReceiver == null) {
             mNetWorkStateReceiver = new NetWorkStateReceiver(mTv_change3);
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
 
-*/
-        initCount();
+        initCount();*/
         super.onResume();
     }
 
     //onPause()方法注销
     @Override
     protected void onPause() {
-       /* unregisterReceiver(mNetWorkStateReceiver);
-*/
+      /*  unregisterReceiver(mNetWorkStateReceiver);*/
         super.onPause();
     }
 

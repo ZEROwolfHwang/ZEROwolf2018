@@ -3,6 +3,8 @@ package com.zero.wolf.greenroad.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,35 +35,32 @@ import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.https.HttpMethods;
-import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.litepalbean.SupportStation;
+import com.zero.wolf.greenroad.manager.CarNumberCount;
+import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
+import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
@@ -91,9 +90,6 @@ public class SureGoodsActivity extends BaseActivity {
     private String mLicense_plate;
     private String mCar_goods;
     private String mCar_station;
-    private String mFile1;
-    private String mFile2;
-    private String mFile3;
     private String mColor;
     private List<SupportGoods> mSupportGoodses;
 
@@ -297,7 +293,10 @@ public class SureGoodsActivity extends BaseActivity {
             SortModel sortModel = new SortModel();
             sortModel.setScientificname(scientificname);
             sortModel.setAlias(alias);
-            sortModel.setImgurl(imgurl);
+
+            Bitmap bitmap = BitmapFactory.decodeFile(imgurl);
+
+            sortModel.setBitmap(bitmap);
 
             String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientificname);
             if (sortLetters == null) {
@@ -309,8 +308,13 @@ public class SureGoodsActivity extends BaseActivity {
             sortModel.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
             sortModel.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
 
+
             mGoodsList.add(sortModel);
         }
+            Logger.i(mGoodsList.get(0).toString());
+            Logger.i(mGoodsList.get(0).getBitmap().toString());
+            Logger.i(mGoodsList.get(1).getBitmap().toString());
+            Logger.i(mGoodsList.get(2).getBitmap().toString());
         Logger.i("" + mGoodsList.size());
     }
 
@@ -439,6 +443,14 @@ public class SureGoodsActivity extends BaseActivity {
         mBt_ok_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if ("".equals(mEt_change1.getText().toString().substring(2).trim())) {
+                    ToastUtils.singleToast(getString(R.string.sure_number));
+                    return;
+                }
+                if ("".equals(mEt_change2.getText().toString().trim())) {
+                    ToastUtils.singleToast(getString(R.string.sure_station));
+                    return;
+                }
                 AlertDialog.Builder dialog = new AlertDialog.Builder(SureGoodsActivity.this);
                 dialog.setTitle(getString(R.string.dialog_title_sure));
                 dialog.setMessage(getDialogSendMessage());
@@ -447,8 +459,12 @@ public class SureGoodsActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //saveLocalLite();
                         carNumberCount();
-                        String currentTime = TimeUtil.getCurrentTimeTos();
-                        postAccept(currentTime);
+
+                        if (NetWorkManager.isnetworkConnected(mContext)) {
+                            postAccept(TimeUtil.getCurrentTimeTos());
+                        } else {
+                            saveLocalLite(TimeUtil.getCurrentTimeTos());
+                        }
                     }
                 });
                 dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
@@ -579,7 +595,7 @@ public class SureGoodsActivity extends BaseActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mIvClearText_goods.setVisibility(View.VISIBLE);
+                    //mIvClearText_goods.setVisibility(View.VISIBLE);
                 } else {
                     mIvClearText_goods.setVisibility(View.INVISIBLE);
                 }
@@ -607,6 +623,10 @@ public class SureGoodsActivity extends BaseActivity {
                         return;
                     }
                 }
+                if (mRecycler_view_goods.hasFocus()) {
+                    mRecycler_view_goods.setFocusable(false);
+                }
+
                 dissmissFocus(mEt_change2);
                 dissmissFocus(mEt_change3);
                /* if (mIvClearText_goods.getVisibility() == View.VISIBLE) {
@@ -637,7 +657,9 @@ public class SureGoodsActivity extends BaseActivity {
                         return;
                     }
                 }
-
+                if (mRecycler_view_goods.hasFocus()) {
+                    mRecycler_view_goods.setFocusable(false);
+                }
                 dissmissFocus(mEt_change1);
                 dissmissFocus(mEt_change3);
                 /*if (mIvClearText_goods.getVisibility() == View.VISIBLE) {
@@ -660,7 +682,6 @@ public class SureGoodsActivity extends BaseActivity {
         mEt_change3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dissmissFocus(mEt_change1);
                 dissmissFocus(mEt_change2);
                 showAndDismiss_clear(mEt_change3, mIvClearText_goods);
@@ -697,15 +718,15 @@ public class SureGoodsActivity extends BaseActivity {
     private void saveLocalLite(String currentTime) {
         SupportPhotoLite supportPhotoLite = new SupportPhotoLite();
         supportPhotoLite.setShuttime(currentTime);
-        supportPhotoLite.setUuid(UUID.randomUUID());
         supportPhotoLite.setUsername(mUsername);
         supportPhotoLite.setGoods(mCar_goods);
         supportPhotoLite.setLicense_plate(mLicense_plate);
         supportPhotoLite.setStation(mCar_station);
-        supportPhotoLite.setPhotoPath1(mFile1);
-        supportPhotoLite.setPhotoPath2(mFile2);
-        supportPhotoLite.setPhotoPath3(mFile3);
+        supportPhotoLite.setPhotoPath1(mPhotoPath1);
+        supportPhotoLite.setPhotoPath2(mPhotoPath2);
+        supportPhotoLite.setPhotoPath3(mPhotoPath3);
         supportPhotoLite.setLicense_color(mColor);
+        supportPhotoLite.setCar_type("绿皮车");
         supportPhotoLite.save();
     }
 
@@ -730,14 +751,6 @@ public class SureGoodsActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 将未上传车辆的数字减去一
-     */
-    private void CarNumberCut() {
-        SPUtils.cut_one(mActivity, SPUtils.CAR_NOT_COUNT);
-        int cra_not_count = (int) SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0);
-        Logger.i("cra_not_count------------" + cra_not_count);
-    }
 
     private void refreshView(int stype) {
         /*if (stype == 001) {
@@ -816,7 +829,7 @@ public class SureGoodsActivity extends BaseActivity {
      */
     private void postAccept(String currentTime) {
 
-        //SimplePhoto();
+    /*    //SimplePhoto();
         List<String> pathList = getPathList();
         Logger.i("" + getPathList().size());
         Logger.i("" + pathList.size());
@@ -829,49 +842,45 @@ public class SureGoodsActivity extends BaseActivity {
             File file = new File(pathList.get(i));//filePath 图片地址
             RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
             builder.addFormDataPart("image" + i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
-           /* File file = new File(pathList.get(i));
-            bodyMap.put("image"+i+"\"; filename=\""+file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"),file));*/
+           *//* File file = new File(pathList.get(i));
+            bodyMap.put("image"+i+"\"; filename=\""+file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"),file));*//*
         }
-        List<MultipartBody.Part> parts = builder.build().parts();
+        List<MultipartBody.Part> parts = builder.build().parts();*/
 
-        HttpUtilsApi httpUtilsApi = HttpMethods.getInstance().getApi();
+        List<MultipartBody.Part> parts = PathUtil.getMultipartBodyPart(mPhotoPath1, mPhotoPath2, mPhotoPath3);
 
-        Logger.i(mUsername);
-        Logger.i(mCar_station);
-        Logger.i(mLicense_plate);
-        Logger.i(mCar_goods);
+        Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi()
+                .postThreeImg("大货车", mColor, currentTime, mUsername,
+                        mCar_station, mLicense_plate, mCar_goods, parts);
 
-        Observable<HttpResultPostImg> postThreeImg = httpUtilsApi.postThreeImg(currentTime, mUsername, mCar_station, mLicense_plate, mCar_goods, parts);
-        postThreeImg.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<HttpResultPostImg>() {
-                    @Override
-                    public void onCompleted() {
-                        Logger.i("三张照片上传成功");
-                    }
+        observable.compose(RxHolder.io_main()).subscribe(new Subscriber<HttpResultPostImg>() {
+            @Override
+            public void onCompleted() {
+                Logger.i("三张照片上传成功");
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i(e.getMessage());
-                    }
+            @Override
+            public void onError(Throwable e) {
+                Logger.i(e.getMessage());
+            }
 
-                    @Override
-                    public void onNext(HttpResultPostImg httpResultPostImg) {
-                        int code = httpResultPostImg.getCode();
-                        String msg = httpResultPostImg.getMsg();
-                        if (code == 200) {
-                            CarNumberCut();
-                            Intent intent = new Intent(SureGoodsActivity.this, PhotoActivity.class);
-                            intent.putExtra("username", mUsername);
-                            startActivity(intent);
-                        } else if (code == 300) {
-                            ToastUtils.singleToast("上传失败");
-                            saveLocalLite(currentTime);
-                        }
-                        Logger.i("" + code);
-                        Logger.i("" + msg);
-                    }
-                });
+            @Override
+            public void onNext(HttpResultPostImg httpResultPostImg) {
+                int code = httpResultPostImg.getCode();
+                String msg = httpResultPostImg.getMsg();
+                if (code == 200) {
+                    CarNumberCount.CarNumberCut(mContext);
+                    Intent intent = new Intent(SureGoodsActivity.this, PhotoActivity.class);
+                    intent.putExtra("username", mUsername);
+                    startActivity(intent);
+                } else if (code == 300) {
+                    ToastUtils.singleToast("上传失败");
+                    saveLocalLite(currentTime);
+                }
+                Logger.i("" + code);
+                Logger.i("" + msg);
+            }
+        });
     }
 
     /**
@@ -887,30 +896,7 @@ public class SureGoodsActivity extends BaseActivity {
         Logger.i("car_not_count------------" + car_not_count);
     }
 
-    /**
-     * 获取多张待上传图片的地址列表
-     *
-     * @return
-     */
-    private List<String> getPathList() {
 
-
-        /*ArrayList<String> list = new ArrayList<>();
-        list.add(mPhotoPath1);
-        list.add(mPhotoPath2);
-        list.add(mPhotoPath3);
-        */
-        mFile1 = "/mnt/sdcard/Download/car_body_light.png";
-        mFile2 = "/mnt/sdcard/Download/car_goods_light.png";
-        mFile3 = "/mnt/sdcard/Download/car_station_light.png";
-
-        ArrayList<String> list = new ArrayList<>();
-        list.add(mFile1);
-        list.add(mFile2);
-        list.add(mFile3);
-
-        return list;
-    }
 
     @Override
     protected void onPause() {
@@ -926,7 +912,6 @@ public class SureGoodsActivity extends BaseActivity {
         super.onDestroy();
 
     }
-
 
 }
 

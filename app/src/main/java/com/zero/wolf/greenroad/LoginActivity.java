@@ -19,6 +19,7 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
+import com.zero.wolf.greenroad.tools.Md5Util;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -113,21 +114,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void startMainActivity() {
 
-        String username = mEt_user_name.getText().toString();
-        String password = mEt_password.getText().toString();
+        String username = mEt_user_name.getText().toString().trim();
+        String password = mEt_password.getText().toString().trim();
 
         mIsConnected = NetWorkManager.isnetworkConnected(this);
-        if (mIsConnected) {
-            loginFromNet(username, password);
+        if ("".equals(username) || "".equals(password)) {
+            ToastUtils.singleToast("请输入账号或密码");
         } else {
-            List<SupportLoginUser> userInfos = DataSupport
-                    .where("username=? and password = ?", username, password)
-                    .find(SupportLoginUser.class);
-            if (userInfos.size() == 0) {
-                ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
-            } else if (userInfos.size() == 1) {
-                String operator = userInfos.get(0).getOperator();
-                getTimeGap(username, password, userInfos, operator, mIsConnected);
+            if (mIsConnected) {
+                loginFromNet(username, password);
+            } else {
+                List<SupportLoginUser> userInfos = DataSupport
+                        .where("username=? and password = ?", username, password)
+                        .find(SupportLoginUser.class);
+                if (userInfos.size() == 0) {
+                    ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
+                } else if (userInfos.size() == 1) {
+                    String operator = userInfos.get(0).getOperator();
+                    getTimeGap(username, password, userInfos, operator, mIsConnected);
+                }
             }
         }
     }
@@ -163,6 +168,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         }
     }
+
     /**
      * 有网络的状态下登录
      *
@@ -171,7 +177,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      */
     private void loginFromNet(String username, String password) {
         Retrofit.Builder builder = new Retrofit.Builder();
-        Retrofit retrofit = builder.baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Login/")
+        Retrofit retrofit = builder
+              //  .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Login/")
+                .baseUrl("http://greenft.githubshop.com/lvsetondao/index.php/Interfacy/Login/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -197,7 +205,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             SupportLoginUser userInfo = new SupportLoginUser();
                             userInfo.setLogindate(TimeUtil.getCurrentTimeToDate());
                             userInfo.setUsername(username);
-                            userInfo.setPassword(password);
+                            userInfo.setPassword(Md5Util.md5Password(password));
                             userInfo.setOperator(name);
                             userInfo.save();
                         } else {
@@ -206,7 +214,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         login2MainActivity(name, username);
                     } else if (code1 == 201) {
                         ToastUtils.singleToast(msg);
-                        login2MainActivity(name, username);
 
                     } else if (code1 == 202) {
 
