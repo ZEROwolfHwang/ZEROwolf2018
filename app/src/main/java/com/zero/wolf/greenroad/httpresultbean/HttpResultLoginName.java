@@ -13,23 +13,23 @@ public class HttpResultLoginName {
 
     private int code;
     private String msg;
-    private String data;
+    private String operator;
+    private String stationName;
 
-    @Override
-    public String toString() {
-        return "LoginName{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", data='" + data + '\'' +
-                '}';
+    public String getOperator() {
+        return operator;
     }
 
-    public String getData() {
-        return data;
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
 
     public int getCode() {

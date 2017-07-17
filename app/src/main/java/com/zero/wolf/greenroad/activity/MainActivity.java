@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +20,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,7 +52,6 @@ import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
-import com.zero.wolf.greenroad.tools.Md5Util;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
@@ -85,15 +84,9 @@ import static org.litepal.crud.DataSupport.findAll;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SubscriberOnNextListener<List<Subject>> {
 
     private long firstClick;
-
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
-    private TextView mTitle_text;
 
-    String mCheckUrl = "http://client.waimai.baidu.com/message/updatetag";
-    String mUpdateUrl = "http://mobile.ac.qq.com/qqcomic_android.apk";
-
-    TextView mUnSendCarNumber;
     private String mFilePath;
     private AppCompatActivity mActivity;
     private LinearLayout mLayout_top;
@@ -140,7 +133,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private ProgressDialog mProgressDialog;
     private File mGoodsFile;
     private String mGoodsFilePath;
-    private String mDeviceId;
+
+    private String mMacAddress;
+    private String mStationName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,9 +152,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceId = tm.getDeviceId();
-
         initData();
         initSp();
         initLitePal();
@@ -169,17 +161,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mIvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String macID = (String) SPUtils.get(mActivity, SPUtils.ISACTIVATIONSUCCESS, "");
-                if (Md5Util.md5Password(mDeviceId).equals(macID)) {
 
-                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                    intent.putExtra("username", mUsername);
-                    startActivity(intent);
-                } else {
+                String android_ID = Settings.Secure
+                        .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+                String macID = (String) SPUtils.get(mActivity, SPUtils.ISACTIVATIONSUCCESS, "");
+
+                Logger.i(macID);
+                if (macID == null) {
                     Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
                     startActivity(intent);
+                } else {
+                    if (macID.equals(android_ID)) {
+                        Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                        intent.putExtra("username", mUsername);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
+                        startActivity(intent);
+                    }
                 }
-
             }
         });
 
@@ -265,8 +266,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                         goodsInfoFore(dataBeen);
                                     }
                                 }).start();
-                                List<SupportGoods> supportGoods1 = findAll(SupportGoods.class);
-                                Logger.i(supportGoods1.size() + "");
                             }
                         } else {
                             new Thread(new Runnable() {
@@ -275,8 +274,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                     goodsInfoFore(dataBeen);
                                 }
                             }).start();
-                            List<SupportGoods> supportGoods1 = findAll(SupportGoods.class);
-                            Logger.i(supportGoods1.size() + "");
                         }
                     }
                 });
@@ -295,6 +292,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Bitmap bitmap = FileBitmapUtil.getBitmap(imgurl);
             String fileName = FileBitmapUtil.getFileName(imgurl);
 
+            Logger.i(imgurl);
             Logger.i(fileName);
 
             try {
@@ -304,6 +302,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
 
             SupportGoods info = new SupportGoods();
+
             info.setAlias(dataBeen.get(i).getAlias());
             info.setScientificname(dataBeen.get(i).getScientificname());
             info.setCargoid(dataBeen.get(i).getCargoid());
@@ -449,15 +448,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (mGoodsFile == null) {
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mGoodsFile = new File(mFilePath, "goodimg");
+            mGoodsFile = new File(mFilePath, "goodsImg");
             mGoodsFile.mkdirs();
-            mGoodsFilePath = mGoodsFile.getPath();
         }
+        mGoodsFilePath = mGoodsFile.getPath();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         mOperator = (String) extras.get("operator");
         mUsername = (String) extras.get("username");
+        mStationName = (String) extras.get("stationName");
 
     }
 
@@ -470,7 +470,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         //mIvCamera.setOnClickListener(this);
         TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
-        title_text_view.setText("泰安东收费站");
+        title_text_view.setText(mStationName);
 
         mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
         mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
@@ -632,7 +632,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     String msg = httpResultPostImg.getMsg();
                     if (code == 200) {
                         CarNumberCount.CarNumberCut(mActivity);
-                        DataSupport.deleteAll(SupportPhotoLite.class,"shuttime=?", shuttime);
+                        DataSupport.deleteAll(SupportPhotoLite.class, "shuttime=?", shuttime);
                         Logger.i("shangchuan成功");
                     } else if (code == 300) {
                         ToastUtils.singleToast("上传失败");

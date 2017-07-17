@@ -11,9 +11,27 @@ import java.util.Date;
 public class SupportLoginUser extends DataSupport {
 
     private Date logindate;
+    private String stationName;
     private String username;
     private String password;
     private String operator;
+    private boolean isCheck;
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
 
     public Date getLogindate() {
         return logindate;

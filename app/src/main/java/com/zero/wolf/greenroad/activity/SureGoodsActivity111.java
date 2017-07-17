@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +23,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
+import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
@@ -58,13 +60,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.MultipartBody;
 import rx.Observable;
 import rx.Subscriber;
 
-import static com.zero.wolf.greenroad.R.id.tv_change;
-
-public class SureGoodsActivity extends BaseActivity {
+public class SureGoodsActivity111 extends BaseActivity {
 
 
     private List<SerializableNumber> mNumberList = new ArrayList<>();
@@ -72,10 +74,10 @@ public class SureGoodsActivity extends BaseActivity {
     private List<SortModel> mGoodsList = new ArrayList<>();
 
     private RecyclerView mRecycler_view_goods;
-    private Context mContext;
+
     private EditText mEt_change3;
     private EditText mEt_change1;
-    private AppCompatActivity mActivity;
+
     private SpinnerPopupWindow mPopupWindow_1;
     private SpinnerPopupWindow mPopupWindow_2;
 
@@ -114,26 +116,49 @@ public class SureGoodsActivity extends BaseActivity {
 
     private int pop_1_currentState;
     private Button mBt_ok_msg;
+    private SureViewPagerAdapter mPagerAdapter;
+
+    @BindView(R.id.tab_sure)
+    TabLayout mTabLayoutSure;
+    @BindView(R.id.view_pager_sure)
+    ViewPager mViewPagerSure;
+    @BindView(R.id.toolbar_sure)
+    Toolbar mToolbarSure;
+    private AppCompatActivity mActivity;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sure_goods);
-        mContext = this;
-        mActivity = this;
-        pop_1_currentState = 222;
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sure_goods111);
+
+        ButterKnife.bind(this);
+
+        mActivity = this;
+        mContext = this;
+
+        initToolbar();
+
+        initViewPagerAndTabs();
 
         initData();
         initView();
-        //initRecycler();
-        initListener();
 
+
+    }
+
+    private void initViewPagerAndTabs() {
+        mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),mNumberList,mStationList,mGoodsList ,this);
+        mViewPagerSure.setOffscreenPageLimit(3);//设置viewpager预加载页面数
+        mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
+//        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
+        mTabLayoutSure.setupWithViewPager(mViewPagerSure);
     }
 
     public static void actionStart(Context context, String color, String username
             , String photoPath1, String photoPath2, String photoPath3) {
-        Intent intent = new Intent(context, SureGoodsActivity.class);
+        Intent intent = new Intent(context, SureGoodsActivity111.class);
         intent.putExtra("username", username);
         intent.putExtra("photoPath1", photoPath1);
         intent.putExtra("photoPath2", photoPath2);
@@ -390,38 +415,7 @@ public class SureGoodsActivity extends BaseActivity {
 
     private void initView() {
 
-        initToolbar();
-
-        LinearLayout mLayout_top = (LinearLayout) findViewById(R.id.layout_top_sure);
-        LinearLayout mLayout_center = (LinearLayout) findViewById(R.id.layout_center_sure);
-        LinearLayout mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom_sure);
-
-        //找到固定的textview
-        TextView textView1 = (TextView) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(R.id.tv_no_change);
-        textView1.setText(getString(R.string.text_car_number_sure));
-        TextView textView2 = (TextView) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(R.id.tv_no_change);
-        textView2.setText(getString(R.string.text_station_name_sure));
-        TextView textView3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.tv_no_change);
-        textView3.setText(getString(R.string.text_car_goods_sure));
-
-        //找到改变的TextView
-        mEt_change1 = (EditText) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(tv_change);
-        mEt_change2 = (EditText) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(tv_change);
-        mEt_change3 = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
-
-        //找到清除text的控件
-        mIvClearText_number = (ImageView) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
-        mIvClearText_number.setOnClickListener((v -> mEt_change1.setText("")));
-
-        mIvClearText_station = (ImageView) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
-        mIvClearText_station.setOnClickListener((v -> mEt_change2.setText("")));
-
-        mIvClearText_goods = (ImageView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
-        mIvClearText_goods.setOnClickListener((v -> mEt_change3.setText("")));
-
-        mBt_ok_msg = (Button) findViewById(R.id.bt_ok_msg);
-
-        initEditText();
+        //initEditText();
 
 
         /**
@@ -430,7 +424,7 @@ public class SureGoodsActivity extends BaseActivity {
 
         // mRecycler_view_goods.setVisibility(View.INVISIBLE);
 
-        initRecycler();
+        //initRecycler();
 
 
     }
@@ -451,7 +445,7 @@ public class SureGoodsActivity extends BaseActivity {
                     ToastUtils.singleToast(getString(R.string.sure_station));
                     return;
                 }
-                AlertDialog.Builder dialog = new AlertDialog.Builder(SureGoodsActivity.this);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(SureGoodsActivity111.this);
                 dialog.setTitle(getString(R.string.dialog_title_sure));
                 dialog.setMessage(getDialogSendMessage());
                 dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
@@ -470,7 +464,7 @@ public class SureGoodsActivity extends BaseActivity {
                 dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(SureGoodsActivity.this, "取消", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SureGoodsActivity111.this, "取消", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialog.show();
@@ -632,7 +626,7 @@ public class SureGoodsActivity extends BaseActivity {
                /* if (mIvClearText_goods.getVisibility() == View.VISIBLE) {
                     mIvClearText_goods.setVisibility(View.INVISIBLE);
                 }*/
-                mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                mPopupWindow_1 = new SpinnerPopupWindow.Builder(SureGoodsActivity111.this)
                         .setmLayoutManager(null, 1)
                         .setmAdapter(mNumberAdapter)
                           .setmHeight(950).setmWidth(800)
@@ -666,7 +660,7 @@ public class SureGoodsActivity extends BaseActivity {
                     mIvClearText_goods.setVisibility(View.INVISIBLE);
                 }*/
 
-                mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity.this)
+                mPopupWindow_2 = new SpinnerPopupWindow.Builder(SureGoodsActivity111.this)
                         .setmLayoutManager(null, 0)
                         .setmAdapter(mStationAdapter)
                       //  .setmHeight(400).setmWidth(500)
@@ -773,20 +767,20 @@ public class SureGoodsActivity extends BaseActivity {
 
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sure);
-        setSupportActionBar(toolbar);
+
+        setSupportActionBar(mToolbarSure);
 
         TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
         title_text_view.setText(getString(R.string.sure_goods_type));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
         //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+       /* mToolbarSure.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
     }
 
     private String getDialogSendMessage() {
@@ -815,7 +809,7 @@ public class SureGoodsActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_bar_cancer) {
-            Toast.makeText(SureGoodsActivity.this, "点击了取消", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SureGoodsActivity111.this, "点击了取消", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -871,7 +865,7 @@ public class SureGoodsActivity extends BaseActivity {
                 String msg = httpResultPostImg.getMsg();
                 if (code == 200) {
                     CarNumberCount.CarNumberCut(mContext);
-                    Intent intent = new Intent(SureGoodsActivity.this, PhotoActivity.class);
+                    Intent intent = new Intent(SureGoodsActivity111.this, PhotoActivity.class);
                     intent.putExtra("username", mUsername);
                     startActivity(intent);
                 } else if (code == 300) {

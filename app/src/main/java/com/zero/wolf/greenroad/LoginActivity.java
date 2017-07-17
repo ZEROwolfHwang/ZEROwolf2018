@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,7 +20,6 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
-import com.zero.wolf.greenroad.tools.Md5Util;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -49,6 +49,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     EditText mEt_user_name;
     @BindView(R.id.text_password)
     EditText mEt_password;
+    @BindView(R.id.check_box_pwd)
+    CheckBox mCheckBox;
     private SpinnerPopupWindow mPopupWindow;
     private boolean mIsConnected;
     private List<SupportLoginUser> mSupportLoginUsers;
@@ -84,7 +86,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 updatePopup(position);
                             }
                         }))
-                        .setmHeight(500).setmWidth(500)
+                        .setmHeight(800).setmWidth(900)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
@@ -103,8 +105,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void updatePopup(int position) {
         mEt_user_name.setText(mSupportLoginUsers.get(position).getUsername());
         mEt_password.setText(mSupportLoginUsers.get(position).getPassword());
+        mCheckBox.setChecked(mSupportLoginUsers.get(position).isCheck());
         mPopupWindow.dismissPopWindow();
-
     }
 
     private void initData() {
@@ -116,6 +118,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         String username = mEt_user_name.getText().toString().trim();
         String password = mEt_password.getText().toString().trim();
+
 
         mIsConnected = NetWorkManager.isnetworkConnected(this);
         if ("".equals(username) || "".equals(password)) {
@@ -131,7 +134,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
                 } else if (userInfos.size() == 1) {
                     String operator = userInfos.get(0).getOperator();
-                    getTimeGap(username, password, userInfos, operator, mIsConnected);
+                    String stationName = userInfos.get(0).getStationName();
+                    boolean isCheck = userInfos.get(0).isCheck();
+
+                    getTimeGap(username, password, userInfos, operator, stationName, mIsConnected);
                 }
             }
         }
@@ -146,12 +152,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param operator
      * @param isConnected
      */
-    private void getTimeGap(String username, String password, List<SupportLoginUser> userInfos, String operator, boolean isConnected) {
+    private void getTimeGap(String username, String password, List<SupportLoginUser> userInfos, String operator, String stationName, boolean isConnected) {
         //// TODO: 2017/7/11 ceshi
         Date currentDate = TimeUtil.getCurrentTimeToDate();
         Date logindate = userInfos.get(0).getLogindate();
         int timeGap = TimeUtil.differentDaysByMillisecond(currentDate, logindate);
-        if (timeGap > 10) {
+        if (timeGap > 1) {
             DataSupport.deleteAll(SupportLoginUser.class, "username=? and password = ?",
                     username, password);
             if (mIsConnected) {
@@ -160,7 +166,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 ToastUtils.singleToast("账号已过期，请在有网状态下重新登录");
             }
         } else {
-            login2MainActivity(operator, username);
+            login2MainActivity(username, operator, stationName);
             if (mIsConnected) {
                 ToastUtils.singleToast("登陆成功");
             } else {
@@ -178,8 +184,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void loginFromNet(String username, String password) {
         Retrofit.Builder builder = new Retrofit.Builder();
         Retrofit retrofit = builder
-              //  .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Login/")
-                .baseUrl("http://greenft.githubshop.com/lvsetondao/index.php/Interfacy/Login/")
+                //  .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Login/")
+                .baseUrl("http://greenft.githubshop.com/index.php/Interfacy/Login/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -191,27 +197,37 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 int code = response.code();
                 int code1 = response.body().getCode();
                 String msg = response.body().getMsg();
-                String name = response.body().getData();
+                String operator = response.body().getOperator();
+                String stationName = response.body().getStationName();
                 Logger.i("" + code);
                 Logger.i("" + code1);
                 Logger.i("" + msg);
-                Logger.i("" + name);
+                Logger.i("" + operator);
+                Logger.i("" + stationName);
                 if (code == 200) {
                     if (code1 == 200) {
                         List<SupportLoginUser> userInfos = DataSupport
                                 .where("username=? and password = ?", username, password)
                                 .find(SupportLoginUser.class);
-                        if (userInfos.size() == 0) {
-                            SupportLoginUser userInfo = new SupportLoginUser();
-                            userInfo.setLogindate(TimeUtil.getCurrentTimeToDate());
-                            userInfo.setUsername(username);
-                            userInfo.setPassword(Md5Util.md5Password(password));
-                            userInfo.setOperator(name);
-                            userInfo.save();
+                        if (mCheckBox.isChecked()) {
+                            if (userInfos.size() == 0) {
+                                SupportLoginUser userInfo = new SupportLoginUser();
+                                userInfo.setLogindate(TimeUtil.getCurrentTimeToDate());
+                                userInfo.setUsername(username);
+                                userInfo.setPassword(password);
+                                userInfo.setOperator(operator);
+                                userInfo.setStationName(stationName);
+                                userInfo.setCheck(true);
+                                userInfo.save();
+                            } else {
+                                getTimeGap(username, password, userInfos, operator, stationName, mIsConnected);
+                            }
                         } else {
-                            getTimeGap(username, password, userInfos, name, mIsConnected);
+                            if (userInfos.size() != 0) {
+                                userInfos.get(0).delete();
+                            }
                         }
-                        login2MainActivity(name, username);
+                        login2MainActivity(username, operator, stationName);
                     } else if (code1 == 201) {
                         ToastUtils.singleToast(msg);
 
@@ -237,10 +253,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     /**
      * 登录成功进入mainActivity
      */
-    private void login2MainActivity(String name, String username) {
+    private void login2MainActivity(String username, String operator, String stationName) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("operator", name);
         intent.putExtra("username", username);
+        intent.putExtra("operator", operator);
+        intent.putExtra("stationName", stationName);
+
         startActivity(intent);
     }
 

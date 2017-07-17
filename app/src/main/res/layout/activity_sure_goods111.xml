@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/content_layout_backgroud"
+    tools:context="com.zero.wolf.greenroad.activity.SureGoodsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_sure"
+        style="@style/style_toolbar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager_sure"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+    </android.support.v4.view.ViewPager>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_sure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.design.widget.TabLayout>
+
+</LinearLayout>

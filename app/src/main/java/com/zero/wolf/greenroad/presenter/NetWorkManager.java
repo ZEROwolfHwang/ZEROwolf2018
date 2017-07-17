@@ -28,7 +28,7 @@ import rx.schedulers.Schedulers;
 public class NetWorkManager {
 
    // public static final String BASEURL = "http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/";
-    public static final String BASEURL = "http://greenft.githubshop.com/lvsetondao/index.php/Interfacy/Api/";
+    public static final String BASEURL = "http://greenft.githubshop.com/index.php/Interfacy/Api/";
 
     private static NetWorkManager mNetWorkManager;
 
@@ -60,16 +60,7 @@ public class NetWorkManager {
         return mNetWorkManager;
     }
 
-    /**
-     * 激活
-     */
-    public Observable<ActivationResult> verificationCode(String id,String name,String key) {
-        return mHttpUtilsApi.activation(id,name,key)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
 
-    }
 
     /**
      * 判断网络是否连接

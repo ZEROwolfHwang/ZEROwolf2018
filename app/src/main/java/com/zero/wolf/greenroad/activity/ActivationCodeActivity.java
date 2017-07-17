@@ -1,11 +1,12 @@
 package com.zero.wolf.greenroad.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,9 +21,9 @@ import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
+import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
-import com.zero.wolf.greenroad.tools.Md5Util;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -59,17 +60,19 @@ public class ActivationCodeActivity extends AppCompatActivity {
     CheckBox mActivationAgreeCheckbox;
     @BindView(R.id.activation_agreement_text)
     TextView mActivationAgreementText;
-    private DevicesInfoUtils mInfoUtils;
+
     private File mFile;
     private File mTempFile;
     private ActivationRequestBody mBody;
     private NetWorkManager mNetWorkManager;
     private boolean mIsNetConnected;
     private Observable<ActivationResult> mVerificationCode;
-    private Subscriber<ActivationResult> mSubscriber;
     private String mANDROID_id;
     private String macID;
     private String mPhoneName;
+    private Subscriber<ActivationResult> mSubscriber;
+    private DevicesInfoUtils mInfoUtils;
+    private String mAndroidId;
 
 
     @Override
@@ -87,13 +90,38 @@ public class ActivationCodeActivity extends AppCompatActivity {
         mIsNetConnected = mNetWorkManager.isnetworkConnected(this);
 
 
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        macID = tm.getDeviceId();
+        macID = Settings.Secure
+                .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        Logger.i(macID);
         mPhoneName = android.os.Build.MODEL;
+        Logger.i(mPhoneName);
 
         mBody = new ActivationRequestBody();
 
-   //     SPUtils.putAndApply(getApplicationContext(), SPUtils.ISFIRSTACTIVATION, false);
+        mActivationFirstCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String s1 = mActivationFirstCode.getText().toString();
+                if (s1.length() == 4) {
+                    mActivationFirstCode.setFocusable(false);
+                    mActivationSecondCode.setFocusable(true);
+                    mActivationSecondCode.setSelection(0);
+                }
+            }
+        });
+
+        //     SPUtils.putAndApply(getApplicationContext(), SPUtils.ISFIRSTACTIVATION, false);
 
     }
 
@@ -112,16 +140,16 @@ public class ActivationCodeActivity extends AppCompatActivity {
             mBody.setMacID(macID);
             mBody.setMacName(mPhoneName);
             mBody.setRegKey(firstCode + "-" + secondCode + "-" + threeCode + "-"
-                    + fourCode + "-"+fiveCode);
+                    + fourCode + "-" + fiveCode);
             if (mIsNetConnected) {
                 mSignInButton.setEnabled(true);
-                mVerificationCode = mNetWorkManager.verificationCode(mBody.getMacID(),mBody.getMacName(),mBody.getRegKey());
+                Observable<ActivationResult> observable = HttpMethods.getInstance().getApi()
+                        .activation(mBody.getMacID(), mBody.getMacName(), mBody.getRegKey());
                 mSubscriber = new Subscriber<ActivationResult>() {
                     @Override
                     public void onCompleted() {
                         mSignInButton.setEnabled(false);
-                        Logger.i("激活完成");
-                        closeActivity(0);
+
                     }
 
                     @Override
@@ -131,15 +159,15 @@ public class ActivationCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(ActivationResult requestResult) {
-                            Logger.i(requestResult.getCode());
+                        Logger.i(requestResult.getCode());
 
                         if (ActivationResult.SUCCESS_CODE.equals(requestResult.getCode())) {
-                            SPUtils.putAndApply(getApplicationContext(), SPUtils.CODE, firstCode  + secondCode
-                                    + threeCode  + fourCode+fiveCode);
-                            SPUtils.putAndApply(getApplicationContext(), SPUtils.ISACTIVATIONSUCCESS, Md5Util.md5Password(macID));
-
+                            SPUtils.putAndApply(getApplicationContext(), SPUtils.CODE, firstCode + secondCode
+                                    + threeCode + fourCode + fiveCode);
+                            SPUtils.putAndApply(getApplicationContext(), SPUtils.ISACTIVATIONSUCCESS, macID);
+                            Logger.i("激活完成");
+                            closeActivity(0);
                         } else if (ActivationResult.FAILD_CODE_USED_KEY.equals(requestResult.getCode())) {
-
                             ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.key_used));
                         } else if (ActivationResult.FAILD_CODE_INVALID_KEY.equals(requestResult.getCode())) {
                             ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.Invalid_Key));
@@ -149,7 +177,7 @@ public class ActivationCodeActivity extends AppCompatActivity {
 
                     }
                 };
-                mVerificationCode.subscribe(mSubscriber);
+                HttpMethods.getInstance().toSubscribe(observable, mSubscriber);
             } else {
                 ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.network_error));
                 mSignInButton.setEnabled(false);
@@ -157,10 +185,11 @@ public class ActivationCodeActivity extends AppCompatActivity {
             }
         } else {
             mSignInButton.setEnabled(false);
-            ToastUtils.singleToast( ActivationCodeActivity.this.getString(R.string.Wrong_format_key));
+            ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.Wrong_format_key));
         }
 
     }
+
     @OnClick(R.id.activation_agree_checkbox)
     public void isChecked() {
         boolean checked = mActivationAgreeCheckbox.isChecked();

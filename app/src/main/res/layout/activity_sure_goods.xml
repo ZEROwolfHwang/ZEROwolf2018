@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/content_layout_backgroud"
     tools:context="com.zero.wolf.greenroad.activity.SureGoodsActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_sure"
+        android:id="@+id/toolbar_sure_nnn"
         style="@style/style_toolbar"
         app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
+
     <LinearLayout
+        android:id="@+id/layout_linear_sure"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/content_layout_backgroud"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_sure_nnn"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/layout_top_sure"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:focusable="false"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/layout_margin5dp"
+            android:focusable="false">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/iv_car_number_sure"
                 android:layout_width="@dimen/main_width_dp70"
                 android:layout_height="@dimen/main_height_dp70"
+                android:focusable="false"
                 android:scaleType="fitCenter"
                 android:src="@drawable/car_number_light"
-                android:focusable="false"
                 app:riv_border_width="2dp"
                 app:riv_corner_radius="15dp"
                 app:riv_oval="false"/>
@@ -48,15 +50,15 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_below="@id/layout_top_sure"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/iv_station_name_sure"
                 android:layout_width="@dimen/main_width_dp70"
                 android:layout_height="@dimen/main_height_dp70"
+                android:focusable="false"
                 android:scaleType="fitCenter"
                 android:src="@drawable/car_station_light"
-                android:focusable="false"
                 app:riv_border_width="2dp"
                 app:riv_corner_radius="15dp"
                 app:riv_oval="false"/>
@@ -72,16 +74,16 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_below="@id/layout_center_sure"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/layout_margin5dp">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/iv_car_goods_sure"
                 android:layout_width="@dimen/main_width_dp70"
                 android:layout_height="@dimen/main_height_dp70"
+                android:focusable="false"
                 android:scaleType="fitCenter"
                 android:src="@drawable/car_goods_light"
                 app:riv_border_width="2dp"
-                android:focusable="false"
                 app:riv_corner_radius="15dp"
                 app:riv_oval="false"/>
 
@@ -97,27 +99,31 @@
              android:layout_height="0dp">-->
 
         <!--  </LinearLayout>-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_goods_sure"
-            android:layout_width="match_parent"
-            android:focusable="false"
-            android:layout_height="220dp">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <Button
-            android:id="@+id/bt_ok_msg"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_margin40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/layout_margin20dp"
-            android:layout_marginRight="@dimen/layout_margin20dp"
-            android:background="@drawable/sure_button_select"
-            android:gravity="center"
-            android:text="@string/ok_send"
-            android:textSize="@dimen/text24"/>
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/bt_ok_msg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/layout_margin20dp"
+        android:layout_marginRight="@dimen/layout_margin20dp"
+        android:background="@drawable/sure_button_select"
+        android:gravity="center"
+        android:text="@string/ok_send"
+        android:textSize="@dimen/text24"/>
 
-</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_goods_sure"
+        android:layout_below="@id/layout_linear_sure"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bt_ok_msg"
+        android:focusable="false">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+
+</RelativeLayout>

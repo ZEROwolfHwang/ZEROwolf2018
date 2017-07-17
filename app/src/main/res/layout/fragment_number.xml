@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_top_sure"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:focusable="false">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_car_number_sure"
+            android:layout_width="@dimen/main_width_dp100"
+            android:layout_height="@dimen/main_height_dp100"
+            android:focusable="false"
+            android:scaleType="fitCenter"
+            android:src="@drawable/car_number_light"
+            app:riv_border_width="2dp"
+            app:riv_corner_radius="15dp"
+            app:riv_oval="false"/>
+
+        <include
+            android:id="@+id/layout_group_sure"
+            layout="@layout/layout_text_group_sure"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_number"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
