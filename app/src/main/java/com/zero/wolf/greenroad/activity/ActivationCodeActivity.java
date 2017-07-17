@@ -114,10 +114,83 @@ public class ActivationCodeActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String s1 = mActivationFirstCode.getText().toString();
                 if (s1.length() == 4) {
-                    mActivationFirstCode.setFocusable(false);
                     mActivationSecondCode.setFocusable(true);
                     mActivationSecondCode.setSelection(0);
+
                 }
+            }
+        });
+        mActivationSecondCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String s1 = mActivationSecondCode.getText().toString();
+                if (s1.length() == 4) {
+                    mActivationThreeCode.setFocusable(true);
+                    mActivationThreeCode.setSelection(0);
+                }
+
+            }
+        });
+        mActivationThreeCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String s1 = mActivationThreeCode.getText().toString();
+                if (s1.length() == 4) {
+                    mActivationFourCode.setFocusable(true);
+                    mActivationFourCode.setSelection(0);
+                }
+            }
+        });
+        mActivationFourCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String s1 = mActivationFourCode.getText().toString();
+                if (s1.length() == 4) {
+                    mActivationFiveCode.setFocusable(true);
+                    mActivationFiveCode.setSelection(0);
+                }
+            }
+        });
+        mActivationFiveCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
 

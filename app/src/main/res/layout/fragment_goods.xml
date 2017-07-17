@@ -8,7 +8,6 @@
         android:id="@+id/layout_bottom_sure"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/layout_center_sure"
         android:layout_marginTop="@dimen/layout_margin5dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -29,11 +28,22 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_goods_sure"
+        android:padding="@dimen/layout_margin10dp"
+        android:id="@+id/recycler_view_goods_sure"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusable="false">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:focusable="false"/>
 
-    </android.support.v7.widget.RecyclerView>
+    <Button
+        android:id="@+id/bt_ok_msg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin40dp"
+        android:layout_marginLeft="@dimen/layout_margin20dp"
+        android:layout_marginRight="@dimen/layout_margin20dp"
+        android:background="@drawable/sure_button_select"
+        android:gravity="center"
+        android:text="@string/ok_send"
+        android:textSize="@dimen/text24"/>
 
 </LinearLayout>

@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.bean.SerializableStation;
+import com.zero.wolf.greenroad.tools.PingYinUtil;
+import com.zero.wolf.greenroad.tools.ViewUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +32,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class StationFragment extends Fragment {
+public class StationFragment extends Fragment implements TextWatcher {
 
     private static StationFragment sFragment;
 
@@ -79,6 +84,7 @@ public class StationFragment extends Fragment {
         mIvClearText_station = (ImageView) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
         mIvClearText_station.setOnClickListener((v -> mEditText.setText("")));
 
+        mEditText.addTextChangedListener(this);
     }
 
     @Override
@@ -115,4 +121,29 @@ public class StationFragment extends Fragment {
     }
 
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearText_station);
+        if (stationString.length() > 0) {
+            List<SerializableStation> fileterList = PingYinUtil.getInstance()
+                    .search_station(sStationList, stationString);
+            Logger.i(fileterList.toString());
+            mStationAdapter.updateListView(fileterList);
+            //mAdapter.updateData(mContacts);
+        } else {
+            if (mStationAdapter != null) {
+                mStationAdapter.updateListView(sStationList);
+            }
+        }
+    }
 }

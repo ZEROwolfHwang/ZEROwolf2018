@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
+import com.zero.wolf.greenroad.tools.PingYinUtil;
+import com.zero.wolf.greenroad.tools.ViewUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +33,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class GoodsFragment extends Fragment {
+public class GoodsFragment extends Fragment implements TextWatcher {
 
 
     private static GoodsFragment sFragment;
@@ -63,18 +68,17 @@ public class GoodsFragment extends Fragment {
 
         initView(view);
 
-
         return view;
     }
 
     private void initView(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_number);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_goods_sure);
 
         LinearLayout mLayout_bottom = (LinearLayout) view.findViewById(R.id.layout_bottom_sure);
 
         //找到固定的textview
         TextView textView1 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.tv_no_change);
-        textView1.setText(getString(R.string.text_car_number_sure));
+        textView1.setText(getString(R.string.text_car_goods_sure));
 
         //找到改变的TextView
         mEditText = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
@@ -83,6 +87,7 @@ public class GoodsFragment extends Fragment {
         mIvClearTextGoods = (ImageView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
         mIvClearTextGoods.setOnClickListener((v -> mEditText.setText("")));
 
+        mEditText.addTextChangedListener(this);
     }
 
     @Override
@@ -118,4 +123,29 @@ public class GoodsFragment extends Fragment {
     }
 
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearTextGoods);
+        if (stationString.length() > 0) {
+            List<SortModel> fileterList = PingYinUtil.getInstance()
+                    .search_goods(sGoodsList, stationString);
+            Logger.i(fileterList.toString());
+            mGoodsAdapter.updateListView(fileterList);
+            //mAdapter.updateData(mContacts);
+        } else {
+            if (mGoodsAdapter != null) {
+                mGoodsAdapter.updateListView(sGoodsList);
+            }
+        }
+    }
 }

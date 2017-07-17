@@ -1,9 +1,6 @@
 package com.zero.wolf.greenroad.activity;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,16 +25,12 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
+import com.zero.wolf.greenroad.tools.PermissionUtils;
 
 import java.io.File;
 
 public class PhotoActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     public static final int TYPE_NUMBER = 101;
     public static final int TYPE_BODY = 102;
@@ -274,7 +266,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             savePath(mFilePath3, intent);
         }
 
-        verifyStoragePermissions(mActivity);
+        PermissionUtils.verifyStoragePermissions(mActivity);
         if (type_int == TYPE_NUMBER) {
             startActivityForResult(intent, TYPE_NUMBER);
         } else if (type_int == TYPE_BODY) {
@@ -314,24 +306,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-    /**
-     * android API23过后需要动态的申请权限
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
-    }
 
     /**
      * //初始化将黄牌设为按下状态等

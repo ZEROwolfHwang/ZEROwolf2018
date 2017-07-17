@@ -30,9 +30,10 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:padding="@dimen/layout_margin20dp"
         android:id="@+id/recycler_view_station"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
-    </android.support.v7.widget.RecyclerView>
+
 </LinearLayout>

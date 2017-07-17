@@ -53,6 +53,7 @@ import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
 import com.zero.wolf.greenroad.tools.PathUtil;
+import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -446,6 +447,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAvailSpace = sDcardSpace.getAvailSpace();
         //Log.i(TAG, "initData: "+ mAvailSpace1);
 
+        PermissionUtils.verifyStoragePermissions(mActivity);
         if (mGoodsFile == null) {
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mGoodsFile = new File(mFilePath, "goodsImg");

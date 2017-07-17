@@ -1,0 +1,47 @@
+package com.zero.wolf.greenroad.interfacy;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+
+/**
+ * @author sineom
+ * @version 1.0
+ * @time 2017/7/17 22:44
+ * @des ${TODO}
+ * @updateAuthor ${Author}
+ * @updataTIme 2017/7/17
+ * @updataDes ${描述更新内容}
+ */
+
+public class TextChangeListenner implements TextWatcher {
+
+
+    private AfterTextListener mAfterTextListener;
+
+    public TextChangeListenner(AfterTextListener afterTextListener) {
+        mAfterTextListener = afterTextListener;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        mAfterTextListener.text(s);
+    }
+
+    public interface AfterTextListener {
+        void text(Editable editable);
+    }
+
+    public void setAfterTextListener(AfterTextListener afterTextListener) {
+        mAfterTextListener = afterTextListener;
+    }
+}

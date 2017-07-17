@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
+import com.zero.wolf.greenroad.fragment.GoodsFragment;
 import com.zero.wolf.greenroad.fragment.StationFragment;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
 
@@ -34,16 +35,22 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        Fragment fragment = null;
+        switch (position) {
             case 0:
-                return CarNumberFragment.newInstance(mNumberList);
+                fragment = CarNumberFragment.newInstance(mNumberList);
+                break;
             case 1:
-                return StationFragment.newInstance(mStationList);
-//            case 2:
-//                return GoodsFragment.newInstance(mGoodsList,context);
+                fragment = StationFragment.newInstance(mStationList);
+                break;
+            case 2:
+                fragment =  GoodsFragment.newInstance(mGoodsList, context);
+                break;
             default:
-                return CarNumberFragment.newInstance(mNumberList);
+                fragment = CarNumberFragment.newInstance(mNumberList);
+                break;
         }
+        return fragment;
     }
 
     @Override

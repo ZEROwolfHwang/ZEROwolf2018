@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
+import com.zero.wolf.greenroad.interfacy.TextChangeListenner;
+import com.zero.wolf.greenroad.tools.PingYinUtil;
+import com.zero.wolf.greenroad.tools.ViewUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +35,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class CarNumberFragment extends Fragment {
+public class CarNumberFragment extends Fragment implements TextChangeListenner.AfterTextListener {
 
     private static CarNumberFragment sFragment;
     private static List<SerializableNumber> sNumberList;
@@ -82,6 +87,10 @@ public class CarNumberFragment extends Fragment {
         mIvClearText_number = (ImageView) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
         mIvClearText_number.setOnClickListener((v -> mEditText.setText("")));
 
+
+        mEditText.addTextChangedListener(new TextChangeListenner(this));
+
+
     }
 
     @Override
@@ -118,5 +127,19 @@ public class CarNumberFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void text(Editable editable) {
+        String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearText_number);
+        if (stationString.length() > 0) {
+            List<SerializableNumber> fileterList = PingYinUtil.getInstance()
+                    .search_numbers(sNumberList, stationString);
+            Logger.i(fileterList.toString());
+            mNumberAdapter.updateListView(fileterList);
+            //mAdapter.updateData(mContacts);
+        } else {
+            if (mNumberAdapter != null) {
+                mNumberAdapter.updateListView(sNumberList);
+            }
+        }
+    }
 }
