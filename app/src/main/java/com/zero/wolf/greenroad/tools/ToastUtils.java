@@ -7,15 +7,6 @@ import com.zero.wolf.greenroad.GreenRoadApplication;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * 文 件 名: ToastUtils
- * 创 建 人: sineom
- * 创建日期: 2017/5/11 14:57
- * 邮   箱: h.sineom@gmail.com
- * 修改时间：
- * 修改备注：
- */
-
 
 public class ToastUtils {
 

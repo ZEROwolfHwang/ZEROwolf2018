@@ -93,24 +93,23 @@
         layout="@layout/math_number_main"/>
     </LinearLayout>
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_below="@id/linear_layout_main"
-        android:scaleType="fitCenter"
-        android:src="@drawable/main_shut_selector"
+    <ImageView
         android:id="@+id/iv_camera"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:layout_gravity="center"
-        app:riv_border_width="3dip"
-        app:riv_corner_radius="50dp"
-        app:riv_oval="true"/>
+        android:background="@drawable/main_shut_selector"
+        android:scaleType="center"
+        android:layout_below="@+id/linear_layout_main"
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
         android:layout_marginTop="@dimen/layout_margin10dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:layout_weight="1"

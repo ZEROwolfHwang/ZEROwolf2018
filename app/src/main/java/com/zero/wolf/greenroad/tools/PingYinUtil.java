@@ -79,6 +79,9 @@ public class PingYinUtil {
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {// 5.0以上需要判断汉字
             if (sortString.matches("^[\u4E00-\u9FFF]+$"))// 正则表达式，判断是否为汉字
                 letter = getSortLetter(sortString.toUpperCase(Locale.CHINESE));
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            if (sortString.matches("^[\u4E00-\u9FFF]+$"))// 正则表达式，判断是否为汉字
+                letter = getSortLetter(sortString.toUpperCase(Locale.CHINESE));
         }
         return letter;
     }

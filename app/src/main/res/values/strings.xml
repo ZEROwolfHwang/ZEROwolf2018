@@ -47,6 +47,6 @@
     <string name="Wrong_format_key">激活码格式不正确</string>
     <string name="sure_number">请输入完整车牌号</string>
     <string name="sure_station">请确定站名</string>
-    <string name="post_upload_not">提交为上传的信息</string>
+    <string name="post_upload_not">提交未上传的信息</string>
 
 </resources>

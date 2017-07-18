@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:padding="@dimen/layout_margin10dp"
+        android:padding="@dimen/layout_margin5dp"
         android:id="@+id/recycler_view_goods_sure"
         android:layout_width="match_parent"
         android:layout_height="0dp"

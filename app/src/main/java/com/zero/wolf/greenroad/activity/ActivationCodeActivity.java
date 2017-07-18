@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -99,103 +97,6 @@ public class ActivationCodeActivity extends AppCompatActivity {
 
         mBody = new ActivationRequestBody();
 
-        mActivationFirstCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String s1 = mActivationFirstCode.getText().toString();
-                if (s1.length() == 4) {
-                    mActivationSecondCode.setFocusable(true);
-                    mActivationSecondCode.setSelection(0);
-
-                }
-            }
-        });
-        mActivationSecondCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String s1 = mActivationSecondCode.getText().toString();
-                if (s1.length() == 4) {
-                    mActivationThreeCode.setFocusable(true);
-                    mActivationThreeCode.setSelection(0);
-                }
-
-            }
-        });
-        mActivationThreeCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                String s1 = mActivationThreeCode.getText().toString();
-                if (s1.length() == 4) {
-                    mActivationFourCode.setFocusable(true);
-                    mActivationFourCode.setSelection(0);
-                }
-            }
-        });
-        mActivationFourCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String s1 = mActivationFourCode.getText().toString();
-                if (s1.length() == 4) {
-                    mActivationFiveCode.setFocusable(true);
-                    mActivationFiveCode.setSelection(0);
-                }
-            }
-        });
-        mActivationFiveCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        //     SPUtils.putAndApply(getApplicationContext(), SPUtils.ISFIRSTACTIVATION, false);
-
     }
 
     @OnClick(R.id.activation_sign_in_button)
@@ -221,7 +122,6 @@ public class ActivationCodeActivity extends AppCompatActivity {
                 mSubscriber = new Subscriber<ActivationResult>() {
                     @Override
                     public void onCompleted() {
-                        mSignInButton.setEnabled(false);
 
                     }
 
@@ -239,6 +139,7 @@ public class ActivationCodeActivity extends AppCompatActivity {
                                     + threeCode + fourCode + fiveCode);
                             SPUtils.putAndApply(getApplicationContext(), SPUtils.ISACTIVATIONSUCCESS, macID);
                             Logger.i("激活完成");
+                            ToastUtils.singleToast("激活成功");
                             closeActivity(0);
                         } else if (ActivationResult.FAILD_CODE_USED_KEY.equals(requestResult.getCode())) {
                             ToastUtils.singleToast(ActivationCodeActivity.this.getString(R.string.key_used));

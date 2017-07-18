@@ -28,4 +28,11 @@ public class ActivityCollector {
         }
         sActivities.clear();
     }
+
+    public static void finishActivity(AppCompatActivity activity) {
+        if (!activity.isFinishing()) {
+            activity.finish();
+        }
+    }
+
 }

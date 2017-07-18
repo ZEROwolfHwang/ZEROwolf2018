@@ -1,16 +1,12 @@
 package com.zero.wolf.greenroad.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.zero.wolf.greenroad.R;
-
-import java.io.File;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -25,7 +21,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void luzhi(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+       /* Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         //使用0，录制1分钟大概内存是几兆
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         // 限制时长 ，参数61代表61秒，可以根据需求自己调，最高应该是2个小时。
@@ -40,7 +36,9 @@ public class TestActivity extends AppCompatActivity {
         Uri videoUri = Uri.fromFile(new File(mFilePath));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
         startActivityForResult(intent, 11);
-
+*/
+        Intent intent = new Intent(this, PhotoActivity.class);
+        startActivity(intent);
 
     }
 

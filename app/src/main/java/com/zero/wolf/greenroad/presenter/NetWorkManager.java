@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.zero.wolf.greenroad.bean.ActivationResult;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 
 import java.util.concurrent.TimeUnit;
@@ -13,9 +12,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * @author sineom
@@ -95,24 +91,6 @@ public class NetWorkManager {
     public Observable<RequestResult> updateLogInfo(LogBean logBean) {
         return mHttpUtilsApi.updateLog(logBean)
                 .subscribeOn(Schedulers.newThread());
-
-    }
-
-
-    *//**
-     * 判断网络是否连接
-     *
-     * @param context
-     * @return
-     *//*
-    public boolean isnetworkConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager maneger = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = maneger.getActiveNetworkInfo();
-            if (activeNetworkInfo != null)
-                return activeNetworkInfo.isAvailable();
-        }
-        return false;
 
     }
 

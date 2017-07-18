@@ -84,17 +84,43 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private String mCurrent_color;
     private RadioGroup mRadio_group_color;
     private File mFile;
+    private String mStationName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_photo);
 
         mActivity = this;
 
         initData();
+
         initView();
+
+        initRadioColor();
+        //车牌颜色的按钮
+        initRadioModel();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        Intent intent = getIntent();
+        mUsername = intent.getStringExtra("username");
+        mStationName = intent.getStringExtra("stationName");
+
+
+        mIv_car_number.setOnClickListener(this);
+        mIv_car_body.setOnClickListener(this);
+        mIv_car_goods.setOnClickListener(this);
+        mBt_ok_send.setOnClickListener(this);
+    }
+
+    private void initRadioModel() {
 
     }
 
@@ -102,22 +128,17 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
      * 初始化数据
      */
     private void initData() {
+        mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFile = new File(mFilePath, "imggreen");
         if (mFile == null) {
-            mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mFile = new File(mFilePath, "imggreen");
             mFile.mkdirs();
         }
-
-        Intent intent = getIntent();
-        mUsername = intent.getStringExtra("username");
     }
 
     private void initView() {
 
         initToolbar();
 
-        initRadioColor();
-        //车牌颜色的按钮
 
         mIv_car_number = (RoundedImageView) findViewById(R.id.iv_car_number);
         mIv_car_body = (RoundedImageView) findViewById(R.id.iv_car_body);
@@ -132,10 +153,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
 //        mToggleButton_color.setOnCheckedChangeListener(this);
 //        mToggleButton_shut.setOnCheckedChangeListener(this);
-        mIv_car_number.setOnClickListener(this);
-        mIv_car_body.setOnClickListener(this);
-        mIv_car_goods.setOnClickListener(this);
-        mBt_ok_send.setOnClickListener(this);
+
 
         //初始化黄色车牌
 //        mToggleButton_color.setPadding(0, 0, 70, 0);
@@ -194,14 +212,17 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_car_number:
+                mIv_car_number.setImageDrawable(getResources().getDrawable(R.drawable.car_number_light));
                 Log.i(TAG, "onClick: " + "点击了拍车牌的照片");
                 shutPhoto(TYPE_NUMBER);
                 break;
             case R.id.iv_car_body:
+                mIv_car_body.setImageDrawable(getResources().getDrawable(R.drawable.car_body_light));
                 shutPhoto(TYPE_BODY);
                 break;
 
             case R.id.iv_car_goods:
+                mIv_car_goods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_light));
                 shutPhoto(TYPE_GOODS);
                 break;
             case R.id.bt_ok_send:
@@ -235,11 +256,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             return;
         }*/
 
-        SureGoodsActivity111.actionStart(PhotoActivity.this, mCurrent_color,
+        SureGoodsActivity111.actionStart(PhotoActivity.this, mStationName, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
-
+        finish();
     }
-
 
 
     private void shutPhoto(int type_int) {
@@ -253,7 +273,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         }*/
         if (type_int == TYPE_NUMBER) {
             mFilePath1 = mFile + "/" + System.currentTimeMillis()
-                    + "mAlias.jpg";
+                    + "number.jpg";
             savePath(mFilePath1, intent);
             Logger.i(mFilePath);
         } else if (type_int == TYPE_BODY) {
@@ -306,8 +326,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-
-
     /**
      * //初始化将黄牌设为按下状态等
      */
@@ -351,5 +369,15 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+    public void finishSelf() {
+        mActivity.finish();
     }
 }

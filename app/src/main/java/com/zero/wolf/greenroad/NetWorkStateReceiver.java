@@ -3,24 +3,23 @@ package com.zero.wolf.greenroad;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.TextView;
 
 public class NetWorkStateReceiver extends BroadcastReceiver {
     private static final String TAG = "NetWorkStateReceiver";
-
     private final TextView mTextView;
-    private NetworkStation mListener;
-    private StringBuilder mSb;
+
+
+    public NetWorkStateReceiver(TextView tv_change3) {
+        mTextView = tv_change3;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //检测API是不是小于21，因为到了API21之后getNetworkInfo(int networkType)方法被弃用
+        /*//检测API是不是小于21，因为到了API21之后getNetworkInfo(int networkType)方法被弃用
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
 
             //获得ConnectivityManager对象
@@ -83,21 +82,20 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
                 mTextView.setTextColor(Color.BLUE);
             }
         }
-        mListener.onStation(mSb.toString());
+        mListener.onStation(mSb.toString());*/
+
+        if (context != null) {
+            ConnectivityManager maneger = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = maneger.getActiveNetworkInfo();
+            if (activeNetworkInfo != null)
+                if (activeNetworkInfo.isAvailable()) {
+                    mTextView.setText("良好");
+                    mTextView.setTextColor(context.getResources().getColor(R.color.blue));
+                } else {
+                    mTextView.setText("网络无连接");
+                    mTextView.setTextColor(context.getResources().getColor(R.color.red));
+                }
+        }
+
     }
-
-    public NetWorkStateReceiver(TextView textView) {
-        super();
-        mTextView = textView;
-    }
-
-    public interface NetworkStation {
-
-        void onStation(String netStation);
-    }
-
-    public void setNetworkStationListener(NetworkStation stationListener) {
-        mListener = stationListener;
-    }
-
 }

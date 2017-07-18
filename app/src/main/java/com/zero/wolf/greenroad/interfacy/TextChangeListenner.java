@@ -34,11 +34,11 @@ public class TextChangeListenner implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        mAfterTextListener.text(s);
+        mAfterTextListener.afterTextChanged(s);
     }
 
     public interface AfterTextListener {
-        void text(Editable editable);
+        void afterTextChanged(Editable editable);
     }
 
     public void setAfterTextListener(AfterTextListener afterTextListener) {

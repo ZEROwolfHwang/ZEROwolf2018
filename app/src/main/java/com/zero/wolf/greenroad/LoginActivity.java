@@ -17,6 +17,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.BaseActivity;
 import com.zero.wolf.greenroad.activity.MainActivity;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
+import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
@@ -35,9 +36,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -182,14 +180,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param password
      */
     private void loginFromNet(String username, String password) {
-        Retrofit.Builder builder = new Retrofit.Builder();
-        Retrofit retrofit = builder
-                //  .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Login/")
-                .baseUrl("http://greenft.githubshop.com/index.php/Interfacy/Login/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-        HttpUtilsApi httpUtilsApi = retrofit.create(HttpUtilsApi.class);
+        HttpUtilsApi httpUtilsApi = HttpMethods.getInstance().getApi();
         Call<HttpResultLoginName> login = httpUtilsApi.login(username, password);
         login.enqueue(new Callback<HttpResultLoginName>() {
             @Override

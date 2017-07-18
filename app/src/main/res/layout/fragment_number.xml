@@ -31,7 +31,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_number"
-        android:padding="@dimen/layout_margin20dp"
+        android:paddingTop="@dimen/layout_margin10dp"
+        android:paddingLeft="@dimen/layout_margin20dp"
+        android:paddingBottom="@dimen/layout_margin20dp"
+        android:paddingRight="@dimen/layout_margin20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

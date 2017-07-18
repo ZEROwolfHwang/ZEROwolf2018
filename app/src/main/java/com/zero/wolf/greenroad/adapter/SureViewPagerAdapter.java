@@ -5,14 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.zero.wolf.greenroad.bean.SerializableNumber;
-import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
 import com.zero.wolf.greenroad.fragment.GoodsFragment;
 import com.zero.wolf.greenroad.fragment.StationFragment;
-import com.zero.wolf.greenroad.smartsearch.SortModel;
-
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/17.
@@ -21,16 +16,24 @@ import java.util.List;
 public class SureViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private final List<SerializableNumber> mNumberList;
-    private final List<SerializableStation> mStationList;
-    private final List<SortModel> mGoodsList;
+    private final String mUsername;
+    private final String mColor;
+    private final String mPhotoPath1;
+    private final String mPhotoPath2;
+    private final String mPhotoPath3;
+    private final String mStationName;
 
-    public SureViewPagerAdapter(FragmentManager fm, List<SerializableNumber> numberList, List<SerializableStation> stationList, List<SortModel> goodsList, Context context) {
+    public SureViewPagerAdapter(FragmentManager fm, String username, String stationName,
+                                String color, String photoPath1, String photoPath2,
+                                String photoPath3, Context context) {
         super(fm);
         this.context = context;
-        mNumberList = numberList;
-        mStationList = stationList;
-        mGoodsList = goodsList;
+        mUsername = username;
+        mStationName = stationName;
+        mColor = color;
+        mPhotoPath1 = photoPath1;
+        mPhotoPath2 = photoPath2;
+        mPhotoPath3 = photoPath3;
     }
 
     @Override
@@ -38,16 +41,17 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = CarNumberFragment.newInstance(mNumberList);
+                fragment = CarNumberFragment.newInstance();
                 break;
             case 1:
-                fragment = StationFragment.newInstance(mStationList);
+                fragment = StationFragment.newInstance();
                 break;
             case 2:
-                fragment =  GoodsFragment.newInstance(mGoodsList, context);
+                fragment =  GoodsFragment.newInstance(mUsername,mStationName,mColor,mPhotoPath1,
+                        mPhotoPath2,mPhotoPath3, context);
                 break;
             default:
-                fragment = CarNumberFragment.newInstance(mNumberList);
+                fragment = CarNumberFragment.newInstance();
                 break;
         }
         return fragment;

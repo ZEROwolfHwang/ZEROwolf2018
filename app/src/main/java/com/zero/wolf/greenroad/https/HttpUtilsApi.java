@@ -35,7 +35,7 @@ public interface HttpUtilsApi {
     //激活码
 
     @FormUrlEncoded
-    @POST("activation")
+    @POST("Api/activation")
     Observable<ActivationResult> activation(@Field("macID") String macId,
                                             @Field("macName") String macName,
                                             @Field("regKey") String regKey);
@@ -60,26 +60,26 @@ public interface HttpUtilsApi {
     Call<ResultCar> doPost(@Field("username") String username, @Field("psd") String psd);
 */
     @FormUrlEncoded
-    @POST("listapi")
+    @POST("Login/listapi")
     Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
 
-    @GET("site")
+    @GET("Api/site")
     Observable<HttpResultStation<List<StationDataBean>>> getStationInfo();
 
-    @GET("number")
+    @GET("Api/number")
     Observable<HttpResultNumber<List<HttpResultNumber.DataBean>>> getNumberInfo();
 
-    @GET("goods")
+    @GET("Api/goods")
     Observable<HttpResultGoods<List<HttpResultGoods.DataBean>>> getGoodsInfo();
 
-    @GET("update")
+    @GET("Apiversion/update")
     Observable<UpdateAppInfo> update(@Query("appname") String appname,
                                      @Query("appversion") String appversion);
 
-    @Multipart
-    @POST("accept")
+    /*@Multipart
+    @POST("Api/accept")
     Observable<HttpResultPostImg> postAccept(@Part MultipartBody.Part file);
-
+*/
   /*  @Multipart
     @POST("image")
     Observable<AcceptResult> postOneImg(@Part MultipartBody.Part file);
@@ -89,7 +89,7 @@ public interface HttpUtilsApi {
     Observable<AcceptResult> postThreeImg(@PartMap Map<String, RequestBody> params);
 */
     @Multipart
-    @POST("image")
+    @POST("Api/image")
     Observable<HttpResultPostImg> postThreeImg(@Part("car_type") String car_type,
                                                @Part("license_color") String licence_color,
                                                @Part("shuttime") String shuttime,

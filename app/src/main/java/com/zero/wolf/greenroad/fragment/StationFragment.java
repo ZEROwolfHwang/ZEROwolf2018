@@ -20,9 +20,15 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.bean.SerializableStation;
+import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
+import com.zero.wolf.greenroad.litepalbean.SupportStation;
+import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
 import com.zero.wolf.greenroad.tools.ViewUtils;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,20 +40,20 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
 
 public class StationFragment extends Fragment implements TextWatcher {
 
+    private ArrayList<SerializableStation> mAcacheStations;
+    private List<SerializableStation> mStationList = new ArrayList<>();
     private static StationFragment sFragment;
 
     private RecyclerView mRecyclerView;
-    private EditText mEditText;
+    private static EditText mEditText;
     private ImageView mIvClearText_station;
-    private static List<SerializableStation> sStationList;
     private SureCarStationAdapter mStationAdapter;
     private LinearLayoutManager mManager;
 
-    public static StationFragment newInstance(List<SerializableStation> stationList) {
+    public static StationFragment newInstance() {
         if (sFragment == null) {
             sFragment = new StationFragment();
         }
-        sStationList = stationList;
         return sFragment;
     }
 
@@ -55,6 +61,54 @@ public class StationFragment extends Fragment implements TextWatcher {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mAcacheStations = (ArrayList<SerializableStation>) ACache
+                .get(getActivity()).getAsObject("stations");
+
+        initStationData();
+    }
+
+    /**
+     * 加载收费站名的数据
+     */
+    private void initStationData() {
+        List<SupportStation> supportStations = DataSupport.findAll(SupportStation.class);
+
+        if (mAcacheStations != null) {
+            if (mAcacheStations.size() == supportStations.size()) {
+                if (mStationList != null) {
+                    mStationList.clear();
+                }
+                mStationList.addAll(mAcacheStations);
+
+            } else {
+                mAcacheStations.clear();
+                addStationData(supportStations);
+            }
+        } else {
+            addStationData(supportStations);
+        }
+    }
+
+    /**
+     * 填充station的数据
+     *
+     * @param supportStations
+     */
+    private void addStationData(List<SupportStation> supportStations) {
+        for (int i = 0; i < supportStations.size(); i++) {
+
+            String stationName = supportStations.get(i).getStationName();
+
+            SerializableStation serializableStation = new SerializableStation();
+
+            serializableStation.setStationName(stationName);
+
+            String sortKey = PingYinUtil.format(stationName);
+            serializableStation.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+            serializableStation.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
+
+            mStationList.add(serializableStation);
+        }
     }
 
     @Override
@@ -90,7 +144,7 @@ public class StationFragment extends Fragment implements TextWatcher {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mStationAdapter = new SureCarStationAdapter((AppCompatActivity) getActivity(), sStationList, new SureCarStationAdapter.onItemClick() {
+        mStationAdapter = new SureCarStationAdapter((AppCompatActivity) getActivity(), mStationList, new SureCarStationAdapter.onItemClick() {
             @Override
             public void itemClick(SerializableStation station) {
                 mEditText.setText(station.getStationName());
@@ -110,8 +164,8 @@ public class StationFragment extends Fragment implements TextWatcher {
     }
 
     private void refreshView() {
-        Collections.sort(sStationList);
-        mStationAdapter.updateListView(sStationList);
+        Collections.sort(mStationList);
+        mStationAdapter.updateListView(mStationList);
     }
 
     @Override
@@ -136,14 +190,25 @@ public class StationFragment extends Fragment implements TextWatcher {
         String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearText_station);
         if (stationString.length() > 0) {
             List<SerializableStation> fileterList = PingYinUtil.getInstance()
-                    .search_station(sStationList, stationString);
+                    .search_station(mStationList, stationString);
             Logger.i(fileterList.toString());
             mStationAdapter.updateListView(fileterList);
             //mAdapter.updateData(mContacts);
         } else {
             if (mStationAdapter != null) {
-                mStationAdapter.updateListView(sStationList);
+                mStationAdapter.updateListView(mStationList);
             }
         }
+    }
+
+    public static void setTextChangedFragment(TextFragmentListener listener) {
+        String number = mEditText.getText().toString().trim();
+        listener.textChanged(number);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ACache.get(getActivity()).put("stations", (ArrayList<SerializableStation>) mStationList);
     }
 }

@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,11 +27,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
@@ -99,10 +101,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private String mAvailSpace;
     private NetWorkStateReceiver mNetWorkStateReceiver;
     private TextView mTv_change3;
-    private RoundedImageView mIvCamera;
+    private ImageView mIvCamera;
 
 
-    private SubscriberOnNextListener getTopMovieOnNext;
     private String mOperator;
     private boolean mIsConnected;
     private String mUsername;
@@ -121,10 +122,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 isStationCompleted = true;
             } else if (s == "789") {
                 isGoodsCompleted = true;
-            } else if (s == "error") {
+            } else if (s.equals("111")||s.equals("222")||s.equals("333")) {
                 mProgressDialog.dismiss();
+                ToastUtils.singleToast("数据加载失败,请检查网络");
             }
-            if (isNumberCompleted && isStationCompleted) {
+
+            if (isNumberCompleted && isStationCompleted && isGoodsCompleted) {
                 mProgressDialog.dismiss();
             }
 
@@ -135,7 +138,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private File mGoodsFile;
     private String mGoodsFilePath;
 
-    private String mMacAddress;
     private String mStationName;
 
     @Override
@@ -176,6 +178,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     if (macID.equals(android_ID)) {
                         Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
                         intent.putExtra("username", mUsername);
+                        intent.putExtra("stationName", mStationName);
                         startActivity(intent);
                     } else {
                         Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
@@ -248,6 +251,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     @Override
                     public void onError(Throwable e) {
                         Logger.i(e.getMessage());
+                        Message message = Message.obtain();
+                        message.obj = "333";
+                        handler.sendMessage(message);
                     }
 
                     @Override
@@ -362,6 +368,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                Message message = Message.obtain();
+                message.obj = "111";
+                handler.sendMessage(message);
                 Logger.i(e.getMessage());
             }
 
@@ -414,7 +423,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
                 Message message = Message.obtain();
-                message.obj = "error";
+                message.obj = "222";
                 handler.sendMessage(message);
             }
 
@@ -467,7 +476,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initView() {
 
         //得到拍照的按钮
-        mIvCamera = (RoundedImageView) findViewById(R.id.iv_camera);
+        mIvCamera = (ImageView) findViewById(R.id.iv_camera);
 
 
         //mIvCamera.setOnClickListener(this);
@@ -586,6 +595,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             buckUpApp();
         } else if (id == R.id.nav_post) {
             post_not_upload();
+            Logger.i("点击了未上传按钮");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -597,6 +607,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         List<SupportPhotoLite> liteList = DataSupport
                 //.where("is_post==?", "NO").find(SupportPhotoLite.class);
                 .findAll(SupportPhotoLite.class);
+        Logger.i("未上传车辆"+liteList.size());
         for (int i = 0; i < liteList.size(); i++) {
             String goods = liteList.get(i).getGoods();
             String license_color = liteList.get(i).getLicense_color();
@@ -697,21 +708,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //在onResume()方法注册
     @Override
     protected void onResume() {
-       /* if (mNetWorkStateReceiver == null) {
+        if (mNetWorkStateReceiver == null) {
             mNetWorkStateReceiver = new NetWorkStateReceiver(mTv_change3);
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
 
-        initCount();*/
+        initCount();
         super.onResume();
     }
 
     //onPause()方法注销
     @Override
     protected void onPause() {
-      /*  unregisterReceiver(mNetWorkStateReceiver);*/
+        unregisterReceiver(mNetWorkStateReceiver);
         super.onPause();
     }
 
@@ -739,7 +750,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * 根据版本号判断要不要更新
      */
     private void updateApp() {
-        CheckUpdateUtils.checkUpdate("GreenRoad.apk", "1.0",
+        String version = DevicesInfoUtils.getInstance().getVersion(mActivity);
+        CheckUpdateUtils.checkUpdate("GreenRoad.apk", version,
                 new CheckUpdateUtils.CheckCallBack() {
                     @Override
                     public void onSuccess(UpdateAppInfo updateInfo) {
