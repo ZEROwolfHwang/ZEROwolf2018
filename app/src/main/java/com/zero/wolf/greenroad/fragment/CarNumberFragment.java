@@ -77,7 +77,7 @@ public class CarNumberFragment extends Fragment implements TextChangeListenner.A
         //如果跟数据库长度相同则不作更改，不然则更新
         if (mAcacheNumbers != null) {
             if (mAcacheNumbers.size() == headList.size()) {
-                if (mNumberList != null) {
+                if (mNumberList.size()!= 0) {
                     mNumberList.clear();
                 }
                 mNumberList.addAll(mAcacheNumbers);

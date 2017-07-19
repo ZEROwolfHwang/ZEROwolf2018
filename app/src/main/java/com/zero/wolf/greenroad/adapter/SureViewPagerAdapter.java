@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
 import com.zero.wolf.greenroad.fragment.GoodsFragment;
 import com.zero.wolf.greenroad.fragment.StationFragment;
+import com.zero.wolf.greenroad.smartsearch.SortModel;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/17.
@@ -22,12 +25,14 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
     private final String mPhotoPath2;
     private final String mPhotoPath3;
     private final String mStationName;
+    private final List<SortModel> mGoodsList;
 
     public SureViewPagerAdapter(FragmentManager fm, String username, String stationName,
                                 String color, String photoPath1, String photoPath2,
-                                String photoPath3, Context context) {
+                                String photoPath3, List<SortModel> goodsList, Context context) {
         super(fm);
         this.context = context;
+        mGoodsList = goodsList;
         mUsername = username;
         mStationName = stationName;
         mColor = color;
@@ -48,7 +53,7 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 2:
                 fragment =  GoodsFragment.newInstance(mUsername,mStationName,mColor,mPhotoPath1,
-                        mPhotoPath2,mPhotoPath3, context);
+                        mPhotoPath2,mPhotoPath3,mGoodsList, context);
                 break;
             default:
                 fragment = CarNumberFragment.newInstance();
@@ -66,11 +71,11 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "123";
+                return "车牌号";
             case 1:
-                return "456";
+                return "站名";
             case 2:
-                return "789";
+                return "货物";
         }
         return null;
     }

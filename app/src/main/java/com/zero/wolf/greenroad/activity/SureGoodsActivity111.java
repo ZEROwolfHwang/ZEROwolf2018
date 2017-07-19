@@ -2,22 +2,24 @@ package com.zero.wolf.greenroad.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
-import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
-import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
-import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
+import com.zero.wolf.greenroad.smartsearch.SortModel;
+import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.PingYinUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,39 +29,13 @@ import butterknife.ButterKnife;
 
 public class SureGoodsActivity111 extends BaseActivity {
 
-
-
-
-
-
-    private EditText mEt_change2;
-    private List<SupportGoods> mSupportGoodsList;
-
     private String mUsername;
     private String mPhotoPath1;
     private String mPhotoPath2;
     private String mPhotoPath3;
-    private String mLicense_plate;
-    private String mCar_goods;
-    private String mCar_station;
     private String mColor;
-    private List<SupportGoods> mSupportGoodses;
 
-
-
-    /**
-     * 根据拼音来排列ListView里面的数据类
-     */
-    private PinyinComparator pinyinComparator;
-
-
-
-
-
-    private SureCarStationAdapter mStationAdapter;
-    private SureCarNumberAdapter mNumberAdapter;
-    private ArrayList<SerializableNumber> mSerializableNumberArrayList;
-
+    private List<SortModel> mGoodsList = new ArrayList<>();
     private SureViewPagerAdapter mPagerAdapter;
 
     @BindView(R.id.tab_sure)
@@ -71,6 +47,7 @@ public class SureGoodsActivity111 extends BaseActivity {
     private AppCompatActivity mActivity;
     private Context mContext;
     private String mStationName;
+    private ArrayList<SortModel> mAcacheGoods;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +64,69 @@ public class SureGoodsActivity111 extends BaseActivity {
 
         getIntentData();
 
+        initGoodsData();
+
         initViewPagerAndTabs();
 
     }
 
+    private void initGoodsData() {
+        mAcacheGoods = (ArrayList<SortModel>) ACache
+                .get(mActivity).getAsObject("goods");
+
+        List<SupportGoods> supportGoodses = DataSupport.findAll(SupportGoods.class);
+
+        if (mAcacheGoods != null) {
+            if (mAcacheGoods.size() == supportGoodses.size()) {
+                mGoodsList.addAll(mAcacheGoods);
+            } else {
+                mAcacheGoods.clear();
+                addGoodsData(supportGoodses);
+            }
+        } else {
+            addGoodsData(supportGoodses);
+        }
+    }
+
+    private void addGoodsData(List<SupportGoods> supportGoodses) {
+        for (int i = 0; i < supportGoodses.size(); i++) {
+
+            String scientificname = supportGoodses.get(i).getScientificname();
+            String alias = supportGoodses.get(i).getAlias();
+            String imgurl = supportGoodses.get(i).getImgurl();
+
+            SortModel sortModel = new SortModel();
+            sortModel.setScientificname(scientificname);
+            sortModel.setAlias(alias);
+
+            Bitmap bitmap = BitmapFactory.decodeFile(imgurl);
+
+            sortModel.setBitmap(bitmap);
+
+            String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientificname);
+            if (sortLetters == null) {
+                sortLetters = PingYinUtil.getInstance().getSortLetter(alias);
+            }
+            sortModel.setSortLetters(sortLetters);
+
+            String sortKey = PingYinUtil.format(scientificname + alias);
+            sortModel.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+            sortModel.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
+
+
+            mGoodsList.add(sortModel);
+        }
+           /* Logger.i(mGoodsList.get(0).toString());
+            Logger.i(mGoodsList.get(0).getBitmap().toString());
+            Logger.i(mGoodsList.get(1).getBitmap().toString());
+            Logger.i(mGoodsList.get(2).getBitmap().toString());
+        Logger.i("" + mGoodsList.size());*/
+    }
+
+
     private void initViewPagerAndTabs() {
         mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),
-                mUsername,mStationName,mColor,mPhotoPath1,mPhotoPath2,mPhotoPath3,this);
+                mUsername,mStationName,mColor,mPhotoPath1,mPhotoPath2,mPhotoPath3,mGoodsList,this);
         mViewPagerSure.setOffscreenPageLimit(3);//设置viewpager预加载页面数
         mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
 //        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
@@ -146,7 +179,7 @@ public class SureGoodsActivity111 extends BaseActivity {
     protected void onPause() {
         super.onPause();
         //存入缓存
-
+        ACache.get(mActivity).put("goods", (ArrayList<SortModel>) mGoodsList);
 
     }
 

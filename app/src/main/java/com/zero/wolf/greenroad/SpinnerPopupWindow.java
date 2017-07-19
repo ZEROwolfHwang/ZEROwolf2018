@@ -140,7 +140,7 @@ public class SpinnerPopupWindow {
     public void showPopWindow(View view) {
         int[] point = {0, 0};
         view.getLocationOnScreen(point);
-        mPopWindow.showAtLocation(view, Gravity.RIGHT | Gravity.TOP, 0, point[1] + view.getHeight());
+        mPopWindow.showAtLocation(view, Gravity.LEFT | Gravity.TOP, 60, point[1] + view.getHeight());
     }
 
     /**

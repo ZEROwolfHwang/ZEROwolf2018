@@ -3,6 +3,7 @@ package com.zero.wolf.greenroad;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.BaseActivity;
 import com.zero.wolf.greenroad.activity.MainActivity;
+import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
 import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
@@ -64,8 +66,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         Connector.getDatabase();
 
+
         mPopup_button = (ImageButton) findViewById(R.id.popup_button);
         mPopup_button.setOnClickListener(this);
+
+
 
         mBt_login = (Button) findViewById(R.id.bt_login);
         mBt_login.setOnClickListener(this);
@@ -76,6 +81,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.popup_button:
                 initData();
+
+                int width = mEt_user_name.getWidth();
+
                 mPopupWindow = new SpinnerPopupWindow.Builder(LoginActivity.this)
                         .setmLayoutManager(null, 0)
                         .setmAdapter(new SpinnerAdapter(this, mSupportLoginUsers, new onItemClick() {
@@ -84,12 +92,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 updatePopup(position);
                             }
                         }))
-                        .setmHeight(800).setmWidth(900)
+                        .setmItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL))
+                        .setmHeight(600).setmWidth(width)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
 
-                mPopupWindow.showPopWindowCenter(v);
+                mPopupWindow.showPopWindow(v);
                 break;
             case R.id.bt_login:
                 startMainActivity();
@@ -268,7 +277,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
-                    LoginActivity.this).inflate(R.layout.item_test, parent,
+                    LoginActivity.this).inflate(R.layout.login_item, parent,
                     false));
             return holder;
         }
@@ -297,7 +306,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             public MyViewHolder(View view) {
                 super(view);
-                tv = (TextView) view.findViewById(R.id.test1);
+                tv = (TextView) view.findViewById(R.id.text_login);
                 //     mPopupWindow.dismissPopWindow();
 
             }

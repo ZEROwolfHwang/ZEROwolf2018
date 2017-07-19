@@ -18,9 +18,9 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/light"
         android:focusable="false"
-        android:textSize="@dimen/text14"/>
+        android:textSize="@dimen/text16"/>
 
 
     <ImageView
@@ -43,8 +43,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:focusable="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text18"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/text20"/>
 
         <ImageView
             android:id="@+id/iv_clear_Text"

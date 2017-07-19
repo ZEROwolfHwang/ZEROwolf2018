@@ -9,8 +9,10 @@
     <LinearLayout
         android:id="@+id/layout_center_sure"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="5dp">
+        android:layout_height="120dp"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:padding="@dimen/layout_margin10dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_station_name_sure"
@@ -30,13 +32,13 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:paddingTop="@dimen/layout_margin10dp"
-        android:paddingLeft="@dimen/layout_margin60dp"
-        android:paddingBottom="@dimen/layout_margin20dp"
-        android:paddingRight="@dimen/layout_margin20dp"
         android:id="@+id/recycler_view_station"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/layout_margin20dp"
+        android:paddingLeft="@dimen/layout_margin60dp"
+        android:paddingRight="@dimen/layout_margin20dp"
+        android:paddingTop="@dimen/layout_margin10dp"/>
 
 
 </LinearLayout>

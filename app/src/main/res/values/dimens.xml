@@ -27,6 +27,8 @@
     <dimen name="main_width_dp100">100dp</dimen>
     <dimen name="main_height_dp100">100dp</dimen>
     <dimen name="layout_margin60dp">60dp</dimen>
+    <dimen name="text16">16sp</dimen>
+    <dimen name="text13">13sp</dimen>
 
     <integer name="abc_max_action_buttons">2</integer>
 

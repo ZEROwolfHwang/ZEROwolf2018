@@ -5,6 +5,8 @@ import android.content.Context;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.tools.SPUtils;
 
+import static org.litepal.LitePalApplication.getContext;
+
 /**
  * Created by Administrator on 2017/6/30.
  */
@@ -26,5 +28,14 @@ public class CarNumberCount {
         int cra_not_count = (int) SPUtils.get(mContext, SPUtils.CAR_NOT_COUNT, 0);
         Logger.i("cra_not_count------------" + cra_not_count);
     }
+    /**
+     * 将车辆的总数加1
+     */
+    public static void CarNumberAdd(Context mContext) {
+        SPUtils.add_one(getContext(), SPUtils.CAR_COUNT);
+
+        SPUtils.add_one(getContext(), SPUtils.CAR_NOT_COUNT);
+    }
+
 
 }

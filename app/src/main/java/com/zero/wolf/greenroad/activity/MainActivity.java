@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -164,7 +163,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mIvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+/*
                 String android_ID = Settings.Secure
                         .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -184,7 +183,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
                         startActivity(intent);
                     }
-                }
+                }*/
+                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                intent.putExtra("username", mUsername);
+                intent.putExtra("stationName", mStationName);
+                startActivity(intent);
             }
         });
 
@@ -310,7 +313,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             SupportGoods info = new SupportGoods();
 
-            info.setAlias(dataBeen.get(i).getAlias());
+            info.setAlias(dataBeen.get(i).getAlias().trim());
             info.setScientificname(dataBeen.get(i).getScientificname());
             info.setCargoid(dataBeen.get(i).getCargoid());
             info.setKind(dataBeen.get(i).getKind());

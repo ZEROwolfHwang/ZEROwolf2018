@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
@@ -75,7 +77,7 @@ public class StationFragment extends Fragment implements TextWatcher {
 
         if (mAcacheStations != null) {
             if (mAcacheStations.size() == supportStations.size()) {
-                if (mStationList != null) {
+                if (mStationList.size() != 0) {
                     mStationList.clear();
                 }
                 mStationList.addAll(mAcacheStations);
@@ -118,7 +120,6 @@ public class StationFragment extends Fragment implements TextWatcher {
 
         initView(view);
 
-
         return view;
     }
 
@@ -133,6 +134,13 @@ public class StationFragment extends Fragment implements TextWatcher {
 
         //找到改变的TextView
         mEditText = (EditText) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(tv_change);
+
+        if (mStationList.size() == 0) {
+            mEditText.setText("泰安东收费站");
+        } else {
+            mEditText.setText(mStationList.get(0).getStationName());
+            mEditText.setSelection(mStationList.get(0).getStationName().length());
+        }
 
         //找到清除text的控件
         mIvClearText_station = (ImageView) mLayout_center.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
@@ -155,8 +163,11 @@ public class StationFragment extends Fragment implements TextWatcher {
             }
         });
 
-        mManager = new LinearLayoutManager(getContext());
-        mManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),GridLayoutManager.HORIZONTAL));
+
+        mManager = new GridLayoutManager(getContext(), 3);
+        mManager.setOrientation(GridLayoutManager.VERTICAL);
+
         mRecyclerView.setLayoutManager(mManager);
 
         mRecyclerView.setAdapter(mStationAdapter);

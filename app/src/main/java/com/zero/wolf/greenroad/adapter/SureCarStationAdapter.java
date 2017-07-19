@@ -37,7 +37,7 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
     public SureCarStationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         SureCarStationHolder holder = new SureCarStationHolder(LayoutInflater.from(
-                mActivity).inflate(R.layout.item_test, parent,
+                mActivity).inflate(R.layout.item_station, parent,
                 false));
 
        // View view = LayoutInflater.from(mActivity).inflate(R.layout.item_test, parent);
@@ -47,6 +47,8 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
     @Override
     public void onBindViewHolder(SureCarStationHolder holder, int position) {
         SerializableStation station = mListLocal.get(position);
+        
+
         holder.bindHolder(station,position,holder);
     }
 
@@ -66,23 +68,28 @@ public class SureCarStationAdapter extends RecyclerView.Adapter<SureCarStationAd
 
     public class SureCarStationHolder extends RecyclerView.ViewHolder {
 
-        private final TextView mTextView;
+        private final TextView mTextView_station_header;
+        private final TextView mTextView_station_end;
 
         public SureCarStationHolder(View itemView) {
             super(itemView);
-            mTextView = (TextView) itemView.findViewById(R.id.test1);
-
+            mTextView_station_header = (TextView) itemView.findViewById(R.id.text_view_station_header);
+            mTextView_station_end = (TextView) itemView.findViewById(R.id.text_view_station_end);
 
         }
 
         public void bindHolder(final SerializableStation station, final int position, final SureCarStationHolder holder) {
-            mTextView.setText(station.getStationName());
+            String stationName = station.getStationName();
+            String station_header = stationName.substring(0, stationName.length() - 3);
 
-           // mTextView.setSelected(position == selectedItem);
-            mTextView.setOnClickListener(new View.OnClickListener() {
+            mTextView_station_header.setText(station_header);
+            mTextView_station_end.setText(R.string.shou_fei_zhan);
+
+            // mTextView.setSelected(position == selectedItem);
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-              //      selectedItem = holder.getLayoutPosition();
+                    //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
                     itemClick.itemClick(station);
                 }

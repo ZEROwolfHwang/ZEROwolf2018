@@ -3,8 +3,7 @@ package com.zero.wolf.greenroad.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,26 +24,25 @@ import android.widget.Toast;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.PhotoActivity;
+import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.interfacy.TextChangeListenner;
-import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.manager.CarNumberCount;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
-import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
 import com.zero.wolf.greenroad.tools.RxHolder;
-import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.tools.ViewUtils;
 
-import java.util.ArrayList;
+import org.litepal.crud.DataSupport;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -53,16 +51,12 @@ import rx.Observable;
 import rx.Subscriber;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
-import static org.litepal.crud.DataSupport.findAll;
 
 /**
  * Created by Administrator on 2017/7/17.
  */
 
 public class GoodsFragment extends Fragment implements TextChangeListenner.AfterTextListener {
-
-    private List<SortModel> mGoodsList = new ArrayList<>();
-    private ArrayList<SortModel> mAcacheGoods;
 
     private static GoodsFragment sFragment;
     private RecyclerView mRecyclerView;
@@ -80,12 +74,14 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
     private String mCar_goods;
     private String mCar_number;
     private String mCar_station;
+    private static List<SortModel> sGoodsList;
 
     public static GoodsFragment newInstance(String username, String stationName,
-                                            String color, String photoPath1, String photoPath2, String photoPath3, Context context) {
+                                            String color, String photoPath1, String photoPath2, String photoPath3, List<SortModel> goodsList, Context context) {
         if (sFragment == null) {
             sFragment = new GoodsFragment();
         }
+        sGoodsList = goodsList;
         sContext = context;
         sUsername = username;
         sStationName = stationName;
@@ -100,69 +96,14 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAcacheGoods = (ArrayList<SortModel>) ACache
-                .get(getActivity()).getAsObject("goods");
-
-        initGoodsData();
     }
 
-    /**
-     * 加载货物的数据及缓存
-     */
-    private void initGoodsData() {
-        List<SupportGoods> supportGoodses = findAll(SupportGoods.class);
-
-        if (mAcacheGoods != null) {
-            if (mAcacheGoods.size() == supportGoodses.size()) {
-                if (mGoodsList != null) {
-                    mGoodsList.clear();
-                }
-                mGoodsList.addAll(mAcacheGoods);
-            } else {
-                mAcacheGoods.clear();
-                addGoodsData(supportGoodses);
-            }
-        } else {
-            addGoodsData(supportGoodses);
-        }
-    }
-
-    private void addGoodsData(List<SupportGoods> supportGoodses) {
-        for (int i = 0; i < supportGoodses.size(); i++) {
-
-            String scientificname = supportGoodses.get(i).getScientificname();
-            String alias = supportGoodses.get(i).getAlias();
-            String imgurl = supportGoodses.get(i).getImgurl();
-
-            SortModel sortModel = new SortModel();
-            sortModel.setScientificname(scientificname);
-            sortModel.setAlias(alias);
-
-            Bitmap bitmap = BitmapFactory.decodeFile(imgurl);
-
-            sortModel.setBitmap(bitmap);
-
-            String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientificname);
-            if (sortLetters == null) {
-                sortLetters = PingYinUtil.getInstance().getSortLetter(alias);
-            }
-            sortModel.setSortLetters(sortLetters);
-
-            String sortKey = PingYinUtil.format(scientificname + alias);
-            sortModel.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
-            sortModel.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
-
-
-            mGoodsList.add(sortModel);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_goods, container, false);
 
-        //View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_goods, null, false);
 
         initView(view);
 
@@ -196,17 +137,24 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                 dialog.setTitle(getString(R.string.dialog_title_sure));
-                dialog.setMessage("1111"/*+getDialogSendMessage()*/);
+                dialog.setMessage(getDialogSendMessage());
                 dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //saveLocalLite();
-                        carNumberCount();
+                        CarNumberCount.CarNumberAdd(getContext());
 
                         if (NetWorkManager.isnetworkConnected(getContext())) {
                             postAccept(TimeUtil.getCurrentTimeTos());
                         } else {
                             saveLocalLite(TimeUtil.getCurrentTimeTos());
+                            ToastUtils.singleToast("上传失败,已保存至本地");
+                            List<SupportPhotoLite> photoLites = DataSupport.findAll(SupportPhotoLite.class);
+
+                            Logger.i("保存到数据库的条数" + photoLites.size());
+                            Logger.i(photoLites.get(0).getLicense_plate());
+                            backToPhotoActivity();
+
                         }
                     }
                 });
@@ -252,30 +200,8 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         List<MultipartBody.Part> parts = PathUtil.getMultipartBodyPart(sPhotoPath1, sPhotoPath2, sPhotoPath3);
 
         Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi()
-                .postThreeImg("大货车", "蓝牌", currentTime, sUsername,
+                .postThreeImg("大货车", sColor, currentTime, sUsername,
                         mCar_station, mCar_number, mCar_goods, parts);
-
-
-/*
-        observable.unsubscribeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<HttpResultPostImg>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(HttpResultPostImg httpResultPostImg) {
-
-                    }
-                });*/
 
         observable.compose(RxHolder.io_main()).subscribe(new Subscriber<HttpResultPostImg>() {
             @Override
@@ -294,15 +220,11 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
                 String msg = httpResultPostImg.getMsg();
                 if (code == 200) {
                     CarNumberCount.CarNumberCut(getContext());
-                    Intent intent = new Intent(getActivity(), PhotoActivity.class);
-                    intent.putExtra("username", sUsername);
-                    intent.putExtra("stationName", sStationName);
-                    startActivity(intent);
-                } else if (code == 300) {
-                    ToastUtils.singleToast("上传失败");
-                    saveLocalLite(currentTime);
+                    backToPhotoActivity();
                 } else {
-                    ToastUtils.singleToast("其他错误");
+                    saveLocalLite(currentTime);
+                    ToastUtils.singleToast("上传失败,已保存至本地");
+                    backToPhotoActivity();
                 }
                 Logger.i("" + code);
                 Logger.i("" + msg);
@@ -310,27 +232,21 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         });
     }
 
-    private void carNumberCount() {
-        SPUtils.add_one(getContext(), SPUtils.CAR_COUNT);
-        int car_count = (int) SPUtils.get(getContext(), SPUtils.CAR_COUNT, 0);
-        Logger.i("car_count------------" + car_count);
-
-        SPUtils.add_one(getContext(), SPUtils.CAR_NOT_COUNT);
-        int car_not_count = (int) SPUtils.get(getContext(), SPUtils.CAR_NOT_COUNT, 0);
-        Logger.i("car_not_count------------" + car_not_count);
+    private void backToPhotoActivity() {
+        Intent intent = new Intent(getActivity(), PhotoActivity.class);
+        intent.putExtra("username", sUsername);
+        intent.putExtra("stationName", sStationName);
+        startActivity(intent);
     }
 
-    /* private String getDialogSendMessage() {
-      *//*   mLicense_plate = mEt_change1.getText().toString();
-        mCar_station = mEt_change2.getText().toString();
-        mCar_goods = mEt_change3.getText().toString();*//*
-*//*
-        String dialog_message = "车  牌  号：" + mLicense_plate + "\n"
+    private String getDialogSendMessage() {
+        String dialog_message = "车  牌  号：" + mCar_number + "\n"
                 + "货物名称：" + mCar_goods + "\n"
                 + "点击“确认”将提交信息" + "\n"
                 + "点击“取消”可再次修改";
-        return dialog_message;*//*
-    }*/
+        return dialog_message;
+    }
+
     private void initView(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_goods_sure);
         mButton = (Button) view.findViewById(R.id.bt_ok_msg);
@@ -342,7 +258,11 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
 
         //找到改变的TextView
         mEditText = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
-
+        if (sGoodsList.size() == 0) {
+            mEditText.setText("西兰花");
+        } else {
+            mEditText.setText(sGoodsList.get(0).getScientificname());
+        }
         //找到清除text的控件
         mIvClearTextGoods = (ImageView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
         mIvClearTextGoods.setOnClickListener((v -> mEditText.setText("")));
@@ -356,25 +276,25 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
 
         PinyinComparator pinyinComparator = new PinyinComparator();
 
-        Collections.sort(mGoodsList, pinyinComparator);// 根据a-z进行排序源数据
+        Collections.sort(sGoodsList, pinyinComparator);// 根据a-z进行排序源数据
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
 
-        mGoodsAdapter = new SureGoodsAdapter(getContext(), mGoodsList, new SureGoodsAdapter.onItemClick() {
+        mGoodsAdapter = new SureGoodsAdapter(getContext(), sGoodsList, new SureGoodsAdapter.onItemClick() {
             @Override
             public void itemClick(SortModel sortModel, int position) {
                 String scientificname = sortModel.getScientificname();
                 mEditText.setText(scientificname);
-                mGoodsAdapter.updateListView(mGoodsList);
+                mGoodsAdapter.updateListView(sGoodsList);
                 mEditText.setSelection(scientificname.length());
             }
         });
+      mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),
+              LinearLayoutManager.HORIZONTAL,10, Color.WHITE));
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
-
-        ACache.get(getActivity()).put("goods", (ArrayList<SortModel>) mGoodsList);
 
     }
 
@@ -391,13 +311,13 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearTextGoods);
         if (stationString.length() > 0) {
             List<SortModel> fileterList = PingYinUtil.getInstance()
-                    .search_goods(mGoodsList, stationString);
+                    .search_goods(sGoodsList, stationString);
             Logger.i(fileterList.toString());
             mGoodsAdapter.updateListView(fileterList);
             //mAdapter.updateData(mContacts);
         } else {
             if (mGoodsAdapter != null) {
-              mGoodsAdapter.updateListView(mGoodsList);
+                mGoodsAdapter.updateListView(sGoodsList);
             }
         }
     }
@@ -406,4 +326,5 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
     public void onResume() {
         super.onResume();
     }
+
 }

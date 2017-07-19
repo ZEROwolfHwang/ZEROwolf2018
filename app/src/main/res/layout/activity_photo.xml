@@ -5,16 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/content_layout_backgroud"
+    android:background="@drawable/bg_tab_layout"
     android:baselineAligned="false"
     android:orientation="vertical"
     tools:context="com.zero.wolf.greenroad.activity.PhotoActivity">
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_photo"
-        style="@style/style_toolbar"
-        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_photo"
+            style="@style/style_toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    </android.support.design.widget.AppBarLayout>
 
     <!-- <ToggleButton
          android:id="@+id/toggleButton_color"
@@ -136,17 +140,17 @@
     </RadioGroup>
 
     <LinearLayout
-        android:layout_marginTop="@dimen/layout_margin10dp"
         android:id="@+id/layout_number"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
         <TextView
             style="@style/text_view_2_car"
-            android:layout_marginLeft="40dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="40dp"
             android:background="@drawable/shape_line_rect_13"
             android:text="@string/tv_car_number"/>
 
@@ -208,8 +212,8 @@
             android:id="@+id/iv_car_goods"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:scaleType="fitCenter"
             android:layout_marginRight="@dimen/layout_margin10dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/car_goods_dark"
             app:riv_border_color="@color/border"
             app:riv_border_width="3dp"
@@ -227,15 +231,8 @@
 
     <Button
         android:id="@+id/bt_ok_send"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/main_height_dp40"
-        android:layout_marginBottom="@dimen/layout_margin5dp"
-        android:layout_marginLeft="@dimen/layout_margin20dp"
-        android:layout_marginRight="@dimen/layout_margin20dp"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="@drawable/sure_button_select"
-        android:gravity="center"
+        style="@style/style_button_sure"
         android:text="@string/ok_send"
-        android:textSize="@dimen/text24"/>
+        />
 
 </LinearLayout>

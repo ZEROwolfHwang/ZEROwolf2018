@@ -905,7 +905,7 @@ public class SureGoodsActivity extends BaseActivity {
         //存入缓存
         ACache.get(mActivity).put("sessions", (ArrayList<SerializableNumber>) mNumberList);
         ACache.get(mActivity).put("stations", (ArrayList<SerializableStation>) mStationList);
-        ACache.get(mActivity).put("goods", (ArrayList<SortModel>) mGoodsList);
+
     }
 
     @Override

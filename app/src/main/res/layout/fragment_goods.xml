@@ -7,8 +7,10 @@
     <LinearLayout
         android:id="@+id/layout_bottom_sure"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="@dimen/layout_margin5dp">
+        android:layout_height="120dp"
+        android:gravity="center"
+        android:padding="@dimen/layout_margin10dp"
+        android:elevation="3dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_car_goods_sure"
@@ -37,13 +39,7 @@
 
     <Button
         android:id="@+id/bt_ok_msg"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin40dp"
-        android:layout_marginLeft="@dimen/layout_margin20dp"
-        android:layout_marginRight="@dimen/layout_margin20dp"
-        android:background="@drawable/sure_button_select"
-        android:gravity="center"
         android:text="@string/ok_send"
-        android:textSize="@dimen/text24"/>
+        style="@style/style_button_sure"/>
 
 </LinearLayout>
