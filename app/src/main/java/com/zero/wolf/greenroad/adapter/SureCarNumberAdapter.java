@@ -17,12 +17,11 @@ import java.util.List;
  * Created by Administrator on 2017/6/26.
  */
 
-public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdapter.SureCarNumberHolder>{
-
+public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdapter.SureCarNumberHolder> {
 
 
     private final AppCompatActivity mActivity;
-    private ArrayList<SerializableNumber>  mListLocal;
+    private ArrayList<SerializableNumber> mListLocal;
 
     private onItemClick itemClick;
 
@@ -38,17 +37,17 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
     public SureCarNumberHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         SureCarNumberHolder holder = new SureCarNumberHolder(LayoutInflater.from(
-                mActivity).inflate(R.layout.item_test, parent,
+                mActivity).inflate(R.layout.item_number, parent,
                 false));
 
-       // View view = LayoutInflater.from(mActivity).inflate(R.layout.item_test, parent);
+        // View view = LayoutInflater.from(mActivity).inflate(R.layout.item_test, parent);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(SureCarNumberHolder holder, int position) {
         SerializableNumber serializableNumber = mListLocal.get(position);
-        holder.bindHolder(serializableNumber,position,holder);
+        holder.bindHolder(serializableNumber, position, holder);
     }
 
     @Override
@@ -62,21 +61,19 @@ public class SureCarNumberAdapter extends RecyclerView.Adapter<SureCarNumberAdap
 
         public SureCarNumberHolder(View itemView) {
             super(itemView);
-            mTextView = (TextView) itemView.findViewById(R.id.test1);
+            mTextView = (TextView) itemView.findViewById(R.id.text_view_number);
 
 
         }
 
         public void bindHolder(final SerializableNumber serializableNumber, final int position, final SureCarNumberHolder holder) {
             mTextView.setText(serializableNumber.getName());
+       // mTextView.setSelected(position == selectedItem);
 
-           // mTextView.setSelected(position == selectedItem);
-            mTextView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-              //      selectedItem = holder.getLayoutPosition();
+                    //      selectedItem = holder.getLayoutPosition();
                     notifyDataSetChanged();
                     itemClick.itemClick(serializableNumber);
                 }

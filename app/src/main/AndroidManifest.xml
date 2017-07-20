@@ -14,7 +14,7 @@
     <application
         android:name=".GreenRoadApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/setting"
+        android:icon="@drawable/logo_green_road"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -36,12 +36,12 @@
         <activity
             android:launchMode="singleTask"
             android:name=".activity.PhotoActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:launchMode="singleTask"
             android:name=".activity.SureGoodsActivity111"
-            android:parentActivityName=".activity.PhotoActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
 

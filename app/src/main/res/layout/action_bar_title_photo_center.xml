@@ -7,10 +7,9 @@
     <TextView
         android:id="@+id/title_text"
         android:textSize="24sp"
-        android:text="32897852"
         android:gravity="center"
         android:layout_gravity="center"
-        android:textColor="#000"
+        android:textColor="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

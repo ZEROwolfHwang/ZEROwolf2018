@@ -78,6 +78,18 @@ public class SureGoodsActivity111 extends BaseActivity {
 
         if (mAcacheGoods != null) {
             if (mAcacheGoods.size() == supportGoodses.size()) {
+                if (mAcacheGoods.size() > 0) {
+                    int size = 0;
+                    for (int i = 0; i < mAcacheGoods.size(); i++) {
+                        if (mAcacheGoods.get(i).getBitmap() != null) {
+                            size += size;
+                        }
+                        if (size != supportGoodses.size()) {
+                            mAcacheGoods.clear();
+                            addGoodsData(supportGoodses);
+                        }
+                    }
+                }
                 mGoodsList.addAll(mAcacheGoods);
             } else {
                 mAcacheGoods.clear();
@@ -167,11 +179,13 @@ public class SureGoodsActivity111 extends BaseActivity {
 
         setSupportActionBar(mToolbarSure);
 
-        TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity,991).getTitle_text_view();
         title_text_view.setText(getString(R.string.sure_goods_type));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
         //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
+        mToolbarSure.setNavigationOnClickListener((v -> finish()));
+
     }
 
 

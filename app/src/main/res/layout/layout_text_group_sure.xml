@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="50dp"
     android:layout_gravity="center"
     android:layout_marginRight="@dimen/layout_margin20dp"
     android:background="@drawable/shape_background_sure"
@@ -43,8 +43,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:focusable="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text20"/>
+            android:textColor="@color/white_light"
+            android:textSize="@dimen/text22"/>
 
         <ImageView
             android:id="@+id/iv_clear_Text"

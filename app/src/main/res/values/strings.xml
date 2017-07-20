@@ -49,5 +49,7 @@
     <string name="sure_station">请确定站名</string>
     <string name="post_upload_not">提交未上传的信息</string>
     <string name="shou_fei_zhan">收费站</string>
+    <string name="error_invalid_password">无效的密码</string>
+    <string name="error_field_required">账号不能为空</string>
 
 </resources>

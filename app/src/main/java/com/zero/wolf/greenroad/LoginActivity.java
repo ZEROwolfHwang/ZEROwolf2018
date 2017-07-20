@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mPopup_button.setOnClickListener(this);
 
 
-
         mBt_login = (Button) findViewById(R.id.bt_login);
         mBt_login.setOnClickListener(this);
     }
@@ -126,11 +126,32 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String username = mEt_user_name.getText().toString().trim();
         String password = mEt_password.getText().toString().trim();
 
+        boolean cancel = false;
+        View focusView = null;
 
-        mIsConnected = NetWorkManager.isnetworkConnected(this);
-        if ("".equals(username) || "".equals(password)) {
-            ToastUtils.singleToast("请输入账号或密码");
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mEt_password.setError(getString(R.string.error_invalid_password));
+            focusView = mEt_password;
+            cancel = true;
+            return;
+        }
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(username)) {
+            mEt_user_name.setError(getString(R.string.error_field_required));
+            focusView = mEt_user_name;
+            cancel = true;
+            return;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
         } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+
+            mIsConnected = NetWorkManager.isnetworkConnected(this);
             if (mIsConnected) {
                 loginFromNet(username, password);
             } else {
@@ -148,7 +169,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
             }
         }
+
     }
+
 
     /**
      * 根据有无网络连接判断时间差内登陆的情形
@@ -230,14 +253,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         login2MainActivity(username, operator, stationName);
                     } else if (code1 == 201) {
                         ToastUtils.singleToast(msg);
+                        mEt_user_name.setError(msg);
 
                     } else if (code1 == 202) {
+
 
                         ToastUtils.singleToast(msg);
                     } else if (code1 == 203) {
 
+
                         ToastUtils.singleToast(msg);
                     } else if (code1 == 204) {
+
                         ToastUtils.singleToast(msg);
                     }
                 }
@@ -312,6 +339,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         }
 
+    }
+
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
     }
 
     public interface onItemClick {

@@ -11,14 +11,11 @@ import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
@@ -26,6 +23,7 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import java.io.File;
 
@@ -85,6 +83,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private RadioGroup mRadio_group_color;
     private File mFile;
     private String mStationName;
+    private String mFilePath_str;
 
 
     @Override
@@ -128,11 +127,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
      * 初始化数据
      */
     private void initData() {
-        mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFile = new File(mFilePath, "imggreen");
         if (mFile == null) {
+            mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            mFile = new File(mFilePath, "imggreen");
             mFile.mkdirs();
         }
+        mFilePath_str = mFile.getPath();
     }
 
     private void initView() {
@@ -165,13 +165,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_photo);
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.back_up_app);
 
-
-        TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity,991).getTitle_text_view();
         title_text_view.setText(getString(R.string.shut_camera));
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
+        toolbar.setNavigationIcon(R.drawable.back_up_logo);
+
         //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,32 +179,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             }
         });
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_photo, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_bar_person_definite) {
-            Toast.makeText(PhotoActivity.this, "点击了人工识别", Toast.LENGTH_SHORT).show();
-            personDefinite();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void personDefinite() {
-        enterSureGoodsActivity();
     }
 
     @Override
@@ -238,7 +211,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
     private void enterSureGoodsActivity() {
 
-/*
+
         if (mCurrent_color == null) {
             ToastUtils.singleToast("请确定车牌颜色");
             return;
@@ -254,7 +227,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         } else if (mUsername == null) {
             ToastUtils.singleToast("当前账号异常,请重新登录");
             return;
-        }*/
+        }
 
         SureGoodsActivity111.actionStart(PhotoActivity.this, mStationName, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
@@ -272,16 +245,16 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         }*/
         if (type_int == TYPE_NUMBER) {
-            mFilePath1 = mFile + "/" + System.currentTimeMillis()
+            mFilePath1 = mFilePath_str + "/" + System.currentTimeMillis()
                     + "number.jpg";
             savePath(mFilePath1, intent);
             Logger.i(mFilePath);
         } else if (type_int == TYPE_BODY) {
-            mFilePath2 = mFile + "/" + System.currentTimeMillis()
+            mFilePath2 = mFilePath_str + "/" + System.currentTimeMillis()
                     + "body.jpg";
             savePath(mFilePath2, intent);
         } else if (type_int == TYPE_GOODS) {
-            mFilePath3 = mFile + "/" + System.currentTimeMillis()
+            mFilePath3 = mFilePath_str + "/" + System.currentTimeMillis()
                     + "goods.jpg";
             savePath(mFilePath3, intent);
         }

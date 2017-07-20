@@ -7,15 +7,15 @@
     <LinearLayout
         android:id="@+id/layout_bottom_sure"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:gravity="center"
         android:padding="@dimen/layout_margin10dp"
         android:elevation="3dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_car_goods_sure"
-            android:layout_width="@dimen/main_width_dp100"
-            android:layout_height="@dimen/main_height_dp100"
+            android:layout_width="@dimen/main_height_dp80"
+            android:layout_height="@dimen/main_height_dp80"
             android:focusable="false"
             android:scaleType="fitCenter"
             android:src="@drawable/car_goods_light"

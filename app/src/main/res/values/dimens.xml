@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="nav_header_height">200dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text14">14sp</dimen>
     <dimen name="text18">18sp</dimen>
@@ -29,6 +29,9 @@
     <dimen name="layout_margin60dp">60dp</dimen>
     <dimen name="text16">16sp</dimen>
     <dimen name="text13">13sp</dimen>
+    <dimen name="layout_margin30dp">30dp</dimen>
+    <dimen name="layout_margin50dp">50dp</dimen>
+    <dimen name="text22">22sp</dimen>
 
     <integer name="abc_max_action_buttons">2</integer>
 

@@ -56,7 +56,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class GoodsFragment extends Fragment implements TextChangeListenner.AfterTextListener {
+public class GoodsFragment extends Fragment implements TextChangeListenner.AfterTextListener{
 
     private static GoodsFragment sFragment;
     private RecyclerView mRecyclerView;
@@ -107,67 +107,10 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
 
         initView(view);
 
-        initData();
 
         return view;
     }
 
-    private void initData() {
-
-
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CarNumberFragment.setTextChangedFragment((edittext -> {
-                    mCar_number = edittext;
-                }));
-                StationFragment.setTextChangedFragment((edittext -> {
-                    mCar_station = edittext;
-                }));
-
-                if ("".equals(mCar_number.substring(2).trim())) {
-                    ToastUtils.singleToast(getString(R.string.sure_number));
-                    return;
-                }
-                if ("".equals(mCar_station)) {
-                    ToastUtils.singleToast(getString(R.string.sure_station));
-                    return;
-                }
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                dialog.setTitle(getString(R.string.dialog_title_sure));
-                dialog.setMessage(getDialogSendMessage());
-                dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //saveLocalLite();
-                        CarNumberCount.CarNumberAdd(getContext());
-
-                        if (NetWorkManager.isnetworkConnected(getContext())) {
-                            postAccept(TimeUtil.getCurrentTimeTos());
-                        } else {
-                            saveLocalLite(TimeUtil.getCurrentTimeTos());
-                            ToastUtils.singleToast("上传失败,已保存至本地");
-                            List<SupportPhotoLite> photoLites = DataSupport.findAll(SupportPhotoLite.class);
-
-                            Logger.i("保存到数据库的条数" + photoLites.size());
-                            Logger.i(photoLites.get(0).getLicense_plate());
-                            backToPhotoActivity();
-
-                        }
-                    }
-                });
-                dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dialog.show();
-            }
-        });
-    }
 
     /**
      * 保存到本地数据库
@@ -268,6 +211,60 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         mIvClearTextGoods.setOnClickListener((v -> mEditText.setText("")));
 
         mEditText.addTextChangedListener(new TextChangeListenner(this));
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CarNumberFragment.setTextChangedFragment((edittext -> {
+                    mCar_number = edittext;
+                }));
+                StationFragment.setTextChangedFragment((edittext -> {
+                    mCar_station = edittext;
+                }));
+
+                if ("".equals(mCar_number.substring(2).trim())) {
+                    ToastUtils.singleToast(getString(R.string.sure_number));
+                    return;
+                }
+                if ("".equals(mCar_station)) {
+                    ToastUtils.singleToast(getString(R.string.sure_station));
+                    return;
+                }
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setTitle(getString(R.string.dialog_title_sure));
+                dialog.setMessage(getDialogSendMessage());
+                dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //saveLocalLite();
+                        CarNumberCount.CarNumberAdd(getContext());
+
+                        if (NetWorkManager.isnetworkConnected(getContext())) {
+                            postAccept(TimeUtil.getCurrentTimeTos());
+                        } else {
+                            saveLocalLite(TimeUtil.getCurrentTimeTos());
+                            ToastUtils.singleToast("上传失败,已保存至本地");
+                            List<SupportPhotoLite> photoLites = DataSupport.findAll(SupportPhotoLite.class);
+
+                            Logger.i("保存到数据库的条数" + photoLites.size());
+                            Logger.i(photoLites.get(0).getLicense_plate());
+                            backToPhotoActivity();
+
+                        }
+                    }
+                });
+                dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+
+            }
+        });
     }
 
     @Override
@@ -291,8 +288,8 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
                 mEditText.setSelection(scientificname.length());
             }
         });
-      mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),
-              LinearLayoutManager.HORIZONTAL,10, Color.WHITE));
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),
+                LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
 
@@ -327,4 +324,19 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         super.onResume();
     }
 
+   /* @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_ok_msg:
+                sendToService();
+                getActivity().finish();
+        }
+    }*/
+
+    /**
+     *
+     */
+    private void sendToService() {
+
+    }
 }

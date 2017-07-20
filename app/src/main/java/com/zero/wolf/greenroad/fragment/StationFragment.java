@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
+import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
 import com.zero.wolf.greenroad.adapter.SureCarStationAdapter;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
@@ -163,12 +163,16 @@ public class StationFragment extends Fragment implements TextWatcher {
             }
         });
 
-        mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),GridLayoutManager.HORIZONTAL));
+      /*  mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(), GridLayoutManager.HORIZONTAL,10,Color.WHITE));
+
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),GridLayoutManager.VERTICAL,10, Color.WHITE));
+*/
+
 
         mManager = new GridLayoutManager(getContext(), 3);
-        mManager.setOrientation(GridLayoutManager.VERTICAL);
-
         mRecyclerView.setLayoutManager(mManager);
+
+        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(), 3));
 
         mRecyclerView.setAdapter(mStationAdapter);
 

@@ -65,6 +65,40 @@ public class FileUtils {
         }
     }
 
+    //递归删除文件
+    public static void deleteJpg(File file) {
+
+        if(file.isDirectory()){
+            File[] childFiles = file.listFiles();
+            if (childFiles == null || childFiles.length == 0) {
+                return;
+            }
+            for (int i = 0; i < childFiles.length; i++) {
+                childFiles[i].delete();
+            }
+        }
+    }
+    /**
+     * 获取文件夹内文件的长度
+     *图片的格式
+     * @param f
+     * @return
+     */
+    public static long getJpgFileSize(File f) {
+        long size = 0;
+        File flist[] = f.listFiles();
+        for (int i = 0; i < flist.length; i++) {
+            String fileName = flist[i].getName();
+            String subEnd = fileName.substring(fileName.lastIndexOf(".") + 1);
+            if (flist[i].isFile()) {
+                if ("png".equals(subEnd) || "jpg".equals(subEnd)) {
+                    size += size;
+                }
+            }
+        }
+        return size;
+    }
+
     /**
      * 根据文件路径获取文件
      *
@@ -773,7 +807,6 @@ public class FileUtils {
     }
 
 
-
     /**
      * 将uri转换为实际路径
      *
@@ -803,7 +836,6 @@ public class FileUtils {
         }
         return data;
     }
-
 
 
     /**

@@ -471,6 +471,7 @@ public class SureGoodsActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(SureGoodsActivity.this, "取消", Toast.LENGTH_SHORT).show();
+
                     }
                 });
                 dialog.show();
@@ -776,7 +777,7 @@ public class SureGoodsActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sure);
         setSupportActionBar(toolbar);
 
-        TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity,991).getTitle_text_view();
         title_text_view.setText(getString(R.string.sure_goods_type));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,6 +51,7 @@ import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
+import com.zero.wolf.greenroad.tools.FileUtils;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.RxHolder;
@@ -121,7 +120,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 isStationCompleted = true;
             } else if (s == "789") {
                 isGoodsCompleted = true;
-            } else if (s.equals("111")||s.equals("222")||s.equals("333")) {
+            } else if (s.equals("111") || s.equals("222") || s.equals("333")) {
                 mProgressDialog.dismiss();
                 ToastUtils.singleToast("数据加载失败,请检查网络");
             }
@@ -264,9 +263,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         List<SupportGoods> supportGoods = findAll(SupportGoods.class);
                         if (supportGoods.size() != 0) {
                             if (dataBeen.size() == supportGoods.size()) {
-                                Logger.i("该方法走了没1");
-                                Logger.i("返回");
-                                return;
+                                long jpgFileSize = FileUtils.getJpgFileSize(new File(mGoodsFilePath));
+                                if (jpgFileSize == supportGoods.size()) {
+                                    Logger.i("该方法走了没1");
+                                    Logger.i("返回");
+                                    return;
+                                } else {
+                                    DataSupport.deleteAll(SupportGoods.class);
+                                    FileUtils.deleteJpg(new File(mGoodsFilePath));
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            goodsInfoFore(dataBeen);
+                                        }
+                                    }).start();
+                                }
                             } else {
                                 Logger.i("该方法走了没2");
                                 DataSupport.deleteAll(SupportGoods.class);
@@ -483,7 +494,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
         //mIvCamera.setOnClickListener(this);
-        TextView title_text_view = ActionBarTool.getInstance(mActivity).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText(mStationName);
 
         mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
@@ -507,21 +518,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tv_change1.setText(mOperator);
         tv_change2.setText(mAvailSpace);
         // mTv_change3.setText("良好");
-        mIsConnected = NetWorkManager.isnetworkConnected(mActivity);
-        if (mIsConnected) {
-            mTv_change3.setText("良好");
-            mTv_change3.setTextColor(Color.BLUE);
-        } else {
-            mTv_change3.setText("网络未连接");
-            mTv_change3.setTextColor(Color.RED);
-        }
-    /*    mNetWorkStateReceiver.setNetworkStationListener(new NetWorkStateReceiver.NetworkStation() {
-            @Override
-            public void onStation(String netStation) {
-                mTv_change3.setText(netStation);
-            }
-        });
-*/
+
+
         //得到版本号
         TextView version_number = (TextView) findViewById(R.id.version_number);
         version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
@@ -565,21 +563,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Toast.makeText(MainActivity.this, "点击了设置", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -610,7 +593,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         List<SupportPhotoLite> liteList = DataSupport
                 //.where("is_post==?", "NO").find(SupportPhotoLite.class);
                 .findAll(SupportPhotoLite.class);
-        Logger.i("未上传车辆"+liteList.size());
+        Logger.i("未上传车辆" + liteList.size());
         for (int i = 0; i < liteList.size(); i++) {
             String goods = liteList.get(i).getGoods();
             String license_color = liteList.get(i).getLicense_color();
@@ -711,15 +694,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //在onResume()方法注册
     @Override
     protected void onResume() {
+        super.onResume();
         if (mNetWorkStateReceiver == null) {
-            mNetWorkStateReceiver = new NetWorkStateReceiver(mTv_change3);
+            mNetWorkStateReceiver = new NetWorkStateReceiver(new NetWorkStateReceiver.NetworkState() {
+                @Override
+                public void onStateChange(String state) {
+                    mTv_change3.setText(state);
+                }
+            });
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
 
         initCount();
-        super.onResume();
+/*
+        mNetWorkStateReceiver.setNetworkStateListener(new NetWorkStateReceiver.NetworkState() {
+            @Override
+            public void onStateChange(String state) {
+                mTv_change3.setText(state);
+            }
+        });*/
     }
 
     //onPause()方法注销

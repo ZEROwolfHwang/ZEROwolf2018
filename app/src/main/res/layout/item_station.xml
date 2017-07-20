@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:gravity="center"
+              android:layout_gravity="center"
+              android:layout_height="100dp">
 
     <TextView
         android:id="@+id/text_view_station_header"
@@ -10,12 +12,12 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:textSize="@dimen/text24"
-        android:textColor="@color/white"
+        android:textColor="@color/item_text_color_station"
         android:text="泰安东"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/text_view_station_end"
-        android:textColor="@color/light"
+        android:textColor="@color/item_text_color_station_end"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="收费站"

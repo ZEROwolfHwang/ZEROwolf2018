@@ -14,6 +14,9 @@
     <color name="white_black">#b0a4b7</color>
     <color name="blue">#00f</color>
     <color name="red">#ff0004</color>
-    <color name="light">#97ffe3</color>
-    <color name="white_light">#bac8fc</color>
+    <color name="light">#5dffd3</color>
+    <color name="white_light">#4871ff</color>
+    <color name="white_dark">#979797</color>
+    <color name="green">#2bf98b</color>
+    <color name="bj_press_number">#987dff</color>
 </resources>

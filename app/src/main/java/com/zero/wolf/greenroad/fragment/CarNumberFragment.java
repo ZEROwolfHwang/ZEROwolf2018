@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.interfacy.TextChangeListenner;
@@ -171,6 +172,8 @@ public class CarNumberFragment extends Fragment implements TextChangeListenner.A
         mManager = new GridLayoutManager(getContext(), 4);
         mManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mManager);
+
+        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(), 4));
 
         mRecyclerView.setAdapter(mNumberAdapter);
 
