@@ -13,7 +13,9 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:elevation="@dimen/layout_margin10dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_photo"
             style="@style/style_toolbar"
@@ -40,7 +42,7 @@
         android:orientation="horizontal"
         android:paddingLeft="@dimen/layout_margin5dp"
         android:paddingRight="@dimen/layout_margin5dp"
-        android:paddingTop="@dimen/layout_margin5dp">
+        android:paddingTop="@dimen/layout_margin20dp">
 
 
         <RadioButton
@@ -86,10 +88,10 @@
             style="@style/RadioButtonStyle"
             android:background="@drawable/rb_white_selector"
             android:text="白牌"
-            android:textColor="@color/license_color_yellow_text"/>
+            android:textColor="@color/license_color_white_text"/>
     </RadioGroup>
 
-    <RadioGroup
+    <!--<RadioGroup
         android:id="@+id/radio_group_car_model"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -137,7 +139,7 @@
             android:text="拖拉机"
             android:textColor="@color/license_color_yellow_text"/>
 
-    </RadioGroup>
+    </RadioGroup>-->
 
     <LinearLayout
         android:id="@+id/layout_number"

@@ -215,18 +215,22 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         if (mCurrent_color == null) {
             ToastUtils.singleToast("请确定车牌颜色");
             return;
-        } else if (mFilePath1 == null) {
+        } else if (getBitmap(mFilePath1) == null) {
             ToastUtils.singleToast("请拍摄车牌");
             return;
-        } else if (mFilePath2 == null) {
-            ToastUtils.singleToast("请拍摄车身");
-            return;
-        } else if (mFilePath3 == null) {
-            ToastUtils.singleToast("请拍摄货物");
-            return;
-        } else if (mUsername == null) {
-            ToastUtils.singleToast("当前账号异常,请重新登录");
-            return;
+        } else {
+            if (getBitmap(mFilePath2)== null) {
+                ToastUtils.singleToast("请拍摄车身");
+                return;
+            } else if (getBitmap(mFilePath3) == null) {
+                ToastUtils.singleToast("请拍摄货物");
+                return;
+            } else {
+                if (mUsername == null) {
+                    ToastUtils.singleToast("当前账号异常,请重新登录");
+                    return;
+                }
+            }
         }
 
         SureGoodsActivity111.actionStart(PhotoActivity.this, mStationName, mCurrent_color,
@@ -296,6 +300,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         ImageProcessor processor = new ImageProcessor(bitmap);
         Bitmap bitmap1 = processor.scale((float) 0.2);
         view.setImageBitmap(bitmap1);
+    }
+    private Bitmap getBitmap(String filePath) {
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        return bitmap;
     }
 
 

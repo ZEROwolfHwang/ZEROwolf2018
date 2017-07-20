@@ -37,7 +37,7 @@
             android:enabled="true"
             android:singleLine="true"
             android:text="绿菜花"
-            android:textColor="@color/white_light"
+            android:textColor="@color/white_light_goods"
             android:textSize="@dimen/text13"/>
     </LinearLayout>
 

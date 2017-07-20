@@ -18,8 +18,9 @@
             android:layout_weight="1"
             android:background="@drawable/shape_line_rect_13"
             android:gravity="center"
+            android:textColor="@color/white_light_main_shut"
             android:text="@string/has_shot"
-            android:textSize="@dimen/text14"/>
+            android:textSize="@dimen/text16"/>
 
         <TextView
             android:id="@+id/tv_math_number_main_has"
@@ -29,7 +30,7 @@
             android:gravity="center"
             android:text="0"
             android:textColor="@color/white"
-            android:textSize="@dimen/text18"/>
+            android:textSize="@dimen/text20"/>
 
     </LinearLayout>
 
@@ -48,9 +49,10 @@
             android:layout_marginLeft="@dimen/main_height_dp60"
             android:layout_weight="1"
             android:background="@drawable/shape_line_rect_13"
+            android:textColor="@color/white_light_main_shut"
             android:gravity="center"
             android:text="@string/has_not_sent"
-            android:textSize="@dimen/text14"/>
+            android:textSize="@dimen/text16"/>
 
         <TextView
             android:id="@+id/tv_math_number_main_has_not"
@@ -60,7 +62,7 @@
             android:gravity="center"
             android:text="0"
             android:textColor="@color/white"
-            android:textSize="@dimen/text18"/>
+            android:textSize="@dimen/text20"/>
 
     </LinearLayout>
 

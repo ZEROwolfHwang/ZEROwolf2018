@@ -4,11 +4,11 @@
     <corners android:radius="@dimen/layout_margin5dp"/>
     <gradient
         android:angle="90"
-        android:startColor="#000000"
-        android:centerColor="#484848"
-        android:endColor="#ffffff"
-        android:centerX="0.7"
-        android:centerY="0.7"
+        android:startColor="#0e0e0e"
+        android:centerColor="#89181818"
+        android:endColor="#00ffffff"
+        android:centerX="0.4"
+        android:centerY="0.4"
         android:gradientRadius="@integer/abc_max_action_buttons"
         android:type="linear"
         />

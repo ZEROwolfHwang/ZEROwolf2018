@@ -155,6 +155,9 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
             @Override
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
+                saveLocalLite(currentTime);
+                ToastUtils.singleToast("上传失败,已保存至本地");
+                backToPhotoActivity();
             }
 
             @Override
@@ -163,6 +166,7 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
                 String msg = httpResultPostImg.getMsg();
                 if (code == 200) {
                     CarNumberCount.CarNumberCut(getContext());
+                    ToastUtils.singleToast("上传成功");
                     backToPhotoActivity();
                 } else {
                     saveLocalLite(currentTime);
@@ -180,6 +184,7 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         intent.putExtra("username", sUsername);
         intent.putExtra("stationName", sStationName);
         startActivity(intent);
+        getActivity().finish();
     }
 
     private String getDialogSendMessage() {

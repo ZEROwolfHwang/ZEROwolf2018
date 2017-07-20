@@ -8,11 +8,11 @@ import android.net.NetworkInfo;
 
 public class NetWorkStateReceiver extends BroadcastReceiver {
     private static final String TAG = "NetWorkStateReceiver";
-    private final NetworkState mNetworkState;
 
 
-    public NetWorkStateReceiver(NetworkState networkState) {
-        mNetworkState = networkState;
+
+    public NetWorkStateReceiver() {
+
     }
 
     @Override
@@ -91,9 +91,9 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
                     /*mTextView.setText("良好");
                     mTextView.setTextColor(context.getResources().getColor(R.color.blue));
                     */
-                    mNetworkState.onStateChange("良好");
+
                 } else {
-                    mNetworkState.onStateChange("网络无连接");
+
                     /*mTextView.setText("网络无连接");
                     mTextView.setTextColor(context.getResources().getColor(R.color.red));
                     */

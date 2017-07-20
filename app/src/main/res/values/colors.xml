@@ -15,8 +15,14 @@
     <color name="blue">#00f</color>
     <color name="red">#ff0004</color>
     <color name="light">#5dffd3</color>
-    <color name="white_light">#4871ff</color>
+    <color name="white_light">#1247ff</color>
     <color name="white_dark">#979797</color>
     <color name="green">#2bf98b</color>
     <color name="bj_press_number">#987dff</color>
+    <color name="white_light_goods">#3aa685</color>
+    <color name="white_light_main">#518b6a</color>
+    <color name="white_dark_main">#9ab0ff</color>
+    <color name="white_car_type">#7ea699</color>
+    <color name="black_car">#171438</color>
+    <color name="white_light_main_shut">#14145b</color>
 </resources>

@@ -4,10 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -137,6 +136,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private String mGoodsFilePath;
 
     private String mStationName;
+    private ProgressDialog mProgress_upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -581,6 +581,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             buckUpApp();
         } else if (id == R.id.nav_post) {
             post_not_upload();
+            refresh();
             Logger.i("点击了未上传按钮");
         }
 
@@ -590,6 +591,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void post_not_upload() {
+
+        mProgress_upload = new ProgressDialog(mActivity);
+        mProgress_upload.setTitle("正在上传为上传数据");
+        mProgress_upload.setCancelable(false);
+        mProgress_upload.show();
+
         List<SupportPhotoLite> liteList = DataSupport
                 //.where("is_post==?", "NO").find(SupportPhotoLite.class);
                 .findAll(SupportPhotoLite.class);
@@ -632,6 +639,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     if (code == 200) {
                         CarNumberCount.CarNumberCut(mActivity);
                         DataSupport.deleteAll(SupportPhotoLite.class, "shuttime=?", shuttime);
+
                         Logger.i("shangchuan成功");
                     } else if (code == 300) {
                         ToastUtils.singleToast("上传失败");
@@ -639,6 +647,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
             });
         }
+        ToastUtils.singleToast("上传成功");
+        mProgress_upload.dismiss();
 
     }
 
@@ -662,12 +672,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void cancelCount() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle("清楚车辆计数");
+        dialog.setTitle("清空本地保存的未上传车辆");
         dialog.setMessage("是否对拍摄车辆以及上传车辆进行重新计数");
         dialog.setCancelable(false);
         dialog.setPositiveButton("清空", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface di, int which) {
+                DataSupport.deleteAll(SupportPhotoLite.class);
                 SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
                 SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
                 refresh();
@@ -695,18 +706,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onResume() {
         super.onResume();
-        if (mNetWorkStateReceiver == null) {
-            mNetWorkStateReceiver = new NetWorkStateReceiver(new NetWorkStateReceiver.NetworkState() {
-                @Override
-                public void onStateChange(String state) {
-                    mTv_change3.setText(state);
-                }
-            });
+     /*   if (mNetWorkStateReceiver == null) {
+            mNetWorkStateReceiver = new NetWorkStateReceiver();
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
-
+*/
+        if (NetWorkManager.isnetworkConnected(mActivity)) {
+            mTv_change3.setText("良好");
+            mTv_change3.setTextColor(Color.BLUE);
+        } else {
+            mTv_change3.setText("网络无连接");
+            mTv_change3.setTextColor(Color.RED);
+        }
         initCount();
 /*
         mNetWorkStateReceiver.setNetworkStateListener(new NetWorkStateReceiver.NetworkState() {
@@ -720,7 +733,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //onPause()方法注销
     @Override
     protected void onPause() {
-        unregisterReceiver(mNetWorkStateReceiver);
+       // unregisterReceiver(mNetWorkStateReceiver);
         super.onPause();
     }
 
