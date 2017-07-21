@@ -137,10 +137,10 @@ public class SpinnerPopupWindow {
     /**
      * 显示Pop在view的右下方
      */
-    public void showPopWindow(View view) {
+    public void showPopWindow(View view, int left) {
         int[] point = {0, 0};
         view.getLocationOnScreen(point);
-        mPopWindow.showAtLocation(view, Gravity.LEFT | Gravity.TOP, 60, point[1] + view.getHeight());
+        mPopWindow.showAtLocation(view, Gravity.LEFT | Gravity.TOP, left, point[1] + view.getHeight());
     }
 
     /**

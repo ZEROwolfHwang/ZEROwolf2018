@@ -5,15 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/loginbac"
+    android:background="@drawable/bg_login_page"
+    android:gravity="center"
     android:padding="16dp"
     tools:context="com.zero.wolf.greenroad.LoginActivity">
 
     <FrameLayout
         android:id="@+id/layout_user_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp">
+        android:layout_height="@dimen/layout_margin50dp"
+        android:background="@drawable/login_bg_edit"
+        android:elevation="@dimen/layout_margin5dp"
+        android:layout_marginLeft="@dimen/layout_margin20dp"
+        android:layout_marginRight="@dimen/layout_margin20dp">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -23,7 +27,9 @@
                 android:id="@+id/text_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/logo_user_name"
                 android:hint="@string/hint_username"
+                android:background="@null"
                 android:maxLines="1"
                 android:singleLine="true"/>
 
@@ -31,57 +37,80 @@
 
 
         <ImageButton
-            android:layout_gravity="right|center_vertical"
-            android:background="@drawable/pop_drop_down"
+            android:padding="@dimen/layout_margin10dp"
             android:id="@+id/popup_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="@dimen/layout_margin50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/pop_drop_down"/>
     </FrameLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input"
-        android:layout_below="@id/layout_user_name"
+        android:elevation="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:background="@drawable/login_bg_edit"
+        android:layout_marginLeft="@dimen/layout_margin20dp"
+        android:layout_marginRight="@dimen/layout_margin20dp"
+        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_below="@id/layout_user_name">
 
         <EditText
             android:id="@+id/text_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/logo_pass_word"
             android:hint="@string/hint_password"
             android:imeActionId="@+id/login"
-
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
+            android:background="@null"
             android:maxLines="1"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textColorHint="@color/white"/>
 
     </android.support.design.widget.TextInputLayout>
 
     <CheckBox
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        style="@style/MyCheckbox"
         android:id="@+id/check_box_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text18"
         android:layout_below="@id/text_input"
+        android:layout_marginLeft="@dimen/layout_margin20dp"
+        android:textColor="@color/login_check_box_text"
+
         android:text="记住密码"/>
 
     <Button
         android:id="@+id/bt_login"
-        style="@style/style_button_sure"
+        android:textSize="@dimen/text20"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/text20"
+        android:layout_marginRight="@dimen/text20"
+        android:layout_width="match_parent"
+        android:elevation="@dimen/layout_margin10dp"
+        android:layout_height="@dimen/layout_margin50dp"
+        android:background="@drawable/login_bg_edit"
+        android:textColor="@color/white_dark_login_selector"
         android:layout_below="@id/check_box_pwd"
         android:layout_marginTop="@dimen/layout_margin10dp"
         android:text="@string/login"
-       />
+        />
 
 
-<!--    <Button
+    <!--    <Button
 
-        android:id="@+id/bt_login1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bt_login"
-        android:layout_marginTop="16dp"
-        android:text="@string/login"/>-->
+            android:id="@+id/bt_login1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bt_login"
+            android:layout_marginTop="16dp"
+            android:text="@string/login"/>-->
 
 
 </RelativeLayout>

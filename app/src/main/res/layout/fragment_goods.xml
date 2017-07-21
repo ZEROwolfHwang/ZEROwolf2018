@@ -12,16 +12,14 @@
         android:padding="@dimen/layout_margin10dp"
         android:elevation="3dp">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+
+        <ImageView
             android:id="@+id/iv_car_goods_sure"
-            android:layout_width="@dimen/main_height_dp80"
-            android:layout_height="@dimen/main_height_dp80"
-            android:focusable="false"
+            android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/car_goods_light"
-            app:riv_border_width="2dp"
-            app:riv_corner_radius="15dp"
-            app:riv_oval="false"/>
+            android:background="@drawable/car_goods_dark"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:layout_height="@dimen/layout_margin80dp"/>
 
         <include
             android:id="@+id/layout_group_sure"

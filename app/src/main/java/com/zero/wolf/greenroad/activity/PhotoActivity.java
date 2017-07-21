@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -68,9 +69,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private RoundedImageView mShow_3_2_car_body;
     private RoundedImageView mShow_3_3_car_goods;
 
-    private RoundedImageView mIv_car_number;
-    private RoundedImageView mIv_car_body;
-    private RoundedImageView mIv_car_goods;
+    private ImageView mIv_car_number;
+    private ImageView mIv_car_body;
+    private ImageView mIv_car_goods;
     private Button mBt_ok_send;
 
     private String mFilePath;
@@ -140,9 +141,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         initToolbar();
 
 
-        mIv_car_number = (RoundedImageView) findViewById(R.id.iv_car_number);
-        mIv_car_body = (RoundedImageView) findViewById(R.id.iv_car_body);
-        mIv_car_goods = (RoundedImageView) findViewById(R.id.iv_car_goods);
+        mIv_car_number = (ImageView) findViewById(R.id.iv_car_number);
+        mIv_car_body = (ImageView) findViewById(R.id.iv_car_body);
+        mIv_car_goods = (ImageView) findViewById(R.id.iv_car_goods);
         //展示的
         //mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
         mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);

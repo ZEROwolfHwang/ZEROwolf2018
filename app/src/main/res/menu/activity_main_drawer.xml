@@ -12,7 +12,7 @@
     </item>
     <item
         android:title="@string/post_upload_not"
-        android:icon="@drawable/cancel_count"
+        android:icon="@drawable/post_not_send"
         android:id="@+id/nav_post">
     </item>
 

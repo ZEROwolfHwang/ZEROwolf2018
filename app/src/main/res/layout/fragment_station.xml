@@ -14,16 +14,15 @@
         android:gravity="center"
         android:padding="@dimen/layout_margin10dp">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+
+        <ImageView
             android:id="@+id/iv_station_name_sure"
-            android:layout_width="@dimen/main_width_dp80"
-            android:layout_height="@dimen/main_height_dp80"
-            android:focusable="false"
-            android:scaleType="fitCenter"
-            android:src="@drawable/car_station_light"
-            app:riv_border_width="2dp"
-            app:riv_corner_radius="15dp"
-            app:riv_oval="false"/>
+            android:layout_width="@dimen/layout_margin80dp"
+            android:layout_height="@dimen/layout_margin80dp"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:background="@drawable/car_station_dark"
+            android:scaleType="fitCenter"/>
+
 
         <include
             android:id="@+id/layout_group_sure"

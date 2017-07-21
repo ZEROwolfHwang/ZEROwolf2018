@@ -24,6 +24,10 @@
         <item name="android:textSize">@dimen/text18</item>
     </style>
 
+    <style name="MyCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -104,7 +108,7 @@
 
     <style name="style_button_sure">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/layout_margin60dp</item>
+        <item name="android:layout_height">@dimen/layout_margin80dp</item>
         <item name="android:background">@drawable/sure_button_select</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text24</item>
@@ -112,4 +116,5 @@
     </style>
 
 
+    <dimen name="layout_margin80dp">80dp</dimen>
 </resources>

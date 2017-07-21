@@ -52,16 +52,6 @@
             android:layout_below="@id/layout_top_sure"
             android:layout_marginTop="5dp">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/iv_station_name_sure"
-                android:layout_width="@dimen/main_width_dp70"
-                android:layout_height="@dimen/main_height_dp70"
-                android:focusable="false"
-                android:scaleType="fitCenter"
-                android:src="@drawable/car_station_light"
-                app:riv_border_width="2dp"
-                app:riv_corner_radius="15dp"
-                app:riv_oval="false"/>
 
             <include
                 android:id="@+id/layout_group_sure"

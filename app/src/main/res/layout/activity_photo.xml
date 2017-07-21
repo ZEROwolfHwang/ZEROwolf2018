@@ -156,19 +156,13 @@
             android:background="@drawable/shape_line_rect_13"
             android:text="@string/tv_car_number"/>
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <ImageView
             android:id="@+id/iv_car_number"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/car_number_dark"
-            app:riv_border_color="@color/border"
-            app:riv_border_width="3dp"
-            app:riv_corner_radius_bottom_left="@dimen/layout_margin10dp"
-            app:riv_corner_radius_top_right="@dimen/layout_margin10dp"
-            app:riv_mutate_background="true"
-            app:riv_oval="false"/>
+            android:background="@drawable/car_number_selection"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:layout_height="@dimen/layout_margin80dp"/>
 
 
     </LinearLayout>
@@ -178,18 +172,15 @@
         android:layout_height="80dp"
         android:orientation="horizontal">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+
+        <ImageView
             android:id="@+id/iv_car_body"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/car_body_dark"
-            app:riv_border_color="@color/border"
-            app:riv_border_width="3dip"
-            app:riv_corner_radius_bottom_left="20dp"
-            app:riv_corner_radius_top_right="20dp"
-            app:riv_oval="false"/>
+            android:background="@drawable/car_body_selection"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:layout_height="@dimen/layout_margin80dp"/>
+
 
         <TextView
             style="@style/text_view_2_car"
@@ -210,19 +201,14 @@
             android:background="@drawable/shape_line_rect_13"
             android:text="@string/tv_car_goods"/>
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <ImageView
             android:id="@+id/iv_car_goods"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/car_goods_dark"
-            app:riv_border_color="@color/border"
-            app:riv_border_width="3dp"
-            app:riv_corner_radius_bottom_right="20dp"
-            app:riv_corner_radius_top_left="20dp"
-            app:riv_mutate_background="true"
-            app:riv_oval="false"/>
+            android:background="@drawable/car_goods_selection"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:layout_height="@dimen/layout_margin80dp"/>
+
 
     </LinearLayout>
 

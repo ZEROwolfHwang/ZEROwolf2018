@@ -165,9 +165,9 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
                 int code = httpResultPostImg.getCode();
                 String msg = httpResultPostImg.getMsg();
                 if (code == 200) {
-                    CarNumberCount.CarNumberCut(getContext());
-                    ToastUtils.singleToast("上传成功");
                     backToPhotoActivity();
+                    CarNumberCount.CarNumberCut(getContext());
+                    ToastUtils.singleToast("车牌号为"+mCar_number+"上传成功");
                 } else {
                     saveLocalLite(currentTime);
                     ToastUtils.singleToast("上传失败,已保存至本地");

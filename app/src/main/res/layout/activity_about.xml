@@ -7,10 +7,10 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_margin60dp"
+        android:layout_height="@dimen/layout_margin60dp"
         android:layout_margin="12dp"
-        android:background="@mipmap/ic_launcher_round"
+        android:background="@drawable/logo_green_road"
         />
 
     <LinearLayout

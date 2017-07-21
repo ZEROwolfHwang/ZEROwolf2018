@@ -61,4 +61,5 @@ public class DevicesInfoUtils {
     public static boolean SDKVersionMUp() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
+
 }
