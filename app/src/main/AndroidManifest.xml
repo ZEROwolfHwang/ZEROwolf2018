@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.zero.wolf.greenroad">
 
-
- <!--   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
+    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE"/> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
@@ -18,7 +17,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,24 +27,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:launchMode="singleTask"
             android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
-
-
         </activity>
         <activity
-            android:launchMode="singleTask"
             android:name=".activity.PhotoActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
             android:launchMode="singleTask"
-            android:name=".activity.SureGoodsActivity111"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
-
+        </activity>
+        <activity
+            android:name=".activity.SureGoodsActivity111"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden">
         </activity>
 
         <receiver
@@ -54,20 +51,20 @@
         </receiver>
 
         <activity android:name=".activity.TestActivity">
-
         </activity>
-
         <activity
             android:name=".activity.AboutActivity"
             android:theme="@style/ActivityAboutStyle">
-
         </activity>
-
         <activity
             android:name=".activity.ActivationCodeActivity"
             android:theme="@style/MyDialogStyle">
-
         </activity>
+
+        <service
+            android:name=".servicy.PostIntentService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

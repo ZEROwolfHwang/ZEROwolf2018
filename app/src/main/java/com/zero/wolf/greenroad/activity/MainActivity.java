@@ -591,7 +591,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void post_not_upload() {
-
+//// TODO: 2017/7/23  
         mProgress_upload = new ProgressDialog(mActivity);
         mProgress_upload.setTitle("正在上传为上传数据");
         mProgress_upload.setCancelable(false);

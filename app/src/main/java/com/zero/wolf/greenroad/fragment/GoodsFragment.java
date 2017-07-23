@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -23,32 +24,27 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.SaveToLocation;
 import com.zero.wolf.greenroad.activity.PhotoActivity;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
-import com.zero.wolf.greenroad.https.HttpMethods;
+import com.zero.wolf.greenroad.bean.PostContent;
 import com.zero.wolf.greenroad.interfacy.TextChangeListenner;
-import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.manager.CarNumberCount;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
+import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
-import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.tools.ViewUtils;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.Collections;
 import java.util.List;
 
 import okhttp3.MultipartBody;
-import rx.Observable;
-import rx.Subscriber;
 
 import static com.zero.wolf.greenroad.R.id.tv_change;
 
@@ -56,7 +52,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class GoodsFragment extends Fragment implements TextChangeListenner.AfterTextListener{
+public class GoodsFragment extends Fragment implements TextChangeListenner.AfterTextListener {
 
     private static GoodsFragment sFragment;
     private RecyclerView mRecyclerView;
@@ -65,16 +61,17 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
     private SureGoodsAdapter mGoodsAdapter;
     private static Context sContext;
     private Button mButton;
-    private static String sUsername;
+    private static String mUsername;
     private static String sStationName;
-    private static String sColor;
-    private static String sPhotoPath1;
-    private static String sPhotoPath2;
-    private static String sPhotoPath3;
+    private static String mColor;
+    private static String mPhotoPath1;
+    private static String mPhotoPath2;
+    private static String mPhotoPath3;
     private String mCar_goods;
     private String mCar_number;
     private String mCar_station;
     private static List<SortModel> sGoodsList;
+    private String mCurrentTimeTos;
 
     public static GoodsFragment newInstance(String username, String stationName,
                                             String color, String photoPath1, String photoPath2, String photoPath3, List<SortModel> goodsList, Context context) {
@@ -83,12 +80,12 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         }
         sGoodsList = goodsList;
         sContext = context;
-        sUsername = username;
+        mUsername = username;
         sStationName = stationName;
-        sColor = color;
-        sPhotoPath1 = photoPath1;
-        sPhotoPath2 = photoPath2;
-        sPhotoPath3 = photoPath3;
+        mColor = color;
+        mPhotoPath1 = photoPath1;
+        mPhotoPath2 = photoPath2;
+        mPhotoPath3 = photoPath3;
         return sFragment;
     }
 
@@ -112,38 +109,20 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
     }
 
 
-    /**
-     * 保存到本地数据库
-     *
-     * @param currentTime
-     */
-    private void saveLocalLite(String currentTime) {
-        SupportPhotoLite supportPhotoLite = new SupportPhotoLite();
-        supportPhotoLite.setShuttime(currentTime);
-        supportPhotoLite.setUsername(sUsername);
-        supportPhotoLite.setGoods(mCar_goods);
-        supportPhotoLite.setLicense_plate(mCar_number);
-        supportPhotoLite.setStation(mCar_station);
-        supportPhotoLite.setPhotoPath1(sPhotoPath1);
-        supportPhotoLite.setPhotoPath2(sPhotoPath2);
-        supportPhotoLite.setPhotoPath3(sPhotoPath3);
-        supportPhotoLite.setLicense_color(sColor);
-        supportPhotoLite.setCar_type("绿皮车");
-        supportPhotoLite.save();
-    }
+
 
 
     /**
      * 向服务器Post所有的信息
      *
-     * @param currentTime
+     * @param
      */
-    private void postAccept(String currentTime) {
+    /*private void postAccept(String currentTime) {
 
-        List<MultipartBody.Part> parts = PathUtil.getMultipartBodyPart(sPhotoPath1, sPhotoPath2, sPhotoPath3);
+        List<MultipartBody.Part> parts = PathUtil.getMultipartBodyPart(mPhotoPath1, mPhotoPath2, mPhotoPath3);
 
         Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi()
-                .postThreeImg("大货车", sColor, currentTime, sUsername,
+                .postThreeImg("大货车", mColor, currentTime, mUsername,
                         mCar_station, mCar_number, mCar_goods, parts);
 
         observable.compose(RxHolder.io_main()).subscribe(new Subscriber<HttpResultPostImg>() {
@@ -155,37 +134,37 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
             @Override
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
-                saveLocalLite(currentTime);
+                BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
+
                 ToastUtils.singleToast("上传失败,已保存至本地");
-                backToPhotoActivity();
             }
 
             @Override
             public void onNext(HttpResultPostImg httpResultPostImg) {
+                BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
                 int code = httpResultPostImg.getCode();
                 String msg = httpResultPostImg.getMsg();
                 if (code == 200) {
-                    backToPhotoActivity();
+                    // backToPhotoActivity();
+                    try {
+                        Thread.sleep(15000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     CarNumberCount.CarNumberCut(getContext());
-                    ToastUtils.singleToast("车牌号为"+mCar_number+"上传成功");
+                    ToastUtils.singleToast("车牌号为" + mCar_number + "上传成功");
                 } else {
-                    saveLocalLite(currentTime);
+
                     ToastUtils.singleToast("上传失败,已保存至本地");
-                    backToPhotoActivity();
+                    //backToPhotoActivity();
                 }
                 Logger.i("" + code);
                 Logger.i("" + msg);
             }
         });
-    }
+    }*/
 
-    private void backToPhotoActivity() {
-        Intent intent = new Intent(getActivity(), PhotoActivity.class);
-        intent.putExtra("username", sUsername);
-        intent.putExtra("stationName", sStationName);
-        startActivity(intent);
-        getActivity().finish();
-    }
+
 
     private String getDialogSendMessage() {
         String dialog_message = "车  牌  号：" + mCar_number + "\n"
@@ -244,18 +223,18 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
                     public void onClick(DialogInterface dialog, int which) {
                         //saveLocalLite();
                         CarNumberCount.CarNumberAdd(getContext());
-
+                        mCurrentTimeTos = TimeUtil.getCurrentTimeTos();
                         if (NetWorkManager.isnetworkConnected(getContext())) {
-                            postAccept(TimeUtil.getCurrentTimeTos());
-                        } else {
-                            saveLocalLite(TimeUtil.getCurrentTimeTos());
-                            ToastUtils.singleToast("上传失败,已保存至本地");
-                            List<SupportPhotoLite> photoLites = DataSupport.findAll(SupportPhotoLite.class);
-
-                            Logger.i("保存到数据库的条数" + photoLites.size());
-                            Logger.i(photoLites.get(0).getLicense_plate());
+                            startPostIntentService();
+                            //BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
                             backToPhotoActivity();
-
+                           // postAccept(TimeUtil.getCurrentTimeTos());
+                        } else {
+                            SaveToLocation.saveLocalLite(mCurrentTimeTos,"卡车", mUsername, mColor,
+                                    mCar_number,mCar_station,mCar_goods,
+                                    mPhotoPath1, mPhotoPath2, mPhotoPath3);
+                            backToPhotoActivity();
+                            ToastUtils.singleToast("上传失败,已保存至本地");
                         }
                     }
                 });
@@ -270,6 +249,35 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
 
             }
         });
+    }
+
+    private void backToPhotoActivity() {
+         getActivity().finish();
+        Intent intent = new Intent(getActivity(), PhotoActivity.class);
+        intent.putExtra("username", mUsername);
+        intent.putExtra("stationName", sStationName);
+        startActivity(intent);
+    }
+
+
+    private void startPostIntentService() {
+        List<MultipartBody.Part> parts = PathUtil
+                .getMultipartBodyPart(mPhotoPath1, mPhotoPath2, mPhotoPath3);
+        PostContent content = new PostContent();
+        content.setStatiomName(sStationName);
+        content.setCar_type("卡车");
+        content.setColor(mColor);
+        content.setCar_number(mCar_number);
+        content.setCar_station(mCar_station);
+        content.setCar_goods(mCar_goods);
+        content.setUsername(mUsername);
+        content.setParts(parts);
+        content.setCurrentTime(mCurrentTimeTos);
+        content.setPhotoPath1(mPhotoPath1);
+        content.setPhotoPath2(mPhotoPath2);
+        content.setPhotoPath3(mPhotoPath3);
+
+        PostIntentService.startActionPost((AppCompatActivity) getActivity(),content);
     }
 
     @Override
