@@ -182,8 +182,10 @@ public class SureGoodsActivity111 extends BaseActivity {
         TextView title_text_view = ActionBarTool.getInstance(mActivity,991).getTitle_text_view();
         title_text_view.setText(getString(R.string.sure_goods_type));
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
         //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
+
+        mToolbarSure.setNavigationIcon(R.drawable.back_up_logo);
         mToolbarSure.setNavigationOnClickListener((v -> finish()));
 
     }

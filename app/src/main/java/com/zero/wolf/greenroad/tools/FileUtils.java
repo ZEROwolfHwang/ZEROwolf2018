@@ -92,7 +92,7 @@ public class FileUtils {
             String subEnd = fileName.substring(fileName.lastIndexOf(".") + 1);
             if (flist[i].isFile()) {
                 if ("png".equals(subEnd) || "jpg".equals(subEnd)) {
-                    size += size;
+                    size ++;
                 }
             }
         }

@@ -115,6 +115,8 @@ public class SureGoodsActivity extends BaseActivity {
     private int pop_1_currentState;
     private Button mBt_ok_msg;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

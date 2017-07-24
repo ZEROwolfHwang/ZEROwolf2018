@@ -87,6 +87,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private String mFilePath_str;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

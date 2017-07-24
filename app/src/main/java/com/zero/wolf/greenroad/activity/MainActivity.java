@@ -29,14 +29,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.GreenRoadApplication;
+import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
+import com.zero.wolf.greenroad.helpers.GreenRoadResourceHelper;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
-import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.https.RequestLiteGoods;
 import com.zero.wolf.greenroad.https.RequestLiteNumber;
 import com.zero.wolf.greenroad.https.RequestLiteStation;
@@ -44,16 +45,14 @@ import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.litepalbean.SupportStation;
-import com.zero.wolf.greenroad.manager.CarNumberCount;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
+import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
 import com.zero.wolf.greenroad.tools.FileUtils;
-import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
-import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
@@ -70,10 +69,9 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import okhttp3.MultipartBody;
-import rx.Observable;
 import rx.Subscriber;
 
+import static com.zero.wolf.greenroad.R.id.nav_theme;
 import static com.zero.wolf.greenroad.R.id.tv_change;
 import static org.litepal.crud.DataSupport.findAll;
 
@@ -82,6 +80,7 @@ import static org.litepal.crud.DataSupport.findAll;
  */
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SubscriberOnNextListener<List<Subject>> {
+
 
     private long firstClick;
     private static final String TAG = "MainActivity";
@@ -136,7 +135,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private String mGoodsFilePath;
 
     private String mStationName;
-    private ProgressDialog mProgress_upload;
+    private AlertDialog.Builder mNotPostDialog;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -583,6 +584,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             post_not_upload();
             refresh();
             Logger.i("点击了未上传按钮");
+        } else if (id == nav_theme) {
+            changeTheme();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -590,73 +593,81 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    private void post_not_upload() {
-//// TODO: 2017/7/23  
-        mProgress_upload = new ProgressDialog(mActivity);
-        mProgress_upload.setTitle("正在上传为上传数据");
-        mProgress_upload.setCancelable(false);
-        mProgress_upload.show();
+    private boolean tag_is_animation = false;
 
-        List<SupportPhotoLite> liteList = DataSupport
-                //.where("is_post==?", "NO").find(SupportPhotoLite.class);
-                .findAll(SupportPhotoLite.class);
-        Logger.i("未上传车辆" + liteList.size());
-        for (int i = 0; i < liteList.size(); i++) {
-            String goods = liteList.get(i).getGoods();
-            String license_color = liteList.get(i).getLicense_color();
-            String license_plate = liteList.get(i).getLicense_plate();
-            String photoPath1 = liteList.get(i).getPhotoPath1();
-            String photoPath2 = liteList.get(i).getPhotoPath2();
-            String photoPath3 = liteList.get(i).getPhotoPath3();
-            String shuttime = liteList.get(i).getShuttime();
-            String station = liteList.get(i).getStation();
-            String username = liteList.get(i).getUsername();
-            String car_type = liteList.get(i).getCar_type();
-
-            if (photoPath1 == null) {
-                return;
-            }
-
-            List<MultipartBody.Part> parts = PathUtil
-                    .getMultipartBodyPart(photoPath1, photoPath2, photoPath3);
-            Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi().postThreeImg("大货车", license_color,
-                    shuttime, username, station, license_plate, goods, parts);
-            observable.compose(RxHolder.io_main()).subscribe(new Subscriber<HttpResultPostImg>() {
-                @Override
-                public void onCompleted() {
-                    Logger.i("三张照片上传成功");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Logger.i(e.getMessage());
-                }
-
-                @Override
-                public void onNext(HttpResultPostImg httpResultPostImg) {
-                    int code = httpResultPostImg.getCode();
-                    String msg = httpResultPostImg.getMsg();
-                    if (code == 200) {
-                        CarNumberCount.CarNumberCut(mActivity);
-                        DataSupport.deleteAll(SupportPhotoLite.class, "shuttime=?", shuttime);
-
-                        Logger.i("shangchuan成功");
-                    } else if (code == 300) {
-                        ToastUtils.singleToast("上传失败");
-                    }
-                }
-            });
+    /**
+     * 点击主题菜单按钮改变App的主题
+     */
+    private void changeTheme() {
+        if (tag_is_animation) {
+            Intent intent = new Intent(getContext(), AnimatorActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        } else {
+            switchCurrentThemeTag();
+            ((GreenRoadApplication) getApplication()).notifyByThemeChanged();
+//            recreate();
         }
-        ToastUtils.singleToast("上传成功");
-        mProgress_upload.dismiss();
+    }
 
+    @Override
+    public void notifyByThemeChanged() {
+        super.notifyByThemeChanged();
+        GreenRoadResourceHelper helper = GreenRoadResourceHelper.getInstance(getContext());
+       /* helper.setBackgroundResourceByAttr(mAppBackground, R.attr.custom_attr_app_bg);
+        helper.setBackgroundResourceByAttr(mStatusBar, R.attr.custom_attr_app_title_layout_bg);
+        helper.setBackgroundResourceByAttr(mTitleLayout, R.attr.custom_attr_app_title_layout_bg);
+
+        helper.setBackgroundResourceByAttr(mBtnTurnDay, R.attr.custom_attr_btn_bg);
+        helper.setTextColorByAttr(mBtnTurnDay, R.attr.custom_attr_btn_text_color);
+        helper.setBackgroundResourceByAttr(mBtnTurnNight, R.attr.custom_attr_btn_bg);
+        helper.setTextColorByAttr(mBtnTurnNight, R.attr.custom_attr_btn_text_color);
+
+        helper.setAlphaByAttr(mUserPhoto, R.attr.custom_attr_user_photo_alpha);
+
+        helper.setTextColorByAttr(mNickname, R.attr.custom_attr_nickname_text_color);
+        helper.setTextColorByAttr(mRemark, R.attr.custom_attr_remark_text_color);
+
+        mUserPhotoPlaceHolder = helper.getDrawableByAttr(R.attr.custom_attr_user_photo_place_holder);
+
+        initBtnStatus(); //*/
+
+    }
+    /* private void initBroadCast() {
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        Intent intent = new Intent(LOCAL_BROADCAST);
+        mLocalBroadcastManager.sendBroadcast(intent);
+
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(LOCAL_BROADCAST);
+        mPostReceiver = new NotPostReceiver();
+        mLocalBroadcastManager.registerReceiver(mPostReceiver, mIntentFilter);
+    }*/
+
+    private void post_not_upload() {
+
+
+        //initBroadCast();
+
+        mNotPostDialog = new AlertDialog.Builder(mActivity);
+        mNotPostDialog.setTitle("是否提交本地保存的车辆信息");
+        mNotPostDialog.setMessage("本地保存的未上传成功的车辆个数为:" +
+                SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0));
+        mNotPostDialog.setCancelable(false);
+        mNotPostDialog.setPositiveButton("提交", ((dialog, which) ->
+                PostIntentService.startActionNotPost(this))
+        );
+        mNotPostDialog.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        mNotPostDialog.show();
     }
 
     /**
      * 退出程序
      */
     private void buckUpApp() {
-
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -892,4 +903,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         return true;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+      //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
+    }
+
 }

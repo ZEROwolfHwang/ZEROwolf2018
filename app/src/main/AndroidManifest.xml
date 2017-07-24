@@ -64,7 +64,16 @@
         <service
             android:name=".servicy.PostIntentService"
             android:exported="false">
+
         </service>
+
+        <receiver
+            android:name=".servicy.NotPostReceiver">
+            <intent-filter>
+                <action android:name="com.zero.wolf.greenroad.servicy.action.TYPE_THREAD"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +60,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private boolean mIsConnected;
     private List<SupportLoginUser> mSupportLoginUsers;
     private static int TIMEGAP = 10;
+
 
 
     @Override
@@ -230,7 +232,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         } else {
             login2MainActivity(username, operator, stationName);
             if (mIsConnected) {
-                ToastUtils.singleToast("登陆成功");
+                //ToastUtils.singleToast("登陆成功");
+                Snackbar.make(mBt_login, "登陆成功", Snackbar.LENGTH_SHORT);
             } else {
                 ToastUtils.singleToast("无网络连接状态登陆成功");
             }

@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 public class SPUtils {
-
+    public static final String KEY_THEME_TAG = "GreenRoad_ThemeTag";
 
     public static final String ISACTIVATIONSUCCESS= "isactivationsuccess";
 
