@@ -61,6 +61,10 @@
             android:theme="@style/MyDialogStyle">
         </activity>
 
+        <activity android:name=".activity.AnimatorActivity">
+
+        </activity>
+
         <service
             android:name=".servicy.PostIntentService"
             android:exported="false">

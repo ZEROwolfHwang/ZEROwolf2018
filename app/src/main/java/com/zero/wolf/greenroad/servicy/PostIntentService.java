@@ -15,6 +15,7 @@ import com.zero.wolf.greenroad.manager.CarNumberCount;
 import com.zero.wolf.greenroad.tools.ArrayCollector;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.RxHolder;
+import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
@@ -69,6 +70,8 @@ public class PostIntentService extends IntentService {
     private ArrayList<String> mSuccessArrayList = new ArrayList<>();
 
     private ArrayList<String> mFailedArrayList;
+    private int mBefore_post_count;
+    private int mAfter_post_count;
 
 
     public PostIntentService() {
@@ -171,6 +174,7 @@ public class PostIntentService extends IntentService {
                 observable.compose(RxHolder.io_main()).subscribe(mPostImgSubscriber);
 
             } else if (ACTION_NOT_POST.equals(action)) {
+                mBefore_post_count = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
 
                 //initLocalBroadCast();
                 //mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
@@ -236,10 +240,9 @@ public class PostIntentService extends IntentService {
                                 //sendServiceStatus("success");
                                 //Logger.i("第" + finalI + license_plate + "---上传成功");
                                 // TODO: 2017/7/24 取消删除数据库.
-                                // CarNumberCount.CarNumberCut(mMainActivity);
+                                CarNumberCount.CarNumberCut(mMainActivity);
                                 // DataSupport.deleteAll(SupportPhotoLite.class, "shuttime=?", shuttime);
-                                //  ArrayCollector.addString(license_plate);
-                                // mSuccessArrayList.add(license_plate);
+
 
                             } else {
                                 if (code == 300) {
@@ -272,17 +275,15 @@ public class PostIntentService extends IntentService {
     @Override
     public void onDestroy() {
 
-        super.onDestroy();
 
-        List<SupportPhotoLite> liteList = DataSupport
-                //.where("is_post==?", "NO").find(SupportPhotoLite.class);
-                .findAll(SupportPhotoLite.class);
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < liteList.size(); i++) {
-            strings.add(liteList.get(i).getLicense_plate());
-        }
+        mAfter_post_count = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
 
-        sendServiceStatus(strings);
+        Logger.i("上传成功车辆数：" + (mBefore_post_count - mAfter_post_count) + "\n" +
+                "上传失败车辆数：" + mAfter_post_count);
+        ToastUtils.singleToast("上传成功车辆数：" + (mBefore_post_count - mAfter_post_count) + "\n" +
+                "上传失败车辆数：" + mAfter_post_count);
+
+        // sendServiceStatus();
 
         if (mPostImgSubscriber != null && mPostImgSubscriber.isUnsubscribed()) {
             mPostImgSubscriber.unsubscribe();
@@ -294,6 +295,7 @@ public class PostIntentService extends IntentService {
         if (mPostReceiver != null) {
             unregisterReceiver(mPostReceiver);
         }
+        super.onDestroy();
 
     }
 

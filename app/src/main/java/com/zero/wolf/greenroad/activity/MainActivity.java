@@ -1,5 +1,9 @@
 package com.zero.wolf.greenroad.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,7 +141,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private String mStationName;
     private AlertDialog.Builder mNotPostDialog;
+    private RelativeLayout mRelativeLayout;
 
+    private int thumb_margin_left_day = 0;
+    private int thumb_margin_left_night = 0;
 
 
     @Override
@@ -515,6 +523,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         TextView tv_change2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(tv_change);
         mTv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
 
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.custom_id_app_background);
 
         tv_change1.setText(mOperator);
         tv_change2.setText(mAvailSpace);
@@ -593,29 +602,63 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    private boolean tag_is_animation = false;
+    private boolean tag_is_animation = true;
 
     /**
      * 点击主题菜单按钮改变App的主题
+     *   /**
+     * 切换主题时展示动画
      */
+
     private void changeTheme() {
-        if (tag_is_animation) {
-            Intent intent = new Intent(getContext(), AnimatorActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        } else {
-            switchCurrentThemeTag();
-            ((GreenRoadApplication) getApplication()).notifyByThemeChanged();
-//            recreate();
-        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(240);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (tag_is_animation) {
+                    Intent intent = new Intent(getContext(), AnimatorActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                } else {
+                    // 发送主题变更通知，让每一个注册监听事件的Activity主动更新UI.
+                    ((GreenRoadApplication) getApplication()).notifyByThemeChanged();
+                }
+            }
+        });
+
+        animatorSet.play(obtainCheckboxAnimator());
+
+        animatorSet.start();
+    }
+
+
+
+    private Animator obtainCheckboxAnimator() {
+        int start = getThemeTag() == -1 ? thumb_margin_left_night : thumb_margin_left_day;
+        int end = getThemeTag() == -1 ? thumb_margin_left_day : thumb_margin_left_night;
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+       /* animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                RelativeLayout.MarginLayoutParams layoutParams = (RelativeLayout.MarginLayoutParams) mCheckboxThumb.getLayoutParams();
+                layoutParams.leftMargin = value;
+                mCheckboxThumb.setLayoutParams(layoutParams);
+            }
+        });*/
+        return animator;
     }
 
     @Override
     public void notifyByThemeChanged() {
         super.notifyByThemeChanged();
         GreenRoadResourceHelper helper = GreenRoadResourceHelper.getInstance(getContext());
-       /* helper.setBackgroundResourceByAttr(mAppBackground, R.attr.custom_attr_app_bg);
-        helper.setBackgroundResourceByAttr(mStatusBar, R.attr.custom_attr_app_title_layout_bg);
+        helper.setBackgroundResourceByAttr(mRelativeLayout, R.attr.custom_attr_app_bg);
+        /*helper.setBackgroundResourceByAttr(mStatusBar, R.attr.custom_attr_app_title_layout_bg);
         helper.setBackgroundResourceByAttr(mTitleLayout, R.attr.custom_attr_app_title_layout_bg);
 
         helper.setBackgroundResourceByAttr(mBtnTurnDay, R.attr.custom_attr_btn_bg);
