@@ -625,11 +625,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             Logger.i("点击了未上传按钮");
         } else if (id == nav_theme) {
             changeTheme();
+        } else if (id == R.id.nav_model) {
+            changeModel();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void changeModel() {
+        ToastUtils.singleToast("当前为拍照模式,是否切换为摄影模式");
     }
 
     private boolean tag_is_animation = true;
@@ -673,16 +679,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         int start = getThemeTag() == -1 ? thumb_margin_left_night : thumb_margin_left_day;
         int end = getThemeTag() == -1 ? thumb_margin_left_day : thumb_margin_left_night;
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
-       /* animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                RelativeLayout.MarginLayoutParams layoutParams = (RelativeLayout.MarginLayoutParams) mCheckboxThumb.getLayoutParams();
-                layoutParams.leftMargin = value;
-                mCheckboxThumb.setLayoutParams(layoutParams);
-            }
-        });*/
         return animator;
     }
 
@@ -708,23 +705,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         helper.setBackgroundResourceByAttr(mTv_math_number_main_has, R.attr.custom_text_view_math_number);
         helper.setBackgroundResourceByAttr(mTv_math_number_main_has_not, R.attr.custom_text_view_math_number);
 
-        //helper.setBackgroundResourceByAttr(mRelativeLayout, R.attr.custom_shape_static);
-        /*helper.setBackgroundResourceByAttr(mStatusBar, R.attr.custom_attr_app_title_layout_bg);
-        helper.setBackgroundResourceByAttr(mTitleLayout, R.attr.custom_attr_app_title_layout_bg);
 
-        helper.setBackgroundResourceByAttr(mBtnTurnDay, R.attr.custom_attr_btn_bg);
-        helper.setTextColorByAttr(mBtnTurnDay, R.attr.custom_attr_btn_text_color);
-        helper.setBackgroundResourceByAttr(mBtnTurnNight, R.attr.custom_attr_btn_bg);
-        helper.setTextColorByAttr(mBtnTurnNight, R.attr.custom_attr_btn_text_color);
-
-        helper.setAlphaByAttr(mUserPhoto, R.attr.custom_attr_user_photo_alpha);
-
-        helper.setTextColorByAttr(mNickname, R.attr.custom_attr_nickname_text_color);
-        helper.setTextColorByAttr(mRemark, R.attr.custom_attr_remark_text_color);
-
-        mUserPhotoPlaceHolder = helper.getDrawableByAttr(R.attr.custom_attr_user_photo_place_holder);
-
-        initBtnStatus(); //*/
 
     }
     /* private void initBroadCast() {

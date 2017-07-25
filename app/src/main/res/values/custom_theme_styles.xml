@@ -121,8 +121,21 @@
     <style name="GreenRoadTheme.Night.Preview"/>
 
 
+    <!-- MainActivity中最下面公司以及版本信息的字体颜色-->
     <color name="custom_company_night">#728cae</color>
     <color name="custom_company_day">#616161</color>
+
+    <!-- ToolBar的背景颜色-->
+    <color name="toolbar_color_night">#050326</color>
+    <color name="toolbar_color_day">#52c6cc</color>
+
+    <!-- 车辆计数(大横条)背景以及 车牌,车身,货物 的背景-->
+    <color name="shape_line_rect_day">#b0a4ef</color>
+    <color name="shape_line_rect_night">#bdbdff</color>
+
+    <!-- 车辆计数数字(小方框)的背景-->
+    <color name="text_view_math_number_night">#02021a</color>
+    <color name="text_view_math_number_day">#4ec2cf</color>
 
     <!--侧滑菜单的头布局中文字的颜色-->
     <color name="head_layout_text_night">#eeeef4</color>

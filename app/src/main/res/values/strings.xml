@@ -52,5 +52,6 @@
     <string name="error_invalid_password">无效的密码</string>
     <string name="error_field_required">账号不能为空</string>
     <string name="theme_app">主题</string>
+    <string name="nav_model">模式</string>
 
 </resources>

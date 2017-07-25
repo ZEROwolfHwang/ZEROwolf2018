@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="toolbar_color_night">#110b4d</color>
+
     <color name="transparent_background">#50000000</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>
@@ -30,13 +30,5 @@
     <color name="login_check_text_blue">#23ff48</color>
     <color name="login_bg_white">#ececec</color>
 
-    <color name="toolbar_color_day">#b8a4ed</color>
 
-<!-- 车辆计数(大横条)背景以及 车牌,车身,货物 的背景-->
-    <color name="shape_line_rect_day">#b0a4ef</color>
-    <color name="shape_line_rect_night">#bdbdff</color>
-
-<!-- 车辆计数数字(小方框)的背景-->
-    <color name="text_view_math_number_night">#02021a</color>
-    <color name="text_view_math_number_day">#4ec2cf</color>
 </resources>

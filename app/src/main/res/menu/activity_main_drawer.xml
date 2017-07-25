@@ -15,6 +15,12 @@
         android:icon="@drawable/post_not_send"
         android:id="@+id/nav_post">
     </item>
+    <item
+        android:title="@string/nav_model"
+        android:icon="@drawable/nav_camera_model"
+        android:id="@+id/nav_model">
+    </item>
+
 
 </group>
     <item android:title="Communicate">
