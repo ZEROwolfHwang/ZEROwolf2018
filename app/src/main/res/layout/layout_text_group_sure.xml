@@ -6,7 +6,7 @@
     android:layout_height="50dp"
     android:layout_gravity="center"
     android:layout_marginRight="@dimen/layout_margin20dp"
-    android:background="@drawable/shape_background_sure"
+    android:background="?attr/custom_shape_background_fragment"
     android:gravity="center"
     android:orientation="horizontal"
     tools:showIn="@layout/content_main">
@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:textColor="@color/light"
+        android:textColor="?attr/custom_fragment_static_text"
         android:focusable="false"
         android:textSize="@dimen/text16"/>
 
@@ -27,7 +27,7 @@
         android:layout_width="4dp"
         android:layout_height="30dp"
         android:focusable="false"
-        android:background="@drawable/shape_static"/>
+        android:background="@drawable/shape_static_night"/>
 
     <FrameLayout
         android:id="@+id/layoutContainer"

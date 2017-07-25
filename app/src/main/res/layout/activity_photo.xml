@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tab_layout"
+    android:background="?attr/custom_attr_app_bg"
     android:baselineAligned="false"
     android:orientation="vertical"
     tools:context="com.zero.wolf.greenroad.activity.PhotoActivity">
@@ -153,14 +153,14 @@
             style="@style/text_view_2_car"
             android:layout_gravity="center"
             android:layout_marginLeft="40dp"
-            android:background="@drawable/shape_line_rect_13"
+            android:background="?attr/custom_shape_line_rect"
             android:text="@string/tv_car_number"/>
 
         <ImageView
             android:id="@+id/iv_car_number"
             android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:background="@drawable/car_number_selection"
+            android:background="?attr/custom_car_number_selection"
             android:layout_marginRight="@dimen/layout_margin10dp"
             android:layout_height="@dimen/layout_margin80dp"/>
 
@@ -177,7 +177,7 @@
             android:id="@+id/iv_car_body"
             android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:background="@drawable/car_body_selection"
+            android:background="?attr/custom_car_body_selection"
             android:layout_marginLeft="@dimen/layout_margin10dp"
             android:layout_height="@dimen/layout_margin80dp"/>
 
@@ -185,7 +185,7 @@
         <TextView
             style="@style/text_view_2_car"
             android:layout_marginRight="40dp"
-            android:background="@drawable/shape_line_rect_2"
+            android:background="?attr/custom_shape_line_rect_center"
             android:text="@string/tv_car_body"/>
 
     </LinearLayout>
@@ -198,14 +198,14 @@
         <TextView
             style="@style/text_view_2_car"
             android:layout_marginLeft="40dp"
-            android:background="@drawable/shape_line_rect_13"
+            android:background="?attr/custom_shape_line_rect"
             android:text="@string/tv_car_goods"/>
 
         <ImageView
             android:id="@+id/iv_car_goods"
             android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
-            android:background="@drawable/car_goods_selection"
+            android:background="?attr/custom_car_goods_selection"
             android:layout_marginRight="@dimen/layout_margin10dp"
             android:layout_height="@dimen/layout_margin80dp"/>
 

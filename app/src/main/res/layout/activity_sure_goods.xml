@@ -99,7 +99,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/layout_margin20dp"
         android:layout_marginRight="@dimen/layout_margin20dp"
-        android:background="@drawable/sure_button_select"
+        android:background="@drawable/sure_button_select_night"
         android:gravity="center"
         android:text="@string/ok_send"
         android:textSize="@dimen/text24"/>

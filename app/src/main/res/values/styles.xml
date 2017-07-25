@@ -40,7 +40,7 @@
 
     <style name="rect_static">
         <item name="android:layout_marginTop">20dp</item>
-        <item name="android:background">@drawable/shape_static</item>
+        <item name="android:background">@drawable/shape_static_night</item>
         <item name="android:layout_width">4dp</item>
         <item name="android:layout_height">40dp</item>
     </style>
@@ -89,7 +89,7 @@
     <style name="style_toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">?attr/custom_my_colorPrimary</item>
     </style>
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">16sp</item>
@@ -108,7 +108,7 @@
     <style name="style_button_sure">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/layout_margin80dp</item>
-        <item name="android:background">@drawable/sure_button_select</item>
+        <item name="android:background">?attr/custom_sure_button_selector</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text24</item>
         <item name="android:textColor">@color/white</item>

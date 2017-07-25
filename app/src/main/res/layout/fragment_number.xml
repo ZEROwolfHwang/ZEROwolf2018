@@ -19,7 +19,7 @@
                 android:id="@+id/iv_car_number_sure"
                 android:layout_width="@dimen/layout_margin80dp"
                 android:scaleType="fitCenter"
-                android:background="@drawable/car_number_dark"
+                android:background="?attr/custom_car_number_sure"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
                 android:layout_height="@dimen/layout_margin80dp"/>
 

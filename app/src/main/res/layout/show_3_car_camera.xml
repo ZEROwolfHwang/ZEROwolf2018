@@ -20,7 +20,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="center"
-        android:src="@drawable/car_number_dark"
+        android:src="?attr/custom_car_number_show"
         app:riv_corner_radius="@dimen/layout_margin10dp"
         app:riv_oval="true"/>
 
@@ -31,7 +31,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:scaleType="center"
-        android:src="@drawable/car_body_dark"
+        android:src="?attr/custom_car_body_show"
         app:riv_corner_radius="@dimen/layout_margin10dp"
         app:riv_oval="true"/>
 
@@ -40,7 +40,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="center"
-        android:src="@drawable/car_goods_dark"
+        android:src="?attr/custom_car_goods_show"
         app:riv_corner_radius="@dimen/layout_margin10dp"
         app:riv_oval="true"/>
 

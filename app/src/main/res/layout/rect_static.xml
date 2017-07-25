@@ -5,7 +5,7 @@
     android:id="@+id/iv_static"
     android:layout_marginLeft="10dp"
     android:layout_marginTop="50dp"
-    android:background="@drawable/shape_static"
+    android:background="@drawable/shape_static_night"
     android:layout_width="10dp"
     android:layout_height="60dp"
     tools:showIn="@layout/content_main"/>

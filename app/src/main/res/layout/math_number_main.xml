@@ -11,12 +11,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/custom_shape_line_rect_has"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/main_height_dp40"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/main_height_dp60"
             android:layout_weight="1"
-            android:background="@drawable/shape_line_rect_13"
+            android:background="?attr/custom_shape_line_rect"
             android:gravity="center"
             android:textColor="@color/white_light_main_shut"
             android:text="@string/has_shot"
@@ -26,7 +27,7 @@
             android:id="@+id/tv_math_number_main_has"
             android:layout_width="@dimen/main_width_dp60"
             android:layout_height="@dimen/main_height_dp60"
-            android:background="@drawable/text_view_math_number_has"
+            android:background="?attr/custom_text_view_math_number"
             android:gravity="center"
             android:text="0"
             android:textColor="@color/white"
@@ -44,11 +45,12 @@
         <TextView
 
             android:layout_width="wrap_content"
+            android:id="@+id/custom_shape_line_rect_has_not"
             android:layout_height="@dimen/main_height_dp40"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/main_height_dp60"
             android:layout_weight="1"
-            android:background="@drawable/shape_line_rect_13"
+            android:background="?attr/custom_shape_line_rect"
             android:textColor="@color/white_light_main_shut"
             android:gravity="center"
             android:text="@string/has_not_sent"
@@ -58,7 +60,7 @@
             android:id="@+id/tv_math_number_main_has_not"
             android:layout_width="@dimen/main_width_dp60"
             android:layout_height="@dimen/main_height_dp60"
-            android:background="@drawable/text_view_math_number_has"
+            android:background="?attr/custom_text_view_math_number"
             android:gravity="center"
             android:text="0"
             android:textColor="@color/white"

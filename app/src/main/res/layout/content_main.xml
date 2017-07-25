@@ -99,7 +99,8 @@
         android:layout_height="160dp"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="@drawable/main_shut_selector"
+        android:elevation="15dp"
+        android:background="?attr/custom_main_shut_selector_btn"
         android:scaleType="fitCenter"
         android:layout_below="@+id/linear_layout_main"
         android:layout_centerHorizontal="true"/>
@@ -114,15 +115,16 @@
 
         <TextView
             android:layout_weight="1"
+            android:id="@+id/custom_company_name_text"
             android:textSize="@dimen/text12"
-            android:textColor="@color/white_light_main"
+            android:textColor="?attr/custom_company_name_text"
             android:text="@string/company_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
         <TextView
 
             android:textSize="@dimen/text12"
-            android:textColor="@color/white_light_main"
+            android:textColor="?attr/custom_company_name_text"
             android:id="@+id/version_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

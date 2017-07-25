@@ -1,110 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources >
-    <style name="GreenRoadTheme" parent="AppTheme.NoActionBar" >
+<resources>
+
+    <style name="GreenRoadTheme" parent="AppTheme.NoActionBar">
 
     </style>
 
-    <style name="GreenRoadTheme.Day" >
-        <item name="custom_attr_app_bg">@drawable/bg_tab_layout</item>
-        <item name="colorPrimary">#7d95ca</item>
-        <item name="transparent_background">#50000000</item>
-        <item name="black">#000</item>
-        <item name="white">#fff</item>
-        <item name="yellow">#ff0</item>
-        <item name="toolbar_color">#7c00f7</item>
-        <item name="gray">#bdbdbd</item>
-        <item name="transparent">#007c00f7</item>
-        <item name="white_black">#b0a4b7</item>
-        <item name="blue">#00f</item>
-        <item name="red">#ff0004</item>
-        <item name="light">#5dffd3</item>
-        <item name="white_light">#1247ff</item>
-        <item name="white_dark">#979797</item>
-        <item name="green">#2bf98b</item>
-        <item name="bj_press_number">#987dff</item>
-        <item name="white_light_goods">#3aa685</item>
-        <item name="white_light_main">#518b6a</item>
-        <item name="white_dark_main">#9ab0ff</item>
-        <item name="white_car_type">#7ea699</item>
-        <item name="black_car">#171438</item>
-        <item name="white_light_main_shut">#14145b</item>
-        <item name="white_dark_login_sure">#787879</item>
-        <item name="login_check_text_blue">#23ff48</item>
-        <item name="login_bg_white">#ececec</item>
-      <!--  <item name="custom_attr_app_bg">@color/custom_color_app_bg_day</item>
-        <item name="custom_attr_app_title_layout_bg">@color/custom_color_app_title_layout_bg_day</item>
-        <item name="custom_attr_app_content_layout_bg">@color/custom_color_app_content_layout_bg_day</item>
-        <item name="custom_attr_app_content_layout_div_color">@color/custom_color_app_content_layout_div_color_day</item>
+    <style name="GreenRoadTheme.Day">
 
-        <item name="custom_attr_sub_text_color">@color/custom_color_sub_text_color_day</item>
-        <item name="custom_attr_main_text_color">@color/custom_color_main_text_color_day</item>
+        <!-- __________________  MainActivity __________________ -->
 
-        <item name="custom_attr_btn_bg">@drawable/custom_drawable_btn_bg_day</item>
-        <item name="custom_attr_btn_text_color">@color/custom_selector_btn_text_color_day</item>
+        <item name="custom_attr_app_bg">@drawable/bg_app_day</item>
+        <item name="custom_shape_static">@drawable/shape_static_day</item>
+        <item name="custom_white_black_text">@color/black</item>
+        <item name="custom_my_colorPrimary">@color/toolbar_color_day</item>
+        <item name="custom_company_name_text">@color/custom_company_day</item>
+        <item name="custom_main_shut_selector_btn">@drawable/main_shut_selector_day</item>
+        <item name="custom_shape_line_rect">@drawable/shape_line_rect_13_day</item>
+        <item name="custom_shape_line_rect_center">@drawable/shape_line_rect_center_day</item>
+        <item name="custom_text_view_math_number">@drawable/text_view_math_number_day</item>
 
-        <item name="custom_attr_check_box_bg">@drawable/custom_drawable_checkbox_bg_day</item>
-        <item name="custom_attr_main_title_color">@color/custom_color_main_title_color_day</item>
-        <item name="custom_attr_check_box_thumb_bg">@drawable/custom_drawable_checkbox_thumb_bg_day</item>
-        <item name="custom_attr_check_box_thumb_margin_left">@dimen/custom_dimen_thumb_margin_left_day</item>
+        <item name="custom_head_layout_text">@color/head_layout_text_day</item>
 
-        <item name="custom_attr_user_photo_alpha">@dimen/custom_float_user_photo_alpha_day</item>
-        <item name="custom_attr_user_photo_place_holder">@drawable/custom_drawable_user_photo_place_holder_day</item>
+        <!-- __________________  PhotoActivity __________________ -->
 
-        <item name="custom_attr_nickname_text_color">@color/custom_color_nickname_text_color_day</item>
-        <item name="custom_attr_remark_text_color">@color/custom_color_remark_text_color_day</item>-->
+        <item name="custom_car_number_selection">@drawable/car_number_selection_day</item>
+        <item name="custom_car_body_selection">@drawable/car_body_selection_day</item>
+        <item name="custom_car_goods_selection">@drawable/car_goods_selection_day</item>
+
+        <item name="custom_car_number_show">@drawable/car_number_light</item>
+        <item name="custom_car_body_show">@drawable/car_body_light</item>
+        <item name="custom_car_goods_show">@drawable/car_goods_light</item>
+
+        <item name="custom_sure_button_selector">@drawable/sure_button_select_day</item>
+
+
+        <!-- __________________  SureGoodsActivity __________________ -->
+
+        <item name="custom_tab_text_color">@color/tab_text_color_day</item>
+        <item name="custom_tab_text_color_selected">@color/tab_text_color_selected_day</item>
+
+        <item name="custom_tab_bg_pager_view">@drawable/tab_bg_view_pager_day</item>
+
+
+        <!-- __________________     Fragment      __________________ -->
+
+        <item name="custom_car_number_sure">@drawable/car_number_light</item>
+        <item name="custom_car_station_sure">@drawable/car_station_light</item>
+        <item name="custom_car_goods_sure">@drawable/car_goods_light</item>
+
+        <item name="custom_shape_background_fragment">@drawable/shape_background_sure_day</item>
+        <item name="custom_fragment_static_text">@color/fragment_static_text_day</item>
+
+        <item name="custom_item_text_color_number">@color/item_text_color_day</item>
+        <item name="custom_item_text_color_station">@color/item_text_color_day</item>
+        <item name="custom_item_text_color_station_end">@color/item_text_color_end_day</item>
+        <item name="custom_item_text_color_goods">@color/item_text_color_day</item>
+        <item name="custom_item_text_color_goods_end">@color/item_text_color_end_day</item>
+
+
+
+
     </style>
 
-    <style name="GreenRoadTheme.Night" >
-        <item name="custom_attr_app_bg">@drawable/demo</item>
-        <item name="colorPrimary">#1e2535</item>
-        <item name="transparent_background">#50000000</item>
-        <item name="black">#000</item>
-        <item name="white">#fff</item>
-        <item name="yellow">#ff0</item>
-        <item name="toolbar_color">#7c00f7</item>
-        <item name="gray">#bdbdbd</item>
-        <item name="transparent">#007c00f7</item>
-        <item name="white_black">#b0a4b7</item>
-        <item name="blue">#00f</item>
-        <item name="red">#ff0004</item>
-        <item name="light">#5dffd3</item>
-        <item name="white_light">#1247ff</item>
-        <item name="white_dark">#979797</item>
-        <item name="green">#2bf98b</item>
-        <item name="bj_press_number">#987dff</item>
-        <item name="white_light_goods">#3aa685</item>
-        <item name="white_light_main">#518b6a</item>
-        <item name="white_dark_main">#9ab0ff</item>
-        <item name="white_car_type">#7ea699</item>
-        <item name="black_car">#171438</item>
-        <item name="white_light_main_shut">#14145b</item>
-        <item name="white_dark_login_sure">#787879</item>
-        <item name="login_check_text_blue">#23ff48</item>
-        <item name="login_bg_white">#ececec</item>
-        <!--<item name="custom_attr_app_bg">@color/custom_color_app_bg_night</item>
-        <item name="custom_attr_app_title_layout_bg">@color/custom_color_app_title_layout_bg_night</item>
-        <item name="custom_attr_app_content_layout_bg">@color/custom_color_app_content_layout_bg_night</item>
-        <item name="custom_attr_app_content_layout_div_color">@color/custom_color_app_content_layout_div_color_night</item>
+    <style name="GreenRoadTheme.Night">
 
-        <item name="custom_attr_sub_text_color">@color/custom_color_sub_text_color_night</item>
-        <item name="custom_attr_main_text_color">@color/custom_color_main_text_color_night</item>
+        <!-- __________________  MainActivity __________________ -->
 
-        <item name="custom_attr_btn_bg">@drawable/custom_drawable_btn_bg_night</item>
-        <item name="custom_attr_btn_text_color">@color/custom_selector_btn_text_color_night</item>
+        <item name="custom_attr_app_bg">@drawable/bg_app_night</item>
+        <item name="custom_shape_static">@drawable/shape_static_night</item>
+        <item name="custom_white_black_text">@color/white</item>
+        <item name="custom_my_colorPrimary">@color/toolbar_color_night</item>
+        <item name="custom_company_name_text">@color/custom_company_night</item>
+        <item name="custom_main_shut_selector_btn">@drawable/main_shut_selector_night</item>
+        <item name="custom_shape_line_rect">@drawable/shape_line_rect_13_night</item>
+        <item name="custom_shape_line_rect_center">@drawable/shape_line_rect_center_night</item>
+        <item name="custom_text_view_math_number">@drawable/text_view_math_number_night</item>
 
-        <item name="custom_attr_check_box_bg">@drawable/custom_drawable_checkbox_bg_night</item>
-        <item name="custom_attr_main_title_color">@color/custom_color_main_title_color_night</item>
-        <item name="custom_attr_check_box_thumb_bg">@drawable/custom_drawable_checkbox_thumb_bg_night</item>
-        <item name="custom_attr_check_box_thumb_margin_left">@dimen/custom_dimen_thumb_margin_left_night</item>
+        <item name="custom_head_layout_text">@color/head_layout_text_night</item>
 
-        <item name="custom_attr_user_photo_alpha">@dimen/custom_float_user_photo_alpha_night</item>
-        <item name="custom_attr_user_photo_place_holder">@drawable/custom_drawable_user_photo_place_holder_night</item>
 
-        <item name="custom_attr_nickname_text_color">@color/custom_color_nickname_text_color_night</item>
-        <item name="custom_attr_remark_text_color">@color/custom_color_remark_text_color_night</item>-->
+        <!-- __________________  PhotoActivity __________________ -->
+
+        <item name="custom_car_number_selection">@drawable/car_number_selection_night</item>
+        <item name="custom_car_body_selection">@drawable/car_body_selection_night</item>
+        <item name="custom_car_goods_selection">@drawable/car_goods_selection_night</item>
+
+
+        <item name="custom_car_number_show">@drawable/car_number_dark</item>
+        <item name="custom_car_body_show">@drawable/car_body_dark</item>
+        <item name="custom_car_goods_show">@drawable/car_goods_dark</item>
+
+        <item name="custom_sure_button_selector">@drawable/sure_button_select_night</item>
+
+        <!-- __________________  SureGoodsActivity __________________ -->
+
+        <item name="custom_tab_text_color">@color/tab_text_color_night</item>
+        <item name="custom_tab_text_color_selected">@color/tab_text_color_selected_night</item>
+        <item name="custom_tab_bg_pager_view">@drawable/tab_bg_view_pager_night</item>
+
+
+        <!-- __________________     Fragment      __________________ -->
+
+        <item name="custom_car_number_sure">@drawable/car_number_dark</item>
+        <item name="custom_car_station_sure">@drawable/car_station_dark</item>
+        <item name="custom_car_goods_sure">@drawable/car_goods_dark</item>
+
+        <item name="custom_shape_background_fragment">@drawable/shape_background_sure_night</item>
+        <item name="custom_fragment_static_text">@color/fragment_static_text_night</item>
+
+        <item name="custom_item_text_color_number">@color/item_text_color_night</item>
+        <item name="custom_item_text_color_station">@color/item_text_color_night</item>
+        <item name="custom_item_text_color_station_end">@color/item_text_color_end_night</item>
+        <item name="custom_item_text_color_goods">@color/item_text_color_night</item>
+        <item name="custom_item_text_color_goods_end">@color/item_text_color_end_night</item>
+
     </style>
 
-    <style name="GreenRoadTheme.Day.Preview" />
+    <style name="GreenRoadTheme.Day.Preview"/>
 
-    <style name="GreenRoadTheme.Night.Preview" />
+    <style name="GreenRoadTheme.Night.Preview"/>
+
+
+    <color name="custom_company_night">#728cae</color>
+    <color name="custom_company_day">#616161</color>
+
+    <!--侧滑菜单的头布局中文字的颜色-->
+    <color name="head_layout_text_night">#eeeef4</color>
+    <color name="head_layout_text_day">#28287e</color>
+
+    <!--tabLayoutw文字选中与未选中的字体颜色-->
+    <color name="tab_text_color_day">#2525ff</color>
+    <color name="tab_text_color_night">#fffefe</color>
+
+    <color name="tab_text_color_selected_day">#8484ff</color>
+    <color name="tab_text_color_selected_night">#00eeff</color>
+
+    <!--fragment 中站名,车牌号,货物三组字段的字体颜色-->
+    <color name="fragment_static_text_day">#121213</color>
+    <color name="fragment_static_text_night">#226183</color>
+
+    <!--fragment 中三组RecyclerView的字体颜色-->
+    <color name="item_text_color_day">#0075ab</color>
+    <color name="item_text_color_night">#ffffff</color>
+
+    <color name="item_text_color_end_day">#556376</color>
+    <color name="item_text_color_end_night">#3f8b5e</color>
+
 </resources>

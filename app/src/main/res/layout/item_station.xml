@@ -12,12 +12,12 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:textSize="@dimen/text24"
-        android:textColor="@color/item_text_color_station"
+        android:textColor="?attr/custom_item_text_color_station"
         android:text="泰安东"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/text_view_station_end"
-        android:textColor="@color/item_text_color_station_end"
+        android:textColor="?attr/custom_item_text_color_station_end"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="收费站"

@@ -26,7 +26,7 @@
             android:layout_height="40dp"
             android:gravity="bottom"
             android:text="白刺"
-            android:textColor="@color/white"
+            android:textColor="?attr/custom_item_text_color_goods"
             android:textSize="@dimen/text24"/>
 
         <TextView
@@ -37,7 +37,7 @@
             android:enabled="true"
             android:singleLine="true"
             android:text="绿菜花"
-            android:textColor="@color/white_light_goods"
+            android:textColor="?attr/custom_item_text_color_goods_end"
             android:textSize="@dimen/text13"/>
     </LinearLayout>
 

@@ -13,7 +13,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="@color/item_text_color_number"
+            android:textColor="?attr/custom_item_text_color_number"
             android:textSize="@dimen/text24"/>
 
 

@@ -19,6 +19,7 @@ import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -145,6 +146,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private int thumb_margin_left_day = 0;
     private int thumb_margin_left_night = 0;
+    private TextView mTv_change1;
+    private TextView mTv_change2;
+    private Toolbar mToolbar;
+    private ActionBar mBar;
+    private TextView mCustom_Version_number;
+    private TextView mCompany_name_text;
+    private TextView mCustom_shape_line_rect_has;
+    private TextView mCustom_shape_line_rect_has_not;
+    private TextView mTv_company_name;
+    private TextView mTv_app_name;
+    private LinearLayout mHead_layout_main;
+    private TextView mTv_math_number_main_has;
+    private TextView mTv_math_number_main_has_not;
 
 
     @Override
@@ -158,9 +172,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mActivity = this;
 
 
-        mFilePath = Environment.getExternalStorageDirectory().getPath();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         initData();
         initSp();
@@ -199,16 +211,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -498,13 +500,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initView() {
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
         //得到拍照的按钮
         mIvCamera = (ImageView) findViewById(R.id.iv_camera);
-
 
         //mIvCamera.setOnClickListener(this);
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText(mStationName);
+
+        mFilePath = Environment.getExternalStorageDirectory().getPath();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
 
         mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
         mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
@@ -519,20 +540,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         textView3.setText(getString(R.string.static_tv_net_state));
 
         //找到改变的TextView
-        TextView tv_change1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(tv_change);
-        TextView tv_change2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(tv_change);
+        mTv_change1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(tv_change);
+        mTv_change2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(tv_change);
         mTv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
 
         mRelativeLayout = (RelativeLayout) findViewById(R.id.custom_id_app_background);
 
-        tv_change1.setText(mOperator);
-        tv_change2.setText(mAvailSpace);
+        mTv_change1.setText(mOperator);
+        mTv_change2.setText(mAvailSpace);
         // mTv_change3.setText("良好");
 
-
         //得到版本号
-        TextView version_number = (TextView) findViewById(R.id.version_number);
-        version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
+        mCustom_Version_number = (TextView) findViewById(R.id.version_number);
+        mCustom_Version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
+
+        mCompany_name_text = (TextView) findViewById(R.id.custom_company_name_text);
+
+        mCustom_shape_line_rect_has = (TextView) findViewById(R.id.math_number_main_two)
+                .findViewById(R.id.custom_shape_line_rect_has);
+        mCustom_shape_line_rect_has_not = (TextView) findViewById(R.id.math_number_main_two)
+                .findViewById(R.id.custom_shape_line_rect_has_not);
+
+        mTv_math_number_main_has = (TextView) findViewById(R.id.tv_math_number_main_has);
+        mTv_math_number_main_has_not = (TextView) findViewById(R.id.tv_math_number_main_has_not);
 
 
     }
@@ -606,15 +636,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     /**
      * 点击主题菜单按钮改变App的主题
-     *   /**
+     * /**
      * 切换主题时展示动画
      */
 
     private void changeTheme() {
+        mHead_layout_main = (LinearLayout)findViewById(R.id.head_layout_main);
+        mTv_app_name = (TextView) findViewById(R.id.tv_app_name);
+        mTv_company_name = (TextView) findViewById(R.id.tv_company_name);
+
+
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(240);
         animatorSet.addListener(new AnimatorListenerAdapter() {
-
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -633,7 +667,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         animatorSet.start();
     }
-
 
 
     private Animator obtainCheckboxAnimator() {
@@ -656,8 +689,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void notifyByThemeChanged() {
         super.notifyByThemeChanged();
+
         GreenRoadResourceHelper helper = GreenRoadResourceHelper.getInstance(getContext());
         helper.setBackgroundResourceByAttr(mRelativeLayout, R.attr.custom_attr_app_bg);
+        helper.setBackgroundResourceByAttr(mToolbar, R.attr.custom_my_colorPrimary);
+        helper.setTextColorByAttr(mTv_change1, R.attr.custom_white_black_text);
+        helper.setTextColorByAttr(mTv_change2, R.attr.custom_white_black_text);
+        helper.setBackgroundResourceByAttr(mIvCamera, R.attr.custom_main_shut_selector_btn);
+        helper.setTextColorByAttr(mCustom_Version_number, R.attr.custom_company_name_text);
+        helper.setTextColorByAttr(mCompany_name_text, R.attr.custom_company_name_text);
+        helper.setBackgroundResourceByAttr(mCustom_shape_line_rect_has, R.attr.custom_shape_line_rect);
+        helper.setBackgroundResourceByAttr(mCustom_shape_line_rect_has_not, R.attr.custom_shape_line_rect);
+
+        helper.setBackgroundResourceByAttr(mHead_layout_main, R.attr.custom_attr_app_bg);
+        helper.setTextColorByAttr(mTv_app_name, R.attr.custom_head_layout_text);
+        helper.setTextColorByAttr(mTv_company_name, R.attr.custom_head_layout_text);
+
+        helper.setBackgroundResourceByAttr(mTv_math_number_main_has, R.attr.custom_text_view_math_number);
+        helper.setBackgroundResourceByAttr(mTv_math_number_main_has_not, R.attr.custom_text_view_math_number);
+
+        //helper.setBackgroundResourceByAttr(mRelativeLayout, R.attr.custom_shape_static);
         /*helper.setBackgroundResourceByAttr(mStatusBar, R.attr.custom_attr_app_title_layout_bg);
         helper.setBackgroundResourceByAttr(mTitleLayout, R.attr.custom_attr_app_title_layout_bg);
 
@@ -760,6 +811,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onResume() {
         super.onResume();
+
      /*   if (mNetWorkStateReceiver == null) {
             mNetWorkStateReceiver = new NetWorkStateReceiver();
         }
@@ -787,7 +839,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //onPause()方法注销
     @Override
     protected void onPause() {
-       // unregisterReceiver(mNetWorkStateReceiver);
+        // unregisterReceiver(mNetWorkStateReceiver);
         super.onPause();
     }
 
@@ -950,7 +1002,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onDestroy() {
         super.onDestroy();
-      //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
+        //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
     }
 
 }

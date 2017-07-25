@@ -42,8 +42,8 @@ public class AnimatorActivity extends BaseActivity {
 
     public void initAllDatum() {
         mAnimatorView.setImageResource(getThemeTag() == -1 ?
-                R.drawable.custom_drawable_mode_translation_turn_night_v16:
-                R.drawable.custom_drawable_mode_translation_turn_day_v16 );
+                R.drawable.custom_drawable_mode_translation_turn_day_v16 :
+                R.drawable.custom_drawable_mode_translation_turn_night_v16);
         sendEmptyMessageDelayed(KeyStore.KEY_TAG_ANIMATOR_START, 300);
     }
 

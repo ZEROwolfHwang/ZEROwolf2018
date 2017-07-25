@@ -33,7 +33,7 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
 
     @Override
     public SureGoodsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.sure_recycler_goods_item, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_sure_recycler_goods, null);
         return new SureGoodsHolder(view);
     }
 

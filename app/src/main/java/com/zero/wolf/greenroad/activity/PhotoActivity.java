@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,7 +25,6 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
-import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import java.io.File;
 
@@ -85,7 +85,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private File mFile;
     private String mStationName;
     private String mFilePath_str;
-
+    private LinearLayout mApp_bg_layout;
 
 
     @Override
@@ -141,6 +141,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         initToolbar();
 
+        mApp_bg_layout = (LinearLayout) findViewById(R.id.custom_id_app_background);
 
         mIv_car_number = (ImageView) findViewById(R.id.iv_car_number);
         mIv_car_body = (ImageView) findViewById(R.id.iv_car_body);
@@ -168,7 +169,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         setSupportActionBar(toolbar);
 
 
-        TextView title_text_view = ActionBarTool.getInstance(mActivity,991).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText(getString(R.string.shut_camera));
 
         toolbar.setNavigationIcon(R.drawable.back_up_logo);
@@ -187,17 +188,33 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_car_number:
-                mIv_car_number.setImageDrawable(getResources().getDrawable(R.drawable.car_number_light));
+                if (getThemeTag() == 1) {
+                    mIv_car_number.setImageDrawable(getResources().getDrawable(R.drawable.car_number_dark));
+                } else {
+                    mIv_car_number.setImageDrawable(getResources().getDrawable(R.drawable.car_number_light));
+                }
                 Log.i(TAG, "onClick: " + "点击了拍车牌的照片");
                 shutPhoto(TYPE_NUMBER);
                 break;
             case R.id.iv_car_body:
-                mIv_car_body.setImageDrawable(getResources().getDrawable(R.drawable.car_body_light));
+                if (getThemeTag() == 1) {
+
+                    mIv_car_body.setImageDrawable(getResources().getDrawable(R.drawable.car_body_dark));
+                } else {
+                    mIv_car_body.setImageDrawable(getResources().getDrawable(R.drawable.car_body_light));
+
+                }
                 shutPhoto(TYPE_BODY);
                 break;
 
             case R.id.iv_car_goods:
-                mIv_car_goods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_light));
+                if (getThemeTag() == 1) {
+
+                    mIv_car_goods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_dark));
+                } else {
+                    mIv_car_goods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_light));
+
+                }
                 shutPhoto(TYPE_GOODS);
                 break;
             case R.id.bt_ok_send:
@@ -212,8 +229,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
 
     private void enterSureGoodsActivity() {
-
-
+//// TODO: 2017/7/25 解放
+/*
         if (mCurrent_color == null) {
             ToastUtils.singleToast("请确定车牌颜色");
             return;
@@ -221,7 +238,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             ToastUtils.singleToast("请拍摄车牌");
             return;
         } else {
-            if (getBitmap(mFilePath2)== null) {
+            if (getBitmap(mFilePath2) == null) {
                 ToastUtils.singleToast("请拍摄车身");
                 return;
             } else if (getBitmap(mFilePath3) == null) {
@@ -233,7 +250,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                     return;
                 }
             }
-        }
+        }*/
 
         SureGoodsActivity111.actionStart(PhotoActivity.this, mStationName, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
@@ -303,6 +320,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         Bitmap bitmap1 = processor.scale((float) 0.2);
         view.setImageBitmap(bitmap1);
     }
+
     private Bitmap getBitmap(String filePath) {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
         return bitmap;
@@ -353,6 +371,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
                 break;
         }
     }
+
 
     @Override
     protected void onDestroy() {
