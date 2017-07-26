@@ -35,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.GreenRoadApplication;
 import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
@@ -172,8 +171,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mActivity = this;
 
 
-
-
         initData();
         initSp();
         initLitePal();
@@ -204,10 +201,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         startActivity(intent);
                     }
                 }*/
-                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                intent.putExtra("username", mUsername);
-                intent.putExtra("stationName", mStationName);
-                startActivity(intent);
+                if (getModelTag() == 1) {
+                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                    intent.putExtra("username", mUsername);
+                    intent.putExtra("stationName", mStationName);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, ShootVideoActivity.class);
+                    intent.putExtra("username", mUsername);
+                    intent.putExtra("stationName", mStationName);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -482,6 +486,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //Log.i(TAG, "initData: "+ mAvailSpace1);
 
         PermissionUtils.verifyStoragePermissions(mActivity);
+
         if (mGoodsFile == null) {
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mGoodsFile = new File(mFilePath, "goodsImg");
@@ -522,9 +527,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
 
 
         mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
@@ -634,11 +636,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    private void changeModel() {
-        ToastUtils.singleToast("当前为拍照模式,是否切换为摄影模式");
-    }
-
-    private boolean tag_is_animation = true;
 
     /**
      * 点击主题菜单按钮改变App的主题
@@ -647,7 +644,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
 
     private void changeTheme() {
-        mHead_layout_main = (LinearLayout)findViewById(R.id.head_layout_main);
+        mHead_layout_main = (LinearLayout) findViewById(R.id.head_layout_main);
         mTv_app_name = (TextView) findViewById(R.id.tv_app_name);
         mTv_company_name = (TextView) findViewById(R.id.tv_company_name);
 
@@ -658,14 +655,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if (tag_is_animation) {
-                    Intent intent = new Intent(getContext(), AnimatorActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                } else {
-                    // 发送主题变更通知，让每一个注册监听事件的Activity主动更新UI.
-                    ((GreenRoadApplication) getApplication()).notifyByThemeChanged();
-                }
+
+                Intent intent = new Intent(getContext(), AnimatorActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
             }
         });
 
@@ -704,7 +698,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         helper.setBackgroundResourceByAttr(mTv_math_number_main_has, R.attr.custom_text_view_math_number);
         helper.setBackgroundResourceByAttr(mTv_math_number_main_has_not, R.attr.custom_text_view_math_number);
-
 
 
     }
@@ -857,6 +850,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         String downUrl = updateInfo.getData().getDownloadurl();//apk下载地址
                         String updateinfo = updateInfo.getData().getUpdateinfo();//apk更新详情
                         String appName = updateInfo.getData().getAppname();
+
+                        Logger.i(isForce + "------" + downUrl + " -----"
+                                + updateinfo + " -----" + appName);
+
                         if (("1".equals(isForce)) && !TextUtils.isEmpty(updateinfo)) {//强制更新
                             Logger.i("强制更新");
                             forceUpdate(MainActivity.this, appName, downUrl, updateinfo);
@@ -870,6 +867,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     @Override
                     public void onError() {
                         noneUpdate(MainActivity.this);
+                        Logger.i("返回信息为空,更新错误!");
+
                     }
                 });
     }
@@ -890,6 +889,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!canDownloadState()) {
+                    Logger.i("立即更新,,,,当前手机状态是否为可下载状态");
                     showDownloadSetting();
                     return;
                 }
@@ -918,7 +918,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     showDownloadSetting();
                     return;
                 }
-                AppInnerDownLoder.downLoadApk(MainActivity.this, downUrl, appName);
+                AppInnerDownLoder.downLoadApk(context, downUrl, appName);
                 //  DownLoadApk.download(MainActivity.this,downUrl,updateinfo,appName);
             }
         }).setNegativeButton("暂不更新", new DialogInterface.OnClickListener() {
@@ -979,6 +979,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         return true;
     }
+
+    private void changeModel() {
+        switchCurrentCameraModel();
+        if (getModelTag() == 1) {
+            ToastUtils.singleToast("切换为拍照模式");
+        } else {
+            ToastUtils.singleToast("切换为摄影模式");
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

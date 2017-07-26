@@ -53,5 +53,6 @@
     <string name="error_field_required">账号不能为空</string>
     <string name="theme_app">主题</string>
     <string name="nav_model">模式</string>
+    <string name="shoot_video">录制视频</string>
 
 </resources>

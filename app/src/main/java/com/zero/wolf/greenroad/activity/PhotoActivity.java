@@ -379,7 +379,4 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-    public void finishSelf() {
-        mActivity.finish();
-    }
 }

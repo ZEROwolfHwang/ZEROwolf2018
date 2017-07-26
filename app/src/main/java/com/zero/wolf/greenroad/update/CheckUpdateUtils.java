@@ -26,7 +26,7 @@ public class CheckUpdateUtils {
         HttpMethods.getInstance().toSubscribe(observable, new Subscriber<UpdateAppInfo>() {
             @Override
             public void onCompleted() {
-                Logger.i("更新app完成");
+
             }
 
             @Override

@@ -101,7 +101,6 @@
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/license_color_white_text</item>
         <item name="android:textSize">@dimen/text18</item>
     </style>
 
@@ -114,6 +113,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- 全屏的-->
+    <style name="FullTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
     <dimen name="layout_margin80dp">80dp</dimen>
 </resources>

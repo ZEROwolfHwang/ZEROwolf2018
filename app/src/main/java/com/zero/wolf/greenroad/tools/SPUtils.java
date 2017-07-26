@@ -14,6 +14,9 @@ import java.util.Map;
 public class SPUtils {
     public static final String KEY_THEME_TAG = "GreenRoad_ThemeTag";
 
+    //拍摄的模式,1表示拍摄图片,-1表示摄影
+    public static final String KEY_CAMERA_MODEL = "key_camera_model";
+
     public static final String ISACTIVATIONSUCCESS= "isactivationsuccess";
 
     public static final String SHAREDPRENAME = "activation";
