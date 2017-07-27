@@ -29,7 +29,7 @@ import com.zero.wolf.greenroad.activity.PhotoActivity;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.PostContent;
-import com.zero.wolf.greenroad.interfacy.TextChangeListenner;
+import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.manager.CarNumberCount;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
@@ -52,7 +52,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class GoodsFragment extends Fragment implements TextChangeListenner.AfterTextListener {
+public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTextListener {
 
     private static GoodsFragment sFragment;
     private RecyclerView mRecyclerView;
@@ -194,7 +194,7 @@ public class GoodsFragment extends Fragment implements TextChangeListenner.After
         mIvClearTextGoods = (ImageView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
         mIvClearTextGoods.setOnClickListener((v -> mEditText.setText("")));
 
-        mEditText.addTextChangedListener(new TextChangeListenner(this));
+        mEditText.addTextChangedListener(new TextChangeWatcher(this));
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,28 +2,18 @@ package com.zero.wolf.greenroad.litepalbean;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.Date;
-
 /**
  * Created by Administrator on 2017/7/6.
  */
 
 public class SupportLoginUser extends DataSupport {
 
-    private Date logindate;
+    private String logindate;
     private String stationName;
     private String username;
     private String password;
     private String operator;
-    private boolean isCheck;
 
-    public boolean isCheck() {
-        return isCheck;
-    }
-
-    public void setCheck(boolean check) {
-        isCheck = check;
-    }
 
     public String getStationName() {
         return stationName;
@@ -33,11 +23,11 @@ public class SupportLoginUser extends DataSupport {
         this.stationName = stationName;
     }
 
-    public Date getLogindate() {
+    public String getLogindate() {
         return logindate;
     }
 
-    public void setLogindate(Date logindate) {
+    public void setLogindate(String logindate) {
         this.logindate = logindate;
     }
 

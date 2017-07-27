@@ -13,12 +13,12 @@ import android.text.TextWatcher;
  * @updataDes ${描述更新内容}
  */
 
-public class TextChangeListenner implements TextWatcher {
+public class TextChangeWatcher implements TextWatcher {
 
 
     private AfterTextListener mAfterTextListener;
 
-    public TextChangeListenner(AfterTextListener afterTextListener) {
+    public TextChangeWatcher(AfterTextListener afterTextListener) {
         mAfterTextListener = afterTextListener;
     }
 

@@ -2,47 +2,44 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:checkableBehavior="single">
-<group>
+    <group>
+
+        <item
+            android:id="@+id/nav_cancer"
+            android:icon="@drawable/cancel_count"
+            android:title="@string/cancel_count">
+        </item>
+        <item
+            android:id="@+id/nav_post"
+            android:icon="@drawable/post_not_send"
+            android:title="@string/post_upload_not">
+        </item>
+        <item
+            android:id="@+id/nav_model"
+            android:icon="@drawable/nav_camera_model"
+            android:title="@string/nav_model">
+        </item>
+
+        <item
+
+            android:id="@+id/nav_about"
+            android:icon="@drawable/about_app"
+            android:title="@string/about_app"/>
+        <item
+            android:id="@+id/nav_update"
+            android:icon="@drawable/update_app"
+            android:title="@string/update_app"/>
+        <item
+            android:id="@+id/nav_theme"
+            android:icon="@drawable/footer_item_theme"
+            android:title="@string/theme_app"/>
+
+        <item
+            android:id="@+id/nav_backup"
+            android:icon="@drawable/footer_item_location"
+            android:title="@string/back_up_app"/>
+
+    </group>
 
 
-    <item
-        android:title="@string/cancel_count"
-        android:icon="@drawable/cancel_count"
-        android:id="@+id/nav_cancer">
-    </item>
-    <item
-        android:title="@string/post_upload_not"
-        android:icon="@drawable/post_not_send"
-        android:id="@+id/nav_post">
-    </item>
-    <item
-        android:title="@string/nav_model"
-        android:icon="@drawable/nav_camera_model"
-        android:id="@+id/nav_model">
-    </item>
-
-
-</group>
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/about_app"
-                android:title="@string/about_app"/>
-            <item
-                android:id="@+id/nav_update"
-                android:icon="@drawable/update_app"
-                android:title="@string/update_app"/>
-            <item
-                android:id="@+id/nav_theme"
-                android:icon="@drawable/theme_app"
-                android:title="@string/theme_app"/>
-
-            <item
-                android:id="@+id/nav_backup"
-                android:icon="@drawable/back_up_app"
-                android:title="@string/back_up_app"/>
-
-        </menu>
-    </item>
 </menu>

@@ -73,7 +73,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Subscriber;
 
 import static com.zero.wolf.greenroad.R.id.nav_theme;
@@ -90,6 +92,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
+
+    @BindView(R.id.footer_item_setting)
+    TextView mTv_footer_setting;
+    @BindView(R.id.footer_item_theme)
+    TextView mTv_footer_theme;
+    @BindView(R.id.footer_item_location)
+    TextView mTv_footer_location;
+
 
     private String mFilePath;
     private AppCompatActivity mActivity;
@@ -567,6 +577,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTv_math_number_main_has_not = (TextView) findViewById(R.id.tv_math_number_main_has_not);
 
 
+
+
+        TextView textView = (TextView) findViewById(R.id.footer_item_theme);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.singleToast("点击了页脚布局的设置按钮");
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
     }
 
     private void initSp() {
@@ -578,6 +600,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         //如果cra_not_count为空则创建，否则不创建
         if (SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0) == null) {
             SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
+
         }
     }
 
@@ -989,9 +1012,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-
+    @OnClick(R.id.footer_item_setting)
+    public void onSetting(View view) {
+        ToastUtils.singleToast("点击了设置");
+    }
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
         //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
     }

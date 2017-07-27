@@ -21,7 +21,7 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
-import com.zero.wolf.greenroad.interfacy.TextChangeListenner;
+import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.tools.ACache;
@@ -42,7 +42,7 @@ import static com.zero.wolf.greenroad.R.id.tv_change;
  * Created by Administrator on 2017/7/17.
  */
 
-public class CarNumberFragment extends Fragment implements TextChangeListenner.AfterTextListener {
+public class CarNumberFragment extends Fragment implements TextChangeWatcher.AfterTextListener {
 
     private List<SerializableNumber> mNumberList = new ArrayList<>();
     private static CarNumberFragment sFragment;
@@ -149,7 +149,7 @@ public class CarNumberFragment extends Fragment implements TextChangeListenner.A
         mIvClearText_number.setOnClickListener((v -> mEditText.setText("")));
 
 
-        mEditText.addTextChangedListener(new TextChangeListenner(this));
+        mEditText.addTextChangedListener(new TextChangeWatcher(this));
 
 
     }

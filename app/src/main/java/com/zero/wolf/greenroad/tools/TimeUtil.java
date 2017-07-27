@@ -2,6 +2,9 @@ package com.zero.wolf.greenroad.tools;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,23 +36,34 @@ public class TimeUtil {
         return shutTime;
     }
 
-    public static Date getCurrentTimeToDate() {
+    public static String getCurrentTimeToDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
-        Date curDate = new Date(System.currentTimeMillis());
+        String curTime = formatter.format(new Date(System.currentTimeMillis()));
         // String shutTime = formatter.format(curDate);
-        return curDate;
+        return curTime;
     }
 
     /**
      * 通过时间秒毫秒数判断两个时间的间隔
-     *
-     * @param date1
-     * @param date2
+     *time1 保存在数据库中的时间
+     *time2 当前登陆的时间的时间
      * @return
      */
-    public static int differentDaysByMillisecond(Date date1, Date date2) {
-        int days = (int) ((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
-        return days;
+    public static int differentDaysByMillisecond(String time1, String time2) {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            Date date1 = format.parse(time1);
+            Date date2 = format.parse(time2);
+            int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
+           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
+            Logger.i(days + "-----days");
+            return days;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 

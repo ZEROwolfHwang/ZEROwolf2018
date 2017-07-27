@@ -30,6 +30,9 @@ public class ShootVideoActivity extends BaseActivity  {
     Button playBtn;
     @BindView(R.id.shutBtn)
     Button shutBtn;
+    @BindView(R.id.bt_ok_send_video)
+    Button mBtnSendVideo;
+
 
     @BindView(R.id.activity_play)
     RelativeLayout activityPlay;

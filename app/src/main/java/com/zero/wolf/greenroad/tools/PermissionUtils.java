@@ -45,18 +45,4 @@ public class PermissionUtils {
         }
     }
 
-    public static void verifyCameraPermissions(AppCompatActivity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-
-        }
-    }
 }

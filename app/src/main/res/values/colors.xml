@@ -29,6 +29,7 @@
     <color name="white_dark_login_sure">#787879</color>
     <color name="login_check_text_blue">#23ff48</color>
     <color name="login_bg_white">#ececec</color>
+    <color name="login_bg_white_translate">#89ececec</color>
 
 
 </resources>
