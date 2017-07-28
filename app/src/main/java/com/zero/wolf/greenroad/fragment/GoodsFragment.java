@@ -108,64 +108,6 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         return view;
     }
 
-
-
-
-
-    /**
-     * 向服务器Post所有的信息
-     *
-     * @param
-     */
-    /*private void postAccept(String currentTime) {
-
-        List<MultipartBody.Part> parts = PathUtil.getMultipartBodyPart(mPhotoPath1, mPhotoPath2, mPhotoPath3);
-
-        Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi()
-                .postThreeImg("大货车", mColor, currentTime, mUsername,
-                        mCar_station, mCar_number, mCar_goods, parts);
-
-        observable.compose(RxHolder.io_main()).subscribe(new Subscriber<HttpResultPostImg>() {
-            @Override
-            public void onCompleted() {
-                Logger.i("三张照片上传成功");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Logger.i(e.getMessage());
-                BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
-
-                ToastUtils.singleToast("上传失败,已保存至本地");
-            }
-
-            @Override
-            public void onNext(HttpResultPostImg httpResultPostImg) {
-                BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
-                int code = httpResultPostImg.getCode();
-                String msg = httpResultPostImg.getMsg();
-                if (code == 200) {
-                    // backToPhotoActivity();
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    CarNumberCount.CarNumberCut(getContext());
-                    ToastUtils.singleToast("车牌号为" + mCar_number + "上传成功");
-                } else {
-
-                    ToastUtils.singleToast("上传失败,已保存至本地");
-                    //backToPhotoActivity();
-                }
-                Logger.i("" + code);
-                Logger.i("" + msg);
-            }
-        });
-    }*/
-
-
-
     private String getDialogSendMessage() {
         String dialog_message = "车  牌  号：" + mCar_number + "\n"
                 + "货物名称：" + mCar_goods + "\n"
@@ -232,7 +174,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                         } else {
                             SaveToLocation.saveLocalLite(mCurrentTimeTos,"卡车", mUsername, mColor,
                                     mCar_number,mCar_station,mCar_goods,
-                                    mPhotoPath1, mPhotoPath2, mPhotoPath3);
+                                    mPhotoPath1, mPhotoPath2, mPhotoPath3, 0);
                             backToPhotoActivity();
                             ToastUtils.singleToast("上传失败,已保存至本地");
                         }

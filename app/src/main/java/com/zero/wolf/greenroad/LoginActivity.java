@@ -213,7 +213,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             login2MainActivity(username, operator, stationName);
             if (mIsConnected) {
                 //ToastUtils.singleToast("登陆成功");
-                Snackbar.make(mBt_login, "登陆成功", Snackbar.LENGTH_SHORT);
+                //// TODO: 2017/7/28  snakebar
+                Snackbar.make(mBt_login, "登陆成功", Snackbar.LENGTH_SHORT).show();
             } else {
                 ToastUtils.singleToast("无网络连接状态登陆成功");
             }

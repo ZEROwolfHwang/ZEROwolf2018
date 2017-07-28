@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -35,32 +34,13 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     public static final int TYPE_BODY = 102;
     public static final int TYPE_GOODS = 103;
 
-    public static final int NONE = 0;
-    public static final int PHOTOHRAPH = 1;// 拍照
-    public static final int PHOTOZOOM = 2; // 缩放
-    public static final int PHOTORESOULT = 3;// 结果
-
-    public static final String IMAGE_UNSPECIFIED = "image/*";
-
     private static final String TAG = "PhotoActivity";
-    private static final int PHOTOHRAPH_NUMBER = 111;
-    private static final int PHOTOHRAPH_BODY = 112;
-    private static final int PHOTOHRAPH_GOODS = 113;
-    private static final int PHOTORESOULT_1 = 221;
-    private static final int PHOTORESOULT_2 = 222;
-    private static final int PHOTORESOULT_3 = 223;
+
     private static final String COLOR_GREEN = "绿牌";
     private static final String COLOR_YELLOW = "黄牌";
     private static final String COLOR_BLUE = "蓝牌";
     private static final String COLOR_BLACK = "黑牌";
     private static final String COLOR_WHITE = "白牌";
-    private static final int SHUT_CAMERA = 441;
-    private static final int SHUT_RECORDING = 442;
-
-    private static final int enter_sure_person = 551;
-    private static final int enter_sure_smart = 552;
-    private static int currentShut = SHUT_CAMERA;
-
 
     private AppCompatActivity mActivity;
 
@@ -79,7 +59,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private String mFilePath2;
     private String mFilePath3;
     private String mUsername;
-    private RadioButton mLicense_yellow;
     private String mCurrent_color;
     private RadioGroup mRadio_group_color;
     private File mFile;
@@ -131,7 +110,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private void initData() {
         if (mFile == null) {
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mFile = new File(mFilePath, "imggreen");
+            mFile = new File(mFilePath, "GreenShoot");
             mFile.mkdirs();
         }
         mFilePath_str = mFile.getPath();
@@ -331,8 +310,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
      * //初始化将黄牌设为按下状态等
      */
     private void initRadioColor() {
-        mLicense_yellow = (RadioButton) findViewById(R.id.license_yellow);
-
         mRadio_group_color = (RadioGroup) findViewById(R.id.radio_group_color);
         mRadio_group_color.setOnCheckedChangeListener(this);
     }

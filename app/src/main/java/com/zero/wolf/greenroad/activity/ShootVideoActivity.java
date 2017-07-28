@@ -49,6 +49,7 @@ public class ShootVideoActivity extends BaseActivity  {
         mActivity = this;
         ButterKnife.bind(mActivity);
 
+
         uri = getIntent().getStringExtra(DATA);
 
         if (uri == null) {

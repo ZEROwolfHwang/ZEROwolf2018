@@ -15,6 +15,12 @@
             android:title="@string/post_upload_not">
         </item>
         <item
+            android:id="@+id/nav_preview"
+            android:icon="@drawable/nav_preview"
+            android:title="@string/nav_preview">
+        </item>
+
+        <item
             android:id="@+id/nav_model"
             android:icon="@drawable/nav_camera_model"
             android:title="@string/nav_model">
@@ -29,11 +35,6 @@
             android:id="@+id/nav_update"
             android:icon="@drawable/update_app"
             android:title="@string/update_app"/>
-        <item
-            android:id="@+id/nav_theme"
-            android:icon="@drawable/footer_item_theme"
-            android:title="@string/theme_app"/>
-
         <item
             android:id="@+id/nav_backup"
             android:icon="@drawable/footer_item_location"

@@ -6,7 +6,7 @@ import java.io.File;
 
 public class VideoFileUtils {
     private static final String SD_PATH = Environment.getExternalStorageDirectory().getPath();
-    public static final String VIDEONAME = "videoGreen";
+    public static final String VIDEONAME = "GreenVideo";
 
     public static String getAppPath() {
         StringBuilder sb = new StringBuilder();

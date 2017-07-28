@@ -12,7 +12,6 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.manager.CarNumberCount;
-import com.zero.wolf.greenroad.tools.ArrayCollector;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.RxHolder;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -127,6 +126,7 @@ public class PostIntentService extends IntentService {
                 mParts = post_content.getParts();
                 Logger.i(mCar_goods + "000000" + mColor);
 
+
                 Observable<HttpResultPostImg> observable = HttpMethods.getInstance().getApi()
                         .postThreeImg(mCar_type, mColor, mCurrentTime, mUsername,
                                 mCar_station, mCar_number, mCar_goods, mParts);
@@ -142,7 +142,7 @@ public class PostIntentService extends IntentService {
                         Logger.i(e.getMessage());
                         SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mUsername, mColor,
                                 mCar_number, mCar_station, mCar_goods,
-                                mPhotoPath1, mPhotoPath2, mPhotoPath3);
+                                mPhotoPath1, mPhotoPath2, mPhotoPath3,0);
                         ToastUtils.singleToast("上传失败,已保存至本地");
                     }
 
@@ -158,13 +158,16 @@ public class PostIntentService extends IntentService {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mUsername, mColor,
+                                    mCar_number, mCar_station, mCar_goods,
+                                    mPhotoPath1, mPhotoPath2, mPhotoPath3,1);
                             CarNumberCount.CarNumberCut(getContext());
 
                             ToastUtils.singleToast("车牌号为" + mCar_number + "上传成功");
                         } else {
                             SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mUsername, mColor,
                                     mCar_number, mCar_station, mCar_goods,
-                                    mPhotoPath1, mPhotoPath2, mPhotoPath3);
+                                    mPhotoPath1, mPhotoPath2, mPhotoPath3,0);
                             ToastUtils.singleToast("上传失败,已保存至本地");
                         }
                         Logger.i("" + code);
@@ -187,8 +190,7 @@ public class PostIntentService extends IntentService {
                 //sendServiceStatus("服务启动");
 
                 List<SupportPhotoLite> liteList = DataSupport
-                        //.where("is_post==?", "NO").find(SupportPhotoLite.class);
-                        .findAll(SupportPhotoLite.class);
+                        .where("isPost = ?", "0").find(SupportPhotoLite.class);
                 int size = liteList.size();
                 Logger.i("未上传车辆" + size);
 
@@ -200,14 +202,11 @@ public class PostIntentService extends IntentService {
                     String photoPath1 = liteList.get(i).getPhotoPath1();
                     String photoPath2 = liteList.get(i).getPhotoPath2();
                     String photoPath3 = liteList.get(i).getPhotoPath3();
-                    String shuttime = liteList.get(i).getShuttime();
+                    String shutTime = liteList.get(i).getShutTime();
                     String station = liteList.get(i).getStation();
                     String username = liteList.get(i).getUsername();
                     String car_type = liteList.get(i).getCar_type();
 
-                    if (photoPath1 == null) {
-                        return;
-                    }
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -218,7 +217,7 @@ public class PostIntentService extends IntentService {
                             .getMultipartBodyPart(photoPath1, photoPath2, photoPath3);
                     Observable<HttpResultPostImg> observable = HttpMethods.getInstance()
                             .getApi().postThreeImg("大货车", license_color,
-                                    shuttime, username, station, license_plate, goods, parts);
+                                    shutTime, username, station, license_plate, goods, parts);
 
 
                     mNotPostImgSubscriber = new Subscriber<HttpResultPostImg>() {
@@ -229,6 +228,7 @@ public class PostIntentService extends IntentService {
 
                         @Override
                         public void onError(Throwable e) {
+
                             Logger.i(e.getMessage());
                         }
 
@@ -241,9 +241,9 @@ public class PostIntentService extends IntentService {
                                 //Logger.i("第" + finalI + license_plate + "---上传成功");
                                 // TODO: 2017/7/24 取消删除数据库.
                                 CarNumberCount.CarNumberCut(mMainActivity);
-                                // DataSupport.deleteAll(SupportPhotoLite.class, "shuttime=?", shuttime);
-
-
+                                SupportPhotoLite photoLite = new SupportPhotoLite();
+                                photoLite.setIsPost(1);
+                                photoLite.updateAll("shutTime==? and username==?", shutTime, username);
                             } else {
                                 if (code == 300) {
                                     ToastUtils.singleToast("上传失败");
@@ -255,18 +255,9 @@ public class PostIntentService extends IntentService {
                         }
                     };
                     observable.compose(RxHolder.io_main()).subscribe(mNotPostImgSubscriber);
-
                 }
-
-                Logger.i(ArrayCollector.getList().toString());
-
             }
-            Logger.i(ArrayCollector.getList().toString());
-
-
         }
-        Logger.i(ArrayCollector.getList().toString());
-
     }
 
     /**
@@ -278,11 +269,11 @@ public class PostIntentService extends IntentService {
 
         mAfter_post_count = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
 
-        Logger.i("上传成功车辆数：" + (mBefore_post_count - mAfter_post_count) + "\n" +
+       /* Logger.i("上传成功车辆数：" + (mBefore_post_count - mAfter_post_count) + "\n" +
                 "上传失败车辆数：" + mAfter_post_count);
         ToastUtils.singleToast("上传成功车辆数：" + (mBefore_post_count - mAfter_post_count) + "\n" +
                 "上传失败车辆数：" + mAfter_post_count);
-
+*/
         // sendServiceStatus();
 
         if (mPostImgSubscriber != null && mPostImgSubscriber.isUnsubscribed()) {

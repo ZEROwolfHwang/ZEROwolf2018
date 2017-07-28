@@ -85,8 +85,6 @@ public class RecordActivity extends AppCompatActivity implements SurfaceHolder.C
         setContentView(R.layout.activity_record);
         ButterKnife.bind(this);
 
-        RequestUserPermission requestUserPermission = new RequestUserPermission(this);
-        requestUserPermission.verifyStoragePermissions();
 
         videoDir();
         initView();

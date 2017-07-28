@@ -8,14 +8,14 @@ import org.litepal.crud.DataSupport;
 
 public class SupportPhotoLite extends DataSupport {
 
-    private String shuttime;
+    private String shutTime;
 
-    public String getShuttime() {
-        return shuttime;
+    public String getShutTime() {
+        return shutTime;
     }
 
-    public void setShuttime(String shuttime) {
-        this.shuttime = shuttime;
+    public void setShutTime(String shutTime) {
+        this.shutTime = shutTime;
     }
 
     private String car_type;
@@ -27,6 +27,15 @@ public class SupportPhotoLite extends DataSupport {
     private String station;
     private String license_plate;
     private String goods;
+    private int isPost;//1 为上传成功   0 为上传失败或未上传
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
+    }
 
     public String getCar_type() {
         return car_type;

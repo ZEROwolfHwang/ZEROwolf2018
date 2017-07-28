@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:clickable="true"
+            android:layout_marginLeft="@dimen/layout_margin20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -36,7 +37,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:gravity="center"
+                android:gravity="left|center_vertical"
                 android:drawableLeft="@drawable/footer_item_setting"
                 android:text="@string/action_settings" />
             <TextView
@@ -44,7 +45,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:gravity="center"
+                android:gravity="left|center_vertical"
                 android:drawableLeft="@drawable/footer_item_theme"
                 android:text="@string/theme_app" />
 
@@ -54,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:drawableLeft="@drawable/footer_item_location"
-                android:gravity="center"
+                android:gravity="left|center_vertical"
                 android:text="位置" />
 
         </LinearLayout>

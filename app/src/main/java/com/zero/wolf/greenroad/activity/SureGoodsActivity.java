@@ -721,7 +721,7 @@ public class SureGoodsActivity extends BaseActivity {
      */
     private void saveLocalLite(String currentTime) {
         SupportPhotoLite supportPhotoLite = new SupportPhotoLite();
-        supportPhotoLite.setShuttime(currentTime);
+        supportPhotoLite.setShutTime(currentTime);
         supportPhotoLite.setUsername(mUsername);
         supportPhotoLite.setGoods(mCar_goods);
         supportPhotoLite.setLicense_plate(mLicense_plate);

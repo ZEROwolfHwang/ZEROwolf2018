@@ -78,7 +78,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Subscriber;
 
-import static com.zero.wolf.greenroad.R.id.nav_theme;
 import static com.zero.wolf.greenroad.R.id.tv_change;
 import static org.litepal.crud.DataSupport.findAll;
 
@@ -499,7 +498,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (mGoodsFile == null) {
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mGoodsFile = new File(mFilePath, "goodsImg");
+            mGoodsFile = new File(mFilePath, "GreenGoods");
             mGoodsFile.mkdirs();
         }
         mGoodsFilePath = mGoodsFile.getPath();
@@ -576,17 +575,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTv_math_number_main_has = (TextView) findViewById(R.id.tv_math_number_main_has);
         mTv_math_number_main_has_not = (TextView) findViewById(R.id.tv_math_number_main_has_not);
 
-
-
-
-        TextView textView = (TextView) findViewById(R.id.footer_item_theme);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtils.singleToast("点击了页脚布局的设置按钮");
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-            }
+        mTv_math_number_main_has_not.setOnClickListener(v ->
+        {
+            post_not_upload();
+            onResume();
+            Logger.i("点击了未上传的TextVIEW按钮");
         });
 
     }
@@ -629,6 +622,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+    @OnClick({R.id.footer_item_setting,
+            R.id.footer_item_theme, R.id.footer_item_location})
+    public void onFooterClick(View view) {
+        switch (view.getId()) {
+            case R.id.footer_item_setting:
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.footer_item_theme:
+                changeTheme();
+                break;
+            case R.id.footer_item_location:
+                ToastUtils.singleToast("在这里做更新位置的处理");
+                break;
+            default:
+                break;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -648,15 +663,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             post_not_upload();
             refresh();
             Logger.i("点击了未上传按钮");
-        } else if (id == nav_theme) {
-            changeTheme();
         } else if (id == R.id.nav_model) {
             changeModel();
+        } else if (id == R.id.nav_preview) {
+            previewPhotoInfo();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void previewPhotoInfo() {
+        Intent intent = new Intent(this, PreviewPhotoActivity.class);
+        startActivity(intent);
+
     }
 
 
@@ -1016,6 +1037,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onSetting(View view) {
         ToastUtils.singleToast("点击了设置");
     }
+
     @Override
     protected void onDestroy() {
 
