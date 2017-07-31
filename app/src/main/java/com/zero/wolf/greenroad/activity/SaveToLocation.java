@@ -20,12 +20,13 @@ public class SaveToLocation {
      * @param currentTime
      * @param
      */
-    public static void saveLocalLite(String currentTime, String mCar_type, String mUsername, String mColor,
+    public static void saveLocalLite(String currentTime, String mCar_type, String operator, String mUsername, String mColor,
                                      String mCar_number, String mCar_station, String mCar_goods,
                                      String mPhotoPath1, String mPhotoPath2, String mPhotoPath3, int isPost) {
         SupportPhotoLite supportPhotoLite = new SupportPhotoLite();
         supportPhotoLite.setShutTime(currentTime);
         supportPhotoLite.setCar_type(mCar_type);
+        supportPhotoLite.setOperator(operator);
         supportPhotoLite.setUsername(mUsername);
         supportPhotoLite.setLicense_color(mColor);
         supportPhotoLite.setLicense_plate(mCar_number);

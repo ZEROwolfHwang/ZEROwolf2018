@@ -8,6 +8,7 @@ import org.litepal.crud.DataSupport;
 
 public class SupportPhotoLite extends DataSupport {
 
+
     private String shutTime;
 
     public String getShutTime() {
@@ -24,10 +25,19 @@ public class SupportPhotoLite extends DataSupport {
     private String photoPath3;
     private String license_color;
     private String username;
+    private String operator;
     private String station;
     private String license_plate;
     private String goods;
     private int isPost;//1 为上传成功   0 为上传失败或未上传
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
     public int getIsPost() {
         return isPost;

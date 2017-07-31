@@ -78,6 +78,16 @@ public class FileUtils {
             }
         }
     }
+
+    public static void deleteJpgPreview(String file) {
+
+        File file1 = new File(file);
+        if(file1.isFile()){
+            file1.delete();
+        }
+    }
+
+
     /**
      * 获取文件夹内文件的长度
      *图片的格式

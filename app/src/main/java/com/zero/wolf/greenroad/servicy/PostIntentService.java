@@ -71,6 +71,7 @@ public class PostIntentService extends IntentService {
     private ArrayList<String> mFailedArrayList;
     private int mBefore_post_count;
     private int mAfter_post_count;
+    private String mOperator;
 
 
     public PostIntentService() {
@@ -112,6 +113,8 @@ public class PostIntentService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_POST_CONTENT.equals(action)) {
                 PostContent post_content = intent.getParcelableExtra(EXTRA_POST_CONTENT);
+
+                mOperator = post_content.getOperator();
                 mStatiomName = post_content.getStatiomName();
                 mCar_goods = post_content.getCar_goods();
                 mColor = post_content.getColor();
@@ -140,7 +143,7 @@ public class PostIntentService extends IntentService {
                     @Override
                     public void onError(Throwable e) {
                         Logger.i(e.getMessage());
-                        SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mUsername, mColor,
+                        SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mOperator,mUsername, mColor,
                                 mCar_number, mCar_station, mCar_goods,
                                 mPhotoPath1, mPhotoPath2, mPhotoPath3,0);
                         ToastUtils.singleToast("上传失败,已保存至本地");
@@ -158,14 +161,14 @@ public class PostIntentService extends IntentService {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mUsername, mColor,
+                            SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mOperator,mUsername, mColor,
                                     mCar_number, mCar_station, mCar_goods,
                                     mPhotoPath1, mPhotoPath2, mPhotoPath3,1);
                             CarNumberCount.CarNumberCut(getContext());
 
                             ToastUtils.singleToast("车牌号为" + mCar_number + "上传成功");
                         } else {
-                            SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mUsername, mColor,
+                            SaveToLocation.saveLocalLite(mCurrentTime, "卡车", mOperator,mUsername, mColor,
                                     mCar_number, mCar_station, mCar_goods,
                                     mPhotoPath1, mPhotoPath2, mPhotoPath3,0);
                             ToastUtils.singleToast("上传失败,已保存至本地");

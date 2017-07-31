@@ -55,6 +55,6 @@
     <string name="nav_model">模式</string>
     <string name="shoot_video">录制视频</string>
     <string name="nav_preview">预览</string>
-    <string name="preview_photo">预览照片</string>
+    <string name="preview_photo">预览信息</string>
 
 </resources>

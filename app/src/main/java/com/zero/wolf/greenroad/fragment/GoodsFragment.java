@@ -72,12 +72,14 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private String mCar_station;
     private static List<SortModel> sGoodsList;
     private String mCurrentTimeTos;
+    private static String mOperator;
 
-    public static GoodsFragment newInstance(String username, String stationName,
+    public static GoodsFragment newInstance(String operator, String username, String stationName,
                                             String color, String photoPath1, String photoPath2, String photoPath3, List<SortModel> goodsList, Context context) {
         if (sFragment == null) {
             sFragment = new GoodsFragment();
         }
+        mOperator = operator;
         sGoodsList = goodsList;
         sContext = context;
         mUsername = username;
@@ -172,7 +174,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                             backToPhotoActivity();
                            // postAccept(TimeUtil.getCurrentTimeTos());
                         } else {
-                            SaveToLocation.saveLocalLite(mCurrentTimeTos,"卡车", mUsername, mColor,
+                            SaveToLocation.saveLocalLite(mCurrentTimeTos,"卡车", mOperator,mUsername, mColor,
                                     mCar_number,mCar_station,mCar_goods,
                                     mPhotoPath1, mPhotoPath2, mPhotoPath3, 0);
                             backToPhotoActivity();
@@ -213,6 +215,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         content.setCar_station(mCar_station);
         content.setCar_goods(mCar_goods);
         content.setUsername(mUsername);
+        content.setOperator(mOperator);
         content.setParts(parts);
         content.setCurrentTime(mCurrentTimeTos);
         content.setPhotoPath1(mPhotoPath1);

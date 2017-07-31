@@ -48,6 +48,7 @@ public class SureGoodsActivity111 extends BaseActivity {
     private Context mContext;
     private String mStationName;
     private ArrayList<SortModel> mAcacheGoods;
+    private String mOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,16 +139,17 @@ public class SureGoodsActivity111 extends BaseActivity {
 
     private void initViewPagerAndTabs() {
         mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),
-                mUsername,mStationName,mColor,mPhotoPath1,mPhotoPath2,mPhotoPath3,mGoodsList,this);
+                mOperator,mUsername,mStationName,mColor,mPhotoPath1,mPhotoPath2,mPhotoPath3,mGoodsList,this);
         mViewPagerSure.setOffscreenPageLimit(3);//设置viewpager预加载页面数
         mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
 //        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
         mTabLayoutSure.setupWithViewPager(mViewPagerSure);
     }
 
-    public static void actionStart(Context context, String stationName, String color, String username
+    public static void actionStart(Context context, String operator,String stationName, String color, String username
             , String photoPath1, String photoPath2, String photoPath3) {
         Intent intent = new Intent(context, SureGoodsActivity111.class);
+        intent.putExtra("operator", operator);
         intent.putExtra("stationName", stationName);
         intent.putExtra("username", username);
         intent.putExtra("photoPath1", photoPath1);
@@ -163,6 +165,7 @@ public class SureGoodsActivity111 extends BaseActivity {
      */
     private void getIntentData() {
         Intent intent = getIntent();
+        mOperator = intent.getStringExtra("operator");
         mUsername = intent.getStringExtra("username");
         mColor = intent.getStringExtra("color");
         mStationName = intent.getStringExtra("stationName");

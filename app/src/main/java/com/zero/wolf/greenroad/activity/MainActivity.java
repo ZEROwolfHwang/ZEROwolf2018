@@ -214,11 +214,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
                     intent.putExtra("username", mUsername);
                     intent.putExtra("stationName", mStationName);
+                    intent.putExtra("operator", mOperator);
+
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(MainActivity.this, ShootVideoActivity.class);
                     intent.putExtra("username", mUsername);
                     intent.putExtra("stationName", mStationName);
+                    intent.putExtra("operator", mOperator);
                     startActivity(intent);
                 }
             }
@@ -293,6 +296,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                     Logger.i("返回");
                                     return;
                                 } else {
+                                    //本地保存的货物小图标的长度与服务器长度不一致
                                     DataSupport.deleteAll(SupportGoods.class);
                                     FileUtils.deleteJpg(new File(mGoodsFilePath));
                                     new Thread(new Runnable() {
@@ -795,10 +799,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void cancelCount() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle("清空本地保存的未上传车辆");
-        dialog.setMessage("是否对拍摄车辆以及上传车辆进行重新计数");
+        dialog.setTitle("将已拍摄车辆及未上传车辆清零重新计数");
+        dialog.setMessage("点击“确定”将清空计数" + "\""+
+                "点击“取消”将取消该操作");
         dialog.setCancelable(false);
-        dialog.setPositiveButton("清空", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface di, int which) {
                 DataSupport.deleteAll(SupportPhotoLite.class);

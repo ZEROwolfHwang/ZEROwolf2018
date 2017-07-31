@@ -25,6 +25,7 @@ public class PostContent implements Parcelable {
     private String color;
     private String currentTime;
     private String username;
+    private String operator;
     private String car_station;
     private String car_number;
     private String car_goods;
@@ -38,34 +39,19 @@ public class PostContent implements Parcelable {
 
     }
 
-    @Override
-    public String toString() {
-        return "PostContent{" +
-                "car_type='" + car_type + '\'' +
-                ", color='" + color + '\'' +
-                ", currentTime='" + currentTime + '\'' +
-                ", username='" + username + '\'' +
-                ", car_station='" + car_station + '\'' +
-                ", car_number='" + car_number + '\'' +
-                ", car_goods='" + car_goods + '\'' +
-                ", photoPath1='" + photoPath1 + '\'' +
-                ", photoPath2='" + photoPath2 + '\'' +
-                ", photoPath3='" + photoPath3 + '\'' +
-                ", parts=" + parts +
-                '}';
-    }
-
     protected PostContent(Parcel in) {
         car_type = in.readString();
         color = in.readString();
         currentTime = in.readString();
         username = in.readString();
+        operator = in.readString();
         car_station = in.readString();
         car_number = in.readString();
         car_goods = in.readString();
         photoPath1 = in.readString();
         photoPath2 = in.readString();
         photoPath3 = in.readString();
+        statiomName = in.readString();
     }
 
     public static final Creator<PostContent> CREATOR = new Creator<PostContent>() {
@@ -80,23 +66,12 @@ public class PostContent implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getOperator() {
+        return operator;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(car_type);
-        dest.writeString(color);
-        dest.writeString(currentTime);
-        dest.writeString(username);
-        dest.writeString(car_station);
-        dest.writeString(car_number);
-        dest.writeString(car_goods);
-        dest.writeString(photoPath1);
-        dest.writeString(photoPath2);
-        dest.writeString(photoPath3);
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
     public String getCar_type() {
@@ -193,5 +168,26 @@ public class PostContent implements Parcelable {
 
     public void setStatiomName(String statiomName) {
         this.statiomName = statiomName;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(car_type);
+        dest.writeString(color);
+        dest.writeString(currentTime);
+        dest.writeString(username);
+        dest.writeString(operator);
+        dest.writeString(car_station);
+        dest.writeString(car_number);
+        dest.writeString(car_goods);
+        dest.writeString(photoPath1);
+        dest.writeString(photoPath2);
+        dest.writeString(photoPath3);
+        dest.writeString(statiomName);
     }
 }

@@ -57,6 +57,7 @@ public class TimeUtil {
             Date date1 = format.parse(time1);
             Date date2 = format.parse(time2);
             int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
+           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600));//小时
            // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
             Logger.i(days + "-----days");
             return days;

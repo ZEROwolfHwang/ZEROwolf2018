@@ -65,6 +65,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private String mStationName;
     private String mFilePath_str;
     private LinearLayout mApp_bg_layout;
+    private String mOperator;
 
 
     @Override
@@ -91,6 +92,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
         Intent intent = getIntent();
         mUsername = intent.getStringExtra("username");
+        mOperator = intent.getStringExtra("operator");
         mStationName = intent.getStringExtra("stationName");
 
 
@@ -231,7 +233,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             }
         }*/
 
-        SureGoodsActivity111.actionStart(PhotoActivity.this, mStationName, mCurrent_color,
+        SureGoodsActivity111.actionStart(PhotoActivity.this, mOperator,mStationName, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
         finish();
     }

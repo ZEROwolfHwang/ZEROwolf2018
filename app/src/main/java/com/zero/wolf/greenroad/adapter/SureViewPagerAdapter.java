@@ -26,13 +26,15 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
     private final String mPhotoPath3;
     private final String mStationName;
     private final List<SortModel> mGoodsList;
+    private final String mOperator;
 
-    public SureViewPagerAdapter(FragmentManager fm, String username, String stationName,
+    public SureViewPagerAdapter(FragmentManager fm, String operator, String username, String stationName,
                                 String color, String photoPath1, String photoPath2,
                                 String photoPath3, List<SortModel> goodsList, Context context) {
         super(fm);
         this.context = context;
         mGoodsList = goodsList;
+        mOperator = operator;
         mUsername = username;
         mStationName = stationName;
         mColor = color;
@@ -52,7 +54,7 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
                 fragment = StationFragment.newInstance();
                 break;
             case 2:
-                fragment =  GoodsFragment.newInstance(mUsername,mStationName,mColor,mPhotoPath1,
+                fragment =  GoodsFragment.newInstance(mOperator,mUsername,mStationName,mColor,mPhotoPath1,
                         mPhotoPath2,mPhotoPath3,mGoodsList, context);
                 break;
             default:
