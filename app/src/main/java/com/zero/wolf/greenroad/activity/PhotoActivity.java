@@ -129,7 +129,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         mIv_car_goods = (ImageView) findViewById(R.id.iv_car_goods);
         //展示的
         //mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
-        mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
+        mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.preview_item_car_number);
         mShow_3_2_car_body = (RoundedImageView) findViewById(R.id.show_3_2_car_body);
         mShow_3_3_car_goods = (RoundedImageView) findViewById(R.id.show_3_3_car_goods);
 

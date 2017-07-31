@@ -71,13 +71,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullTheme">
         </activity>
-        <activity android:name=".activity.SettingActivity"
-                  android:launchMode="singleTask"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activity.SettingActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".activity.PreviewPhotoActivity"
-                  android:launchMode="singleTask"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activity.PreviewPhotoActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <service
@@ -96,6 +98,8 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".activity.PreviewDetailActivity">
+        </activity>
     </application>
 
 </manifest>

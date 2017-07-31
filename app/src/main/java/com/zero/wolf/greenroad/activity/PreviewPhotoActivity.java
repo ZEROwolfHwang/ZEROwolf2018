@@ -12,9 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.PreviewPhotoAdapter;
@@ -39,18 +40,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PreviewPhotoActivity extends BaseActivity {
+public class PreviewPhotoActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.toolbar_preview)
     Toolbar mToolbarPreview;
     @BindView(R.id.recycler_view_preview)
     RecyclerView mRecyclerViewPreview;
-    @BindView(R.id.preview_item_photo_number)
-    ImageView mPreviewItemPhotoNumber;
-    @BindView(R.id.preview_item_photo_body)
-    ImageView mPreviewItemPhotoBody;
-    @BindView(R.id.preview_item_photo_goods)
-    ImageView mPreviewItemPhotoGoods;
+    @BindView(R.id.preview_item_car_number)
+    RoundedImageView mPreviewItemPhotoNumber;
+    @BindView(R.id.preview_item_car_body)
+    RoundedImageView mPreviewItemPhotoBody;
+    @BindView(R.id.preview_item_car_goods)
+    RoundedImageView mPreviewItemPhotoGoods;
     private PreviewPhotoActivity mActivity;
     private Context mContext;
     private List<SupportPhotoLite> mPhotoList;
@@ -111,6 +112,10 @@ public class PreviewPhotoActivity extends BaseActivity {
                 mPreviewItemPhotoNumber.setImageBitmap(getBitmap(preview.getPhotoPath1()));
                 mPreviewItemPhotoBody.setImageBitmap(getBitmap(preview.getPhotoPath2()));
                 mPreviewItemPhotoGoods.setImageBitmap(getBitmap(preview.getPhotoPath3()));
+
+                mPreviewItemPhotoNumber.setOnClickListener(v -> {
+                    PreviewDetailActivity.actionStart(mContext,preview);
+                });
             }
         });
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -160,7 +165,7 @@ public class PreviewPhotoActivity extends BaseActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
 
         ImageProcessor processor = new ImageProcessor(bitmap);
-        return processor.scale((float) 0.2);
+        return processor.scale((float) 0.15);
     }
 
     @Override
@@ -269,5 +274,17 @@ public class PreviewPhotoActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_preview, menu);
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        	case R.id.preview_item_car_number:
+
+                break;
+
+        	default:
+        		break;
+        }
     }
 }

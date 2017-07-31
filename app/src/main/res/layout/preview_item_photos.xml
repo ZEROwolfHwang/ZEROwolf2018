@@ -3,14 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/show_3_photo"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_marginTop="@dimen/layout_margin10dp"
-    android:layout_weight="1"
+    android:layout_height="100dp"
+    android:layout_marginTop="@dimen/layout_margin5dp"
     android:gravity="center"
     android:orientation="horizontal"
-    tools:showIn="@layout/activity_photo">
+    tools:showIn="@layout/activity_preview_photo">
 
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -24,7 +22,7 @@
         app:riv_oval="true"/>
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/show_3_2_car_body"
+        android:id="@+id/preview_item_car_body"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginLeft="5dp"
@@ -35,7 +33,7 @@
         app:riv_oval="true"/>
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/show_3_3_car_goods"
+        android:id="@+id/preview_item_car_goods"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="center"

@@ -214,8 +214,7 @@
 
     <include
         android:id="@+id/layout_show_3_car"
-        layout="@layout/show_3_car_camera"/>
-
+        layout="@layout/preview_item_photos"/>
 
     <Button
         android:id="@+id/bt_ok_send"

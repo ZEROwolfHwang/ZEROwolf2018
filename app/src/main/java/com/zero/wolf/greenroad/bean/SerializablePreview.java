@@ -1,9 +1,11 @@
 package com.zero.wolf.greenroad.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by shadow on 2016/3/4.
  */
-public class SerializablePreview {
+public class SerializablePreview implements Serializable {
 
 
     private int isPost;
