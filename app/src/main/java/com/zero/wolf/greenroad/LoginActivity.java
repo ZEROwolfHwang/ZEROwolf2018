@@ -22,6 +22,8 @@ import com.zero.wolf.greenroad.https.HttpMethods;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
+import com.zero.wolf.greenroad.polling.PollingService;
+import com.zero.wolf.greenroad.polling.PollingUtils;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
@@ -105,11 +107,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         .setOutsideTouchable(true)
                         .setFocusable(true)
                         .build();
-
-                int left = mEt_user_name.getLeft();
-                int paddingLeft = mEt_user_name.getPaddingLeft();
-                Logger.i("登录账号框" + left + "-----" + paddingLeft);
-
 
                 float dimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40,
                         getResources().getDisplayMetrics());
@@ -210,6 +207,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 return;
             }
         } else {
+            startPollingService(username);
             login2MainActivity(username, operator, stationName);
             if (mIsConnected) {
                 //ToastUtils.singleToast("登陆成功");
@@ -260,6 +258,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 userInfo.setStationName(stationName);
                                 userInfo.save();
                                 Logger.i("登陆成功");
+                                // TODO: 2017/8/1
+                                startPollingService(username);
                                 login2MainActivity(username, operator, stationName);
                             } else {
                                 Logger.i("走了gettimegap方法");
@@ -296,6 +296,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
     }
 
+   /* *//**
+     * 登陆成功开启服务
+     * @param username
+     */
+    private void startPollingService(String username) {
+  /*      Logger.i("loginActivity界面登陆成功启动服务");
+        LoopService.startLoopService(this,username);*/
+        PollingUtils.startPollingService(this, 2, PollingService.class, PollingService.ACTION,username);
+
+    }
     /**
      * 登录成功进入mainActivity
      */

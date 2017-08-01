@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.FileUtils;
+import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.view.PlayView;
 
 import butterknife.BindView;
@@ -49,6 +50,7 @@ public class ShootVideoActivity extends BaseActivity  {
         mActivity = this;
         ButterKnife.bind(mActivity);
 
+        PermissionUtils.verifyStoragePermissions(mActivity);
 
         uri = getIntent().getStringExtra(DATA);
 
@@ -57,7 +59,6 @@ public class ShootVideoActivity extends BaseActivity  {
         } else {
             initPlay();
         }
-
 
         initView();
     }

@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.zero.wolf.greenroad.activity.PreviewDetailActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/preview_item_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
 
-    </android.support.v4.view.ViewPager>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/preview_item_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
+
+        <RadioGroup
+            android:id="@+id/page_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="@dimen/layout_margin80dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/page1"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@drawable/view_page_selector"
+                android:button="@null"
+                android:checked="true"
+                android:clickable="false"/>
+
+            <RadioButton
+                android:id="@+id/page2"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/view_page_selector"
+                android:button="@null"
+                android:clickable="false"/>
+            <RadioButton
+                android:id="@+id/page3"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginLeft="12dp"
+                android:background="@drawable/view_page_selector"
+                android:button="@null"
+                android:clickable="false"/>
+
+        </RadioGroup>
+
+    </RelativeLayout>
 
 
-
-</LinearLayout>
+</RelativeLayout>

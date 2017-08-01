@@ -28,20 +28,20 @@ import butterknife.Unbinder;
  * @updataDes ${描述更新内容}
  */
 
-public class PreviewNumberFragment extends Fragment {
+public class PreviewGoodsFragment extends Fragment {
 
-    private static PreviewNumberFragment sFragment;
+    private static PreviewGoodsFragment sFragment;
     private static SerializablePreview mPreviewDetail1;
-    @BindView(R.id.text_view_preview_detail)
-    TextView mTextViewPreviewDetail;
 
     Unbinder unbinder;
+    @BindView(R.id.text_view_preview_detail)
+    TextView mTextViewPreviewDetail;
     @BindView(R.id.preview_item_img_photo)
-    ImageView mPreviewItemImgPhotoNumber;
+    ImageView mPreviewItemImgPhoto;
 
-    public static PreviewNumberFragment newInstance(SerializablePreview previewDetail) {
+    public static PreviewGoodsFragment newInstance(SerializablePreview previewDetail) {
         if (sFragment == null) {
-            sFragment = new PreviewNumberFragment();
+            sFragment = new PreviewGoodsFragment();
         }
         mPreviewDetail1 = previewDetail;
         return sFragment;
@@ -57,12 +57,11 @@ public class PreviewNumberFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.preview_detail_fragment_number, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mPreviewDetail1.getPhotoPath1());
+        Bitmap bitmap = BitmapFactory.decodeFile(mPreviewDetail1.getPhotoPath3());
         if (bitmap != null) {
-            mPreviewItemImgPhotoNumber.setImageBitmap(bitmap);
+            mPreviewItemImgPhoto.setImageBitmap(bitmap);
         }
-        mTextViewPreviewDetail.setText(getString(R.string.tv_car_number));
+        mTextViewPreviewDetail.setText(getString(R.string.tv_car_goods));
         return view;
     }
 

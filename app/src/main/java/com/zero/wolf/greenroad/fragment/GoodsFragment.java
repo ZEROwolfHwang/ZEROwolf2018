@@ -172,31 +172,30 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                             startPostIntentService();
                             //BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
                             backToPhotoActivity();
-                           // postAccept(TimeUtil.getCurrentTimeTos());
+                            // postAccept(TimeUtil.getCurrentTimeTos());
                         } else {
-                            SaveToLocation.saveLocalLite(mCurrentTimeTos,"卡车", mOperator,mUsername, mColor,
-                                    mCar_number,mCar_station,mCar_goods,
+                            SaveToLocation.saveLocalLite(mCurrentTimeTos, "卡车", mOperator, mUsername, mColor,
+                                    mCar_number, mCar_station, mCar_goods,
                                     mPhotoPath1, mPhotoPath2, mPhotoPath3, 0);
+                            Logger.i(mOperator + "///////////////////");
                             backToPhotoActivity();
                             ToastUtils.singleToast("上传失败,已保存至本地");
                         }
                     }
                 });
-                dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
+                dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
+                    Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+                    dialog1.dismiss();
                 });
+
                 dialog.show();
 
-            }
-        });
-    }
+        }
+    });
+}
 
     private void backToPhotoActivity() {
-         getActivity().finish();
+        getActivity().finish();
         Intent intent = new Intent(getActivity(), PhotoActivity.class);
         intent.putExtra("username", mUsername);
         intent.putExtra("stationName", sStationName);
@@ -222,7 +221,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         content.setPhotoPath2(mPhotoPath2);
         content.setPhotoPath3(mPhotoPath3);
 
-        PostIntentService.startActionPost((AppCompatActivity) getActivity(),content);
+        PostIntentService.startActionPost((AppCompatActivity) getActivity(), content);
     }
 
     @Override

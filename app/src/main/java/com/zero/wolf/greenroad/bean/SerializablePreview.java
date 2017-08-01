@@ -10,6 +10,8 @@ public class SerializablePreview implements Serializable {
 
     private int isPost;
 
+    private String color;
+
     private String shutTime;
 
     private String station;
@@ -25,6 +27,14 @@ public class SerializablePreview implements Serializable {
     private String photoPath2;
 
     private String photoPath3;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 
     public String getPhotoPath1() {
         return photoPath1;
@@ -103,11 +113,15 @@ public class SerializablePreview implements Serializable {
     public String toString() {
         return "SerializablePreview{" +
                 "isPost=" + isPost +
+                ", color='" + color + '\'' +
                 ", shutTime='" + shutTime + '\'' +
                 ", station='" + station + '\'' +
                 ", operator='" + operator + '\'' +
                 ", car_number='" + car_number + '\'' +
                 ", car_goods='" + car_goods + '\'' +
+                ", photoPath1='" + photoPath1 + '\'' +
+                ", photoPath2='" + photoPath2 + '\'' +
+                ", photoPath3='" + photoPath3 + '\'' +
                 '}';
     }
 }

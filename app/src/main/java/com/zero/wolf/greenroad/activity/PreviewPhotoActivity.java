@@ -61,6 +61,7 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
     private String mGoodsFilePath;
     private String mFilePath;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +76,12 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         initData();
         initView();
-    }
 
+    }
 
     private void initView() {
 
@@ -109,13 +110,30 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
         mAdapter = new PreviewPhotoAdapter(mContext, mActivity, mPreviewList, new PreviewPhotoAdapter.onPreviewItemClick() {
             @Override
             public void itemClick(SerializablePreview preview) {
-                mPreviewItemPhotoNumber.setImageBitmap(getBitmap(preview.getPhotoPath1()));
-                mPreviewItemPhotoBody.setImageBitmap(getBitmap(preview.getPhotoPath2()));
-                mPreviewItemPhotoGoods.setImageBitmap(getBitmap(preview.getPhotoPath3()));
+                if (preview.getPhotoPath1() != null) {
+
+                    mPreviewItemPhotoNumber.setImageBitmap(getBitmap(preview.getPhotoPath1()));
+                }
+                if (preview.getPhotoPath2() != null) {
+
+                    mPreviewItemPhotoBody.setImageBitmap(getBitmap(preview.getPhotoPath2()));
+                }
+                if (preview.getPhotoPath3() != null) {
+
+                    mPreviewItemPhotoGoods.setImageBitmap(getBitmap(preview.getPhotoPath3()));
+                }
 
                 mPreviewItemPhotoNumber.setOnClickListener(v -> {
-                    PreviewDetailActivity.actionStart(mContext,preview);
+                    PreviewDetailActivity.actionStart(mContext, preview,0);
+                    Logger.i(preview.toString());
                 });
+                mPreviewItemPhotoBody.setOnClickListener(v -> {
+                    PreviewDetailActivity.actionStart(mContext, preview,1);
+                });
+                mPreviewItemPhotoGoods.setOnClickListener(v -> {
+                    PreviewDetailActivity.actionStart(mContext, preview,2);
+                });
+
             }
         });
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -128,21 +146,26 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
         for (int i = 0; i < mPhotoList.size(); i++) {
             SupportPhotoLite photoLite = mPhotoList.get(i);
 
-            SerializablePreview preview = new SerializablePreview();
-            preview.setCar_number(photoLite.getLicense_plate());
-            preview.setCar_goods(photoLite.getGoods());
-            preview.setIsPost(photoLite.getIsPost());
-            preview.setShutTime(photoLite.getShutTime());
-            preview.setStation(photoLite.getStation());
-            preview.setOperator(photoLite.getOperator());
-            preview.setPhotoPath1(photoLite.getPhotoPath1());
-            preview.setPhotoPath2(photoLite.getPhotoPath2());
-            preview.setPhotoPath3(photoLite.getPhotoPath3());
+            for (int j = 0; j < 5; j++) {
 
+                SerializablePreview preview = new SerializablePreview();
+                preview.setCar_number(photoLite.getLicense_plate());
+                preview.setCar_goods(photoLite.getGoods());
+                preview.setIsPost(photoLite.getIsPost());
+                preview.setShutTime(photoLite.getShutTime());
+                preview.setStation(photoLite.getStation());
+                preview.setOperator(photoLite.getOperator());
+                preview.setColor(photoLite.getLicense_color());
+                preview.setPhotoPath1(photoLite.getPhotoPath1());
+                preview.setPhotoPath2(photoLite.getPhotoPath2());
+                preview.setPhotoPath3(photoLite.getPhotoPath3());
 
-            mPreviewList.add(preview);
+                mPreviewList.add(preview);
+            }
             Logger.i(mPreviewList.get(i).getShutTime());
         }
+
+
     }
 
     private void initToolbar() {
@@ -165,7 +188,7 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
         Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
 
         ImageProcessor processor = new ImageProcessor(bitmap);
-        return processor.scale((float) 0.15);
+        return processor.scale((float) 0.25);
     }
 
     @Override
@@ -226,7 +249,7 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
             SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
             SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
 
-            onRestart();
+            onResume();
         });
         dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
             dialog1.dismiss();
@@ -260,7 +283,7 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
                     FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath3());
                 }
             }
-            onRestart();
+            onResume();
         });
         dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
             dialog1.dismiss();
@@ -279,12 +302,12 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        	case R.id.preview_item_car_number:
+            case R.id.preview_item_car_number:
 
                 break;
 
-        	default:
-        		break;
+            default:
+                break;
         }
     }
 }

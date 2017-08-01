@@ -15,7 +15,7 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
 
-        android:id="@+id/preview_item_car_number"
+        android:id="@+id/show_3_1_car_number"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="center"

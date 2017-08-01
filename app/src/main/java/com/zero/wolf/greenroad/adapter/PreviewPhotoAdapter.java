@@ -6,14 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.bean.SerializablePreview;
+import com.zero.wolf.greenroad.manager.CarColorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,8 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     private final Context mContext;
+
+
     private ArrayList<SerializablePreview> mPreviewList;
     private final AppCompatActivity mActivity;
     private final onPreviewItemClick mItemClick;
@@ -59,6 +60,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         notifyDataSetChanged();
     }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
@@ -76,7 +78,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof PreviewPhotoHolderNot) {
             ((PreviewPhotoHolderNot) holder).bindHolder(mPreviewList.get(position), position);
         } else {
-            ((PreviewPhotoHolder) holder).bindHolder(mPreviewList.get(position), position);
+            ((PreviewPhotoHolder) holder).bindHolder(mPreviewList.get(position));
         }
     }
 
@@ -105,6 +107,8 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView mPreviewTextStationNot;
         @BindView(R.id.preview_text_shutTime_not)
         TextView mPreviewTextShutTimeNot;
+        @BindView(R.id.preview_item_color_img_not)
+        ImageView mPreviewItemColorImgNot;
 
         public PreviewPhotoHolderNot(View itemView) {
             super(itemView);
@@ -115,12 +119,13 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-        public void bindHolder(SerializablePreview supportPhotoLite, int position) {
-            String operator = supportPhotoLite.getOperator();
-            String goods = supportPhotoLite.getCar_goods();
-            String car_number = supportPhotoLite.getCar_number();
-            String shutTime = supportPhotoLite.getShutTime();
-            String station = supportPhotoLite.getStation();
+        public void bindHolder(SerializablePreview serializablePreview, int position) {
+            String operator = serializablePreview.getOperator();
+            String goods = serializablePreview.getCar_goods();
+            String car_number = serializablePreview.getCar_number();
+            String shutTime = serializablePreview.getShutTime();
+            String station = serializablePreview.getStation();
+            String color = serializablePreview.getColor();
 
             mPreviewTextCarNumberNot.setText(car_number);
             mPreviewTextGoodsNot.setText(goods);
@@ -128,8 +133,47 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mPreviewTextShutTimeNot.setText(shutTime);
             mPreviewTextStationNot.setText(station);
 
+            setColor(mPreviewItemColorImgNot, color);
+
+            itemView.setOnClickListener(v -> {
+
+                mItemClick.itemClick(serializablePreview);
+
+            });
+
             Logger.i(shutTime);
 
+        }
+    }
+
+    /**
+     * 设置预览信息的颜色图标
+     *
+     * @param imageView
+     * @param color
+     */
+    private void setColor(ImageView imageView, String color) {
+        if (imageView != null && color != null) {
+            if (CarColorManager.COLOR_BLACK.equals(color)) {
+                imageView.setImageDrawable(mContext.getResources()
+                        .getDrawable(R.drawable.preview_item_color_black));
+            }
+            if (CarColorManager.COLOR_BLUE.equals(color)) {
+                imageView.setImageDrawable(mContext.getResources()
+                        .getDrawable(R.drawable.preview_item_color_blue));
+            }
+            if (CarColorManager.COLOR_YELLOW.equals(color)) {
+                imageView.setImageDrawable(mContext.getResources()
+                        .getDrawable(R.drawable.preview_item_color_yellow));
+            }
+            if (CarColorManager.COLOR_GREEN.equals(color)) {
+                imageView.setImageDrawable(mContext.getResources()
+                        .getDrawable(R.drawable.preview_item_color_green));
+            }
+            if (CarColorManager.COLOR_WHITE.equals(color)) {
+                imageView.setImageDrawable(mContext.getResources()
+                        .getDrawable(R.drawable.preview_item_color_white));
+            }
         }
     }
 
@@ -145,10 +189,9 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView mPreviewTextStation;
         @BindView(R.id.preview_text_shutTime)
         TextView mPreviewTextShutTime;
-        @BindView(R.id.view_stub_preview)
-        ViewStub mViewStub;
-        private ImageView mImageView;
-        private SpinnerPopupWindow mWindow;
+        @BindView(R.id.preview_item_color_img)
+        ImageView mPreviewItemColorImg;
+
 
         public PreviewPhotoHolder(View itemView) {
             super(itemView);
@@ -156,13 +199,13 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
-        public void bindHolder(SerializablePreview serializablePreview, int position) {
+        public void bindHolder(SerializablePreview serializablePreview) {
             String operator = serializablePreview.getOperator();
             String goods = serializablePreview.getCar_goods();
             String car_number = serializablePreview.getCar_number();
             String shutTime = serializablePreview.getShutTime();
             String station = serializablePreview.getStation();
-
+            String color = serializablePreview.getColor();
 
             mPreviewTextCarNumber.setText(car_number);
             mPreviewTextGoods.setText(goods);
@@ -170,16 +213,19 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mPreviewTextShutTime.setText(shutTime);
             mPreviewTextStation.setText(station);
 
+            setColor(mPreviewItemColorImg,color);
+
             itemView.setOnClickListener(v -> {
 
-              mItemClick.itemClick(serializablePreview);
+                mItemClick.itemClick(serializablePreview);
 
             });
         }
     }
 
+
     public interface onPreviewItemClick {
-      void itemClick(SerializablePreview serializablePreview);
+        void itemClick(SerializablePreview serializablePreview);
     }
 }
 

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
@@ -36,11 +37,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
 
     private static final String TAG = "PhotoActivity";
 
-    private static final String COLOR_GREEN = "绿牌";
-    private static final String COLOR_YELLOW = "黄牌";
-    private static final String COLOR_BLUE = "蓝牌";
-    private static final String COLOR_BLACK = "黑牌";
-    private static final String COLOR_WHITE = "白牌";
 
     private AppCompatActivity mActivity;
 
@@ -116,6 +112,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             mFile.mkdirs();
         }
         mFilePath_str = mFile.getPath();
+
+        PermissionUtils.verifyStoragePermissions(mActivity);
+
     }
 
     private void initView() {
@@ -129,7 +128,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         mIv_car_goods = (ImageView) findViewById(R.id.iv_car_goods);
         //展示的
         //mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
-        mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.preview_item_car_number);
+        mShow_3_1_car_number = (RoundedImageView) findViewById(R.id.show_3_1_car_number);
         mShow_3_2_car_body = (RoundedImageView) findViewById(R.id.show_3_2_car_body);
         mShow_3_3_car_goods = (RoundedImageView) findViewById(R.id.show_3_3_car_goods);
 
@@ -298,7 +297,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     private void showBitmap(String filePath, RoundedImageView view) {
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
         ImageProcessor processor = new ImageProcessor(bitmap);
-        Bitmap bitmap1 = processor.scale((float) 0.2);
+        Bitmap bitmap1 = processor.scale((float) 0.25);
         view.setImageBitmap(bitmap1);
     }
 
@@ -326,24 +325,24 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId) {
             case R.id.license_yellow:
-                mCurrent_color = COLOR_YELLOW;
+                mCurrent_color = CarColorManager.COLOR_YELLOW;
                 Logger.i(mCurrent_color);
                 break;
             case R.id.license_blue:
-                mCurrent_color = COLOR_BLUE;
+                mCurrent_color = CarColorManager.COLOR_BLUE;
                 Logger.i(mCurrent_color);
                 break;
             case R.id.license_black:
-                mCurrent_color = COLOR_BLACK;
+                mCurrent_color = CarColorManager.COLOR_BLACK;
                 Logger.i(mCurrent_color);
                 break;
             case R.id.license_green:
-                mCurrent_color = COLOR_GREEN;
+                mCurrent_color = CarColorManager.COLOR_GREEN;
                 Logger.i(mCurrent_color);
                 break;
             case R.id.license_white:
                 Logger.i(mCurrent_color);
-                mCurrent_color = COLOR_WHITE;
+                mCurrent_color = CarColorManager.COLOR_WHITE;
                 break;
 
             default:

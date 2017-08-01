@@ -32,11 +32,38 @@ public class GreenRoadApplication extends Application {
 
         LitePal.initialize(this);
 
+          //  startLongConn();
+        // 登录后开启长连接
+      /*  if (UserConfig.isPassLogined()) {
+            Logger.i("用户已登录，开启长连接...");
+            startLongConn();
+        }*/
+
     }
+/*
+
+    */
+/**
+     * 开始执行启动长连接服务
+     *//*
+
+    private void startLongConn() {
+
+        //quitLongConn();
+        Logger.i("长连接服务已开启");
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, LoopService.class);
+        intent.setAction(LoopService.ACTION);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long triggerAtTime = SystemClock.elapsedRealtime();
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 60 * 1000, pendingIntent);
+
+    }
+*/
 
     /**
      * 向堆栈中所有对象发送更新UI的指令
-     * */
+     */
     public void notifyByThemeChanged() {
         List<ThemeChangeObserver> observers = obtainThemeChangeObserverStack();
         for (ThemeChangeObserver observer : observers) {
@@ -47,7 +74,7 @@ public class GreenRoadApplication extends Application {
 
     /**
      * 获得observer堆栈
-     * */
+     */
     private List<ThemeChangeObserver> obtainThemeChangeObserverStack() {
         if (mThemeChangeObserverStack == null) mThemeChangeObserverStack = new ArrayList<>();
         return mThemeChangeObserverStack;
@@ -55,17 +82,19 @@ public class GreenRoadApplication extends Application {
 
     /**
      * 向堆栈中添加observer
-     * */
+     */
     public void registerObserver(ThemeChangeObserver observer) {
-        if (observer == null || obtainThemeChangeObserverStack().contains(observer)) return ;
+        if (observer == null || obtainThemeChangeObserverStack().contains(observer)) return;
         obtainThemeChangeObserverStack().add(observer);
     }
 
     /**
      * 从堆栈中移除observer
-     * */
+     */
     public void unregisterObserver(ThemeChangeObserver observer) {
-        if (observer == null || !(obtainThemeChangeObserverStack().contains(observer))) return ;
+        if (observer == null || !(obtainThemeChangeObserverStack().contains(observer))) return;
         obtainThemeChangeObserverStack().remove(observer);
     }
+
+
 }

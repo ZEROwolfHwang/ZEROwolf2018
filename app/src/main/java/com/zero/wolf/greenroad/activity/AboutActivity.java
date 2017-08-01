@@ -3,6 +3,7 @@ package com.zero.wolf.greenroad.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -17,7 +18,7 @@ import com.zero.wolf.greenroad.tools.SPUtils;
  * Created by Administrator on 2017/7/3.
  */
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends AppCompatActivity {
 
 /*    @BindView(R.id.activity_about_user_agreement)
     TextView mActivityAboutUserAgreement;*/

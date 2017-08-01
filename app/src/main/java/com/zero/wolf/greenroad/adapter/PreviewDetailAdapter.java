@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.zero.wolf.greenroad.bean.SerializablePreview;
+import com.zero.wolf.greenroad.fragment.PreviewBodyFragment;
+import com.zero.wolf.greenroad.fragment.PreviewGoodsFragment;
 import com.zero.wolf.greenroad.fragment.PreviewNumberFragment;
 
 /**
@@ -24,6 +26,7 @@ public class PreviewDetailAdapter extends FragmentPagerAdapter{
 
     public PreviewDetailAdapter(FragmentManager fm, SerializablePreview previewDetail) {
         super(fm);
+
         mPreviewDetail = previewDetail;
     }
 
@@ -36,16 +39,17 @@ public class PreviewDetailAdapter extends FragmentPagerAdapter{
                 fragment = PreviewNumberFragment.newInstance(mPreviewDetail);
                 break;
             case 1:
-                fragment = PreviewNumberFragment.newInstance(mPreviewDetail);
+                fragment = PreviewBodyFragment.newInstance(mPreviewDetail);
                 break;
             case 2:
-                fragment =  PreviewNumberFragment.newInstance(mPreviewDetail);
+                fragment =  PreviewGoodsFragment.newInstance(mPreviewDetail);
                 break;
             default:
                 fragment = PreviewNumberFragment.newInstance(mPreviewDetail);
                 break;
         }
         return fragment;
+
     }
 
 

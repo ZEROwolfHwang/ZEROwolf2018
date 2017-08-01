@@ -50,6 +50,8 @@ import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.litepalbean.SupportStation;
+import com.zero.wolf.greenroad.polling.PollingService;
+import com.zero.wolf.greenroad.polling.PollingUtils;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -178,7 +180,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         ButterKnife.bind(this);
         mActivity = this;
-
 
         initData();
         initSp();
@@ -1048,6 +1049,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         super.onDestroy();
         //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
+        Logger.i("mainactivity被销毁");
+        PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
     }
 
 }

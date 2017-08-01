@@ -5,6 +5,7 @@ import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultStation;
 import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
@@ -99,6 +100,9 @@ public interface HttpUtilsApi {
                                                @Part("goods") String goods,
                                                @Part List<MultipartBody.Part> file);
 
+    @FormUrlEncoded
+    @POST("Apionline/online")
+    Observable<HttpResultPolling> polling(@Field("polling") String polling);
 
 
 }
