@@ -71,11 +71,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullTheme">
         </activity>
+
         <activity
             android:name=".activity.SettingActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+
         <activity
             android:name=".activity.PreviewPhotoActivity"
             android:launchMode="singleTask"
@@ -101,7 +104,8 @@
         <activity android:name=".activity.PreviewDetailActivity">
         </activity>
 
-        <service
+        <!--
+            <service
             android:name=".polling.LoopService"
             android:enabled="true"
             android:exported="true">
@@ -111,6 +115,16 @@
             android:enabled="true"
             android:exported="true">
         </service>
+        <service
+            android:name=".polling.LongConnService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+        -->
+        <activity android:name=".activity.AddOperatorActivity"
+                  android:launchMode="singleTask"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

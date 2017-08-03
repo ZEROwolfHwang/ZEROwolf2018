@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -76,14 +75,13 @@
         android:layout_marginTop="@dimen/layout_margin10dp"
         style="@style/MyCheckbox"
         android:id="@+id/check_box_pwd"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/text18"
         android:layout_below="@id/text_input"
-        android:layout_marginLeft="@dimen/layout_margin20dp"
         android:textColor="@color/login_check_box_text"
-
         android:text="记住密码"/>
 
     <Button

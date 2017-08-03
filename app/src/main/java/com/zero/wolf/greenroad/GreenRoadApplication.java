@@ -1,8 +1,15 @@
 package com.zero.wolf.greenroad;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.SystemClock;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.interfacy.ThemeChangeObserver;
+import com.zero.wolf.greenroad.polling.LoopService;
 
 import org.litepal.LitePal;
 
@@ -38,14 +45,14 @@ public class GreenRoadApplication extends Application {
             Logger.i("用户已登录，开启长连接...");
             startLongConn();
         }*/
-
+        startLongConn();
     }
 /*
 
     */
 /**
      * 开始执行启动长连接服务
-     *//*
+     */
 
     private void startLongConn() {
 
@@ -59,7 +66,6 @@ public class GreenRoadApplication extends Application {
         manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 60 * 1000, pendingIntent);
 
     }
-*/
 
     /**
      * 向堆栈中所有对象发送更新UI的指令

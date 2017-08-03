@@ -32,4 +32,7 @@
     <color name="login_bg_white_translate">#89ececec</color>
 
 
+    <color name="setting_bg_text_item">#7dafd1e1</color>
+
+
 </resources>

@@ -12,7 +12,7 @@ import android.os.SystemClock;
 
 public class PollingUtils {
     //开启轮询服务
-    public static void startPollingService(Context context, int seconds, Class<?> cls, String action, String username) {
+    public static void startPollingService(Context context, int seconds, Class<?> cls,String action) {
         //获取AlarmManager系统服务
         AlarmManager manager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
@@ -20,7 +20,6 @@ public class PollingUtils {
         //包装需要执行Service的Intent
         Intent intent = new Intent(context, cls);
         intent.setAction(action);
-        intent.putExtra("username", username);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -32,7 +31,7 @@ public class PollingUtils {
                 seconds * 1000, pendingIntent);
     }
     //停止轮询服务
-    public static void stopPollingService(Context context, Class<?> cls, String action) {
+    public static void stopPollingService(Context context, Class<?> cls,String action) {
         AlarmManager manager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, cls);

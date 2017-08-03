@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/custom_attr_app_bg"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/layout_margin10dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_setting_add"
+            style="@style/style_toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/layout_margin10dp"
+        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:background="?attr/custom_attr_setting_text_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center_vertical"
+            android:text="工号"
+            android:textSize="@dimen/text22"/>
+
+        <EditText
+            android:id="@+id/add_operator_job_number"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="left|center_vertical"
+            android:hint="500001"
+            android:textSize="@dimen/text24"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="@dimen/layout_margin10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:background="?attr/custom_attr_setting_text_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center_vertical"
+            android:text="姓名"
+            android:textSize="@dimen/text22"/>
+
+        <EditText
+            android:id="@+id/add_operator_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="left|center_vertical"
+            android:hint="500001"
+            android:textSize="@dimen/text24"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/layout_margin10dp"
+        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:background="?attr/custom_attr_setting_text_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center_vertical"
+            android:text="默认检查人"
+            android:textSize="@dimen/text22"/>
+
+        <CheckBox
+            android:id="@+id/add_operator_check_person"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="left|center_vertical"
+            android:textSize="@dimen/text24"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="@dimen/layout_margin10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:background="?attr/custom_attr_setting_text_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center_vertical"
+            android:text="默认检查人"
+            android:textSize="@dimen/text22"/>
+
+        <CheckBox
+            android:id="@+id/add_operator_login_person"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="left|center_vertical"
+            android:textSize="@dimen/text24"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save_operator_info_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="@dimen/layout_margin20dp"
+        android:layout_marginTop="@dimen/layout_margin20dp"
+        android:background="?attr/custom_attr_setting_text_bg"
+        android:elevation="@dimen/layout_margin10dp"
+        android:gravity="center"
+        android:text="保存"
+        android:textColor="@color/white_dark_login_selector"
+        android:textSize="@dimen/text20"/>
+
+
+</LinearLayout>

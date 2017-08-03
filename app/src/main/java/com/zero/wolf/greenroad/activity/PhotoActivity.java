@@ -155,12 +155,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
         toolbar.setNavigationIcon(R.drawable.back_up_logo);
 
         //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
     }
 

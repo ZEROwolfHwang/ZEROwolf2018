@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="30dp"
+              android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:id="@+id/text_setting_recycler_job_number"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_weight="2"
+        android:gravity="center_vertical"
+        android:text="500001"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text18"/>
+
+    <TextView
+        android:id="@+id/text_setting_recycler_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_weight="2"
+        android:gravity="center_vertical"
+        android:text="500001"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text18"/>
+
+    <CheckBox
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_weight="3"
+        android:gravity="center_vertical"/>
+
+    <LinearLayout
+
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3">
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:maxLines="1"
+            android:id="@+id/text_setting_recycler_edit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="right"
+            android:layout_height="match_parent"
+            android:textColor="@color/blue"
+            android:text="@string/add"/>
+
+        <TextView
+            android:maxLines="1"
+            android:id="@+id/text_setting_recycler_delete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="right"
+            android:layout_height="match_parent"
+            android:textColor="@color/red"
+            android:text="@string/add"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

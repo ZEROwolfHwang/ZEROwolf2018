@@ -216,7 +216,6 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             setColor(mPreviewItemColorImg,color);
 
             itemView.setOnClickListener(v -> {
-
                 mItemClick.itemClick(serializablePreview);
 
             });

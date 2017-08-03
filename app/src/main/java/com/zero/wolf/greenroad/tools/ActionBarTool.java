@@ -39,7 +39,7 @@ public class ActionBarTool {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (mType == 991) {
-
+            //右侧没有menu
             mTitleView = inflater.inflate(R.layout.action_bar_title_photo_right, null);
         } else if (mType == 990){
             mTitleView = inflater.inflate(R.layout.action_bar_title_photo_center, null);

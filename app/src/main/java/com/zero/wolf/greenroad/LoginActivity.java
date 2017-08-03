@@ -301,9 +301,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param username
      */
     private void startPollingService(String username) {
-  /*      Logger.i("loginActivity界面登陆成功启动服务");
-        LoopService.startLoopService(this,username);*/
-        PollingUtils.startPollingService(this, 2, PollingService.class, PollingService.ACTION,username);
+        Logger.i("loginActivity界面登陆成功启动服务");
+        //LoopService.startLoopService(this,username);
+        PollingUtils.startPollingService(this, 5, PollingService.class, PollingService.ACTION);
 
     }
     /**
