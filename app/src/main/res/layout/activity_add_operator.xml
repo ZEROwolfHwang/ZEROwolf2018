@@ -35,14 +35,31 @@
             android:text="工号"
             android:textSize="@dimen/text22"/>
 
-        <EditText
-            android:id="@+id/add_operator_job_number"
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:gravity="left|center_vertical"
-            android:hint="500001"
-            android:textSize="@dimen/text24"/>
+            >
+
+            <EditText
+                android:maxLength="6"
+                android:id="@+id/add_operator_job_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:hint="请输入六位数的工号"
+                android:textSize="@dimen/text22"
+                android:imeActionId="@+id/login"
+                android:imeOptions="actionUnspecified"
+                android:inputType="number"
+                android:background="@null"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColorHint="@color/white"/>
+
+        </android.support.design.widget.TextInputLayout>
+
 
     </LinearLayout>
 
@@ -62,14 +79,26 @@
             android:text="姓名"
             android:textSize="@dimen/text22"/>
 
-        <EditText
-            android:id="@+id/add_operator_name"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="left|center_vertical"
-            android:hint="500001"
-            android:textSize="@dimen/text24"/>
+            android:layout_weight="3">
+
+            <EditText
+                android:inputType="textPersonName"
+                android:id="@+id/add_operator_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:hint="请输入姓名"
+                android:textSize="@dimen/text22"
+                android:background="@null"
+                android:maxLines="1"
+                android:singleLine="true"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+
 
     </LinearLayout>
 

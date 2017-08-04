@@ -10,6 +10,7 @@ import android.os.SystemClock;
  * Created by Administrator on 2017/8/1.
  */
 
+
 public class PollingUtils {
     //开启轮询服务
     public static void startPollingService(Context context, int seconds, Class<?> cls,String action) {

@@ -34,7 +34,7 @@
         android:textStyle="bold"
         android:layout_height="match_parent"/>
 
-    <TextView
+   <!-- <TextView
         android:maxLines="1"
         android:id="@+id/text_setting_road_selection"
         android:layout_width="0dp"
@@ -44,6 +44,6 @@
         android:layout_height="match_parent"
         android:textColor="@color/blue"
         android:text="@string/text_selection"/>
-
+-->
 
 </LinearLayout>

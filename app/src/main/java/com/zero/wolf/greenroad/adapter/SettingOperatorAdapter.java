@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
@@ -11,6 +12,7 @@ import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.bean.SettingOperatorInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,14 +24,33 @@ import butterknife.ButterKnife;
 public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperatorAdapter.SettingOperatorHolder> {
 
     private final SettingActivity mActivity;
-    private final ArrayList<SettingOperatorInfo> mList;
+    private ArrayList<SettingOperatorInfo> mList;
+    private final OnCheckSeleckedListener mCheckListener;
+    private final OnLoginSeleckedListener mLoginListener;
 
 
-
-    public SettingOperatorAdapter(SettingActivity settingActivity, ArrayList<SettingOperatorInfo> list) {
+    public SettingOperatorAdapter(SettingActivity settingActivity, ArrayList<SettingOperatorInfo> list, OnCheckSeleckedListener onCheckSeleckedListener, OnLoginSeleckedListener onLoginSeleckedListener) {
         mActivity = settingActivity;
         mList = list;
+        mCheckListener = onCheckSeleckedListener;
+        mLoginListener = onLoginSeleckedListener;
     }
+
+
+    /**
+     * 当ListView数据发生变化时,调用此方法来更新ListView
+     *
+     * @param list
+     */
+    public void updateListView(List<SettingOperatorInfo> list) {
+        if (list == null) {
+            this.mList = new ArrayList<SettingOperatorInfo>();
+        } else {
+            this.mList = (ArrayList<SettingOperatorInfo>) list;
+        }
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public SettingOperatorHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,7 +62,7 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     @Override
     public void onBindViewHolder(SettingOperatorHolder holder, int position) {
         SettingOperatorInfo info = mList.get(position);
-        holder.bindHolder(info,position);
+        holder.bindHolder(info);
     }
 
     @Override
@@ -50,24 +71,64 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     }
 
     public class SettingOperatorHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.text_setting_recycler_edit)
-        TextView mTextSettingRecyclerEdit;
+
         @BindView(R.id.text_setting_recycler_delete)
         TextView mTextSettingRecyclerDelete;
         @BindView(R.id.text_setting_recycler_job_number)
         TextView mTextSettingRecyclerJobNumber;
         @BindView(R.id.text_setting_recycler_name)
         TextView mTextSettingRecyclerName;
+        @BindView(R.id.operator_check_select)
+        CheckBox mOperatorCheckSelect;
+        @BindView(R.id.operator_login_select)
+        CheckBox mOperatorLoginSelect;
+
         public SettingOperatorHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindHolder(SettingOperatorInfo info, int position) {
-            mTextSettingRecyclerJobNumber.setText(info.getJob_number());
-            mTextSettingRecyclerName.setText(info.getName());
+        public void bindHolder(SettingOperatorInfo info) {
+            String job_number = info.getJob_number();
+            mTextSettingRecyclerJobNumber.setText(job_number);
+            mTextSettingRecyclerName.setText(info.getOperator_name());
+            mOperatorCheckSelect.setChecked(info.isCheckSelected());
+            mOperatorLoginSelect.setChecked(info.isLoginSelected());
+            mOperatorCheckSelect.setOnClickListener(v -> {
+                for (SettingOperatorInfo operatorInfo : mList) {
+                    if (operatorInfo.isCheckSelected()) {
+                        operatorInfo.setCheckSelected(false);
+                    }
+                }
+                info.setCheckSelected(true);
+                notifyDataSetChanged();
+
+                mCheckListener.checkListener(info);
+            });
+            mOperatorLoginSelect.setOnClickListener(v -> {
+                for (SettingOperatorInfo operatorInfo : mList) {
+                    if (operatorInfo.isLoginSelected())
+                    operatorInfo.setLoginSelected(false);
+                }
+                info.setLoginSelected(true);
+                notifyDataSetChanged();
+
+                mLoginListener.loginListener(info);
+            });
+            //点击了删除的按钮
+            mTextSettingRecyclerDelete.setOnClickListener(v -> {
+
+
+            });
 
         }
+    }
+
+    public interface OnCheckSeleckedListener {
+        void checkListener(SettingOperatorInfo info);
+    }
+    public interface OnLoginSeleckedListener {
+        void loginListener(SettingOperatorInfo info);
     }
 
 }

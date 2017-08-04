@@ -64,5 +64,6 @@
     <string name="setting_operator">检查人/登记人</string>
     <string name="add">添加</string>
     <string name="add_operator">新增检查人/登记人</string>
+    <string name="delete">删除</string>
 
 </resources>

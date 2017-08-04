@@ -34,6 +34,7 @@
         android:textStyle="bold"
         android:layout_height="match_parent"/>
 
+<!--
     <TextView
         android:maxLines="1"
         android:id="@+id/text_setting_station_selection"
@@ -44,6 +45,7 @@
         android:layout_height="match_parent"
         android:textColor="@color/blue"
         android:text="@string/text_selection"/>
+-->
 
 
 </LinearLayout>
