@@ -1,5 +1,6 @@
 package com.zero.wolf.greenroad.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -68,6 +69,7 @@ public class AnimatorActivity extends BaseActivity {
                     break;
                 case KeyStore.KEY_TAG_ANIMATOR_STOP:
                     stopAnimator();
+
                     break;
                 default:
                     break;
@@ -91,6 +93,7 @@ public class AnimatorActivity extends BaseActivity {
             sendEmptyMessageDelayed(KeyStore.KEY_SKIP_ANIMATOR_FINISH, 360);
             switchCurrentThemeTag(); //
             ((GreenRoadApplication) getApplication()).notifyByThemeChanged(); //
+
         }
     }
 
@@ -105,5 +108,7 @@ public class AnimatorActivity extends BaseActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        Intent intent = new Intent(AnimatorActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,0 +1,194 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/layout_margin10dp"
+              tools:context="com.zero.wolf.greenroad.fragment.DetailsFragment">
+
+
+    <RadioGroup
+        android:id="@+id/radio_group_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <RadioButton
+            android:id="@+id/license_black"
+            style="@style/RadioButtonStyle"
+            android:background="@drawable/rb_black_selector"
+            android:text="黑牌"
+            android:textColor="@color/license_color_yellow_text"
+            />
+
+        <RadioButton
+            android:id="@+id/license_blue"
+            style="@style/RadioButtonStyle"
+            android:layout_marginLeft="@dimen/layout_margin2dp"
+            android:layout_marginRight="@dimen/layout_margin2dp"
+            android:background="@drawable/rb_blue_selector"
+            android:text="蓝牌"
+            android:textColor="@color/license_color_yellow_text"/>
+
+        <RadioButton
+            android:id="@+id/license_yellow"
+            style="@style/RadioButtonStyle"
+            android:background="@drawable/rb_yellow_selector"
+            android:text="黄牌"
+            android:textColor="@color/license_color_yellow_text"
+            />
+
+        <RadioButton
+            android:id="@+id/license_green"
+            style="@style/RadioButtonStyle"
+            android:layout_marginLeft="@dimen/layout_margin2dp"
+            android:layout_marginRight="@dimen/layout_margin2dp"
+            android:background="@drawable/rb_green_selector"
+            android:text="绿牌"
+            android:textColor="@color/license_color_yellow_text"/>
+
+        <RadioButton
+            android:id="@+id/license_white"
+            style="@style/RadioButtonStyle"
+            android:background="@drawable/rb_white_selector"
+            android:text="白牌"
+            android:textColor="@color/license_color_white_text"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:elevation="3dp"
+        android:gravity="center">
+
+        <ImageView
+            style="@style/main_left_image_view"
+            android:background="?attr/custom_car_number_sure"/>
+
+        <LinearLayout
+            style="@style/main_text_layout_bg_style">
+
+            <TextView
+                style="@style/main_text_static_tv_style"
+                android:text="车牌号"/>
+
+            <ImageView
+                style="@style/main_text_static_iv_style"/>
+
+            <TextView
+                android:id="@+id/tv_change_station_config"
+                style="@style/main_text_change_tv_style"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:elevation="3dp"
+        android:gravity="center">
+
+        <ImageView
+            style="@style/main_left_image_view"
+            android:background="?attr/custom_car_goods_sure"/>
+
+        <LinearLayout
+            style="@style/main_text_layout_bg_style">
+
+            <TextView
+                style="@style/main_text_static_tv_style"
+                android:text="货物"/>
+
+            <ImageView
+                style="@style/main_text_static_iv_style"/>
+
+            <TextView
+                android:id="@+id/tv_change_goods_detail"
+                style="@style/main_text_change_tv_style"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/layout_margin20dp"
+            android:layout_marginRight="@dimen/layout_margin30dp"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_selector_room"/>
+
+        <ToggleButton
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/layout_margin20dp"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_selector_free"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="现场\n检查结论"
+            android:textSize="@dimen/text16"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="免费绿通车-符合绿通放行规定"
+            android:textSize="@dimen/text18"/>
+
+        <Button
+            android:id="@+id/btn_conclusion_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="选择"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="现场检查说明"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_shoot_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

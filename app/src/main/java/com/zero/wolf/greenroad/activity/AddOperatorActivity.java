@@ -81,7 +81,6 @@ public class AddOperatorActivity extends BaseActivity {
             }
             if (mIsChecked) {
                 SupportOperator operator = new SupportOperator();
-
                 operator.setToDefault("check_select");
                 operator.updateAll();
             }
@@ -94,8 +93,16 @@ public class AddOperatorActivity extends BaseActivity {
             SupportOperator operator = new SupportOperator();
             operator.setJob_number(mJob_number);
             operator.setOperator_name(mOperator_name);
-            operator.setCheck_select(mIsChecked);
-            operator.setLogin_select(mIsLogined);
+            if (mIsChecked) {
+                operator.setCheck_select(1);
+            } else {
+                operator.setCheck_select(0);
+            }
+            if (mIsLogined) {
+                operator.setLogin_select(1);
+            } else {
+                operator.setLogin_select(0);
+            }
             operator.save();
             // TODO: 2017/8/4 需要向网络提交本次添加
 

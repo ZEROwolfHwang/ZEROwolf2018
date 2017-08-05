@@ -28,7 +28,7 @@
         android:maxLines="1"
         android:id="@+id/text_setting_station"
         android:layout_width="0dp"
-        android:text="广海"
+        android:text="碧厦"
         android:textColor="?attr/custom_attr_setting_text_color"
         android:textSize="@dimen/text22"
         android:textStyle="bold"

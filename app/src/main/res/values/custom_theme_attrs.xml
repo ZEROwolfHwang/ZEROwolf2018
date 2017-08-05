@@ -78,7 +78,7 @@
 
     <!-- 控制     三个fragment中车站车牌车货物的图片   format:颜色值、资源引用-->
     <attr name="custom_car_number_sure" format="color|reference"/>
-    <attr name="custom_car_station_sure" format="color|reference"/>
+    <attr name="custom_car_station_main" format="color|reference"/>
     <attr name="custom_car_goods_sure" format="color|reference"/>
 
     <attr name="custom_shape_background_fragment" format="color|reference"/>

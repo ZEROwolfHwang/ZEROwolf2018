@@ -12,6 +12,10 @@ import java.util.Map;
  */
 
 public class SPUtils {
+
+    public static final String TEXTLANE= "textlane";
+    public static final String CHECKOPERATOR = "checkoperator";
+    public static final String LOGINOPERATOR = "loginoperator";
     public static final String KEY_THEME_TAG = "GreenRoad_ThemeTag";
 
     //拍摄的模式,1表示拍摄图片,-1表示摄影

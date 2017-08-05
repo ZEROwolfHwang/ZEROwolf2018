@@ -38,7 +38,7 @@
 
         <include
             android:id="@+id/layout_group_main"
-            layout="@layout/layout_text_group_main"/>
+            layout="@layout/layout_text_group_main_operator"/>
 
     </LinearLayout>
     <LinearLayout
@@ -61,7 +61,7 @@
 
         <include
             android:id="@+id/layout_group_main"
-            layout="@layout/layout_text_group_main"/>
+            layout="@layout/layout_text_group_main_operator"/>
 
     </LinearLayout>
     <LinearLayout
@@ -84,7 +84,7 @@
 
         <include
             android:id="@+id/layout_group_main"
-            layout="@layout/layout_text_group_main"/>
+            layout="@layout/layout_text_group_main_operator"/>
 
     </LinearLayout>
 
@@ -105,33 +105,6 @@
         android:layout_below="@+id/linear_layout_main"
         android:layout_centerHorizontal="true"/>
 
-    <LinearLayout
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayout">
-
-        <TextView
-            android:layout_weight="1"
-            android:id="@+id/custom_company_name_text"
-            android:textSize="@dimen/text12"
-            android:textColor="?attr/custom_company_name_text"
-            android:text="@string/company_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-
-            android:textSize="@dimen/text12"
-            android:textColor="?attr/custom_company_name_text"
-            android:id="@+id/version_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-    </LinearLayout>
 
 </RelativeLayout>
 

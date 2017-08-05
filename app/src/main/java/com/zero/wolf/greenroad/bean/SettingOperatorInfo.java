@@ -5,25 +5,25 @@ package com.zero.wolf.greenroad.bean;
  */
 
 public class SettingOperatorInfo {
-    private boolean isLoginSelected;
-    private boolean isCheckSelected;
+    private int isLoginSelected;
+    private int isCheckSelected;
     private String job_number;
     private String operator_name;
 
-    public boolean isLoginSelected() {
+    public int getIsLoginSelected() {
         return isLoginSelected;
     }
 
-    public void setLoginSelected(boolean loginSelected) {
-        isLoginSelected = loginSelected;
+    public void setIsLoginSelected(int isLoginSelected) {
+        this.isLoginSelected = isLoginSelected;
     }
 
-    public boolean isCheckSelected() {
+    public int getIsCheckSelected() {
         return isCheckSelected;
     }
 
-    public void setCheckSelected(boolean checkSelected) {
-        isCheckSelected = checkSelected;
+    public void setIsCheckSelected(int isCheckSelected) {
+        this.isCheckSelected = isCheckSelected;
     }
 
     public String getJob_number() {

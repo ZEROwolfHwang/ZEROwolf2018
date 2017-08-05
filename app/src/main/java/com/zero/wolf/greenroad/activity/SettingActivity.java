@@ -16,8 +16,11 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SettingOperatorAdapter;
 import com.zero.wolf.greenroad.bean.SettingOperatorInfo;
+import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.SPListUtil;
+import com.zero.wolf.greenroad.tools.SPUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -49,6 +52,8 @@ public class SettingActivity extends BaseActivity {
     private ArrayList<SettingOperatorInfo> mOperatorList;
     private String mJob_number_check;
     private String mJob_number_login;
+    private String mOperator_check_name;
+    private String mOperator_login_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,7 @@ public class SettingActivity extends BaseActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        mTextSettingLane.setSelection(mTextSettingLane.getText().length());
+
 
         initData();
         initToolbar();
@@ -87,13 +92,27 @@ public class SettingActivity extends BaseActivity {
             SettingOperatorInfo info = new SettingOperatorInfo();
             info.setOperator_name(operators.get(i).getOperator_name());
             info.setJob_number(operators.get(i).getJob_number());
-            info.setCheckSelected(operators.get(i).isCheck_select());
-            info.setLoginSelected(operators.get(i).isLogin_select());
+            info.setIsCheckSelected(operators.get(i).getCheck_select());
+            info.setIsLoginSelected(operators.get(i).getLogin_select());
             mOperatorList.add(info);
             Logger.i(mOperatorList.get(i).toString());
         }
+        //从app注册时的配置信息中取出数据填充线路以及收费站
+        List<String> strListValue = SPListUtil.getStrListValue(mActivity, SPListUtil.APPCONFIGINFO);
+        mTextSettingRoad.setText(strListValue.get(1).toString());
+        mTextSettingStation.setText(strListValue.get(2).toString());
 
+        //初始化车道以及保存改变车道的状态
+        mTextSettingLane.setText((String) SPUtils.get(mActivity, SPUtils.TEXTLANE, "66"));
+        mTextSettingLane.setSelection(mTextSettingLane.getText().length());
+        mTextSettingLane.addTextChangedListener(new TextChangeWatcher(editable -> {
+            String laneText = mTextSettingLane.getText().toString().trim();
+            if (!"".equals(laneText)) {
+                SPUtils.putAndApply(mActivity, SPUtils.TEXTLANE, laneText);
+            }
+        }));
     }
+
 
     /**
      * 初始化RecyclerView的布局
@@ -103,22 +122,21 @@ public class SettingActivity extends BaseActivity {
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         mAdapter = new SettingOperatorAdapter(this, mOperatorList, (SettingOperatorInfo info) -> {
             mJob_number_check = info.getJob_number();
-            String name = info.getOperator_name();
-            Logger.i("check---" + mJob_number_check + "-----" + name);
+            mOperator_check_name = info.getOperator_name();
+            Logger.i("check---" + mJob_number_check + "-----" + mOperator_check_name);
 
         }, (SettingOperatorInfo info) -> {
             mJob_number_login = info.getJob_number();
-            String name = info.getOperator_name();
-            Logger.i("login---" + mJob_number_login + "-----" + name);
+            mOperator_login_name = info.getOperator_name();
+            Logger.i("login---" + mJob_number_login + "-----" + mOperator_login_name);
 
         });
         mSettingRecyclerView.setLayoutManager(manager);
         mSettingRecyclerView.addItemDecoration(new RecycleViewDivider(this,
-                LinearLayoutManager.HORIZONTAL,10 ,Color.TRANSPARENT));
+                LinearLayoutManager.HORIZONTAL, 10, Color.TRANSPARENT));
 
         mSettingRecyclerView.setAdapter(mAdapter);
     }
-
 
 
     private void initToolbar() {
@@ -164,19 +182,21 @@ public class SettingActivity extends BaseActivity {
      * @param type
      */
     private void updateOperatorLite(String job_number, int type) {
+
+
         List<SupportOperator> operatorList = DataSupport.findAll(SupportOperator.class);
         for (SupportOperator operator : operatorList) {
             if (job_number != null && job_number.equals(operator.getJob_number())) {
                 if (type == 001) {
-                    operator.setCheck_select(true);
+                    operator.setCheck_select(1);
                 } else {
-                    operator.setLogin_select(true);
+                    operator.setLogin_select(1);
                 }
             } else {
                 if (type == 001) {
-                    operator.setCheck_select(false);
+                    operator.setCheck_select(0);
                 } else {
-                    operator.setLogin_select(false);
+                    operator.setLogin_select(0);
                 }
             }
             operator.save();
@@ -193,6 +213,7 @@ public class SettingActivity extends BaseActivity {
         if (mJob_number_login != null) {
             updateOperatorLite(mJob_number_login, 002);
         }
+
     }
 
     @Override

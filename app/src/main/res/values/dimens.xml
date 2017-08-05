@@ -32,6 +32,8 @@
     <dimen name="layout_margin30dp">30dp</dimen>
     <dimen name="layout_margin50dp">50dp</dimen>
     <dimen name="text22">22sp</dimen>
+    <dimen name="layout_margin70dp">70dp</dimen>
+    <dimen name="layout_margin0dp">0dp</dimen>
 
     <integer name="abc_max_action_buttons">2</integer>
 

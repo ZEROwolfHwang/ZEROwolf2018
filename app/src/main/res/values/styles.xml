@@ -126,5 +126,46 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="main_text_layout_bg_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">?attr/custom_shape_background_fragment</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="main_text_static_tv_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">?attr/custom_fragment_static_text</item>
+        <item name="android:textSize">@dimen/text14</item>
+    </style>
+
+    <style name="main_text_static_iv_style">
+        <item name="android:background">?attr/custom_shape_static</item>
+        <item name="android:layout_width">4dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+
+    <style name="main_text_change_tv_style">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:textColor">?attr/custom_white_black_text</item>
+        <item name="android:textSize">@dimen/text18</item>
+    </style>
+
+    <style name="main_left_image_view">
+        <item name="android:layout_width">@dimen/layout_margin70dp</item>
+        <item name="android:layout_height">@dimen/layout_margin70dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
     <dimen name="layout_margin80dp">80dp</dimen>
 </resources>

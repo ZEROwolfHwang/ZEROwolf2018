@@ -1,5 +1,6 @@
 package com.zero.wolf.greenroad.adapter;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.bean.SettingOperatorInfo;
+import com.zero.wolf.greenroad.litepalbean.SupportOperator;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +48,7 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
      */
     public void updateListView(List<SettingOperatorInfo> list) {
         if (list == null) {
-            this.mList = new ArrayList<SettingOperatorInfo>();
+            this.mList = new ArrayList<>();
         } else {
             this.mList = (ArrayList<SettingOperatorInfo>) list;
         }
@@ -62,7 +66,8 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     @Override
     public void onBindViewHolder(SettingOperatorHolder holder, int position) {
         SettingOperatorInfo info = mList.get(position);
-        holder.bindHolder(info);
+        holder.bindHolder(info,position);
+
     }
 
     @Override
@@ -88,39 +93,47 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindHolder(SettingOperatorInfo info) {
+        public void bindHolder(SettingOperatorInfo info, int position) {
             String job_number = info.getJob_number();
             mTextSettingRecyclerJobNumber.setText(job_number);
             mTextSettingRecyclerName.setText(info.getOperator_name());
-            mOperatorCheckSelect.setChecked(info.isCheckSelected());
-            mOperatorLoginSelect.setChecked(info.isLoginSelected());
+
+            mOperatorCheckSelect.setChecked(info.getIsCheckSelected()== 0?false:true);
+            mOperatorLoginSelect.setChecked(info.getIsLoginSelected()==0?false:true);
             mOperatorCheckSelect.setOnClickListener(v -> {
                 for (SettingOperatorInfo operatorInfo : mList) {
-                    if (operatorInfo.isCheckSelected()) {
-                        operatorInfo.setCheckSelected(false);
+                    if (operatorInfo.getIsCheckSelected()==1) {
+                        operatorInfo.setIsCheckSelected(0);
                     }
                 }
-                info.setCheckSelected(true);
+                info.setIsCheckSelected(1);
                 notifyDataSetChanged();
 
                 mCheckListener.checkListener(info);
             });
             mOperatorLoginSelect.setOnClickListener(v -> {
                 for (SettingOperatorInfo operatorInfo : mList) {
-                    if (operatorInfo.isLoginSelected())
-                    operatorInfo.setLoginSelected(false);
+                    if (operatorInfo.getIsLoginSelected()==1)
+                    operatorInfo.setIsLoginSelected(0);
                 }
-                info.setLoginSelected(true);
+                info.setIsLoginSelected(1);
                 notifyDataSetChanged();
 
                 mLoginListener.loginListener(info);
             });
             //点击了删除的按钮
             mTextSettingRecyclerDelete.setOnClickListener(v -> {
-
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setTitle("是否确定删除该检查人/登记人");
+                builder.setPositiveButton(R.string.dialog_messge_OK, (dialog, which) -> {
+                    mList.remove(position);
+                    notifyItemRemoved(position);
+                    DataSupport.deleteAll(SupportOperator.class, "job_number = ?", info.getJob_number());
+                });
+                builder.setNegativeButton(R.string.dialog_message_Cancel,
+                        (dialog, which) -> dialog.dismiss());
+                builder.show();
             });
-
         }
     }
 

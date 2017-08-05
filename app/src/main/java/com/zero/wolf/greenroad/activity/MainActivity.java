@@ -10,14 +10,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -38,9 +40,10 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.TestActivity;
+import com.zero.wolf.greenroad.adapter.MainViewPagerAdapter;
 import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
-import com.zero.wolf.greenroad.helpers.GreenRoadResourceHelper;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
 import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
 import com.zero.wolf.greenroad.https.RequestLiteGoods;
@@ -50,8 +53,6 @@ import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.litepalbean.SupportStation;
-import com.zero.wolf.greenroad.polling.PollingService;
-import com.zero.wolf.greenroad.polling.PollingUtils;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -60,7 +61,6 @@ import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
 import com.zero.wolf.greenroad.tools.FileUtils;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
-import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
@@ -80,16 +80,27 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Subscriber;
 
-import static com.zero.wolf.greenroad.R.id.tv_change;
 import static org.litepal.crud.DataSupport.findAll;
 
 /**
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SubscriberOnNextListener<List<Subject>> {
+public class MainActivity extends BaseActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        SubscriberOnNextListener<List<Subject>> {
 
 
+    @BindView(R.id.tab_main)
+    TabLayout mTabMain;
+    @BindView(R.id.view_pager_main)
+    ViewPager mViewPagerMain;
+    @BindView(R.id.toolbar_main)
+    Toolbar mToolbarMain;
+    @BindView(R.id.nav_view)
+    NavigationView mNavView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -169,6 +180,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private LinearLayout mHead_layout_main;
     private TextView mTv_math_number_main_has;
     private TextView mTv_math_number_main_has_not;
+    private MainViewPagerAdapter mPagerAdapter;
+
 
 
     @Override
@@ -181,15 +194,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         mActivity = this;
 
+        initViewPagerAndTabs();
         initData();
-        initSp();
+        //initSp();
         initLitePal();
         initView();
 
 
-        mIvCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        mIvCamera.setOnClickListener(new View.OnClickListener() {
+        //          @Override
+        //        public void onClick(View v) {
 /*
                 String android_ID = Settings.Secure
                         .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -211,24 +225,32 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         startActivity(intent);
                     }
                 }*/
-                if (getModelTag() == 1) {
-                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                    intent.putExtra("username", mUsername);
-                    intent.putExtra("stationName", mStationName);
-                    intent.putExtra("operator", mOperator);
+//                if (getModelTag() == 1) {
+//                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+//                    intent.putExtra("username", mUsername);
+//                    intent.putExtra("stationName", mStationName);
+//                    intent.putExtra("operator", mOperator);
+//
+//                    startActivity(intent);
+//                } else {
+//                    Intent intent = new Intent(MainActivity.this, ShootVideoActivity.class);
+//                    intent.putExtra("username", mUsername);
+//                    intent.putExtra("stationName", mStationName);
+//                    intent.putExtra("operator", mOperator);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
 
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(MainActivity.this, ShootVideoActivity.class);
-                    intent.putExtra("username", mUsername);
-                    intent.putExtra("stationName", mStationName);
-                    intent.putExtra("operator", mOperator);
-                    startActivity(intent);
-                }
-            }
-        });
 
+    }
 
+    private void initViewPagerAndTabs() {
+        mPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), this);
+        mViewPagerMain.setOffscreenPageLimit(2);//设置viewpager预加载页面数
+        mViewPagerMain.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
+//        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
+        mTabMain.setupWithViewPager(mViewPagerMain);
     }
 
 
@@ -495,9 +517,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initData() {
-        SDcardSpace sDcardSpace = new SDcardSpace(mActivity);
-        mAvailSpace = sDcardSpace.getAvailSpace();
-        //Log.i(TAG, "initData: "+ mAvailSpace1);
 
         PermissionUtils.verifyStoragePermissions(mActivity);
 
@@ -508,32 +527,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         mGoodsFilePath = mGoodsFile.getPath();
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        mOperator = (String) extras.get("operator");
-        mUsername = (String) extras.get("username");
-        mStationName = (String) extras.get("stationName");
-
     }
 
 
     private void initView() {
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbarMain);
 
         //得到拍照的按钮
-        mIvCamera = (ImageView) findViewById(R.id.iv_camera);
+        //  mIvCamera = (ImageView) findViewById(R.id.iv_camera);
 
         //mIvCamera.setOnClickListener(this);
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
-        title_text_view.setText(mStationName);
+        title_text_view.setText("绿通车登记");
 
         mFilePath = Environment.getExternalStorageDirectory().getPath();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbarMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
 
         drawer.setDrawerListener(toggle);
@@ -542,6 +554,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+/*
 
         mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
         mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
@@ -579,16 +592,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         mTv_math_number_main_has = (TextView) findViewById(R.id.tv_math_number_main_has);
         mTv_math_number_main_has_not = (TextView) findViewById(R.id.tv_math_number_main_has_not);
+*/
 
-        mTv_math_number_main_has_not.setOnClickListener(v ->
+     /*   mTv_math_number_main_has_not.setOnClickListener(v ->
         {
             post_not_upload();
             onResume();
             Logger.i("点击了未上传的TextVIEW按钮");
         });
-
+*/
     }
-
+/*
     private void initSp() {
         //如果cra_count为空则创建，否则不创建
         if (SPUtils.get(getApplicationContext(), SPUtils.CAR_COUNT, 0) == null) {
@@ -600,8 +614,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
 
         }
-    }
-
+    }*/
+/*
     private void initCount() {
         //找到两个计数的textview
         mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
@@ -614,7 +628,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         mTv_number_has_send.setText(String.valueOf(count_shut));
         mTv_number_has_not_send.setText(String.valueOf(count_cut));
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -640,6 +654,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.footer_item_location:
                 ToastUtils.singleToast("在这里做更新位置的处理");
+                Intent intent1 = new Intent(this, TestActivity.class);
+                finish();
+                startActivity(intent1);
                 break;
             default:
                 break;
@@ -693,10 +710,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
 
     private void changeTheme() {
-        mHead_layout_main = (LinearLayout) findViewById(R.id.head_layout_main);
-        mTv_app_name = (TextView) findViewById(R.id.tv_app_name);
-        mTv_company_name = (TextView) findViewById(R.id.tv_company_name);
-
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(240);
@@ -706,6 +719,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 super.onAnimationEnd(animation);
 
                 Intent intent = new Intent(getContext(), AnimatorActivity.class);
+                finish();
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
@@ -726,40 +740,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return animator;
     }
 
-    @Override
-    public void notifyByThemeChanged() {
-        super.notifyByThemeChanged();
-
-        GreenRoadResourceHelper helper = GreenRoadResourceHelper.getInstance(getContext());
-        helper.setBackgroundResourceByAttr(mRelativeLayout, R.attr.custom_attr_app_bg);
-        helper.setBackgroundResourceByAttr(mToolbar, R.attr.custom_my_colorPrimary);
-        helper.setTextColorByAttr(mTv_change1, R.attr.custom_white_black_text);
-        helper.setTextColorByAttr(mTv_change2, R.attr.custom_white_black_text);
-        helper.setBackgroundResourceByAttr(mIvCamera, R.attr.custom_main_shut_selector_btn);
-        helper.setTextColorByAttr(mCustom_Version_number, R.attr.custom_company_name_text);
-        helper.setTextColorByAttr(mCompany_name_text, R.attr.custom_company_name_text);
-        helper.setBackgroundResourceByAttr(mCustom_shape_line_rect_has, R.attr.custom_shape_line_rect);
-        helper.setBackgroundResourceByAttr(mCustom_shape_line_rect_has_not, R.attr.custom_shape_line_rect);
-
-        helper.setBackgroundResourceByAttr(mHead_layout_main, R.attr.custom_attr_app_bg);
-        helper.setTextColorByAttr(mTv_app_name, R.attr.custom_head_layout_text);
-        helper.setTextColorByAttr(mTv_company_name, R.attr.custom_head_layout_text);
-
-        helper.setBackgroundResourceByAttr(mTv_math_number_main_has, R.attr.custom_text_view_math_number);
-        helper.setBackgroundResourceByAttr(mTv_math_number_main_has_not, R.attr.custom_text_view_math_number);
-
-
-    }
-    /* private void initBroadCast() {
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
-        Intent intent = new Intent(LOCAL_BROADCAST);
-        mLocalBroadcastManager.sendBroadcast(intent);
-
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(LOCAL_BROADCAST);
-        mPostReceiver = new NotPostReceiver();
-        mLocalBroadcastManager.registerReceiver(mPostReceiver, mIntentFilter);
-    }*/
 
     private void post_not_upload() {
 
@@ -801,7 +781,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void cancelCount() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         dialog.setTitle("将已拍摄车辆及未上传车辆清零重新计数");
-        dialog.setMessage("点击“确定”将清空计数" + "\""+
+        dialog.setMessage("点击“确定”将清空计数" + "\"" +
                 "点击“取消”将取消该操作");
         dialog.setCancelable(false);
         dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
@@ -842,15 +822,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetWorkStateReceiver, filter);
+
+
 */
-        if (NetWorkManager.isnetworkConnected(mActivity)) {
-            mTv_change3.setText("良好");
-            mTv_change3.setTextColor(Color.BLUE);
-        } else {
-            mTv_change3.setText("网络无连接");
-            mTv_change3.setTextColor(Color.RED);
-        }
-        initCount();
+//        if (NetWorkManager.isnetworkConnected(mActivity)) {
+//            mTv_change3.setText("良好");
+//            mTv_change3.setTextColor(Color.BLUE);
+//        } else {
+//            mTv_change3.setText("网络无连接");
+//            mTv_change3.setTextColor(Color.RED);
+//        }
+//        initCount();
+
+
+
+
 /*
         mNetWorkStateReceiver.setNetworkStateListener(new NetWorkStateReceiver.NetworkState() {
             @Override
@@ -1000,7 +986,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void showDownloadSetting() {
         String packageName = "com.android.providers.downloads";
-        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + packageName));
         if (intentAvailable(intent)) {
             startActivity(intent);
@@ -1050,7 +1036,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onDestroy();
         //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
         Logger.i("mainactivity被销毁");
-        PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
+        //  PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
     }
 
 }

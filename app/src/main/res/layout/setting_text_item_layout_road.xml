@@ -28,7 +28,7 @@
         android:maxLines="1"
         android:id="@+id/text_setting_road"
         android:layout_width="0dp"
-        android:text="西部沿海"
+        android:text="京沪高速"
         android:textColor="?attr/custom_attr_setting_text_color"
         android:textSize="@dimen/text22"
         android:textStyle="bold"

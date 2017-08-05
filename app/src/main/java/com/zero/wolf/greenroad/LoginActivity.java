@@ -25,6 +25,7 @@ import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
 import com.zero.wolf.greenroad.polling.PollingService;
 import com.zero.wolf.greenroad.polling.PollingUtils;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
+import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -65,6 +66,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        // TODO: 2017/8/5 客户端的认证信息，移至注册账号是的返回储存
+
+        List app_config_info = new ArrayList<String>();
+
+        app_config_info.add("163127841234");
+        app_config_info.add("西部沿海");
+        app_config_info.add("广海");
+
+        Logger.i(app_config_info.toString());
+        SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
+
+
 
         Connector.getDatabase();
 

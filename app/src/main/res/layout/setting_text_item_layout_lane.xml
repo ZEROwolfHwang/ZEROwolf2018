@@ -30,7 +30,6 @@
         android:maxLines="1"
         android:id="@+id/text_setting_lane"
         android:layout_width="0dp"
-        android:text="54"
         android:textColor="?attr/custom_attr_setting_text_color"
         android:textSize="@dimen/text22"
         android:textStyle="bold"

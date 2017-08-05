@@ -10,22 +10,22 @@ public class SupportOperator extends DataSupport {
 
     private String job_number;
     private String operator_name;
-    private boolean check_select;
-    private boolean login_select;
+    private int check_select;
+    private int login_select;
 
-    public boolean isCheck_select() {
+    public int getCheck_select() {
         return check_select;
     }
 
-    public void setCheck_select(boolean check_select) {
+    public void setCheck_select(int check_select) {
         this.check_select = check_select;
     }
 
-    public boolean isLogin_select() {
+    public int getLogin_select() {
         return login_select;
     }
 
-    public void setLogin_select(boolean login_select) {
+    public void setLogin_select(int login_select) {
         this.login_select = login_select;
     }
 

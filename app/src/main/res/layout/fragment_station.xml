@@ -16,11 +16,11 @@
 
 
         <ImageView
-            android:id="@+id/iv_station_name_sure"
+            android:id="@+id/iv_station_config"
             android:layout_width="@dimen/layout_margin80dp"
             android:layout_height="@dimen/layout_margin80dp"
             android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:background="?attr/custom_car_station_sure"
+            android:background="?attr/custom_car_station_main"
             android:scaleType="fitCenter"/>
 
 

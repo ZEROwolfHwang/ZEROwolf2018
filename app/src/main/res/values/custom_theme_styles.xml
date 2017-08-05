@@ -45,7 +45,7 @@
         <!-- __________________     Fragment      __________________ -->
 
         <item name="custom_car_number_sure">@drawable/car_number_light</item>
-        <item name="custom_car_station_sure">@drawable/car_station_light</item>
+        <item name="custom_car_station_main">@drawable/car_station_light</item>
         <item name="custom_car_goods_sure">@drawable/car_goods_light</item>
 
         <item name="custom_shape_background_fragment">@drawable/shape_background_sure_day</item>
@@ -105,7 +105,7 @@
         <!-- __________________     Fragment      __________________ -->
 
         <item name="custom_car_number_sure">@drawable/car_number_dark</item>
-        <item name="custom_car_station_sure">@drawable/car_station_dark</item>
+        <item name="custom_car_station_main">@drawable/car_station_dark</item>
         <item name="custom_car_goods_sure">@drawable/car_goods_dark</item>
 
         <item name="custom_shape_background_fragment">@drawable/shape_background_sure_night</item>
