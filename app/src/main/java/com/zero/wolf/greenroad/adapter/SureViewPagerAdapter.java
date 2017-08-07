@@ -6,8 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
+import com.zero.wolf.greenroad.fragment.CheckFragment;
 import com.zero.wolf.greenroad.fragment.GoodsFragment;
-import com.zero.wolf.greenroad.fragment.StationFragment;
+import com.zero.wolf.greenroad.fragment.PhotoFragment;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
 
 import java.util.List;
@@ -51,12 +52,16 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
                 fragment = CarNumberFragment.newInstance();
                 break;
             case 1:
-                fragment = StationFragment.newInstance();
-                break;
-            case 2:
                 fragment =  GoodsFragment.newInstance(mOperator,mUsername,mStationName,mColor,mPhotoPath1,
                         mPhotoPath2,mPhotoPath3,mGoodsList, context);
                 break;
+            case 2:
+                fragment = PhotoFragment.newInstance("111","...");
+                break;
+            case 3:
+                fragment =  CheckFragment.newInstance("dvdfrad","orjk");
+                break;
+
             default:
                 fragment = CarNumberFragment.newInstance();
                 break;
@@ -66,7 +71,7 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -75,9 +80,12 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "车牌号";
             case 1:
-                return "站名";
-            case 2:
                 return "货物";
+            case 2:
+                return "照片";
+            case 3:
+                return "检查结果";
+
         }
         return null;
     }

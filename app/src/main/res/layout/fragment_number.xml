@@ -6,35 +6,100 @@
               android:orientation="vertical">
 
 
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="@dimen/layout_margin10dp"
+        android:elevation="3dp"
+        android:gravity="center">
+
+
+        <ImageView
+            android:layout_width="@dimen/layout_margin80dp"
+            android:layout_height="@dimen/layout_margin80dp"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:background="?attr/custom_car_number_sure"
+            android:scaleType="fitCenter"/>
+
         <LinearLayout
-            android:id="@+id/layout_top_sure"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:gravity="center"
             android:elevation="3dp"
-            android:layout_marginBottom="@dimen/layout_margin10dp">
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_margin10dp">
 
 
             <ImageView
-                android:id="@+id/iv_car_number_sure"
                 android:layout_width="@dimen/layout_margin80dp"
-                android:scaleType="fitCenter"
-                android:background="?attr/custom_car_number_sure"
-                android:layout_marginLeft="@dimen/layout_margin10dp"
-                android:layout_height="@dimen/layout_margin80dp"/>
+                android:layout_height="@dimen/layout_margin80dp"
+                android:background="?attr/custom_car_goods_sure"
+                android:scaleType="fitCenter"/>
 
-            <include
-                android:id="@+id/layout_group_sure"
-                layout="@layout/layout_text_group_sure"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/layout_margin20dp"
+                android:background="?attr/custom_shape_background_fragment"
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:textColor="?attr/custom_fragment_static_text"
+                    android:textSize="@dimen/text16"/>
+
+
+                <ImageView
+                    android:layout_width="4dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_static_night"
+                    android:focusable="false"/>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <EditText
+                        android:id="@+id/number_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:textColor="@color/white_light"
+                        android:textSize="@dimen/text22"/>
+
+                    <ImageView
+                        android:id="@+id/number_img_clear_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:padding="4dp"
+                        android:src="@drawable/clear_button"
+                        android:visibility="invisible"/>
+
+                </FrameLayout>
+
+            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_number"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:paddingBottom="@dimen/layout_margin20dp"
         android:paddingLeft="@dimen/layout_margin10dp"
         android:paddingRight="@dimen/layout_margin10dp">

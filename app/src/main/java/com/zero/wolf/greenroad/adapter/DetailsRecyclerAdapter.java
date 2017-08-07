@@ -52,7 +52,7 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
 
     public class DetailsRecyclerHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.detail_recycler_img)
+        @BindView(R.id.detail_recycler_item_img)
         ImageView mDetailRecyclerImg;
         @BindView(R.id.detail_recycler_text)
         TextView mDetailRecyclerText;

@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
+import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -26,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SureGoodsActivity111 extends BaseActivity {
 
@@ -35,9 +39,12 @@ public class SureGoodsActivity111 extends BaseActivity {
     private String mPhotoPath3;
     private String mColor;
 
+
     private List<SortModel> mGoodsList = new ArrayList<>();
     private SureViewPagerAdapter mPagerAdapter;
 
+    @BindView(R.id.sure_good_fab)
+    FloatingActionButton mSureGoodFab;
     @BindView(R.id.tab_sure)
     TabLayout mTabLayoutSure;
     @BindView(R.id.view_pager_sure)
@@ -49,6 +56,9 @@ public class SureGoodsActivity111 extends BaseActivity {
     private String mStationName;
     private ArrayList<SortModel> mAcacheGoods;
     private String mOperator;
+    private String mType;
+    private String mCarNumber;
+    private String mStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,24 +139,33 @@ public class SureGoodsActivity111 extends BaseActivity {
 
             mGoodsList.add(sortModel);
         }
-           /* Logger.i(mGoodsList.get(0).toString());
-            Logger.i(mGoodsList.get(0).getBitmap().toString());
-            Logger.i(mGoodsList.get(1).getBitmap().toString());
-            Logger.i(mGoodsList.get(2).getBitmap().toString());
-        Logger.i("" + mGoodsList.size());*/
+
     }
 
 
     private void initViewPagerAndTabs() {
         mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),
-                mOperator,mUsername,mStationName,mColor,mPhotoPath1,mPhotoPath2,mPhotoPath3,mGoodsList,this);
-        mViewPagerSure.setOffscreenPageLimit(3);//设置viewpager预加载页面数
+                mOperator, mUsername, mStationName, mColor, mPhotoPath1, mPhotoPath2, mPhotoPath3, mGoodsList, this);
+        mViewPagerSure.setOffscreenPageLimit(4);//设置viewpager预加载页面数
+
         mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
-//        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
+        if (GlobalManager.ENTERTYPE_NUMBER.equals(mType)) {
+            mViewPagerSure.setCurrentItem(0); // 设置当前显示在哪个页面}
+        }
+        if (GlobalManager.ENTERTYPE_GOODS.equals(mType)) {
+            mViewPagerSure.setCurrentItem(1); // 设置当前显示在哪个页面}
+        }
+        if (GlobalManager.ENTERTYPE_PHOTO.equals(mType)) {
+            mViewPagerSure.setCurrentItem(2); // 设置当前显示在哪个页面}
+        }
+        if (GlobalManager.ENTERTYPE_CHECK.equals(mType)) {
+            mViewPagerSure.setCurrentItem(3); // 设置当前显示在哪个页面}
+        }
+
         mTabLayoutSure.setupWithViewPager(mViewPagerSure);
     }
 
-    public static void actionStart(Context context, String operator,String stationName, String color, String username
+    public static void actionStart(Context context, String operator, String stationName, String color, String username
             , String photoPath1, String photoPath2, String photoPath3) {
         Intent intent = new Intent(context, SureGoodsActivity111.class);
         intent.putExtra("operator", operator);
@@ -165,24 +184,15 @@ public class SureGoodsActivity111 extends BaseActivity {
      */
     private void getIntentData() {
         Intent intent = getIntent();
-        mOperator = intent.getStringExtra("operator");
-        mUsername = intent.getStringExtra("username");
-        mColor = intent.getStringExtra("color");
-        mStationName = intent.getStringExtra("stationName");
-        mPhotoPath1 = intent.getStringExtra("photoPath1");
-        mPhotoPath2 = intent.getStringExtra("photoPath2");
-        mPhotoPath3 = intent.getStringExtra("photoPath3");
+        mType = intent.getType();
     }
-
-
-
 
 
     private void initToolbar() {
 
         setSupportActionBar(mToolbarSure);
 
-        TextView title_text_view = ActionBarTool.getInstance(mActivity,991).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText(getString(R.string.sure_goods_type));
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);//显示返回上级的箭头
@@ -193,9 +203,13 @@ public class SureGoodsActivity111 extends BaseActivity {
 
     }
 
-
+    @OnClick(R.id.sure_good_fab)
+    public void onClick(View view) {
+        onBackPressed();
+    }
     @Override
     protected void onPause() {
+
         super.onPause();
         //存入缓存
         ACache.get(mActivity).put("goods", (ArrayList<SortModel>) mGoodsList);

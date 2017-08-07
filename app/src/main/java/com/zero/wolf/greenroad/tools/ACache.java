@@ -40,6 +40,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * 这是一个缓存工具类，提供数据的本地化方法
  */
 public class ACache {
+
+    public static String TEXTGOODS = "textgoods";
+    public static String TEXTNUMBER = "textnumber";
+    public static String TEXTCONCLUSION = "textconclusion";
+
     public static final int TIME_HOUR = 60 * 60;
     public static final int TIME_DAY = TIME_HOUR * 24;
     private static final int MAX_SIZE = 1000 * 1000 * 50; // 50 mb

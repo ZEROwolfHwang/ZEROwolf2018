@@ -1,5 +1,6 @@
 package com.zero.wolf.greenroad.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,14 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
 import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
+import com.zero.wolf.greenroad.interfacy.OnFragmentAttachListener;
 import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
@@ -34,25 +34,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-import static com.zero.wolf.greenroad.R.id.tv_change;
 
 /**
  * Created by Administrator on 2017/7/17.
  */
 
 public class CarNumberFragment extends Fragment implements TextChangeWatcher.AfterTextListener {
-
+    Unbinder unbinder;
+    private static EditText mEditText;
+    @BindView(R.id.number_img_clear_text)
+    ImageView mIvClearText_number;
+    @BindView(R.id.recycler_view_number)
+    RecyclerView mRecyclerView;
     private List<SerializableNumber> mNumberList = new ArrayList<>();
     private static CarNumberFragment sFragment;
 
-    private RecyclerView mRecyclerView;
-    private static EditText mEditText;
-    private ImageView mIvClearText_number;
+
     private SureCarNumberAdapter mNumberAdapter;
     private GridLayoutManager mManager;
     private ArrayList<SerializableNumber> mAcacheNumbers;
+
+    private OnFragmentAttachListener mListener;
 
     public static CarNumberFragment newInstance() {
         if (sFragment == null) {
@@ -78,7 +84,7 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
         //如果跟数据库长度相同则不作更改，不然则更新
         if (mAcacheNumbers != null) {
             if (mAcacheNumbers.size() == headList.size()) {
-                if (mNumberList.size()!= 0) {
+                if (mNumberList.size() != 0) {
                     mNumberList.clear();
                 }
                 mNumberList.addAll(mAcacheNumbers);
@@ -118,7 +124,7 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
                 .get(getActivity()).getAsObject("sessions");
 
         iniNumberData();
-
+        mEditText = (EditText) view.findViewById(R.id.number_edit_text);
         initView(view);
 
 
@@ -126,16 +132,7 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
     }
 
     private void initView(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_number);
 
-        LinearLayout mLayout_top = (LinearLayout) view.findViewById(R.id.layout_top_sure);
-
-        //找到固定的textview
-        TextView textView1 = (TextView) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(R.id.tv_no_change);
-        textView1.setText(getString(R.string.text_car_number_sure));
-
-        //找到改变的TextView
-        mEditText = (EditText) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(tv_change);
 
         if (mNumberList.size() == 0) {
             mEditText.setText("粤B");
@@ -145,7 +142,7 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
         }
 
         //找到清除text的控件
-        mIvClearText_number = (ImageView) mLayout_top.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
+
         mIvClearText_number.setOnClickListener((v -> mEditText.setText("")));
 
 
@@ -188,6 +185,7 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
     public void onDestroyView() {
         super.onDestroyView();
 
+
     }
 
     @Override
@@ -208,8 +206,10 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
     }
 
     public static void setTextChangedFragment(TextFragmentListener listener) {
-        String number = mEditText.getText().toString().trim();
-        listener.textChanged(number);
+        if (mEditText != null) {
+            String number = mEditText.getText().toString().trim();
+            listener.textChanged(number);
+        }
     }
 
     @Override
@@ -217,4 +217,17 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
         super.onPause();
         ACache.get(getActivity()).put("sessions", (ArrayList<SerializableNumber>) mNumberList);
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentAttachListener) {
+            mListener = (OnFragmentAttachListener) context;
+        }/* else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }*/
+    }
+
+
 }

@@ -13,4 +13,11 @@ package com.zero.wolf.greenroad.manager;
 public class GlobalManager {
     public static int REQUEST_ACTIVATION = 1 * 111;
 
+    public static String ENTERTYPE_NUMBER = "entertype_number";
+    public static String ENTERTYPE_GOODS = "entertype_goods";
+    public static String ENTERTYPE_PHOTO = "entertype_photo";
+    public static String ENTERTYPE_CHECK = "entertype_check";
+
+
+
 }

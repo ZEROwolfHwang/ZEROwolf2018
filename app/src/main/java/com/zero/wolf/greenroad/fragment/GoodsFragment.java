@@ -1,13 +1,11 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,52 +13,51 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.activity.SaveToLocation;
 import com.zero.wolf.greenroad.activity.PhotoActivity;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.PostContent;
 import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
-import com.zero.wolf.greenroad.manager.CarNumberCount;
-import com.zero.wolf.greenroad.presenter.NetWorkManager;
+import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
+import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
-import com.zero.wolf.greenroad.tools.TimeUtil;
-import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.tools.ViewUtils;
 
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import okhttp3.MultipartBody;
-
-import static com.zero.wolf.greenroad.R.id.tv_change;
 
 /**
  * Created by Administrator on 2017/7/17.
  */
 
-public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTextListener {
+public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTextListener, View.OnClickListener {
 
     private static GoodsFragment sFragment;
-    private RecyclerView mRecyclerView;
-    private EditText mEditText;
-    private ImageView mIvClearTextGoods;
+    Unbinder unbinder;
+
+    private static EditText mEditText;
+    @BindView(R.id.goods_img_clear_text)
+    ImageView mIvClearTextGoods;
+    @BindView(R.id.recycler_view_goods_sure)
+    RecyclerView mRecyclerView;
+
     private SureGoodsAdapter mGoodsAdapter;
     private static Context sContext;
-    private Button mButton;
     private static String mUsername;
     private static String sStationName;
     private static String mColor;
@@ -73,6 +70,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private static List<SortModel> sGoodsList;
     private String mCurrentTimeTos;
     private static String mOperator;
+    private String goodsText;
 
     public static GoodsFragment newInstance(String operator, String username, String stationName,
                                             String color, String photoPath1, String photoPath2, String photoPath3, List<SortModel> goodsList, Context context) {
@@ -103,10 +101,11 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_goods, container, false);
 
-
+       mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
         initView(view);
 
 
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -118,46 +117,41 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         return dialog_message;
     }
 
-    private void initView(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_goods_sure);
-        mButton = (Button) view.findViewById(R.id.bt_ok_msg);
-        LinearLayout mLayout_bottom = (LinearLayout) view.findViewById(R.id.layout_bottom_sure);
 
-        //找到固定的textview
-        TextView textView1 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.tv_no_change);
-        textView1.setText(getString(R.string.text_car_goods_sure));
+    private void initView(View view) {
 
         //找到改变的TextView
-        mEditText = (EditText) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(tv_change);
-        if (sGoodsList.size() == 0) {
+        String aCacheGoodsText =  ACache
+                .get(getActivity()).getAsString("goodsText");
+        String editText = mEditText.getText().toString().trim();
+        if (editText != null) {
+            mEditText.setSelection(editText.length());
+        }
+        if (aCacheGoodsText == null || "".equals(aCacheGoodsText)) {
             mEditText.setText("西兰花");
+            goodsText = "苹果";
         } else {
-            mEditText.setText(sGoodsList.get(0).getScientificname());
+            goodsText = aCacheGoodsText;
+            mEditText.setText(aCacheGoodsText);
         }
         //找到清除text的控件
-        mIvClearTextGoods = (ImageView) mLayout_bottom.findViewById(R.id.layout_group_sure).findViewById(R.id.iv_clear_Text);
+
         mIvClearTextGoods.setOnClickListener((v -> mEditText.setText("")));
 
-        mEditText.addTextChangedListener(new TextChangeWatcher(this));
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+
+       /* mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CarNumberFragment.setTextChangedFragment((edittext -> {
                     mCar_number = edittext;
-                }));
-                StationFragment.setTextChangedFragment((edittext -> {
-                    mCar_station = edittext;
                 }));
 
                 if ("".equals(mCar_number.substring(2).trim())) {
                     ToastUtils.singleToast(getString(R.string.sure_number));
                     return;
                 }
-                if ("".equals(mCar_station)) {
-                    ToastUtils.singleToast(getString(R.string.sure_station));
-                    return;
-                }
+
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                 dialog.setTitle(getString(R.string.dialog_title_sure));
@@ -191,8 +185,15 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 dialog.show();
 
         }
-    });
-}
+    });*/
+    }
+
+    public static void setTextChangedFragment(TextFragmentListener listener) {
+        if (mEditText != null) {
+            String number = mEditText.getText().toString().trim();
+            listener.textChanged(number);
+        }
+    }
 
     private void backToPhotoActivity() {
         getActivity().finish();
@@ -250,12 +251,15 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
 
+        mEditText.addTextChangedListener(new TextChangeWatcher(this));
+        mEditText.setOnClickListener(this);
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        unbinder.unbind();
 
     }
 
@@ -274,11 +278,13 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 mGoodsAdapter.updateListView(sGoodsList);
             }
         }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
    /* @Override
@@ -295,5 +301,30 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
      */
     private void sendToService() {
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        String editText = mEditText.getText().toString().trim();
+        goodsText = editText;
+        ACache.get(getActivity()).put("goodsText", (String) goodsText);
+
+    }
+
+    @OnClick(R.id.goods_edit_text)
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.goods_edit_text:
+                String goodsEdit = mEditText.getText().toString().trim();
+                if (goodsEdit != null&&!"".equals(goodsEdit)) {
+                    mEditText.setSelection(goodsEdit.length());
+                    mIvClearTextGoods.setVisibility(View.VISIBLE);
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 }

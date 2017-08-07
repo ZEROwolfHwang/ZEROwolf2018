@@ -6,7 +6,6 @@
               android:padding="@dimen/layout_margin10dp"
               tools:context="com.zero.wolf.greenroad.fragment.DetailsFragment">
 
-
     <RadioGroup
         android:id="@+id/radio_group_color"
         android:layout_width="match_parent"
@@ -78,7 +77,7 @@
                 style="@style/main_text_static_iv_style"/>
 
             <TextView
-                android:id="@+id/tv_change_station_config"
+                android:id="@+id/tv_change_number_detail"
                 style="@style/main_text_change_tv_style"/>
 
         </LinearLayout>
@@ -114,7 +113,13 @@
         </LinearLayout>
 
     </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:id="@+id/recycler_view_shoot_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </android.support.v7.widget.RecyclerView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -139,15 +144,16 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="@dimen/layout_margin5dp"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="@dimen/layout_margin60dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="现场\n检查结论"
+            android:text="现场检查结论"
             android:textSize="@dimen/text16"/>
 
         <TextView
@@ -169,26 +175,37 @@
             android:text="选择"/>
 
     </LinearLayout>
-
     <LinearLayout
         android:layout_marginTop="@dimen/layout_margin5dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin30dp"
+        android:layout_height="@dimen/layout_margin60dp"
         android:orientation="horizontal">
 
         <TextView
-            android:text="现场检查说明"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="现场检查说明"
+            android:textSize="@dimen/text16"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="免费绿通车-符合绿通放行规定"
+            android:textSize="@dimen/text18"/>
+
+        <Button
+            android:id="@+id/btn_description_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="选择"/>
+
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_shoot_photo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

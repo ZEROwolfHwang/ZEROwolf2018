@@ -181,7 +181,8 @@ public class MainActivity extends BaseActivity implements
     private TextView mTv_math_number_main_has;
     private TextView mTv_math_number_main_has_not;
     private MainViewPagerAdapter mPagerAdapter;
-
+    private String mCarNumber;
+    private String mStation;
 
 
     @Override
@@ -193,6 +194,7 @@ public class MainActivity extends BaseActivity implements
 
         ButterKnife.bind(this);
         mActivity = this;
+
 
         initViewPagerAndTabs();
         initData();
@@ -225,22 +227,6 @@ public class MainActivity extends BaseActivity implements
                         startActivity(intent);
                     }
                 }*/
-//                if (getModelTag() == 1) {
-//                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-//                    intent.putExtra("username", mUsername);
-//                    intent.putExtra("stationName", mStationName);
-//                    intent.putExtra("operator", mOperator);
-//
-//                    startActivity(intent);
-//                } else {
-//                    Intent intent = new Intent(MainActivity.this, ShootVideoActivity.class);
-//                    intent.putExtra("username", mUsername);
-//                    intent.putExtra("stationName", mStationName);
-//                    intent.putExtra("operator", mOperator);
-//                    startActivity(intent);
-//                }
-//            }
-//        });
 
 
     }
@@ -556,28 +542,7 @@ public class MainActivity extends BaseActivity implements
 
 /*
 
-        mLayout_top = (LinearLayout) findViewById(R.id.layout_top);
-        mLayout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
-        mLayout_center = (LinearLayout) findViewById(R.id.layout_center);
 
-        //找到固定的textview
-        TextView textView1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
-        textView1.setText(getString(R.string.static_tv_operator));
-        TextView textView2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
-        textView2.setText(getString(R.string.static_tv_space));
-        TextView textView3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(R.id.tv_no_change);
-        textView3.setText(getString(R.string.static_tv_net_state));
-
-        //找到改变的TextView
-        mTv_change1 = (TextView) mLayout_top.findViewById(R.id.layout_group_main).findViewById(tv_change);
-        mTv_change2 = (TextView) mLayout_center.findViewById(R.id.layout_group_main).findViewById(tv_change);
-        mTv_change3 = (TextView) mLayout_bottom.findViewById(R.id.layout_group_main).findViewById(tv_change);
-
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.custom_id_app_background);
-
-        mTv_change1.setText(mOperator);
-        mTv_change2.setText(mAvailSpace);
-        // mTv_change3.setText("良好");
 
         //得到版本号
         mCustom_Version_number = (TextView) findViewById(R.id.version_number);
@@ -816,40 +781,12 @@ public class MainActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
 
-     /*   if (mNetWorkStateReceiver == null) {
-            mNetWorkStateReceiver = new NetWorkStateReceiver();
-        }
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(mNetWorkStateReceiver, filter);
 
-
-*/
-//        if (NetWorkManager.isnetworkConnected(mActivity)) {
-//            mTv_change3.setText("良好");
-//            mTv_change3.setTextColor(Color.BLUE);
-//        } else {
-//            mTv_change3.setText("网络无连接");
-//            mTv_change3.setTextColor(Color.RED);
-//        }
-//        initCount();
-
-
-
-
-/*
-        mNetWorkStateReceiver.setNetworkStateListener(new NetWorkStateReceiver.NetworkState() {
-            @Override
-            public void onStateChange(String state) {
-                mTv_change3.setText(state);
-            }
-        });*/
     }
 
     //onPause()方法注销
     @Override
     protected void onPause() {
-        // unregisterReceiver(mNetWorkStateReceiver);
         super.onPause();
     }
 

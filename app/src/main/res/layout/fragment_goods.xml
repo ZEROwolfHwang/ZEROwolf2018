@@ -1,29 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:padding="@dimen/layout_margin10dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <LinearLayout
-        android:id="@+id/layout_bottom_sure"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:gravity="center"
         android:padding="@dimen/layout_margin10dp"
         android:elevation="3dp">
 
 
         <ImageView
-            android:id="@+id/iv_car_goods_sure"
             android:layout_width="@dimen/layout_margin80dp"
             android:scaleType="fitCenter"
             android:background="?attr/custom_car_goods_sure"
-            android:layout_marginLeft="@dimen/layout_margin10dp"
             android:layout_height="@dimen/layout_margin80dp"/>
 
-        <include
-            android:id="@+id/layout_group_sure"
-            layout="@layout/layout_text_group_sure"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/layout_margin20dp"
+            android:background="?attr/custom_shape_background_fragment"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/text_car_goods_sure"
+                android:gravity="center"
+                android:textColor="?attr/custom_fragment_static_text"
+                android:focusable="false"
+                android:textSize="@dimen/text16"/>
+
+
+            <ImageView
+                android:layout_width="4dp"
+                android:layout_height="30dp"
+                android:focusable="false"
+                android:background="@drawable/shape_static_night"/>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/goods_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:focusable="true"
+                    android:textColor="@color/white_light"
+                    android:textSize="@dimen/text22"/>
+
+                <ImageView
+                    android:id="@+id/goods_img_clear_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:padding="4dp"
+                    android:src="@drawable/clear_button"
+                    android:visibility="invisible"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -31,13 +80,8 @@
         android:padding="@dimen/layout_margin5dp"
         android:id="@+id/recycler_view_goods_sure"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:focusable="false"/>
 
-    <Button
-        android:id="@+id/bt_ok_msg"
-        android:text="@string/ok_send"
-        style="@style/style_button_sure"/>
 
 </LinearLayout>

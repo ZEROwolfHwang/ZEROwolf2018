@@ -1,8 +1,10 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,14 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.SureGoodsActivity111;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.manager.CarColorManager;
+import com.zero.wolf.greenroad.manager.GlobalManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -37,6 +43,10 @@ public class DetailsFragment extends Fragment {
     RadioGroup mRadioGroupColor;
     @BindView(R.id.recycler_view_shoot_photo)
     RecyclerView mRecyclerViewShootPhoto;
+    @BindView(R.id.tv_change_number_detail)
+    TextView mTvChangeNumberDetail;
+    @BindView(R.id.tv_change_goods_detail)
+    TextView mTvChangeGoodsDetail;
 
     private String mCurrent_color;
 
@@ -44,6 +54,8 @@ public class DetailsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private String mCarNumber;
+    private String mCarGoods;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -87,6 +99,21 @@ public class DetailsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        CarNumberFragment.setTextChangedFragment((edittext -> {
+            mCarNumber = edittext;
+        }));
+
+        GoodsFragment.setTextChangedFragment(edittext -> {
+            mCarGoods = edittext;
+        });
+        Logger.i(mCarNumber + "]]]]]]]]]");
+        mTvChangeNumberDetail.setText(mCarNumber);
+        mTvChangeGoodsDetail.setText(mCarGoods);
+    }
+
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(manager);
@@ -128,8 +155,40 @@ public class DetailsFragment extends Fragment {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
+            R.id.recycler_view_shoot_photo, R.id.btn_conclusion_selection})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_change_number_detail:
+                enterSureActivity(GlobalManager.ENTERTYPE_NUMBER);
+                break;
+            case R.id.tv_change_goods_detail:
+                enterSureActivity(GlobalManager.ENTERTYPE_GOODS);
+
+                Snackbar.make(view, "进入货物的选择业", Snackbar.LENGTH_SHORT).show();
+                break;
+            case R.id.recycler_view_shoot_photo:
+                enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
+                Snackbar.make(view, "拍摄照片", Snackbar.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_conclusion_selection:
+                enterSureActivity(GlobalManager.ENTERTYPE_CHECK);
+                Snackbar.make(view, "检查结论", Snackbar.LENGTH_SHORT).show();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void enterSureActivity(String type) {
+        Intent intent = new Intent(getActivity(), SureGoodsActivity111.class);
+        intent.setType(type);
+        startActivity(intent);
+    }
+
     public void onButtonPressed(Uri uri) {
+
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
