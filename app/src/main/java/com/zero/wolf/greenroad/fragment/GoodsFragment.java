@@ -101,11 +101,11 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_goods, container, false);
 
-       mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
+        unbinder = ButterKnife.bind(this, view);
+        mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
         initView(view);
 
 
-        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -121,7 +121,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private void initView(View view) {
 
         //找到改变的TextView
-        String aCacheGoodsText =  ACache
+        String aCacheGoodsText = ACache
                 .get(getActivity()).getAsString("goodsText");
         String editText = mEditText.getText().toString().trim();
         if (editText != null) {
@@ -317,7 +317,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         switch (v.getId()) {
             case R.id.goods_edit_text:
                 String goodsEdit = mEditText.getText().toString().trim();
-                if (goodsEdit != null&&!"".equals(goodsEdit)) {
+                if (goodsEdit != null && !"".equals(goodsEdit)) {
                     mEditText.setSelection(goodsEdit.length());
                     mIvClearTextGoods.setVisibility(View.VISIBLE);
                 }
