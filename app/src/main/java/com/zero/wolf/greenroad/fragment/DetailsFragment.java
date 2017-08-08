@@ -48,6 +48,7 @@ public class DetailsFragment extends Fragment {
     @BindView(R.id.tv_change_goods_detail)
     TextView mTvChangeGoodsDetail;
 
+
     private String mCurrent_color;
 
     private String mParam1;
@@ -156,7 +157,7 @@ public class DetailsFragment extends Fragment {
     }
 
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
-            R.id.recycler_view_shoot_photo, R.id.btn_conclusion_selection})
+           R.id.btn_conclusion_selection})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_change_number_detail:
@@ -166,10 +167,6 @@ public class DetailsFragment extends Fragment {
                 enterSureActivity(GlobalManager.ENTERTYPE_GOODS);
 
                 Snackbar.make(view, "进入货物的选择业", Snackbar.LENGTH_SHORT).show();
-                break;
-            case R.id.recycler_view_shoot_photo:
-                enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
-                Snackbar.make(view, "拍摄照片", Snackbar.LENGTH_SHORT).show();
                 break;
             case R.id.btn_conclusion_selection:
                 enterSureActivity(GlobalManager.ENTERTYPE_CHECK);

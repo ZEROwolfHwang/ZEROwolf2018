@@ -7,14 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -22,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -38,6 +43,10 @@ public class ConfigFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final int REQUEST_CODE_SCAN= 901;
+
+
+
     Unbinder unbinder;
     @BindView(R.id.tv_change_station_config)
     TextView mTvChangeStationConfig;
@@ -49,7 +58,8 @@ public class ConfigFragment extends Fragment {
 
     @BindView(R.id.tv_operator_login_config)
     TextView mTvOperatorLoginConfig;
-
+    @BindView(R.id.scan_qr_code)
+    Button mScanQrCode;
 
 
     // TODO: Rename and change types of parameters
@@ -111,6 +121,33 @@ public class ConfigFragment extends Fragment {
         setOperatorInfo("login_select = ?", mTvOperatorLoginConfig);
         mTvChangeLaneConfig.setText((String) SPUtils.get(getActivity(), SPUtils.TEXTLANE, "66"));
 
+    }
+
+    @OnClick(R.id.scan_qr_code)
+    public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+         // 处理二维码扫描结果
+        if (requestCode == REQUEST_CODE_SCAN) {
+            //处理扫描结果（在界面上显示）
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    ToastUtils.singleToast("解析结果:" + result);
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    ToastUtils.singleToast("解析二维码失败");
+                }
+            }
+        }
     }
 
     private void initView() {

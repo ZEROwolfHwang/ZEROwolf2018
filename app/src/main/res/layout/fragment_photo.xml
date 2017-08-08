@@ -1,13 +1,128 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.zero.wolf.greenroad.fragment.PhotoFragment">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/custom_attr_app_bg"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:padding="@dimen/layout_margin10dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/layout_number"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="80dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <TextView
+            style="@style/text_view_2_car"
+            android:layout_gravity="center"
+            android:layout_marginLeft="40dp"
+            android:background="?attr/custom_shape_line_rect"
+            android:text="三证"/>
+
+        <ImageView
+            android:id="@+id/iv_car_number"
+            android:layout_width="@dimen/layout_margin80dp"
+            android:layout_height="@dimen/layout_margin80dp"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:background="?attr/custom_car_number_selection"
+            android:scaleType="fitCenter"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/iv_car_body"
+            android:layout_width="@dimen/layout_margin80dp"
+            android:layout_height="@dimen/layout_margin80dp"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:background="?attr/custom_car_body_selection"
+            android:scaleType="fitCenter"/>
+
+
+        <TextView
+            style="@style/text_view_2_car"
+            android:layout_marginRight="40dp"
+            android:background="?attr/custom_shape_line_rect_center"
+            android:text="车牌车型"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_view_2_car"
+            android:layout_marginLeft="40dp"
+            android:background="?attr/custom_shape_line_rect"
+            android:text="@string/tv_car_goods"/>
+
+        <ImageView
+            android:id="@+id/iv_car_goods"
+            android:layout_width="@dimen/layout_margin80dp"
+            android:layout_height="@dimen/layout_margin80dp"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:background="?attr/custom_car_goods_selection"
+            android:scaleType="fitCenter"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/sanzheng_1"
+            layout="@layout/photo_fragment_show_image_layout"/>
+        <include
+            android:id="@+id/sanzheng_2"
+            layout="@layout/photo_fragment_show_image_layout"/>
+        <include
+            android:id="@+id/sanzheng3"
+            layout="@layout/photo_fragment_show_image_layout"/>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/chepaichexing_1"
+            layout="@layout/photo_fragment_show_image_layout"/>
+        <include
+            android:id="@+id/chepaichexing_2"
+            layout="@layout/photo_fragment_show_image_layout"/>
+        <include
+            android:id="@+id/huowu_1"
+            layout="@layout/photo_fragment_show_image_layout"/>
+         <include
+            android:id="@+id/huowu_2"
+            layout="@layout/photo_fragment_show_image_layout"/>
+
+
+
+    </LinearLayout>
+</LinearLayout>

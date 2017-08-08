@@ -61,6 +61,7 @@ import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.FileBitmapUtil;
 import com.zero.wolf.greenroad.tools.FileUtils;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
+import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
@@ -73,6 +74,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -194,6 +196,14 @@ public class MainActivity extends BaseActivity implements
 
         ButterKnife.bind(this);
         mActivity = this;
+        List app_config_info = new ArrayList<String>();
+
+        app_config_info.add("163127841234");
+        app_config_info.add("西部沿海");
+        app_config_info.add("广海");
+
+        Logger.i(app_config_info.toString());
+        SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
 
 
         initViewPagerAndTabs();

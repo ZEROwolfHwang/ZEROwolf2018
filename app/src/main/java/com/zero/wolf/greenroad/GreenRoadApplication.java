@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 
 import com.orhanobut.logger.Logger;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zero.wolf.greenroad.interfacy.ThemeChangeObserver;
 import com.zero.wolf.greenroad.polling.LoopService;
 
@@ -38,7 +39,7 @@ public class GreenRoadApplication extends Application {
         sApplication = this;
 
         LitePal.initialize(this);
-
+        ZXingLibrary.initDisplayOpinion(this);
           //  startLongConn();
         // 登录后开启长连接
       /*  if (UserConfig.isPassLogined()) {
