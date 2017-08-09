@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
+import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
@@ -59,6 +60,11 @@ public class SureGoodsActivity111 extends BaseActivity {
     private String mType;
     private String mCarNumber;
     private String mStation;
+    private String mCarNumber_i;
+    private String mGoods_i;
+    private String mConclusion_i;
+    private String mDescription_i;
+    private SerializableMain2Sure mMain2Sure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +86,8 @@ public class SureGoodsActivity111 extends BaseActivity {
         initViewPagerAndTabs();
 
     }
+
+
 
     private void initGoodsData() {
         mAcacheGoods = (ArrayList<SortModel>) ACache
@@ -144,8 +152,7 @@ public class SureGoodsActivity111 extends BaseActivity {
 
 
     private void initViewPagerAndTabs() {
-        mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),
-                mOperator, mUsername, mStationName, mColor, mPhotoPath1, mPhotoPath2, mPhotoPath3, mGoodsList, this);
+        mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),mMain2Sure);
         mViewPagerSure.setOffscreenPageLimit(4);//设置viewpager预加载页面数
 
         mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
@@ -165,7 +172,7 @@ public class SureGoodsActivity111 extends BaseActivity {
         mTabLayoutSure.setupWithViewPager(mViewPagerSure);
     }
 
-    public static void actionStart(Context context, String operator, String stationName, String color, String username
+    /*public static void actionStart(Context context, String operator, String stationName, String color, String username
             , String photoPath1, String photoPath2, String photoPath3) {
         Intent intent = new Intent(context, SureGoodsActivity111.class);
         intent.putExtra("operator", operator);
@@ -177,6 +184,12 @@ public class SureGoodsActivity111 extends BaseActivity {
         intent.putExtra("color", color);
 
         context.startActivity(intent);
+    } */
+    public static void actionStart(Context context, SerializableMain2Sure main2Sure, String type) {
+        Intent intent = new Intent(context, SureGoodsActivity111.class);
+        intent.putExtra("main2Sure", main2Sure);
+        intent.setType(type);
+        context.startActivity(intent);
     }
 
     /**
@@ -184,6 +197,11 @@ public class SureGoodsActivity111 extends BaseActivity {
      */
     private void getIntentData() {
         Intent intent = getIntent();
+        mMain2Sure = (SerializableMain2Sure) intent.getSerializableExtra("main2Sure");
+//        mCarNumber_i = main2Sure.getCarNumber_I();
+//        mGoods_i = main2Sure.getGoods_I();
+//        mConclusion_i = main2Sure.getConclusion_I();
+//        mDescription_i = main2Sure.getDescription_I();
         mType = intent.getType();
     }
 

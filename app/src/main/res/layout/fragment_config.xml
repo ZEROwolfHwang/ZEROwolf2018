@@ -103,15 +103,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_height="@dimen/layout_margin45dp"
+        android:layout_height="@dimen/layout_margin40dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
+
         <TextView
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:text="出口流水号"
             android:textSize="@dimen/text16"/>
 
@@ -121,24 +122,26 @@
             android:layout_weight="1"
             android:textSize="@dimen/text18"/>
 
-        <Button
-            android:id="@+id/scan_qr_code"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="二维码"/>
 
+        <ImageButton
+            android:id="@+id/scan_qr_code"
+            android:layout_width="@dimen/layout_margin40dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:background="@drawable/qr_code_day"/>
     </LinearLayout>
 
-
     <TableLayout
-        android:padding="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/layout_margin10dp">
 
         <TableRow>
 
-            <TableRow android:layout_height="match_parent"
+            <TableRow
                 android:layout_width="@dimen/layout_margin0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
@@ -156,42 +159,52 @@
                     android:text="10"/>
 
             </TableRow>
-        <TableRow android:layout_height="match_parent"
-                  android:layout_width="@dimen/layout_margin0dp"
-                  android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="装备质量"/>
 
-            <TextView
-                android:id="@+id/text_table_2"
-                android:layout_width="0dp"
+            <TableRow
+                android:layout_width="@dimen/layout_margin0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="10"/>
-        </TableRow>
-        <TableRow android:layout_height="match_parent"
-                  android:layout_width="@dimen/layout_margin0dp"
-                  android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="称重质量"/>
-            <TextView
-                android:id="@+id/text_table_3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="10"/>
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="装备质量"/>
+
+                <TextView
+                    android:id="@+id/text_table_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="10"/>
             </TableRow>
 
-        </TableRow><TableRow>
-
-            <TableRow android:layout_height="match_parent"
+            <TableRow
                 android:layout_width="@dimen/layout_margin0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="称重质量"/>
+
+                <TextView
+                    android:id="@+id/text_table_3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="10"/>
+            </TableRow>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TableRow
+                android:layout_width="@dimen/layout_margin0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
@@ -209,42 +222,52 @@
                     android:text="10"/>
 
             </TableRow>
-        <TableRow android:layout_height="match_parent"
-                  android:layout_width="@dimen/layout_margin0dp"
-                  android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="装备质量"/>
 
-            <TextView
-                android:id="@+id/text_table_5"
-                android:layout_width="0dp"
+            <TableRow
+                android:layout_width="@dimen/layout_margin0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="10"/>
-        </TableRow>
-        <TableRow android:layout_height="match_parent"
-                  android:layout_width="@dimen/layout_margin0dp"
-                  android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="称重质量"/>
-            <TextView
-                android:id="@+id/text_table_6"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="10"/>
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="装备质量"/>
+
+                <TextView
+                    android:id="@+id/text_table_5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="10"/>
             </TableRow>
 
-        </TableRow><TableRow>
-
-            <TableRow android:layout_height="match_parent"
+            <TableRow
                 android:layout_width="@dimen/layout_margin0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="称重质量"/>
+
+                <TextView
+                    android:id="@+id/text_table_6"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="10"/>
+            </TableRow>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TableRow
+                android:layout_width="@dimen/layout_margin0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
@@ -262,36 +285,43 @@
                     android:text="10"/>
 
             </TableRow>
-        <TableRow android:layout_height="match_parent"
-                  android:layout_width="@dimen/layout_margin0dp"
-                  android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="装备质量"/>
 
-            <TextView
-                android:id="@+id/text_table_8"
-                android:layout_width="0dp"
+            <TableRow
+                android:layout_width="@dimen/layout_margin0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="10"/>
-        </TableRow>
-        <TableRow android:layout_height="match_parent"
-                  android:layout_width="@dimen/layout_margin0dp"
-                  android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="装备质量"/>
+
+                <TextView
+                    android:id="@+id/text_table_8"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="10"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="@dimen/layout_margin0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="称重质量"/>
-            <TextView
-                android:id="@+id/text_table_9"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="10"/>
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="称重质量"/>
+
+                <TextView
+                    android:id="@+id/text_table_9"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="10"/>
             </TableRow>
 
         </TableRow>

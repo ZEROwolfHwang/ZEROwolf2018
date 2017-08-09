@@ -205,7 +205,6 @@ public class MainActivity extends BaseActivity implements
         Logger.i(app_config_info.toString());
         SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
 
-
         initViewPagerAndTabs();
         initData();
         //initSp();

@@ -1,7 +1,6 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -18,6 +17,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity111;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
+import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 
@@ -47,6 +47,10 @@ public class DetailsFragment extends Fragment {
     TextView mTvChangeNumberDetail;
     @BindView(R.id.tv_change_goods_detail)
     TextView mTvChangeGoodsDetail;
+    @BindView(R.id.config_conclusion_text)
+    TextView mConfigConclusionText;
+    @BindView(R.id.config_description_text)
+    TextView mConfigDescriptionText;
 
 
     private String mCurrent_color;
@@ -57,6 +61,8 @@ public class DetailsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private String mCarNumber;
     private String mCarGoods;
+    private String mConclusionText;
+    private String mDescriptionEditText;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -110,9 +116,21 @@ public class DetailsFragment extends Fragment {
         GoodsFragment.setTextChangedFragment(edittext -> {
             mCarGoods = edittext;
         });
+
+        CheckFragment.setTextChangedFragment(edittext -> {
+            mConclusionText = edittext;
+        });
+        CheckFragment.setEditChangedFragment(edittext -> {
+            mDescriptionEditText = edittext;
+        });
+
+
         Logger.i(mCarNumber + "]]]]]]]]]");
         mTvChangeNumberDetail.setText(mCarNumber);
         mTvChangeGoodsDetail.setText(mCarGoods);
+        mConfigConclusionText.setText(mConclusionText);
+        mConfigDescriptionText.setText(mDescriptionEditText);
+
     }
 
     private void initRecyclerView() {
@@ -157,7 +175,7 @@ public class DetailsFragment extends Fragment {
     }
 
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
-           R.id.btn_conclusion_selection})
+            R.id.btn_conclusion_selection})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_change_number_detail:
@@ -179,9 +197,20 @@ public class DetailsFragment extends Fragment {
     }
 
     private void enterSureActivity(String type) {
-        Intent intent = new Intent(getActivity(), SureGoodsActivity111.class);
-        intent.setType(type);
-        startActivity(intent);
+        String carNumber = mTvChangeNumberDetail.getText().toString();
+        String goods = mTvChangeGoodsDetail.getText().toString();
+        String conclusion = mConfigConclusionText.getText().toString();
+        String description = mConfigDescriptionText.getText().toString();
+
+        SerializableMain2Sure main2Sure = new SerializableMain2Sure();
+        main2Sure.setCarNumber_I(carNumber);
+        main2Sure.setGoods_I(goods);
+        main2Sure.setConclusion_I(conclusion);
+        main2Sure.setDescription_I(description);
+
+
+        SureGoodsActivity111.actionStart(getActivity(),main2Sure,type);
+
     }
 
     public void onButtonPressed(Uri uri) {

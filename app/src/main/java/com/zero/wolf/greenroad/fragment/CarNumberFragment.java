@@ -1,38 +1,30 @@
 package com.zero.wolf.greenroad.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
-import com.zero.wolf.greenroad.adapter.SureCarNumberAdapter;
-import com.zero.wolf.greenroad.bean.SerializableNumber;
+import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.interfacy.OnFragmentAttachListener;
-import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
-import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
-import com.zero.wolf.greenroad.tools.ACache;
-import com.zero.wolf.greenroad.tools.PingYinUtil;
-import com.zero.wolf.greenroad.tools.ViewUtils;
+import com.zero.wolf.greenroad.tools.LicenseKeyboardUtil;
 
-import org.litepal.crud.DataSupport;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,27 +35,37 @@ import butterknife.Unbinder;
  * Created by Administrator on 2017/7/17.
  */
 
-public class CarNumberFragment extends Fragment implements TextChangeWatcher.AfterTextListener {
+public class CarNumberFragment extends Fragment {
+
+    public static final String INPUT_LICENSE_COMPLETE = "me.kevingo.licensekeyboard.input.comp";
+    public static final String INPUT_LICENSE_KEY = "LICENSE";
+
     Unbinder unbinder;
-    private static EditText mEditText;
-    @BindView(R.id.number_img_clear_text)
-    ImageView mIvClearText_number;
-    @BindView(R.id.recycler_view_number)
-    RecyclerView mRecyclerView;
-    private List<SerializableNumber> mNumberList = new ArrayList<>();
+
+
     private static CarNumberFragment sFragment;
 
 
-    private SureCarNumberAdapter mNumberAdapter;
-    private GridLayoutManager mManager;
-    private ArrayList<SerializableNumber> mAcacheNumbers;
+    @BindView(R.id.keyboard_view)
+    KeyboardView mKeyboardView;
+    private LicenseKeyboardUtil keyboardUtil;
 
     private OnFragmentAttachListener mListener;
+    private static EditText mEtInputBox1;
+    private static EditText mEtInputBox2;
+    private static EditText mEtInputBox3;
+    private static EditText mEtInputBox4;
+    private static EditText mEtInputBox5;
+    private static EditText mEtInputBox6;
+    private static EditText mEtInputBox7;
+    private static SerializableMain2Sure mMain2Sure;
+    private static String mNumber_I;
 
-    public static CarNumberFragment newInstance() {
+    public static CarNumberFragment newInstance(String number) {
         if (sFragment == null) {
             sFragment = new CarNumberFragment();
         }
+        mNumber_I = number;
         return sFragment;
     }
 
@@ -74,140 +76,133 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
     }
 
 
-    /**
-     * 加载并缓存车牌号头的数据
-     */
-    private void iniNumberData() {
-
-        List<SupportCarNumber> headList = DataSupport.findAll(SupportCarNumber.class);
-
-        //如果跟数据库长度相同则不作更改，不然则更新
-        if (mAcacheNumbers != null) {
-            if (mAcacheNumbers.size() == headList.size()) {
-                if (mNumberList.size() != 0) {
-                    mNumberList.clear();
-                }
-                mNumberList.addAll(mAcacheNumbers);
-            } else {
-                //更新数据需要删除缓存
-                mAcacheNumbers.clear();
-                Logger.i("" + headList.size());
-                addNumberData(headList);
-            }
-        } else {
-            addNumberData(headList);
-        }
-
-    }
-
-    private void addNumberData(List<SupportCarNumber> headList) {
-        for (int i = 0; i < headList.size(); i++) {
-            String headName = headList.get(i).getHeadName();
-            SerializableNumber serializableNumber = new SerializableNumber();
-
-            serializableNumber.setName(headName);
-            String sortKey = PingYinUtil.format(headName);
-            serializableNumber.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
-            serializableNumber.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
-
-            mNumberList.add(serializableNumber);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_number, container, false);
         ButterKnife.bind(this, view);
 
-        mAcacheNumbers = (ArrayList<SerializableNumber>) ACache
-                .get(getActivity()).getAsObject("sessions");
+        Logger.i(mNumber_I);
 
-        iniNumberData();
-        mEditText = (EditText) view.findViewById(R.id.number_edit_text);
         initView(view);
 
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        int currentVersion = android.os.Build.VERSION.SDK_INT;
+        String methodName = null;
+        if (currentVersion >= 16) {
+            // 4.2
+            methodName = "setShowSoftInputOnFocus";
+        } else if (currentVersion >= 14) {
+            // 4.0
+            methodName = "setSoftInputShownOnFocus";
+        }
+        if (methodName == null) {
+            mEtInputBox1.setInputType(InputType.TYPE_NULL);
+            mEtInputBox2.setInputType(InputType.TYPE_NULL);
+            mEtInputBox3.setInputType(InputType.TYPE_NULL);
+            mEtInputBox4.setInputType(InputType.TYPE_NULL);
+            mEtInputBox5.setInputType(InputType.TYPE_NULL);
+            mEtInputBox6.setInputType(InputType.TYPE_NULL);
+            mEtInputBox7.setInputType(InputType.TYPE_NULL);
+        } else {
+            Class<EditText> cls = EditText.class;
+            Method setShowSoftInputOnFocus;
+            try {
+                setShowSoftInputOnFocus = cls.getMethod(methodName,
+                        boolean.class);
+                setShowSoftInputOnFocus.setAccessible(true);
+                setShowSoftInputOnFocus.invoke(mEtInputBox1, false);
+                setShowSoftInputOnFocus.invoke(mEtInputBox2, false);
+                setShowSoftInputOnFocus.invoke(mEtInputBox3, false);
+                setShowSoftInputOnFocus.invoke(mEtInputBox4, false);
+                setShowSoftInputOnFocus.invoke(mEtInputBox5, false);
+                setShowSoftInputOnFocus.invoke(mEtInputBox6, false);
+                setShowSoftInputOnFocus.invoke(mEtInputBox7, false);
+            } catch (NoSuchMethodException e) {
+                mEtInputBox1.setInputType(InputType.TYPE_NULL);
+                mEtInputBox2.setInputType(InputType.TYPE_NULL);
+                mEtInputBox3.setInputType(InputType.TYPE_NULL);
+                mEtInputBox4.setInputType(InputType.TYPE_NULL);
+                mEtInputBox5.setInputType(InputType.TYPE_NULL);
+                mEtInputBox6.setInputType(InputType.TYPE_NULL);
+                mEtInputBox7.setInputType(InputType.TYPE_NULL);
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        keyboardUtil = new LicenseKeyboardUtil(getContext(), view, new EditText[]{mEtInputBox1, mEtInputBox2,
+                mEtInputBox3, mEtInputBox4, mEtInputBox5, mEtInputBox6, mEtInputBox7});
+        keyboardUtil.showKeyboard();
+
+        //输入车牌完成后的intent过滤器
+        IntentFilter finishFilter = new IntentFilter(INPUT_LICENSE_COMPLETE);
+
+        final BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String license = intent.getStringExtra(INPUT_LICENSE_KEY);
+                if (license != null && license.length() > 0) {
+                    if (keyboardUtil != null) {
+                        keyboardUtil.hideKeyboard();
+                    }
+
+                    AlertDialog alertDialog;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("车牌号为:" + license);
+                    alertDialog = builder.create();
+                    alertDialog.setCancelable(true);
+                    alertDialog.show();
+                }
+                getActivity().unregisterReceiver(this);
+            }
+        };
+        getActivity().registerReceiver(receiver, finishFilter);
 
         return view;
     }
 
     private void initView(View view) {
-
-
-        if (mNumberList.size() == 0) {
-            mEditText.setText("粤B");
-        } else {
-            mEditText.setText(mNumberList.get(0).getName());
-            mEditText.setSelection(mNumberList.get(0).getName().length());
-        }
-
-        //找到清除text的控件
-
-        mIvClearText_number.setOnClickListener((v -> mEditText.setText("")));
-
-
-        mEditText.addTextChangedListener(new TextChangeWatcher(this));
-
-
+        mEtInputBox1 = (EditText) view.findViewById(R.id.et_input_box_1);
+        mEtInputBox2 = (EditText) view.findViewById(R.id.et_input_box_2);
+        mEtInputBox3 = (EditText) view.findViewById(R.id.et_input_box_3);
+        mEtInputBox4 = (EditText) view.findViewById(R.id.et_input_box_4);
+        mEtInputBox5 = (EditText) view.findViewById(R.id.et_input_box_5);
+        mEtInputBox6 = (EditText) view.findViewById(R.id.et_input_box_6);
+        mEtInputBox7 = (EditText) view.findViewById(R.id.et_input_box_7);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mNumberAdapter = new SureCarNumberAdapter((AppCompatActivity) getActivity(), mNumberList, new SureCarNumberAdapter.onItemClick() {
-            @Override
-            public void itemClick(SerializableNumber serializableNumber) {
 
-                mEditText.setText(serializableNumber.getName());
-                mEditText.setSelection((serializableNumber.getName().length()));
-                serializableNumber.setTop(1);
-                serializableNumber.setTime(System.currentTimeMillis());
-                refreshView();
-            }
-        });
-
-        mManager = new GridLayoutManager(getContext(), 4);
-        mManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mManager);
-
-        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(), 4));
-
-        mRecyclerView.setAdapter(mNumberAdapter);
 
     }
 
-    private void refreshView() {
-        Collections.sort(mNumberList);
-        mNumberAdapter.updateListView(mNumberList);
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {
-        String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearText_number);
-        if (stationString.length() > 0) {
-            List<SerializableNumber> fileterList = PingYinUtil.getInstance()
-                    .search_numbers(mNumberList, stationString);
-            Logger.i(fileterList.toString());
-            mNumberAdapter.updateListView(fileterList);
-            //mAdapter.updateData(mContacts);
-        } else {
-            if (mNumberAdapter != null) {
-                mNumberAdapter.updateListView(mNumberList);
-            }
-        }
-
     }
 
     public static void setTextChangedFragment(TextFragmentListener listener) {
-        if (mEditText != null) {
-            String number = mEditText.getText().toString().trim();
+        if (mEtInputBox1 != null && mEtInputBox2 != null && mEtInputBox3 != null &&
+                mEtInputBox4 != null && mEtInputBox5 != null && mEtInputBox6 != null && mEtInputBox7 != null) {
+            String number = mEtInputBox1.getText().toString().trim()+
+                    mEtInputBox2.getText().toString().trim()+
+                    mEtInputBox3.getText().toString().trim()+
+                    mEtInputBox4.getText().toString().trim()+
+                    mEtInputBox5.getText().toString().trim()+
+                    mEtInputBox6.getText().toString().trim()+
+                    mEtInputBox7.getText().toString().trim();
             listener.textChanged(number);
         }
     }
@@ -215,7 +210,7 @@ public class CarNumberFragment extends Fragment implements TextChangeWatcher.Aft
     @Override
     public void onPause() {
         super.onPause();
-        ACache.get(getActivity()).put("sessions", (ArrayList<SerializableNumber>) mNumberList);
+
     }
 
     @Override

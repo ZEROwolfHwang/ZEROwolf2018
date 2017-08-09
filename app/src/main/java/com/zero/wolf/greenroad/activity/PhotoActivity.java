@@ -227,9 +227,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener,
             }
         }*/
 
-        SureGoodsActivity111.actionStart(PhotoActivity.this, mOperator,mStationName, mCurrent_color,
+      /*  SureGoodsActivity111.actionStart(PhotoActivity.this, mOperator,mStationName, mCurrent_color,
                 mUsername, mFilePath1, mFilePath2, mFilePath3);
-        finish();
+        finish();*/
     }
 
 

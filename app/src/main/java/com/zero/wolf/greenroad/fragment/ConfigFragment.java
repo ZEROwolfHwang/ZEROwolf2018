@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -59,7 +59,7 @@ public class ConfigFragment extends Fragment {
     @BindView(R.id.tv_operator_login_config)
     TextView mTvOperatorLoginConfig;
     @BindView(R.id.scan_qr_code)
-    Button mScanQrCode;
+    ImageButton mScanQrCode;
 
 
     // TODO: Rename and change types of parameters

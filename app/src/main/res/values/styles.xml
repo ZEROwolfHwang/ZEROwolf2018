@@ -36,8 +36,10 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle
+        </item> <!--新增一个item，用于控制menu-->
 
     </style>
 
@@ -99,6 +101,7 @@
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">?attr/custom_my_colorPrimary</item>
     </style>
+
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">16sp</item>
     </style>
@@ -167,5 +170,42 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
+    <style name="conclusion_title_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="conclusion_check_box_style">
+        <item name="android:background">@drawable/conclusion_check_fragment_box</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingLeft">@dimen/layout_margin10dp</item>
+        <item name="android:paddingRight">@dimen/layout_margin10dp</item>
+        <item name="android:textSize">@dimen/text16</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/layout_margin25dp</item>
+    </style>
+
+    <style name="conclusion_check_fragment_layout_style">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="number_edit_box_style">
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">?attr/custom_white_black_text</item>
+        <item name="android:textSize">@dimen/text24</item>
+        <item name="android:layout_width">@dimen/layout_margin0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <dimen name="layout_margin80dp">80dp</dimen>
+    <dimen name="layout_margin25dp">25dp</dimen>
 </resources>

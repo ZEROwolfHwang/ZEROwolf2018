@@ -36,6 +36,8 @@
     <dimen name="layout_margin0dp">0dp</dimen>
     <dimen name="layout_margin45dp">45dp</dimen>
     <dimen name="layout_margin100dp">100dp</dimen>
+    <dimen name="tex16">16sp</dimen>
+    <dimen name="text28">28sp</dimen>
 
     <integer name="abc_max_action_buttons">2</integer>
 

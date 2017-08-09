@@ -37,7 +37,7 @@ public class PermissionUtils {
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
-            ToastUtils.singleToast("拒绝权限将无法使用程序");
+           // ToastUtils.singleToast("拒绝权限将无法使用程序");
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,

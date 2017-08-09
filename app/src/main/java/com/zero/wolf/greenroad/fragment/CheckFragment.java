@@ -3,51 +3,83 @@ package com.zero.wolf.greenroad.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CheckFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CheckFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class CheckFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    @BindView(R.id.check_111_001)
+    CheckBox mCheck111001;
+    @BindView(R.id.check_222_001)
+    CheckBox mCheck222001;
+    @BindView(R.id.check_222_002)
+    CheckBox mCheck222002;
+    @BindView(R.id.check_222_003)
+    CheckBox mCheck222003;
+    @BindView(R.id.check_222_004)
+    CheckBox mCheck222004;
+    @BindView(R.id.check_333_001)
+    CheckBox mCheck333001;
+    @BindView(R.id.check_333_002)
+    CheckBox mCheck333002;
+    @BindView(R.id.check_333_003)
+    CheckBox mCheck333003;
+    @BindView(R.id.check_333_004)
+    CheckBox mCheck333004;
+    @BindView(R.id.check_444_001)
+    CheckBox mCheck444001;
+    @BindView(R.id.check_444_002)
+    CheckBox mCheck444002;
+    @BindView(R.id.check_444_003)
+    CheckBox mCheck444003;
+    @BindView(R.id.check_555_001)
+    CheckBox mCheck555001;
+    @BindView(R.id.check_555_002)
+    CheckBox mCheck555002;
+    @BindView(R.id.check_666_001)
+    CheckBox mCheck666001;
+    @BindView(R.id.check_666_002)
+    CheckBox mCheck666002;
+    @BindView(R.id.check_666_003)
+    CheckBox mCheck666003;
+    @BindView(R.id.check_777_001)
+    CheckBox mCheck777001;
+
+    Unbinder unbinder;
+
+    private static final String ARG_CONCLUSION= "conclusion";
+    private static final String ARG_DESCRIPTION= "description";
 
     private OnFragmentInteractionListener mListener;
+    private static TextView mTextConclusionView;
+    private static EditText mEditDescriptionView;
+    private String mConclusion_I;
+    private String mDescription_I;
 
     public CheckFragment() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CheckFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CheckFragment newInstance(String param1, String param2) {
+
+    public static CheckFragment newInstance(String conclusion,String description ) {
         CheckFragment fragment = new CheckFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_CONCLUSION,conclusion);
+        args.putString(ARG_DESCRIPTION,description);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,19 +88,71 @@ public class CheckFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mConclusion_I = getArguments().getString(ARG_CONCLUSION);
+            mDescription_I = getArguments().getString(ARG_DESCRIPTION);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_check, container, false);
+        View view = inflater.inflate(R.layout.fragment_check, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
+        mTextConclusionView = (TextView) view.findViewById(R.id.check_fragment_text);
+        mEditDescriptionView = (EditText) view.findViewById(R.id.check_fragment_edit);
+
+        mTextConclusionView.setText(mConclusion_I);
+        mEditDescriptionView.setText(mDescription_I);
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        StringBuilder builder = new StringBuilder();
+
+        initOnclick(builder,mCheck111001);
+        initOnclick(builder,mCheck222001);
+        initOnclick(builder,mCheck222002);
+        initOnclick(builder,mCheck222003);
+        initOnclick(builder,mCheck222004);
+        initOnclick(builder,mCheck333001);
+        initOnclick(builder,mCheck333002);
+        initOnclick(builder,mCheck333003);
+        initOnclick(builder,mCheck333004);
+        initOnclick(builder,mCheck444001);
+        initOnclick(builder,mCheck444002);
+        initOnclick(builder,mCheck444003);
+        initOnclick(builder,mCheck555001);
+        initOnclick(builder,mCheck555002);
+        initOnclick(builder,mCheck666001);
+        initOnclick(builder,mCheck666002);
+        initOnclick(builder,mCheck666003);
+        initOnclick(builder,mCheck777001);
+
+    }
+
+    /**
+     * 对所有的checkBox进行点击操作
+     * @param builder
+     */
+    private void initOnclick(StringBuilder builder, CheckBox checkBox) {
+        checkBox.setOnClickListener(v -> {
+            String newStr = "";
+            if (checkBox.isChecked()) {
+                builder.append(checkBox.getText()+";");
+                newStr = builder.toString();
+            } else {
+                String str = checkBox.getText() + ";";
+                newStr = builder.toString().replaceAll(str, "");
+                builder.delete(0, builder.length());
+                builder.append(newStr);
+            }
+            mTextConclusionView.setText(builder.toString());
+        });
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -89,18 +173,37 @@ public class CheckFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        mTextConclusionView.getText();
+    }
+    public static void setTextChangedFragment(TextFragmentListener listener) {
+        if (mTextConclusionView != null) {
+            String number = mTextConclusionView.getText().toString().trim();
+            listener.textChanged(number);
+        }
+    }
+    public static void setEditChangedFragment(TextFragmentListener listener) {
+        if ( mEditDescriptionView!= null) {
+            String number = mEditDescriptionView.getText().toString().trim();
+            listener.textChanged(number);
+        }
+    }
+
+
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         void onFragmentInteraction(Uri uri);
     }
 }

@@ -5,13 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
 import com.zero.wolf.greenroad.fragment.CheckFragment;
-import com.zero.wolf.greenroad.fragment.GoodsFragment;
 import com.zero.wolf.greenroad.fragment.PhotoFragment;
-import com.zero.wolf.greenroad.smartsearch.SortModel;
-
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/17.
@@ -20,28 +17,12 @@ import java.util.List;
 public class SureViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private final String mUsername;
-    private final String mColor;
-    private final String mPhotoPath1;
-    private final String mPhotoPath2;
-    private final String mPhotoPath3;
-    private final String mStationName;
-    private final List<SortModel> mGoodsList;
-    private final String mOperator;
+    private final SerializableMain2Sure mMain2Sure;
 
-    public SureViewPagerAdapter(FragmentManager fm, String operator, String username, String stationName,
-                                String color, String photoPath1, String photoPath2,
-                                String photoPath3, List<SortModel> goodsList, Context context) {
-        super(fm);
-        this.context = context;
-        mGoodsList = goodsList;
-        mOperator = operator;
-        mUsername = username;
-        mStationName = stationName;
-        mColor = color;
-        mPhotoPath1 = photoPath1;
-        mPhotoPath2 = photoPath2;
-        mPhotoPath3 = photoPath3;
+
+    public SureViewPagerAdapter(FragmentManager manager, SerializableMain2Sure main2Sure) {
+        super(manager);
+        mMain2Sure = main2Sure;
     }
 
     @Override
@@ -49,21 +30,20 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = CarNumberFragment.newInstance();
+                fragment = CarNumberFragment.newInstance(mMain2Sure.getCarNumber_I());
                 break;
             case 1:
-                fragment =  GoodsFragment.newInstance(mOperator,mUsername,mStationName,mColor,mPhotoPath1,
-                        mPhotoPath2,mPhotoPath3,mGoodsList, context);
+                fragment =  CarNumberFragment.newInstance(mMain2Sure.getGoods_I());
                 break;
             case 2:
                 fragment = PhotoFragment.newInstance("111","...");
                 break;
             case 3:
-                fragment =  CheckFragment.newInstance("dvdfrad","orjk");
+                fragment =  CheckFragment.newInstance(mMain2Sure.getConclusion_I(),mMain2Sure.getDescription_I());
                 break;
 
             default:
-                fragment = CarNumberFragment.newInstance();
+                fragment = CarNumberFragment.newInstance(mMain2Sure.getCarNumber_I());
                 break;
         }
         return fragment;

@@ -22,6 +22,7 @@ import com.zero.wolf.greenroad.activity.PhotoActivity;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.PostContent;
+import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
@@ -71,21 +72,14 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private String mCurrentTimeTos;
     private static String mOperator;
     private String goodsText;
+    private static SerializableMain2Sure mMain2Sure;
+    private static String mGoods_i;
 
-    public static GoodsFragment newInstance(String operator, String username, String stationName,
-                                            String color, String photoPath1, String photoPath2, String photoPath3, List<SortModel> goodsList, Context context) {
+    public static GoodsFragment newInstance(String goods) {
         if (sFragment == null) {
             sFragment = new GoodsFragment();
         }
-        mOperator = operator;
-        sGoodsList = goodsList;
-        sContext = context;
-        mUsername = username;
-        sStationName = stationName;
-        mColor = color;
-        mPhotoPath1 = photoPath1;
-        mPhotoPath2 = photoPath2;
-        mPhotoPath3 = photoPath3;
+        mGoods_i = goods;
         return sFragment;
     }
 
@@ -103,6 +97,9 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
         unbinder = ButterKnife.bind(this, view);
         mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
+
+        mEditText.setText(mGoods_i);
+
         initView(view);
 
 

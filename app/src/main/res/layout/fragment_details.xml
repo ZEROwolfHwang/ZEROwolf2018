@@ -122,24 +122,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginTop="@dimen/layout_margin5dp"
         android:orientation="horizontal">
 
         <ToggleButton
+            android:id="@+id/toggle_is_room"
             android:layout_width="@dimen/layout_margin0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/layout_margin20dp"
             android:layout_marginRight="@dimen/layout_margin30dp"
             android:layout_weight="1"
-            android:background="@drawable/toggle_selector_room"/>
+            android:textOn="@null"
+            android:textOff="@null"
+            android:background="?attr/custom_toggle_selector_room"/>
 
         <ToggleButton
+            android:textOn="@null"
+            android:textOff="@null"
+            android:id="@+id/toggle_is_free"
             android:layout_width="@dimen/layout_margin0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/layout_margin20dp"
             android:layout_weight="1"
-            android:background="@drawable/toggle_selector_free"/>
+            android:background="?attr/custom_toggle_selector_free"/>
 
     </LinearLayout>
 
@@ -160,9 +166,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:id="@+id/config_conclusion_text"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:text="免费绿通车-符合绿通放行规定"
             android:textColor="@color/black"
             android:textSize="@dimen/text18"/>
 
@@ -195,7 +201,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:text="免费绿通车-符合绿通放行规定"
+            android:id="@+id/config_description_text"
             android:textColor="@color/black"
             android:textSize="@dimen/text18"/>
 

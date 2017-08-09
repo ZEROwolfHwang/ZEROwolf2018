@@ -135,4 +135,10 @@
 
     <attr name="custom_attr_setting_text_color" format="color|reference"/>
 
+    <!-- __________________  configFragment __________________ -->
+ <!-- 容积是否达到80% -->
+    <attr name="custom_toggle_selector_room" format="color|reference"/>
+ <!-- 是否免费-->
+    <attr name="custom_toggle_selector_free" format="color|reference"/>
+
 </resources>
