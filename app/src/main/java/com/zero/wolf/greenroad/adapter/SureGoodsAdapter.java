@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.smartsearch.SortModel;
+import com.zero.wolf.greenroad.bean.SerializableGoods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +21,11 @@ import java.util.List;
 public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.SureGoodsHolder> {
 
     private final Context mContext;
-    private List<SortModel> mList;
+    private ArrayList<SerializableGoods> mList;
     private onItemClick mItemClick;
 
 
-    public SureGoodsAdapter(Context context, List<SortModel> allContactsList, onItemClick itemClick) {
+    public SureGoodsAdapter(Context context, ArrayList<SerializableGoods> allContactsList, onItemClick itemClick) {
         mContext = context;
         mList = allContactsList;
         mItemClick = itemClick;
@@ -44,7 +44,7 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
 
     @Override
     public void onBindViewHolder(SureGoodsHolder holder, int position) {
-        SortModel serializableGoods = mList.get(position);
+        SerializableGoods serializableGoods = mList.get(position);
         holder.bindHolder(serializableGoods, position);
     }
 
@@ -53,11 +53,11 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
      *
      * @param list
      */
-    public void updateListView(List<SortModel> list) {
+    public void updateListView(List<SerializableGoods> list) {
         if (list == null) {
-            this.mList = new ArrayList<SortModel>();
+            this.mList = new ArrayList<SerializableGoods>();
         } else {
-            this.mList = list;
+            this.mList = (ArrayList<SerializableGoods>) list;
         }
         notifyDataSetChanged();
     }
@@ -76,9 +76,9 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
             alias = (TextView) itemView.findViewById(R.id.tv_sure_recycler_alias);
         }
 
-        public void bindHolder(final SortModel model, int position) {
+        public void bindHolder(final SerializableGoods model, int position) {
 
-            String scientificname = model.getScientificname();
+            String scientificname = model.getScientific_name();
             scientific_name.setText(scientificname);
             alias.setText(model.getAlias());
 
@@ -93,7 +93,7 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
     }
 
     public interface onItemClick {
-        void itemClick(SortModel serializableGoods, int position);
+        void itemClick(SerializableGoods serializableGoods, int position);
     }
 
 }

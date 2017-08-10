@@ -1,5 +1,7 @@
 package com.zero.wolf.greenroad.bean;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -14,23 +16,21 @@ public class SerializableGoods implements Serializable, Comparable {
      */
     public int top;
 
-    /**
-     * 花名
-     */
+
     public String scientific_name;
 
     public String alias;
 
-    public String imageurl;
+    public Bitmap mBitmap;
 
     public long time;
 
-    public String getImageurl() {
-        return imageurl;
+    public Bitmap getBitmap() {
+        return mBitmap;
     }
 
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 
     public long getTime() {

@@ -48,37 +48,37 @@
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="1"
-                android:text="免费绿通车(1)"/>
+                android:text="免费绿通车"/>
 
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="2"
-                android:text="假冒三证(4)"/>
+                android:text="假冒三证"/>
 
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="3"
-                android:text="装载产品(4)"/>
+                android:text="装载产品"/>
 
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="1"
-                android:text="超限超载(3)"/>
+                android:text="超限超载"/>
 
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="1"
-                android:text="不足80%(2)"/>
+                android:text="不足80%"/>
 
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="3"
-                android:text="假冒第三方文件(3)"/>
+                android:text="假冒第三方文件"/>
 
             <TextView
                 style="@style/conclusion_title_style"
                 android:layout_weight="1"
-                android:text="其他(1)"/>
+                android:text="其他"/>
 
 
         </LinearLayout>
@@ -98,6 +98,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/conclusion_check_fragment_box"
                 android:button="@null"
+                android:textSize="@dimen/text16"
                 android:paddingLeft="@dimen/layout_margin10dp"
                 android:paddingRight="@dimen/layout_margin10dp"
                 android:gravity="center_vertical"
@@ -115,13 +116,17 @@
 
                     <CheckBox
                         android:id="@+id/check_222_001"
+                        android:paddingLeft="@dimen/layout_margin5dp"
+                        android:paddingRight="@dimen/layout_margin5dp"
                         style="@style/conclusion_check_box_style"
                         android:text="三证证件有效期过期"/>
 
                     <CheckBox
+                        android:paddingLeft="@dimen/layout_margin5dp"
+                        android:paddingRight="@dimen/layout_margin5dp"
                         android:id="@+id/check_222_002"
                         style="@style/conclusion_check_box_style"
-                        android:layout_marginLeft="@dimen/layout_margin20dp"
+                        android:layout_marginLeft="@dimen/layout_margin10dp"
                         android:text="假冒行驶证"/>
                 </LinearLayout>
 
@@ -200,10 +205,6 @@
                     android:layout_marginRight="@dimen/layout_margin20dp"
                     android:text="超载"/>
 
-                <CheckBox
-                    android:id="@+id/check_444_003"
-                    style="@style/conclusion_check_box_style"
-                    android:text="超限超载"/>
 
             </LinearLayout>
 
@@ -247,7 +248,7 @@
                 <CheckBox
                     android:id="@+id/check_666_003"
                     style="@style/conclusion_check_box_style"
-                    android:text="假冒货物重量证明文件"/>
+                    android:text="假冒其他绿通有关证明文件"/>
 
             </LinearLayout>
 
@@ -257,6 +258,7 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:textSize="@dimen/text16"
                 android:background="@drawable/conclusion_check_fragment_box"
                 android:button="@null"
                 android:paddingLeft="@dimen/layout_margin10dp"

@@ -1,7 +1,6 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.activity.SureGoodsActivity111;
-import com.zero.wolf.greenroad.manager.GlobalManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +27,12 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
 
     private final Context mContext;
+    private final itemClickListener mLisener;
 
 
-    public DetailsRecyclerAdapter(Context context) {
+    public DetailsRecyclerAdapter(Context context, itemClickListener itemClickLisener) {
         mContext = context;
+        mLisener = itemClickLisener;
     }
 
     @Override
@@ -68,11 +67,12 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
         public void bindHolder() {
             itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(mContext, SureGoodsActivity111.class);
-                intent.setType(GlobalManager.ENTERTYPE_PHOTO);
-                mContext.startActivity(intent);
+                mLisener.itemListener();
             });
         }
     }
 
+    public interface itemClickListener {
+        void itemListener();
+    }
 }

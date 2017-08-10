@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
 import com.zero.wolf.greenroad.fragment.CheckFragment;
+import com.zero.wolf.greenroad.fragment.GoodsFragment;
 import com.zero.wolf.greenroad.fragment.PhotoFragment;
 
 /**
@@ -33,7 +34,7 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
                 fragment = CarNumberFragment.newInstance(mMain2Sure.getCarNumber_I());
                 break;
             case 1:
-                fragment =  CarNumberFragment.newInstance(mMain2Sure.getGoods_I());
+                fragment =  GoodsFragment.newInstance(mMain2Sure.getGoods_I());
                 break;
             case 2:
                 fragment = PhotoFragment.newInstance("111","...");

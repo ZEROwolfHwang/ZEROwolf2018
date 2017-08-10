@@ -54,7 +54,7 @@
             style="@style/text_view_2_car"
             android:layout_marginRight="40dp"
             android:background="?attr/custom_shape_line_rect_center"
-            android:text="车牌车型"/>
+            android:text="车身车型"/>
 
     </LinearLayout>
 
@@ -95,7 +95,7 @@
             android:id="@+id/sanzheng_2"
             layout="@layout/photo_fragment_show_image_layout"/>
         <include
-            android:id="@+id/sanzheng3"
+            android:id="@+id/sanzheng_3"
             layout="@layout/photo_fragment_show_image_layout"/>
 
 
@@ -110,10 +110,10 @@
         android:orientation="horizontal">
 
         <include
-            android:id="@+id/chepaichexing_1"
+            android:id="@+id/cheshenchexing_1"
             layout="@layout/photo_fragment_show_image_layout"/>
         <include
-            android:id="@+id/chepaichexing_2"
+            android:id="@+id/cheshenchexing_2"
             layout="@layout/photo_fragment_show_image_layout"/>
         <include
             android:id="@+id/huowu_1"

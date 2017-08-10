@@ -110,7 +110,11 @@ public class DetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         CarNumberFragment.setTextChangedFragment((edittext -> {
-            mCarNumber = edittext;
+            if (edittext.length() == 7) {
+                mCarNumber = edittext;
+            } else {
+                mCarNumber = "车牌号格式不正确";
+            }
         }));
 
         GoodsFragment.setTextChangedFragment(edittext -> {
@@ -136,7 +140,12 @@ public class DetailsFragment extends Fragment {
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(manager);
-        DetailsRecyclerAdapter adapter = new DetailsRecyclerAdapter(getContext());
+        DetailsRecyclerAdapter adapter = new DetailsRecyclerAdapter(getContext(), new DetailsRecyclerAdapter.itemClickListener() {
+            @Override
+            public void itemListener() {
+                enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
+            }
+        });
         mRecyclerViewShootPhoto.setAdapter(adapter);
     }
 
@@ -209,7 +218,7 @@ public class DetailsFragment extends Fragment {
         main2Sure.setDescription_I(description);
 
 
-        SureGoodsActivity111.actionStart(getActivity(),main2Sure,type);
+        SureGoodsActivity111.actionStart(getActivity(), main2Sure, type);
 
     }
 
