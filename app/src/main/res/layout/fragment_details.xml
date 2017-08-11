@@ -160,16 +160,17 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="现场检查结论"
+            android:textColor="?attr/custom_fragment_static_text"
             android:textSize="@dimen/text16"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textColor="?attr/custom_white_black_text"
             android:id="@+id/config_conclusion_text"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:textColor="@color/black"
             android:textSize="@dimen/text18"/>
 
         <Button
@@ -192,6 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/custom_fragment_static_text"
             android:text="现场检查说明"
             android:textSize="@dimen/text16"/>
 
@@ -202,7 +204,7 @@
             android:gravity="center_vertical"
             android:maxLines="2"
             android:id="@+id/config_description_text"
-            android:textColor="@color/black"
+            android:textColor="?attr/custom_white_black_text"
             android:textSize="@dimen/text18"/>
 
         <Button

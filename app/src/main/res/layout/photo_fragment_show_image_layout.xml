@@ -12,11 +12,13 @@
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/image_show_photo"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="120dp"
         android:scaleType="center"
-        android:src="?attr/custom_car_number_show"
+        app:riv_corner_radius_top_right="@dimen/layout_margin20dp"
+        app:riv_corner_radius_bottom_left="@dimen/layout_margin20dp"
+        android:background="@drawable/demo"
         app:riv_corner_radius="@dimen/layout_margin10dp"
-        app:riv_oval="true"/>
+        app:riv_oval="false"/>
 
     <TextView
         android:id="@+id/image_show_text"

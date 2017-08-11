@@ -9,6 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.fragment.MyBitmap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,11 +32,27 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     private final Context mContext;
     private final itemClickListener mLisener;
+    private List<MyBitmap> mBitmapList;
 
 
-    public DetailsRecyclerAdapter(Context context, itemClickListener itemClickLisener) {
+    public DetailsRecyclerAdapter(Context context, List<MyBitmap> myBitmaps, itemClickListener itemClickLisener) {
         mContext = context;
+        mBitmapList = myBitmaps;
         mLisener = itemClickLisener;
+    }
+
+    /**
+     * 当ListView数据发生变化时,调用此方法来更新ListView
+     *
+     * @param list
+     */
+    public void updateListView(List<MyBitmap> list) {
+        if (list == null) {
+            mBitmapList = new ArrayList<>();
+        } else {
+            mBitmapList = list;
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -44,12 +64,16 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     @Override
     public void onBindViewHolder(DetailsRecyclerHolder holder, int position) {
-        holder.bindHolder();
+        holder.bindHolder(position);
     }
 
     @Override
     public int getItemCount() {
-        return 7;
+        if (mBitmapList.size() == 0) {
+            return 7;
+        } else {
+            return mBitmapList.size();
+        }
     }
 
 
@@ -65,7 +89,16 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
         }
 
-        public void bindHolder() {
+        public void bindHolder(int position) {
+            if (mBitmapList != null && mBitmapList.size() != 0) {
+
+                MyBitmap myBitmap = mBitmapList.get(position);
+                if (myBitmap != null) {
+                    mDetailRecyclerImg.setImageBitmap(myBitmap.getBm());
+                    mDetailRecyclerText.setText(myBitmap.getInfo());
+                }
+            }
+
             itemView.setOnClickListener(v -> {
                 mLisener.itemListener();
             });

@@ -21,19 +21,14 @@ import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class DetailsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -63,20 +58,14 @@ public class DetailsFragment extends Fragment {
     private String mCarGoods;
     private String mConclusionText;
     private String mDescriptionEditText;
+    private List<MyBitmap> mMyBitmaps;
+    private DetailsRecyclerAdapter mAdapter;
 
     public DetailsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static DetailsFragment newInstance(String param1, String param2) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
@@ -128,6 +117,9 @@ public class DetailsFragment extends Fragment {
             mDescriptionEditText = edittext;
         });
 
+        PhotoFragment.setBitmapListListener(bitmaps -> {
+            mMyBitmaps = bitmaps;
+        });
 
         Logger.i(mCarNumber + "]]]]]]]]]");
         mTvChangeNumberDetail.setText(mCarNumber);
@@ -135,18 +127,17 @@ public class DetailsFragment extends Fragment {
         mConfigConclusionText.setText(mConclusionText);
         mConfigDescriptionText.setText(mDescriptionEditText);
 
+        mAdapter.updateListView(mMyBitmaps);
+
     }
 
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(manager);
-        DetailsRecyclerAdapter adapter = new DetailsRecyclerAdapter(getContext(), new DetailsRecyclerAdapter.itemClickListener() {
-            @Override
-            public void itemListener() {
+        mAdapter = new DetailsRecyclerAdapter(getContext(),mMyBitmaps,() -> {
                 enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
-            }
         });
-        mRecyclerViewShootPhoto.setAdapter(adapter);
+        mRecyclerViewShootPhoto.setAdapter(mAdapter);
     }
 
     private void initRadioColor() {
@@ -211,14 +202,15 @@ public class DetailsFragment extends Fragment {
         String conclusion = mConfigConclusionText.getText().toString();
         String description = mConfigDescriptionText.getText().toString();
 
+
+
         SerializableMain2Sure main2Sure = new SerializableMain2Sure();
         main2Sure.setCarNumber_I(carNumber);
         main2Sure.setGoods_I(goods);
         main2Sure.setConclusion_I(conclusion);
         main2Sure.setDescription_I(description);
 
-
-        SureGoodsActivity111.actionStart(getActivity(), main2Sure, type);
+        SureGoodsActivity111.actionStart(getActivity(), main2Sure,mMyBitmaps, type);
 
     }
 
@@ -247,16 +239,7 @@ public class DetailsFragment extends Fragment {
         unbinder.unbind();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

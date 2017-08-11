@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="science_name">
+        <item>苹果</item>
+        <item>香蕉</item>
+        <item>茄子</item>
+        <item>西瓜</item>
+        <item>水蜜桃</item>
+        <item>西蓝花</item>
+        <item>白刺</item>
+        <item>橘子</item>
+    </array>
+</resources>

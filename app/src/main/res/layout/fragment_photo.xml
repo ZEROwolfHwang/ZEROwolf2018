@@ -8,7 +8,19 @@
     android:orientation="vertical"
     android:padding="@dimen/layout_margin10dp">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/rl_progress_bar"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+    </RelativeLayout>
+  <!--  <LinearLayout
         android:id="@+id/layout_number"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -79,9 +91,10 @@
             android:scaleType="fitCenter"/>
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
+        android:id="@+id/ll_sanzheng"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="center"
@@ -102,6 +115,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_cheshenchexing"
         android:layout_marginTop="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -115,14 +129,39 @@
         <include
             android:id="@+id/cheshenchexing_2"
             layout="@layout/photo_fragment_show_image_layout"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_huowu"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:orientation="horizontal">
+
         <include
             android:id="@+id/huowu_1"
             layout="@layout/photo_fragment_show_image_layout"/>
-         <include
+        <include
             android:id="@+id/huowu_2"
             layout="@layout/photo_fragment_show_image_layout"/>
 
-
-
     </LinearLayout>
+    <Button
+        android:id="@+id/button_selected_all"
+        android:text="选择全部"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/photo_iv_camera"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:elevation="15dp"
+        android:background="?attr/custom_main_shut_selector_btn"
+        android:scaleType="fitCenter"
+        android:layout_below="@+id/linear_layout_main"
+        android:layout_centerHorizontal="true"/>
 </LinearLayout>

@@ -62,11 +62,12 @@ public class GoodsFragment extends Fragment {
     private AssetManager mAssetManager;
     private String[] mGoodsNames;
 
-    private static String[] scientific_names = {"苹果", "杏子", "西蓝花", "西瓜", "水蜜桃", "梨子", "白刺","茄子"};
     private static String[] alias = {"给weus骄傲的行情无限", "说的侮辱大家才能", "都无二的勘测机",
             "卖家说的法第五", ",设计费都是对你是否及时打开",
             "1234124戛洒hiu瓦斯鉴定表", "奥斯卡单位澳大马上", "IQ网上订餐MAU爱打架"};
     private ArrayList<SerializableGoods> mGoodsArrayList;
+    private String[] scientific_names;
+
 
     public static GoodsFragment newInstance(String goods) {
         if (sFragment == null) {
@@ -80,6 +81,7 @@ public class GoodsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        scientific_names = getResources().getStringArray(R.array.science_name);
 
     }
 

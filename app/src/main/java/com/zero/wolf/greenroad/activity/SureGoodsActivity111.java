@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
+import com.zero.wolf.greenroad.fragment.MyBitmap;
 import com.zero.wolf.greenroad.litepalbean.SupportGoods;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
@@ -25,6 +26,7 @@ import com.zero.wolf.greenroad.tools.PingYinUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,7 @@ public class SureGoodsActivity111 extends BaseActivity {
     private String mConclusion_i;
     private String mDescription_i;
     private SerializableMain2Sure mMain2Sure;
+    private List<MyBitmap> mMyBitmaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +155,7 @@ public class SureGoodsActivity111 extends BaseActivity {
 
 
     private void initViewPagerAndTabs() {
-        mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),mMain2Sure);
+        mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),mMain2Sure,mMyBitmaps);
         mViewPagerSure.setOffscreenPageLimit(4);//设置viewpager预加载页面数
 
         mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
@@ -185,9 +188,11 @@ public class SureGoodsActivity111 extends BaseActivity {
 
         context.startActivity(intent);
     } */
-    public static void actionStart(Context context, SerializableMain2Sure main2Sure, String type) {
+    public static void actionStart(Context context, SerializableMain2Sure main2Sure, List<MyBitmap> myBitmaps, String type) {
         Intent intent = new Intent(context, SureGoodsActivity111.class);
         intent.putExtra("main2Sure", main2Sure);
+        intent.putExtra("myBitmapList", (Serializable) myBitmaps);
+
         intent.setType(type);
         context.startActivity(intent);
     }
@@ -202,6 +207,8 @@ public class SureGoodsActivity111 extends BaseActivity {
 //        mGoods_i = main2Sure.getGoods_I();
 //        mConclusion_i = main2Sure.getConclusion_I();
 //        mDescription_i = main2Sure.getDescription_I();
+        mMyBitmaps = (List<MyBitmap>) intent.getSerializableExtra("myBitmapList");
+
         mType = intent.getType();
     }
 

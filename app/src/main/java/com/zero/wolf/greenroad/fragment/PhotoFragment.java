@@ -8,20 +8,30 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.compress.Luban;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -39,16 +49,23 @@ import butterknife.Unbinder;
 
 
 public class PhotoFragment extends Fragment {
+    private static final int CHOOSE_CAR_NUMBER = 1 * 991;
+    private static final int CHOOSE_CAR_BODY = 1 * 992;
+    private static final int CHOOSE_CAR_GOODS = 1 * 993;
+    private static final int CHOOSE_CAR_ALL = 1 * 994;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    @BindView(R.id.iv_car_number)
-    ImageView mIvCarNumber;
-    @BindView(R.id.iv_car_body)
-    ImageView mIvCarBody;
-    @BindView(R.id.iv_car_goods)
-    ImageView mIvCarGoods;
+
+    @BindView(R.id.ll_sanzheng)
+    LinearLayout mIvCarNumber;
+    @BindView(R.id.ll_cheshenchexing)
+    LinearLayout mIvCarBody;
+    @BindView(R.id.ll_huowu)
+    LinearLayout mIvCarGoods;
     Unbinder unbinder;
+    @BindView(R.id.photo_iv_camera)
+    ImageView mPhotoIvCamera;
+    @BindView(R.id.button_selected_all)
+    Button mButtonSelectedAll;
 
     private String mParam1;
     private String mParam2;
@@ -56,7 +73,7 @@ public class PhotoFragment extends Fragment {
     private long systemTime1;
     private long systemTime2;
     private Calendar calendar;
-    private int REQUEST_SMALL = 111;
+    public static int REQUEST_SMALL = 100;
 
     private File mFile;
     private String mFilePath_str;
@@ -77,6 +94,11 @@ public class PhotoFragment extends Fragment {
     private TextView mTextCheshen_2;
     private TextView mTextHuowu_1;
     private TextView mTextHuowu_2;
+    private List<LocalMedia> mSelectList;
+    private RoundedImageView[] mRoundedImageViews;
+    private static List<MyBitmap> mMyBitmapList;
+    private static List<MyBitmap> mMyBitmaps;
+    private static PhotoFragment sPhotoFragment;
 
 
     public PhotoFragment() {
@@ -84,22 +106,19 @@ public class PhotoFragment extends Fragment {
     }
 
 
-    public static PhotoFragment newInstance(String param1, String param2) {
-        PhotoFragment fragment = new PhotoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static PhotoFragment newInstance(List<MyBitmap> myBitmaps) {
+        if (sPhotoFragment == null) {
+
+            sPhotoFragment = new PhotoFragment();
+        }
+        mMyBitmaps = myBitmaps;
+        return sPhotoFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
         if (mFile == null) {
             mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenShoot");
             mFile.mkdirs();
@@ -112,6 +131,7 @@ public class PhotoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
+        unbinder = ButterKnife.bind(this, view);
         mImgSanzheng_1 = (RoundedImageView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_photo);
         mImgSanzheng_2 = (RoundedImageView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_photo);
         mImgSanzheng_3 = (RoundedImageView) view.findViewById(R.id.sanzheng_3).findViewById(R.id.image_show_photo);
@@ -120,6 +140,8 @@ public class PhotoFragment extends Fragment {
         mImgHuowu_1 = (RoundedImageView) view.findViewById(R.id.huowu_1).findViewById(R.id.image_show_photo);
         mImgHuowu_2 = (RoundedImageView) view.findViewById(R.id.huowu_2).findViewById(R.id.image_show_photo);
 
+        mRoundedImageViews = new RoundedImageView[]{mImgSanzheng_1, mImgSanzheng_2, mImgSanzheng_3,
+                mImgCheshen_1, mImgCheshen_2, mImgHuowu_1, mImgHuowu_2};
 
         mTextSanzheng_1 = (TextView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_text);
         mTextSanzheng_2 = (TextView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_text);
@@ -137,7 +159,20 @@ public class PhotoFragment extends Fragment {
         mTextHuowu_1.setText("货物-1");
         mTextHuowu_2.setText("货物-2");
 
-        unbinder = ButterKnife.bind(this, view);
+        if (mMyBitmapList == null) {
+            mMyBitmapList = new ArrayList<>();
+        } else {
+            if (mMyBitmapList.size() != 0) {
+                mMyBitmapList.clear();
+                mMyBitmapList.addAll(mMyBitmaps);
+            }
+        }
+        if (mMyBitmapList != null && mMyBitmapList.size() != 0) {
+            for (int i = 0; i < mMyBitmapList.size(); i++) {
+                mRoundedImageViews[i].setImageBitmap(mMyBitmapList.get(i).getBm());
+            }
+        }
+
         return view;
     }
 
@@ -148,43 +183,86 @@ public class PhotoFragment extends Fragment {
         }
     }
 
-    @OnClick({R.id.iv_car_number, R.id.iv_car_body, R.id.iv_car_goods})
+    @OnClick({R.id.ll_sanzheng, R.id.ll_cheshenchexing, R.id.ll_huowu,
+            R.id.button_selected_all, R.id.photo_iv_camera})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_car_number:
-                if (getThemeTag() == 1) {
+            case R.id.ll_sanzheng:
+              /*  if (getThemeTag() == 1) {
                     mIvCarNumber.setImageDrawable(getResources().getDrawable(R.drawable.car_number_dark));
                 } else {
                     mIvCarNumber.setImageDrawable(getResources().getDrawable(R.drawable.car_number_light));
-                }
-                Logger.i("onClick: " + "点击了拍车牌的照片");
-                takeOnCamera();
+                }*/
+                Logger.i("onClick: " + "点击了选择车牌的照片");
+                openPicture(3, CHOOSE_CAR_NUMBER);
                 break;
-            case R.id.iv_car_body:
-                if (getThemeTag() == 1) {
+            case R.id.ll_cheshenchexing:
+                openPicture(2, CHOOSE_CAR_BODY);
+               /* if (getThemeTag() == 1) {
 
                     mIvCarBody.setImageDrawable(getResources().getDrawable(R.drawable.car_body_dark));
                 } else {
                     mIvCarBody.setImageDrawable(getResources().getDrawable(R.drawable.car_body_light));
 
-                }
-                Logger.i("onClick: " + "点击了拍车牌的照片");
+                }*/
+                Logger.i("onClick: " + "点击了选择车身的照片");
                 break;
-            case R.id.iv_car_goods:
-                if (getThemeTag() == 1) {
+            case R.id.ll_huowu:
+                openPicture(2, CHOOSE_CAR_GOODS);
+                /*if (getThemeTag() == 1) {
 
                     mIvCarGoods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_dark));
                 } else {
                     mIvCarGoods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_light));
 
-                }
+                }*/
+                Logger.i("onClick: " + "点击了选择货物的照片");
+                break;
+            case R.id.button_selected_all:
+                openPicture(7, CHOOSE_CAR_ALL);
+
                 Logger.i("onClick: " + "点击了拍车牌的照片");
                 break;
 
+            case R.id.photo_iv_camera:
+                takeOnCamera();
+                break;
             default:
                 break;
         }
     }
+
+    private void openPicture(int maxNum, int choose_type) {
+        // 进入相册 以下是例子：不需要的api可以不写
+        PictureSelector.create(PhotoFragment.this)
+                .openGallery(PictureMimeType.ofImage())
+                .theme(R.style.picture_QQ_style)
+                .maxSelectNum(maxNum)
+                .minSelectNum(1)
+                .imageSpanCount(3)// 每行显示个数
+                .selectionMode(PictureConfig.MULTIPLE)
+                .previewImage(true)
+                .previewVideo(false)
+                .enablePreviewAudio(false) // 是否可播放音频
+                .compressGrade(Luban.THIRD_GEAR)
+                .isCamera(true)
+                .enableCrop(false)
+                .compress(false)
+                .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)
+                .glideOverride(160, 160)
+                .previewEggs(true)
+                // .withAspectRatio(aspect_ratio_x, aspect_ratio_y)
+                // .hideBottomControls(cb_hide.isChecked() ? false : true)
+                // .isGif(cb_isGif.isChecked())
+                // .freeStyleCropEnabled(cb_styleCrop.isChecked())
+                // .circleDimmedLayer(cb_crop_circular.isChecked())
+                //   .showCropFrame(cb_showCropFrame.isChecked())
+                //   .showCropGrid(cb_showCropGrid.isChecked())
+                //   .openClickSound(cb_voice.isChecked())
+                .selectionMedia(mSelectList)
+                .forResult(choose_type);
+    }
+
 
     public void takeOnCamera() {
         //打开相机之前，记录时间1
@@ -193,16 +271,16 @@ public class PhotoFragment extends Fragment {
         //此处之所以诸多try catch，是因为各大厂商手机不确定哪个方法
         try {
             intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-            startActivityForResult(intent, REQUEST_SMALL);
+            startActivityForResult(intent, 101);
         } catch (Exception e) {
             try {
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE_SECURE);
-                startActivityForResult(intent, REQUEST_SMALL);
+                startActivityForResult(intent, 101);
 
             } catch (Exception e1) {
                 try {
                     intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA_SECURE);
-                    startActivityForResult(intent, REQUEST_SMALL);
+                    startActivityForResult(intent, 101);
                 } catch (Exception ell) {
                     Toast.makeText(getActivity(), "请从相册选择", Toast.LENGTH_SHORT).show();
                 }
@@ -213,17 +291,88 @@ public class PhotoFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Log.e("data", "onActivityResult: " + data);
         //关闭相机之后获得时间；2；
         // pb.setVisibility(View.VISIBLE);
         systemTime2 = getSystemTime();
 
-        if (requestCode == REQUEST_SMALL) {
-            //这里可以拓展不同按钮，给下面的方法传不同的参数
-            getContactList();
+        switch (requestCode) {
+            case CHOOSE_CAR_NUMBER:
+                // 图片选择
+                Logger.i("回调成功number");
+                mSelectList = PictureSelector.obtainMultipleResult(data);
+                   /* adapter.setList(selectList);
+                    adapter.notifyDataSetChanged();
+                    DebugUtil.i(TAG, "onActivityResult:" + selectList.size());*/
+                for (int i = 0; i < mSelectList.size(); i++) {
+                    Logger.i(mSelectList.get(i).getPath());
+                }
+                break;
+            case CHOOSE_CAR_BODY:
+                // 图片选择
+                Logger.i("回调成功body");
+                mSelectList = PictureSelector.obtainMultipleResult(data);
+                for (int i = 0; i < mSelectList.size(); i++) {
+                    Logger.i(mSelectList.get(i).getPath());
+                }
+                break;
+            case CHOOSE_CAR_GOODS:
+                // 图片选择
+                Logger.i("回调成功goods");
+                mSelectList = PictureSelector.obtainMultipleResult(data);
+                for (int i = 0; i < mSelectList.size(); i++) {
+                    Logger.i(mSelectList.get(i).getPath());
+                }
+                break;
+            case CHOOSE_CAR_ALL:
+                // 图片选择
+
+                if (mMyBitmapList == null) {
+                    mMyBitmapList = new ArrayList<>();
+                } else {
+                    if (mMyBitmapList.size() != 0) {
+                        mMyBitmapList.clear();
+                    }
+                }
+                Logger.i("回调成功goods");
+                mSelectList = PictureSelector.obtainMultipleResult(data);
+                for (int i = 0; i < mSelectList.size(); i++) {
+                    String photo_path = mSelectList.get(i).getPath();
+                    Logger.i(photo_path);
+//                    mImgSanzheng_1.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(0).getBm()));
+//                    mImgSanzheng_2.post(() -> mImgSanzheng_2.setImageBitmap(finalList.get(1).getBm()));
+//                    mImgSanzheng_3.post(() -> mImgSanzheng_3.setImageBitmap(finalList.get(2).getBm()));
+                    Bitmap bitmap = convertToBitmap(photo_path, 800, 1080);
+                    MyBitmap myBitmap = new MyBitmap(photo_path, bitmap);
+                    if (i == 0) {
+                        myBitmap.setInfo("三证-1");
+                    } else if (i == 1) {
+                        myBitmap.setInfo("三证-2");
+                    } else if (i == 2) {
+                        myBitmap.setInfo("三证-3");
+                    } else if (i == 3) {
+                        myBitmap.setInfo("车身车型-1");
+                    } else if (i == 4) {
+                        myBitmap.setInfo("车身车型-2");
+                    } else if (i == 5) {
+                        myBitmap.setInfo("货物-1");
+                    } else if (i == 6) {
+                        myBitmap.setInfo("货物-2");
+                    }
+                    mMyBitmapList.add(myBitmap);
+                    mRoundedImageViews[i].setImageBitmap(bitmap);
+                }
+
+                break;
+
+
+         /*   case 101:
+                //这里可以拓展不同按钮，给下面的方法传不同的参数
+              //  getContactList();
+                break;*/
         }
 
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void getContactList() {
@@ -234,7 +383,7 @@ public class PhotoFragment extends Fragment {
                 MediaStore.Images.Media.DATA};
         final String orderBy = MediaStore.Images.Media.DISPLAY_NAME;
         final Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        new Thread(new Runnable() {
+       /* new Thread(new Runnable() {
             @Override
             public void run() {
                 List<MyBitmap> list2 = getContentProvider(uri, projection, orderBy);//到时候抽取接口
@@ -249,12 +398,13 @@ public class PhotoFragment extends Fragment {
                     }
                     final List<MyBitmap> finalList = list2;
                     mImgSanzheng_1.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(0).getBm()));
-                    mImgSanzheng_2.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(1).getBm()));
-                    mImgSanzheng_3.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(2).getBm()));
+                    mImgSanzheng_2.post(() -> mImgSanzheng_2.setImageBitmap(finalList.get(1).getBm()));
+                    mImgSanzheng_3.post(() -> mImgSanzheng_3.setImageBitmap(finalList.get(2).getBm()));
+
                 }
 
             }
-        }).start();
+        }).start();*/
 
     }
 
@@ -309,7 +459,7 @@ public class PhotoFragment extends Fragment {
             try {
                 Bitmap bitmap = convertToBitmap(IMG_NAME_LIST.get(i), 800, 1080);
 
-                String mFilePath_str_new = mFilePath_str + "/" + System.currentTimeMillis()
+              /*  String mFilePath_str_new = mFilePath_str + "/" + System.currentTimeMillis()
                         + "sanzheng" + i + ".jpg";
 
                 saveFile(bitmap, mFilePath_str_new);
@@ -317,7 +467,9 @@ public class PhotoFragment extends Fragment {
                 MyBitmap myBitmap = new MyBitmap(mFilePath_str_new, bitmap);
 
                 // FileUtils.deleteJpgPreview(strings);
-
+                doDelete(IMG_NAME_LIST.get(i));
+                */
+                MyBitmap myBitmap = new MyBitmap(IMG_NAME_LIST.get(i), bitmap);
                 myBitmapList.add(myBitmap);
             } catch (Exception e) {
                 Log.e("exceptionee", "getSystemTime: " + e.toString());
@@ -330,6 +482,31 @@ public class PhotoFragment extends Fragment {
         return myBitmapList;
     }
 
+    //1、删除图片
+    private void doDelete(String filePath) {
+        Logger.i(" scteenshot event filePath = " + filePath);
+        if (filePath == null) return;
+        File file = new File(filePath);
+        boolean ret = file.delete();
+        Logger.i(" current file is delete result = " + ret);
+        if (ret) {
+            scanFileAsync(filePath);
+        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtils.singleToast("已删除缩略图");
+            }
+        });
+    }
+
+    //2.需要发广播通知，更新缩略图
+    private void scanFileAsync(String filePath) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanIntent.setData(Uri.fromFile(new File(filePath)));
+        getContext().sendBroadcast(scanIntent);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -351,6 +528,7 @@ public class PhotoFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 
     public interface OnFragmentInteractionListener {
 
@@ -429,4 +607,12 @@ public class PhotoFragment extends Fragment {
         bos.close();
     }
 
+    public static void setBitmapListListener(BitmapListListener listener) {
+        listener.BitmapListner(mMyBitmapList);
+    }
+
+
+    public interface BitmapListListener {
+        void BitmapListner(List<MyBitmap> bitmaps);
+    }
 }

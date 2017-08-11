@@ -33,6 +33,11 @@
 
 
     <color name="setting_bg_text_item">#7dafd1e1</color>
+    <!--自定义输入法的按键背景样式-->
+    <color name="key_bg_night">#4b95a1</color>
+    <color name="key_bg_day">#4c42d9</color>
+    <color name="number_fragment_key_text_night">#b0abf4</color>
+    <color name="number_fragment_key_text_day">#27a5ff</color>
 
 
 </resources>

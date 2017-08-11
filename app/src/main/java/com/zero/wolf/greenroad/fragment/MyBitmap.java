@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 public class MyBitmap {
     String path;
     Bitmap bm;
+    String info;
 
     public MyBitmap(String path, Bitmap bm) {
         this.path = path;
@@ -39,5 +40,13 @@ public class MyBitmap {
 
     public void setBm(Bitmap bm) {
         this.bm = bm;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 }

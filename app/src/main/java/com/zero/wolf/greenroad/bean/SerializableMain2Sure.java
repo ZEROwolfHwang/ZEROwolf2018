@@ -8,8 +8,6 @@ import java.io.Serializable;
 public class SerializableMain2Sure implements Serializable {
 
 
-
-
     private String carNumber_I;
 
     private String goods_I;
@@ -17,6 +15,8 @@ public class SerializableMain2Sure implements Serializable {
     private String conclusion_I;
 
     private String description_I;
+
+
 
     public String getCarNumber_I() {
         return carNumber_I;
