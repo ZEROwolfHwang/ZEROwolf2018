@@ -131,6 +131,7 @@ public class DetailsFragment extends Fragment {
 
     }
 
+
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(manager);
