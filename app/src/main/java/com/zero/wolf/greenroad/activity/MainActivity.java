@@ -4,85 +4,62 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.LoginActivity;
-import com.zero.wolf.greenroad.NetWorkStateReceiver;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.adapter.MainViewPagerAdapter;
-import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
-import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
-import com.zero.wolf.greenroad.https.RequestLiteGoods;
-import com.zero.wolf.greenroad.https.RequestLiteNumber;
-import com.zero.wolf.greenroad.https.RequestLiteStation;
-import com.zero.wolf.greenroad.litepalbean.SupportCarNumber;
-import com.zero.wolf.greenroad.litepalbean.SupportGoods;
+import com.zero.wolf.greenroad.fragment.ConfigFragment;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
-import com.zero.wolf.greenroad.litepalbean.SupportStation;
-import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
-import com.zero.wolf.greenroad.tools.FileBitmapUtil;
-import com.zero.wolf.greenroad.tools.FileUtils;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.tools.SnackbarUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
 import com.zero.wolf.greenroad.update.CheckUpdateUtils;
 import com.zero.wolf.greenroad.update.Subject;
 import com.zero.wolf.greenroad.update.SubscriberOnNextListener;
 
-import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Subscriber;
-
-import static org.litepal.crud.DataSupport.findAll;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -90,7 +67,7 @@ import static org.litepal.crud.DataSupport.findAll;
 
 public class MainActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        SubscriberOnNextListener<List<Subject>> {
+        SubscriberOnNextListener<List<Subject>>  {
 
 
     @BindView(R.id.tab_main)
@@ -103,6 +80,8 @@ public class MainActivity extends BaseActivity implements
     NavigationView mNavView;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+    @BindView(R.id.main_submit)
+    FloatingActionButton mMainSubmit;
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -114,77 +93,21 @@ public class MainActivity extends BaseActivity implements
     @BindView(R.id.footer_item_location)
     TextView mTv_footer_location;
 
-
-    private String mFilePath;
     private AppCompatActivity mActivity;
-    private LinearLayout mLayout_top;
-    private LinearLayout mLayout_center;
-    private LinearLayout mLayout_bottom;
-    private TextView mTv_number_has_send;
-    private TextView mTv_number_has_not_send;
-    private LinearLayout mMath_number_main_two;
-    private String mAvailSpace;
-    private NetWorkStateReceiver mNetWorkStateReceiver;
-    private TextView mTv_change3;
-    private ImageView mIvCamera;
 
 
-    private String mOperator;
-    private boolean mIsConnected;
-    private String mUsername;
-    private boolean isNumberCompleted;
-    private boolean isStationCompleted;
-    private boolean isGoodsCompleted;
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {// handler接收到消息后就会执行此方法
-            // pd.dismiss();// 关闭ProgressDialog
-            String s = (String) msg.obj;
-            if (s == "123") {
-                isNumberCompleted = true;
-            } else if (s == "456") {
-                isStationCompleted = true;
-            } else if (s == "789") {
-                isGoodsCompleted = true;
-            } else if (s.equals("111") || s.equals("222") || s.equals("333")) {
-                mProgressDialog.dismiss();
-                ToastUtils.singleToast("数据加载失败,请检查网络");
-            }
-
-            if (isNumberCompleted && isStationCompleted && isGoodsCompleted) {
-                mProgressDialog.dismiss();
-            }
-
-        }
-    };
     private AlertDialog.Builder mDialog;
-    private ProgressDialog mProgressDialog;
-    private File mGoodsFile;
-    private String mGoodsFilePath;
 
-    private String mStationName;
+
     private AlertDialog.Builder mNotPostDialog;
-    private RelativeLayout mRelativeLayout;
+
 
     private int thumb_margin_left_day = 0;
     private int thumb_margin_left_night = 0;
-    private TextView mTv_change1;
-    private TextView mTv_change2;
-    private Toolbar mToolbar;
-    private ActionBar mBar;
-    private TextView mCustom_Version_number;
-    private TextView mCompany_name_text;
-    private TextView mCustom_shape_line_rect_has;
-    private TextView mCustom_shape_line_rect_has_not;
-    private TextView mTv_company_name;
-    private TextView mTv_app_name;
-    private LinearLayout mHead_layout_main;
-    private TextView mTv_math_number_main_has;
-    private TextView mTv_math_number_main_has_not;
+
     private MainViewPagerAdapter mPagerAdapter;
-    private String mCarNumber;
-    private String mStation;
+    private String mLogin_operator_P;
+    private String mCheck_operator_P;
 
 
     @Override
@@ -208,7 +131,6 @@ public class MainActivity extends BaseActivity implements
         initViewPagerAndTabs();
         initData();
         //initSp();
-        initLitePal();
         initView();
 
 
@@ -248,282 +170,31 @@ public class MainActivity extends BaseActivity implements
         mTabMain.setupWithViewPager(mViewPagerMain);
     }
 
-
-    private void initLitePal() {
-        if (NetWorkManager.isnetworkConnected(mActivity)) {
-
-            isNumberCompleted = false;
-            isStationCompleted = false;
-            isGoodsCompleted = false;
-            LitePal.getDatabase();
-
-            mProgressDialog = new ProgressDialog(mActivity);
-            mProgressDialog.setTitle("正在更新数据");
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    initStation();
-                    initCarNumber();
-                    initGoodsLite();
-                }
-            }).start();
-        } else {
-            return;
-        }
-
-    }
-
-    /**
-     * 更新goods数据库
-     */
-    private void initGoodsLite() {
-        RequestLiteGoods.getInstance()
-                .doGetGoodsInfo(new Subscriber<List<HttpResultGoods.DataBean>>() {
-                    @Override
-                    public void onCompleted() {
-                        Logger.i("货物加载完成");
-                        Message message = Message.obtain();
-                        message.obj = "789";
-                        handler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i(e.getMessage());
-                        Message message = Message.obtain();
-                        message.obj = "333";
-                        handler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onNext(List<HttpResultGoods.DataBean> dataBeen) {
-                        List<SupportGoods> supportGoods = findAll(SupportGoods.class);
-                        if (supportGoods.size() != 0) {
-                            if (dataBeen.size() == supportGoods.size()) {
-                                long jpgFileSize = FileUtils.getJpgFileSize(new File(mGoodsFilePath));
-                                if (jpgFileSize == supportGoods.size()) {
-                                    Logger.i("该方法走了没1");
-                                    Logger.i("返回");
-                                    return;
-                                } else {
-                                    //本地保存的货物小图标的长度与服务器长度不一致
-                                    DataSupport.deleteAll(SupportGoods.class);
-                                    FileUtils.deleteJpg(new File(mGoodsFilePath));
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            goodsInfoFore(dataBeen);
-                                        }
-                                    }).start();
-                                }
-                            } else {
-                                Logger.i("该方法走了没2");
-                                DataSupport.deleteAll(SupportGoods.class);
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        goodsInfoFore(dataBeen);
-                                    }
-                                }).start();
-                            }
-                        } else {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    goodsInfoFore(dataBeen);
-                                }
-                            }).start();
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 循环遍历网络数据填充本地数据库
-     *
-     * @param dataBeen
-     */
-    private void goodsInfoFore(List<HttpResultGoods.DataBean> dataBeen) {
-        Logger.i("该方法走了没goods");
-        for (int i = 0; i < dataBeen.size(); i++) {
-
-            String imgurl = dataBeen.get(i).getImgurl();
-            Bitmap bitmap = FileBitmapUtil.getBitmap(imgurl);
-            String fileName = FileBitmapUtil.getFileName(imgurl);
-
-            Logger.i(imgurl);
-            Logger.i(fileName);
-
-            try {
-                FileBitmapUtil.saveJPGFile(bitmap, fileName, mGoodsFilePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            SupportGoods info = new SupportGoods();
-
-            info.setAlias(dataBeen.get(i).getAlias().trim());
-            info.setScientificname(dataBeen.get(i).getScientificname());
-            info.setCargoid(dataBeen.get(i).getCargoid());
-            info.setKind(dataBeen.get(i).getKind());
-            //   info.setBitmap(bitmap);
-            info.setImgurl(mGoodsFilePath + "/" + fileName);//本地数据库保存的图片路径
-            info.save();
-
-        }
-    }
-
-    /**
-     * 循环遍历网络数据填充本地数据库
-     *
-     * @param dataBeen
-     */
-    private void numbersInfoFore(List<HttpResultNumber.DataBean> dataBeen) {
-        Logger.i("该方法走了没carnumber");
-        for (int i = 0; i < dataBeen.size(); i++) {
-            SupportCarNumber carNumber = new SupportCarNumber();
-            carNumber.setHeadName(dataBeen.get(i).getPac());
-            carNumber.save();
-        }
-    }
-
-    /**
-     * 循环遍历网络数据填充本地数据库
-     *
-     * @param dataBeen
-     */
-
-    private void stationsInfoFore(List<StationDataBean> dataBeen) {
-        Logger.i("该方法走了没station");
-        for (int i = 0; i < dataBeen.size(); i++) {
-            SupportStation station = new SupportStation();
-            station.setStationId(dataBeen.get(i).getId());
-            station.setStationName(dataBeen.get(i).getZhanname());
-            station.save();
-        }
-    }
-
-    /**
-     * 接收到的车牌牌头的数据
-     */
-
-    private void initCarNumber() {
-        RequestLiteNumber.getInstance().doGetNumberInfo(new Subscriber<List<HttpResultNumber.DataBean>>() {
-            @Override
-            public void onCompleted() {
-                //   mNumberListener.onCompleted(true);
-                Message message = Message.obtain();
-                message.obj = "123";
-                handler.sendMessage(message);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                Message message = Message.obtain();
-                message.obj = "111";
-                handler.sendMessage(message);
-                Logger.i(e.getMessage());
-            }
-
-            @Override
-            public void onNext(List<HttpResultNumber.DataBean> dataBeen) {
-              /*  Logger.i(dataBeen.get(0).getPac());
-                DataSupport.deleteAll(SupportCarNumber.class);
-                for (int i = 0; i < dataBeen.size(); i++) {
-                    SupportCarNumber numberHead = new SupportCarNumber();
-                    numberHead.setHeadName(dataBeen.get(i).getPac());
-                    numberHead.save();
-                }*/
-                //isNumberCompleted = true;
-
-                List<SupportCarNumber> supportCarNumbers = findAll(SupportCarNumber.class);
-                if (supportCarNumbers.size() != 0) {
-                    if (dataBeen.size() == supportCarNumbers.size()) {
-                        Logger.i("该方法走了没1");
-                        Logger.i("返回");
-                        return;
-                    } else {
-                        Logger.i("该方法走了没2");
-                        DataSupport.deleteAll(SupportCarNumber.class);
-                        numbersInfoFore(dataBeen);
-                        List<SupportCarNumber> supportCarNumbers1 = findAll(SupportCarNumber.class);
-                        Logger.i(supportCarNumbers1.size() + "");
-                    }
-                } else {
-                    numbersInfoFore(dataBeen);
-                    List<SupportCarNumber> supportCarNumbers1 = findAll(SupportCarNumber.class);
-                    Logger.i(supportCarNumbers1.size() + "");
-                }
-            }
-        });
-    }
-
-    /**
-     * 接收到的收费站站名的数据
-     */
-    private void initStation() {
-        RequestLiteStation.getInstance().doGetStationInfo(new Subscriber<List<StationDataBean>>() {
-            @Override
-            public void onCompleted() {
-                Message message = Message.obtain();
-                message.obj = "456";
-                handler.sendMessage(message);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Logger.i(e.getMessage());
-                Message message = Message.obtain();
-                message.obj = "222";
-                handler.sendMessage(message);
-            }
-
-            @Override
-            public void onNext(List<StationDataBean> dataBeen) {
-                List<SupportStation> supportStations = findAll(SupportStation.class);
-                if (supportStations.size() != 0) {
-                    if (dataBeen.size() == supportStations.size()) {
-                        Logger.i("该方法走了没1");
-                        Logger.i("返回");
-                        return;
-                    } else {
-                        Logger.i("该方法走了没2");
-                        DataSupport.deleteAll(SupportStation.class);
-                        stationsInfoFore(dataBeen);
-                        List<SupportStation> supportStations1 = findAll(SupportStation.class);
-                        Logger.i(supportStations1.size() + "");
-                    }
-                } else {
-                    stationsInfoFore(dataBeen);
-                    List<SupportStation> supportStations1 = findAll(SupportStation.class);
-                    Logger.i(supportStations1.size() + "");
-                }
-            }
-        });
-    }
-
     private void initData() {
 
         PermissionUtils.verifyStoragePermissions(mActivity);
 
-        if (mGoodsFile == null) {
-            mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            mGoodsFile = new File(mFilePath, "GreenGoods");
-            mGoodsFile.mkdirs();
-        }
-        mGoodsFilePath = mGoodsFile.getPath();
 
     }
 
+    @OnClick(R.id.main_submit)
+    public void onClick(View view) {
+        SnackbarUtils.showShortSnackbar(view, "提交信息", Color.GREEN, Color.BLUE);
+        submit2Service();
+    }
+
+    private void submit2Service() {
+        ConfigFragment.newInstance("1","2").setSubmitInfoListener(new ConfigFragment.OnFragmentListener() {
+            @Override
+            public void onFragmentInteraction(String tvOperatorCheckConfig, String tvOperatorLoginConfig) {
+                mCheck_operator_P = tvOperatorCheckConfig;
+                mLogin_operator_P = tvOperatorLoginConfig;
+                Logger.i(mCheck_operator_P+mLogin_operator_P);
+            }
+        });
+
+        ToastUtils.singleToast(mCheck_operator_P + mLogin_operator_P);
+    }
 
     private void initView() {
 
@@ -536,7 +207,7 @@ public class MainActivity extends BaseActivity implements
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText("绿通车登记");
 
-        mFilePath = Environment.getExternalStorageDirectory().getPath();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -985,4 +656,30 @@ public class MainActivity extends BaseActivity implements
         //  PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.caogao:
+                ToastUtils.singleToast("实现保存草稿");
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /*@Override
+    public void onFragmentInteraction(String tvOperatorCheckConfig, String tvOperatorLoginConfig) {
+        mCheck_operator_P = tvOperatorCheckConfig;
+        mLogin_operator_P = tvOperatorLoginConfig;
+        Logger.i(mCheck_operator_P+mLogin_operator_P);
+    }*/
 }

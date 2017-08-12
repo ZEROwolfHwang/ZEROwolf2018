@@ -21,7 +21,7 @@ import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +58,7 @@ public class DetailsFragment extends Fragment {
     private String mCarGoods;
     private String mConclusionText;
     private String mDescriptionEditText;
-    private List<MyBitmap> mMyBitmaps;
+    private static ArrayList<MyBitmap> mMyBitmaps;
     private DetailsRecyclerAdapter mAdapter;
 
     public DetailsFragment() {
@@ -135,8 +135,8 @@ public class DetailsFragment extends Fragment {
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(manager);
-        mAdapter = new DetailsRecyclerAdapter(getContext(),mMyBitmaps,() -> {
-                enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
+        mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps, () -> {
+            enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
         });
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
     }
@@ -176,7 +176,7 @@ public class DetailsFragment extends Fragment {
     }
 
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
-            R.id.btn_conclusion_selection})
+            R.id.config_conclusion_text,R.id.config_description_text})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_change_number_detail:
@@ -187,9 +187,13 @@ public class DetailsFragment extends Fragment {
 
                 Snackbar.make(view, "进入货物的选择业", Snackbar.LENGTH_SHORT).show();
                 break;
-            case R.id.btn_conclusion_selection:
+            case R.id.config_conclusion_text:
                 enterSureActivity(GlobalManager.ENTERTYPE_CHECK);
                 Snackbar.make(view, "检查结论", Snackbar.LENGTH_SHORT).show();
+                break;
+            case R.id.config_description_text:
+                enterSureActivity(GlobalManager.ENTERTYPE_CHECK);
+                Snackbar.make(view, "检查说明", Snackbar.LENGTH_SHORT).show();
                 break;
 
             default:
@@ -203,7 +207,13 @@ public class DetailsFragment extends Fragment {
         String conclusion = mConfigConclusionText.getText().toString();
         String description = mConfigDescriptionText.getText().toString();
 
-
+       /* ArrayList<MyBitmap> bitmaps = new ArrayList<>();
+        for (int i = 0; i < mMyBitmaps.size(); i++) {
+            MyBitmap bitmap = new MyBitmap();
+            bitmap.setPath(mMyBitmaps.get(i).getPath());
+            bitmap.setInfo(mMyBitmaps.get(i).getInfo());
+            bitmaps.add(bitmap);
+        }*/
 
         SerializableMain2Sure main2Sure = new SerializableMain2Sure();
         main2Sure.setCarNumber_I(carNumber);
@@ -211,7 +221,7 @@ public class DetailsFragment extends Fragment {
         main2Sure.setConclusion_I(conclusion);
         main2Sure.setDescription_I(description);
 
-        SureGoodsActivity111.actionStart(getActivity(), main2Sure,mMyBitmaps, type);
+        SureGoodsActivity111.actionStart(getActivity(), main2Sure, type);
 
     }
 
@@ -244,5 +254,16 @@ public class DetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public static void setBitmapListListener(BitmapListListener listener) {
+        if (mMyBitmaps != null) {
+            listener.BitmapListener(mMyBitmaps);
+        }
+    }
+
+
+    public interface BitmapListListener {
+        void BitmapListener(ArrayList<MyBitmap> bitmaps);
     }
 }

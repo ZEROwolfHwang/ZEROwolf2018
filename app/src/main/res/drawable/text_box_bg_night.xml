@@ -4,7 +4,7 @@
 
     <corners android:radius="5dp"/>
 
-    <stroke android:color="@color/white_dark"
+    <stroke android:color="@color/text_box_bg_night"
         android:width="3dp"/>
 
 </shape>

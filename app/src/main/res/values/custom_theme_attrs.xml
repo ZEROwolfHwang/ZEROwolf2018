@@ -144,4 +144,7 @@
     <attr name="number_fragment_key_bg" format="color|reference"/>
     <attr name="number_fragment_key_text" format="color|reference"/>
 
+ <!-- 文本框的背景样式-->
+    <attr name="text_box_bg" format="color|reference"/>
+
 </resources>

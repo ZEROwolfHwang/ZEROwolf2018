@@ -56,6 +56,8 @@
         <item name="custom_item_text_color_station_end">@color/item_text_color_end_day</item>
         <item name="custom_item_text_color_goods">@color/item_text_color_day</item>
         <item name="custom_item_text_color_goods_end">@color/item_text_color_end_day</item>
+        <item name="text_box_bg">@color/text_box_bg_day</item>
+
 
 
         <!-- 自定义输入法的按键背景样式-->
@@ -135,6 +137,7 @@
         <item name="custom_item_text_color_station_end">@color/item_text_color_end_night</item>
         <item name="custom_item_text_color_goods">@color/item_text_color_night</item>
         <item name="custom_item_text_color_goods_end">@color/item_text_color_end_night</item>
+        <item name="text_box_bg">@color/text_box_bg_night</item>
 
         <!-- 自定义输入法的按键背景样式-->
         <item name="number_fragment_key_bg">@drawable/number_fragment_key_bg_night</item>

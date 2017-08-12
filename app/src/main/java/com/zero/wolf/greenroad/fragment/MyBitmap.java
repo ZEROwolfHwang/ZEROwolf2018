@@ -1,15 +1,20 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by 丁瑞 on 2017/4/13.
  */
 
-public class MyBitmap {
+public class MyBitmap implements Parcelable{
     String path;
     Bitmap bm;
     String info;
+
+    public MyBitmap() {
+    }
 
     public MyBitmap(String path, Bitmap bm) {
         this.path = path;
@@ -25,6 +30,24 @@ public class MyBitmap {
 //        E/setsize: getContentProvider: /storage/emulated/0/DCIM/Camera/IMG_20170413_165650.jpg
 //        E/setsize: getContentProvider: /storage/emulated/0/DCIM/Camera/IMG_20170413_165659.jpg
     }
+
+    protected MyBitmap(Parcel in) {
+        path = in.readString();
+        bm = in.readParcelable(Bitmap.class.getClassLoader());
+        info = in.readString();
+    }
+
+    public static final Creator<MyBitmap> CREATOR = new Creator<MyBitmap>() {
+        @Override
+        public MyBitmap createFromParcel(Parcel in) {
+            return new MyBitmap(in);
+        }
+
+        @Override
+        public MyBitmap[] newArray(int size) {
+            return new MyBitmap[size];
+        }
+    };
 
     public String getPath() {
         return path;
@@ -48,5 +71,26 @@ public class MyBitmap {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(path);
+        dest.writeParcelable(bm, flags);
+        dest.writeString(info);
+    }
+
+    @Override
+    public String toString() {
+        return "MyBitmap{" +
+                "path='" + path + '\'' +
+                ", bm=" + bm +
+                ", info='" + info + '\'' +
+                '}';
     }
 }

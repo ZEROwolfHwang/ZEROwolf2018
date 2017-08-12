@@ -43,8 +43,7 @@ public class ConfigFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static final int REQUEST_CODE_SCAN= 901;
-
+    private static final int REQUEST_CODE_SCAN = 901;
 
 
     Unbinder unbinder;
@@ -53,11 +52,11 @@ public class ConfigFragment extends Fragment {
     @BindView(R.id.tv_change_lane_config)
     TextView mTvChangeLaneConfig;
 
-    @BindView(R.id.tv_operator_check_config)
-    TextView mTvOperatorCheckConfig;
+    //@BindView(R.id.tv_operator_check_config)
+    private  static TextView mTvOperatorCheckConfig;
 
-    @BindView(R.id.tv_operator_login_config)
-    TextView mTvOperatorLoginConfig;
+    //@BindView(R.id.tv_operator_login_config)
+    private static TextView mTvOperatorLoginConfig;
     @BindView(R.id.scan_qr_code)
     ImageButton mScanQrCode;
 
@@ -67,7 +66,7 @@ public class ConfigFragment extends Fragment {
     private String mParam2;
 
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentListener mListener;
 
     public ConfigFragment() {
         // Required empty public constructor
@@ -100,9 +99,7 @@ public class ConfigFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,6 +107,10 @@ public class ConfigFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_config, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        mTvOperatorCheckConfig= (TextView) view.findViewById(R.id.tv_operator_check_config);
+        mTvOperatorLoginConfig= (TextView) view.findViewById(R.id.tv_operator_login_config);
+
         initView();
         return view;
     }
@@ -129,10 +130,16 @@ public class ConfigFragment extends Fragment {
         startActivityForResult(intent, REQUEST_CODE_SCAN);
     }
 
+    /**
+     * 对扫描二维码后的信息进行解析
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-         // 处理二维码扫描结果
+        // 处理二维码扫描结果
         if (requestCode == REQUEST_CODE_SCAN) {
             //处理扫描结果（在界面上显示）
             if (null != data) {
@@ -183,8 +190,12 @@ public class ConfigFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-      /*  if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+      /*  if (context instanceof OnFragmentListener) {
+            mListener = (OnFragmentListener) context;
+            if (mTvOperatorCheckConfig != null && mTvOperatorLoginConfig != null) {
+                mListener.onFragmentInteraction(mTvOperatorCheckConfig.getText().toString().trim(),
+                        mTvOperatorLoginConfig.getText().toString().trim());
+            }
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -207,8 +218,14 @@ public class ConfigFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+
+    public void setSubmitInfoListener(OnFragmentListener listener) {
+        listener.onFragmentInteraction(mTvOperatorCheckConfig.getText().toString().trim(),
+                mTvOperatorLoginConfig.getText().toString().trim());
+    }
+
+    public interface OnFragmentListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction();
+        void onFragmentInteraction(String tvOperatorCheckConfig, String tvOperatorLoginConfig);
     }
 }

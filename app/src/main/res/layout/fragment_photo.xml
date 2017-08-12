@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="@dimen/layout_margin10dp">
 
-    <RelativeLayout
+<!--    <RelativeLayout
         android:id="@+id/rl_progress_bar"
         android:visibility="gone"
         android:background="@color/white"
@@ -19,7 +19,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp" />
 
-    </RelativeLayout>
+    </RelativeLayout>-->
   <!--  <LinearLayout
         android:id="@+id/layout_number"
         android:layout_width="match_parent"
@@ -96,7 +96,7 @@
     <LinearLayout
         android:id="@+id/ll_sanzheng"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:gravity="center"
         android:layout_marginRight="@dimen/layout_margin10dp"
         android:orientation="horizontal">
@@ -118,34 +118,33 @@
         android:id="@+id/ll_cheshenchexing"
         android:layout_marginTop="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="140dp"
         android:gravity="center"
-        android:layout_marginRight="@dimen/layout_margin10dp"
+
         android:orientation="horizontal">
 
         <include
             android:id="@+id/cheshenchexing_1"
-            layout="@layout/photo_fragment_show_image_layout"/>
+            layout="@layout/photo_fragment_show_image_layout_14"/>
         <include
             android:id="@+id/cheshenchexing_2"
-            layout="@layout/photo_fragment_show_image_layout"/>
+            layout="@layout/photo_fragment_show_image_layout_23"/>
 
     </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_huowu"
         android:layout_marginTop="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="140dp"
         android:gravity="center"
-        android:layout_marginRight="@dimen/layout_margin10dp"
         android:orientation="horizontal">
 
         <include
             android:id="@+id/huowu_1"
-            layout="@layout/photo_fragment_show_image_layout"/>
+            layout="@layout/photo_fragment_show_image_layout_23"/>
         <include
             android:id="@+id/huowu_2"
-            layout="@layout/photo_fragment_show_image_layout"/>
+            layout="@layout/photo_fragment_show_image_layout_14"/>
 
     </LinearLayout>
     <Button

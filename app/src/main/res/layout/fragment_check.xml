@@ -20,11 +20,11 @@
             android:textSize="@dimen/text16"/>
 
         <TextView
+            android:background="?attr/text_box_bg"
             android:id="@+id/check_fragment_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/layout_margin10dp"
-            android:background="@drawable/text_dark_box"
             android:textSize="@dimen/text16"/>
 
     </LinearLayout>
@@ -289,7 +289,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/text_dark_box"
+            android:background="?attr/text_box_bg"
             android:textColor="@color/black"
             android:textSize="@dimen/text18"/>
 

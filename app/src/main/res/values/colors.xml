@@ -39,5 +39,9 @@
     <color name="number_fragment_key_text_night">#b0abf4</color>
     <color name="number_fragment_key_text_day">#27a5ff</color>
 
+    <!--文本框的边框颜色-->
+    <color name="text_box_bg_day">#2c2c84</color>
+    <color name="text_box_bg_night">#41afce</color>
+
 
 </resources>

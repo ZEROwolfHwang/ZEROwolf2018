@@ -5,10 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.RoundImageView;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     public class DetailsRecyclerHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.detail_recycler_item_img)
-        ImageView mDetailRecyclerImg;
+        RoundImageView mDetailRecyclerImg;
         @BindView(R.id.detail_recycler_text)
         TextView mDetailRecyclerText;
 

@@ -4,16 +4,24 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="100dp"
               android:layout_marginRight="15dp"
-              android:layout_height="120dp">
+              android:layout_height="145dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <com.zero.wolf.greenroad.activity.RoundImageView
         android:id="@+id/detail_recycler_item_img"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="center"
+        android:layout_height="120dp"
         android:src="?attr/custom_car_number_show"
-        app:riv_corner_radius="@dimen/layout_margin10dp"
-        app:riv_oval="true"/>
+
+
+        android:layout_marginTop="@dimen/layout_margin5dp"
+
+        app:border_color="@android:color/black"
+        app:border_width="2dp"
+        app:leftBottom_corner_radius="20dp"
+        app:leftTop_corner_radius="0dp"
+        app:rightBottom_corner_radius="0dp"
+        app:rightTop_corner_radius="20dp"
+        app:type="round" />
 
     <TextView
         android:id="@+id/detail_recycler_text"
@@ -24,6 +32,5 @@
         android:gravity="center"
         android:text="三证-1"
         android:textSize="@dimen/text16"/>
-        android:layout_height="@dimen/layout_margin20dp"/>
 
 </LinearLayout>

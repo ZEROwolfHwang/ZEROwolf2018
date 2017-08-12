@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,9 +29,9 @@ import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.RoundImageView;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -67,6 +69,7 @@ public class PhotoFragment extends Fragment {
     @BindView(R.id.button_selected_all)
     Button mButtonSelectedAll;
 
+
     private String mParam1;
     private String mParam2;
 
@@ -79,13 +82,13 @@ public class PhotoFragment extends Fragment {
     private String mFilePath_str;
 
     private OnFragmentInteractionListener mListener;
-    private RoundedImageView mImgSanzheng_1;
-    private RoundedImageView mImgSanzheng_2;
-    private RoundedImageView mImgSanzheng_3;
-    private RoundedImageView mImgCheshen_1;
-    private RoundedImageView mImgCheshen_2;
-    private RoundedImageView mImgHuowu_1;
-    private RoundedImageView mImgHuowu_2;
+    private RoundImageView mImgSanzheng_1;
+    private RoundImageView mImgSanzheng_2;
+    private RoundImageView mImgSanzheng_3;
+    private RoundImageView mImgCheshen_1;
+    private RoundImageView mImgCheshen_2;
+    private RoundImageView mImgHuowu_1;
+    private RoundImageView mImgHuowu_2;
 
     private TextView mTextSanzheng_1;
     private TextView mTextSanzheng_2;
@@ -95,10 +98,10 @@ public class PhotoFragment extends Fragment {
     private TextView mTextHuowu_1;
     private TextView mTextHuowu_2;
     private List<LocalMedia> mSelectList;
-    private RoundedImageView[] mRoundedImageViews;
-    private static List<MyBitmap> mMyBitmapList;
-    private static List<MyBitmap> mMyBitmaps;
+    private RoundImageView[] mRoundedImageViews;
+    private static ArrayList<MyBitmap> mMyBitmapList;
     private static PhotoFragment sPhotoFragment;
+    private static ArrayList<MyBitmap> mMyBitmaps;
 
 
     public PhotoFragment() {
@@ -106,12 +109,16 @@ public class PhotoFragment extends Fragment {
     }
 
 
-    public static PhotoFragment newInstance(List<MyBitmap> myBitmaps) {
+    public static PhotoFragment newInstance() {
         if (sPhotoFragment == null) {
 
             sPhotoFragment = new PhotoFragment();
         }
-        mMyBitmaps = myBitmaps;
+        DetailsFragment.setBitmapListListener(bitmaps -> {
+            mMyBitmaps = bitmaps;
+            Logger.i(mMyBitmaps.toString());
+        });
+
         return sPhotoFragment;
     }
 
@@ -124,6 +131,8 @@ public class PhotoFragment extends Fragment {
             mFile.mkdirs();
         }
         mFilePath_str = mFile.getPath();
+
+
     }
 
     @Override
@@ -132,18 +141,18 @@ public class PhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mImgSanzheng_1 = (RoundedImageView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_photo);
-        mImgSanzheng_2 = (RoundedImageView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_photo);
-        mImgSanzheng_3 = (RoundedImageView) view.findViewById(R.id.sanzheng_3).findViewById(R.id.image_show_photo);
-        mImgCheshen_1 = (RoundedImageView) view.findViewById(R.id.cheshenchexing_1).findViewById(R.id.image_show_photo);
-        mImgCheshen_2 = (RoundedImageView) view.findViewById(R.id.cheshenchexing_2).findViewById(R.id.image_show_photo);
-        mImgHuowu_1 = (RoundedImageView) view.findViewById(R.id.huowu_1).findViewById(R.id.image_show_photo);
-        mImgHuowu_2 = (RoundedImageView) view.findViewById(R.id.huowu_2).findViewById(R.id.image_show_photo);
+        mImgSanzheng_1 = (RoundImageView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_photo);
+        mImgSanzheng_2 = (RoundImageView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_photo);
+        mImgSanzheng_3 = (RoundImageView) view.findViewById(R.id.sanzheng_3).findViewById(R.id.image_show_photo);
+        mImgCheshen_1 = (RoundImageView) view.findViewById(R.id.cheshenchexing_1).findViewById(R.id.image_show_photo);
+        mImgCheshen_2 = (RoundImageView) view.findViewById(R.id.cheshenchexing_2).findViewById(R.id.image_show_photo);
+        mImgHuowu_1 = (RoundImageView) view.findViewById(R.id.huowu_1).findViewById(R.id.image_show_photo);
+        mImgHuowu_2 = (RoundImageView) view.findViewById(R.id.huowu_2).findViewById(R.id.image_show_photo);
 
-        mRoundedImageViews = new RoundedImageView[]{mImgSanzheng_1, mImgSanzheng_2, mImgSanzheng_3,
+        mRoundedImageViews = new RoundImageView[]{mImgSanzheng_1, mImgSanzheng_2, mImgSanzheng_3,
                 mImgCheshen_1, mImgCheshen_2, mImgHuowu_1, mImgHuowu_2};
 
-        mTextSanzheng_1 = (TextView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_text);
+       /* mTextSanzheng_1 = (TextView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_text);
         mTextSanzheng_2 = (TextView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_text);
         mTextSanzheng_3 = (TextView) view.findViewById(R.id.sanzheng_3).findViewById(R.id.image_show_text);
         mTextCheshen_1 = (TextView) view.findViewById(R.id.cheshenchexing_1).findViewById(R.id.image_show_text);
@@ -158,21 +167,26 @@ public class PhotoFragment extends Fragment {
         mTextCheshen_2.setText("车身车型-2");
         mTextHuowu_1.setText("货物-1");
         mTextHuowu_2.setText("货物-2");
+*/
 
-        if (mMyBitmapList == null) {
-            mMyBitmapList = new ArrayList<>();
-        } else {
-            if (mMyBitmapList.size() != 0) {
-                mMyBitmapList.clear();
+        if (mMyBitmaps != null && mMyBitmaps.size() != 0) {
+/*
+            if (mMyBitmapList == null) {
+                mMyBitmapList = new ArrayList<>();
                 mMyBitmapList.addAll(mMyBitmaps);
+            } else {
+                if (mMyBitmapList.size() != 0) {
+                    mMyBitmapList.clear();
+                    mMyBitmapList.addAll(mMyBitmaps);
+                }
+            }*/
+            for (int i = 0; i < mMyBitmaps.size(); i++) {
+                mRoundedImageViews[i].setImageBitmap(mMyBitmaps.get(i).getBm());
             }
         }
-        if (mMyBitmapList != null && mMyBitmapList.size() != 0) {
-            for (int i = 0; i < mMyBitmapList.size(); i++) {
-                mRoundedImageViews[i].setImageBitmap(mMyBitmapList.get(i).getBm());
-            }
+      /*  if (mMyBitmapList != null && mMyBitmapList.size() != 0) {
         }
-
+*/
         return view;
     }
 
@@ -192,13 +206,13 @@ public class PhotoFragment extends Fragment {
                     mIvCarNumber.setImageDrawable(getResources().getDrawable(R.drawable.car_number_dark));
                 } else {
                     mIvCarNumber.setImageDrawable(getResources().getDrawable(R.drawable.car_number_light));
-                }*/
+
                 Logger.i("onClick: " + "点击了选择车牌的照片");
-                openPicture(3, CHOOSE_CAR_NUMBER);
+                openPicture(3, CHOOSE_CAR_NUMBER);}*/
                 break;
             case R.id.ll_cheshenchexing:
-                openPicture(2, CHOOSE_CAR_BODY);
-               /* if (getThemeTag() == 1) {
+               /* openPicture(2, CHOOSE_CAR_BODY);
+                if (getThemeTag() == 1) {
 
                     mIvCarBody.setImageDrawable(getResources().getDrawable(R.drawable.car_body_dark));
                 } else {
@@ -208,8 +222,8 @@ public class PhotoFragment extends Fragment {
                 Logger.i("onClick: " + "点击了选择车身的照片");
                 break;
             case R.id.ll_huowu:
-                openPicture(2, CHOOSE_CAR_GOODS);
-                /*if (getThemeTag() == 1) {
+                /*openPicture(2, CHOOSE_CAR_GOODS);
+                if (getThemeTag() == 1) {
 
                     mIvCarGoods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_dark));
                 } else {
@@ -291,39 +305,39 @@ public class PhotoFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         Log.e("data", "onActivityResult: " + data);
         //关闭相机之后获得时间；2；
+      //  mRlProgressBar.setVisibility(View.VISIBLE);
         // pb.setVisibility(View.VISIBLE);
         systemTime2 = getSystemTime();
 
         switch (requestCode) {
             case CHOOSE_CAR_NUMBER:
                 // 图片选择
-                Logger.i("回调成功number");
+               /* Logger.i("回调成功number");
                 mSelectList = PictureSelector.obtainMultipleResult(data);
-                   /* adapter.setList(selectList);
+                   *//* adapter.setList(selectList);
                     adapter.notifyDataSetChanged();
-                    DebugUtil.i(TAG, "onActivityResult:" + selectList.size());*/
+                    DebugUtil.i(TAG, "onActivityResult:" + selectList.size());*//*
                 for (int i = 0; i < mSelectList.size(); i++) {
                     Logger.i(mSelectList.get(i).getPath());
-                }
+                }*/
                 break;
             case CHOOSE_CAR_BODY:
-                // 图片选择
+            /*    // 图片选择
                 Logger.i("回调成功body");
                 mSelectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < mSelectList.size(); i++) {
                     Logger.i(mSelectList.get(i).getPath());
-                }
+                }*/
                 break;
             case CHOOSE_CAR_GOODS:
-                // 图片选择
+             /*   // 图片选择
                 Logger.i("回调成功goods");
                 mSelectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < mSelectList.size(); i++) {
                     Logger.i(mSelectList.get(i).getPath());
-                }
+                }*/
                 break;
             case CHOOSE_CAR_ALL:
                 // 图片选择
@@ -337,33 +351,50 @@ public class PhotoFragment extends Fragment {
                 }
                 Logger.i("回调成功goods");
                 mSelectList = PictureSelector.obtainMultipleResult(data);
-                for (int i = 0; i < mSelectList.size(); i++) {
-                    String photo_path = mSelectList.get(i).getPath();
-                    Logger.i(photo_path);
+                Drawable drawable = getResources().getDrawable(R.drawable.demo);
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap1 = bitmapDrawable.getBitmap();
+                new Thread(() -> {
+
+                    if (mSelectList.size() < 7) {
+                        for (int i = 0; i < 7; i++) {
+                            mRoundedImageViews[i].setImageBitmap(bitmap1);
+                        }
+                    }
+                    for (int i = 0; i < mSelectList.size(); i++) {
+                        String photo_path = mSelectList.get(i).getPath();
+                        Logger.i(photo_path);
 //                    mImgSanzheng_1.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(0).getBm()));
 //                    mImgSanzheng_2.post(() -> mImgSanzheng_2.setImageBitmap(finalList.get(1).getBm()));
 //                    mImgSanzheng_3.post(() -> mImgSanzheng_3.setImageBitmap(finalList.get(2).getBm()));
-                    Bitmap bitmap = convertToBitmap(photo_path, 800, 1080);
-                    MyBitmap myBitmap = new MyBitmap(photo_path, bitmap);
-                    if (i == 0) {
-                        myBitmap.setInfo("三证-1");
-                    } else if (i == 1) {
-                        myBitmap.setInfo("三证-2");
-                    } else if (i == 2) {
-                        myBitmap.setInfo("三证-3");
-                    } else if (i == 3) {
-                        myBitmap.setInfo("车身车型-1");
-                    } else if (i == 4) {
-                        myBitmap.setInfo("车身车型-2");
-                    } else if (i == 5) {
-                        myBitmap.setInfo("货物-1");
-                    } else if (i == 6) {
-                        myBitmap.setInfo("货物-2");
+                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        MyBitmap myBitmap = new MyBitmap(photo_path, bitmap);
+                        if (i == 0) {
+                            myBitmap.setInfo("三证-1");
+                        } else if (i == 1) {
+                            myBitmap.setInfo("三证-2");
+                        } else if (i == 2) {
+                            myBitmap.setInfo("三证-3");
+                        } else if (i == 3) {
+                            myBitmap.setInfo("车身车型-1");
+                        } else if (i == 4) {
+                            myBitmap.setInfo("车身车型-2");
+                        } else if (i == 5) {
+                            myBitmap.setInfo("货物-1");
+                        } else if (i == 6) {
+                            myBitmap.setInfo("货物-2");
+                        }
+                        mMyBitmapList.add(myBitmap);
+                        int finalI = i;
+                        mRoundedImageViews[i].post(() -> {
+                            mRoundedImageViews[finalI].setImageBitmap(bitmap);
+                            //mRlProgressBar.setVisibility(View.GONE);
+                        });
+                      //  mRlProgressBar.setVisibility(View.GONE);
+                   // mRlProgressBar.setVisibility(View.GONE);
                     }
-                    mMyBitmapList.add(myBitmap);
-                    mRoundedImageViews[i].setImageBitmap(bitmap);
-                }
-
+                }).start();
+              // mRlProgressBar.setVisibility(View.GONE);
                 break;
 
 
@@ -373,6 +404,7 @@ public class PhotoFragment extends Fragment {
                 break;*/
         }
 
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void getContactList() {
@@ -608,11 +640,11 @@ public class PhotoFragment extends Fragment {
     }
 
     public static void setBitmapListListener(BitmapListListener listener) {
-        listener.BitmapListner(mMyBitmapList);
+        listener.BitmapListener(mMyBitmapList);
     }
 
 
     public interface BitmapListListener {
-        void BitmapListner(List<MyBitmap> bitmaps);
+        void BitmapListener(ArrayList<MyBitmap> bitmaps);
     }
 }
