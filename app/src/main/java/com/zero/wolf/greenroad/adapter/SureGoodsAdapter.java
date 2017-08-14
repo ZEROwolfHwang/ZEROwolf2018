@@ -1,6 +1,9 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.SerializableGoods;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +87,10 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
             scientific_name.setText(scientificname);
             alias.setText(model.getAlias());
 
-            mImageView.setImageBitmap(model.getBitmap());
+            String bitmapUrl = model.getBitmapUrl();
+            Bitmap bitmap = getImageFromAssetsFile(bitmapUrl);
+
+            mImageView.setImageBitmap(bitmap);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -92,8 +100,26 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
         }
     }
 
+    //从Assets中读取图片
+    private Bitmap getImageFromAssetsFile(String fileName) {
+        AssetManager am = null;
+        Bitmap image = null;
+        if (am == null) {
+            am = mContext.getResources().getAssets();
+        }
+        try {
+            InputStream is = am.open(fileName);
+            image = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return image;
+
+    }
+
     public interface onItemClick {
         void itemClick(SerializableGoods serializableGoods, int position);
     }
-
 }

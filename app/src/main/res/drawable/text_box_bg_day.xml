@@ -4,6 +4,7 @@
 
     <corners android:radius="5dp"/>
 
+    <solid android:color="#735a468f" />
     <stroke android:color="@color/text_box_bg_day"
         android:width="3dp"/>
 

@@ -30,13 +30,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.adapter.MainViewPagerAdapter;
+import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.fragment.ConfigFragment;
+import com.zero.wolf.greenroad.fragment.DetailsFragment;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
+import com.zero.wolf.greenroad.https.HttpUtilsApi;
+import com.zero.wolf.greenroad.https.PostInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -60,6 +66,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.RequestBody;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -67,7 +81,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        SubscriberOnNextListener<List<Subject>>  {
+        SubscriberOnNextListener<List<Subject>> {
 
 
     @BindView(R.id.tab_main)
@@ -108,6 +122,7 @@ public class MainActivity extends BaseActivity implements
     private MainViewPagerAdapter mPagerAdapter;
     private String mLogin_operator_P;
     private String mCheck_operator_P;
+    private DetailInfoBean mDetailInfoBean;
 
 
     @Override
@@ -184,16 +199,53 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void submit2Service() {
-        ConfigFragment.newInstance("1","2").setSubmitInfoListener(new ConfigFragment.OnFragmentListener() {
-            @Override
-            public void onFragmentInteraction(String tvOperatorCheckConfig, String tvOperatorLoginConfig) {
-                mCheck_operator_P = tvOperatorCheckConfig;
-                mLogin_operator_P = tvOperatorLoginConfig;
-                Logger.i(mCheck_operator_P+mLogin_operator_P);
-            }
+        ConfigFragment.newInstance().setSubmitInfoListener(bean -> {
+            Logger.i(bean.toString());
+            ToastUtils.singleToast(bean.toString());
         });
 
-        ToastUtils.singleToast(mCheck_operator_P + mLogin_operator_P);
+        DetailsFragment.newInstance().setSubmitInfoListener(bean -> {
+            mDetailInfoBean = bean;
+            Logger.i(mDetailInfoBean.toString());
+        });
+        ToastUtils.singleToast(mCheck_operator_P + mLogin_operator_P + mDetailInfoBean.toString());
+
+        PostInfo info = new PostInfo();
+        info.setCheck("苏三");
+        info.setCheck("璟四");
+        Gson gson=new Gson();
+        String route = gson.toJson(info);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+
+        HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
+        Observable<HttpResultPolling> observable = api.task(body);
+        observable.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<HttpResultPolling>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(HttpResultPolling httpResultPolling) {
+                        int code = httpResultPolling.getCode();
+                        Logger.i(code+"");
+                    }
+                });
     }
 
     private void initView() {
@@ -206,7 +258,6 @@ public class MainActivity extends BaseActivity implements
         //mIvCamera.setOnClickListener(this);
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText("绿通车登记");
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

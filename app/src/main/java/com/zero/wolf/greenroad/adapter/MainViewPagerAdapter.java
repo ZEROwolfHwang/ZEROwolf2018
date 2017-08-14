@@ -28,14 +28,14 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = ConfigFragment.newInstance("1","2");
+                fragment = ConfigFragment.newInstance();
                 break;
             case 1:
-                fragment = DetailsFragment.newInstance("3","4");
+                fragment = DetailsFragment.newInstance();
                 break;
 
             default:
-                fragment = ConfigFragment.newInstance("1","2");
+                fragment = ConfigFragment.newInstance();
                 break;
         }
         return fragment;

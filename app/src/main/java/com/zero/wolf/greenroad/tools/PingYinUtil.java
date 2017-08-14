@@ -2,10 +2,10 @@ package com.zero.wolf.greenroad.tools;
 
 import android.os.Build;
 
+import com.zero.wolf.greenroad.bean.SerializableGoods;
 import com.zero.wolf.greenroad.bean.SerializableNumber;
 import com.zero.wolf.greenroad.bean.SerializableStation;
 import com.zero.wolf.greenroad.smartsearch.CharacterParser;
-import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.smartsearch.SortToken;
 
 import java.util.ArrayList;
@@ -93,14 +93,14 @@ public class PingYinUtil {
      * @param str
      * @return
      */
-    public List<SortModel> search_goods(List<SortModel> mAllContactsList, String str) {
-        List<SortModel> filterList = new ArrayList<SortModel>();// 过滤后的list
+    public List<SerializableGoods> search_goods(List<SerializableGoods> mAllContactsList, String str) {
+        List<SerializableGoods> filterList = new ArrayList<SerializableGoods>();// 过滤后的list
         //if (str.matches("^([0-9]|[/+])*$")) {// 正则表达式 匹配号码
         if (str.matches("^([0-9]|[/+]).*")) {// 正则表达式 匹配以数字或者加号开头的字符串(包括了带空格及-分割的号码)
             // String simpleStr = str.replaceAll("\\-|\\s", "");
-            for (SortModel contact : mAllContactsList) {
-                if (contact.getAlias() != null && contact.getScientificname() != null) {
-                    if (contact.getScientificname().contains(str) || contact.getAlias().contains(str)) {
+            for (SerializableGoods contact : mAllContactsList) {
+                if (contact.getAlias() != null && contact.getScientific_name() != null) {
+                    if (contact.getScientific_name().contains(str) || contact.getAlias().contains(str)) {
                         if (!filterList.contains(contact)) {
                             filterList.add(contact);
                         }
@@ -108,10 +108,10 @@ public class PingYinUtil {
                 }
             }
         } else {
-            for (SortModel contact : mAllContactsList) {
-                if (contact.getAlias() != null && contact.getScientificname() != null) {
+            for (SerializableGoods contact : mAllContactsList) {
+                if (contact.getAlias() != null && contact.getScientific_name() != null) {
                     //姓名全匹配,姓名首字母简拼匹配,姓名全字母匹配
-                    boolean isNameContains = contact.getScientificname().toLowerCase(Locale.CHINESE)
+                    boolean isNameContains = contact.getScientific_name().toLowerCase(Locale.CHINESE)
                             .contains(str.toLowerCase(Locale.CHINESE));
 
                     boolean isAliasContains = contact.getAlias().toLowerCase(Locale.CHINESE)

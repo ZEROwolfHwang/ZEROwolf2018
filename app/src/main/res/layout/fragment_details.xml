@@ -133,25 +133,25 @@
             android:layout_marginLeft="@dimen/layout_margin20dp"
             android:layout_marginRight="@dimen/layout_margin30dp"
             android:layout_weight="1"
-            android:textOn="@null"
+            android:background="?attr/custom_toggle_selector_room"
             android:textOff="@null"
-            android:background="?attr/custom_toggle_selector_room"/>
+            android:textOn="@null"/>
 
         <ToggleButton
-            android:textOn="@null"
-            android:textOff="@null"
             android:id="@+id/toggle_is_free"
             android:layout_width="@dimen/layout_margin0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/layout_margin20dp"
             android:layout_weight="1"
-            android:background="?attr/custom_toggle_selector_free"/>
+            android:background="?attr/custom_toggle_selector_free"
+            android:textOff="@null"
+            android:textOn="@null"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin80dp"
+        android:layout_height="@dimen/layout_margin70dp"
         android:layout_marginTop="@dimen/layout_margin5dp"
         android:orientation="vertical">
 
@@ -164,16 +164,15 @@
             android:textSize="@dimen/text16"/>
 
         <TextView
+            android:id="@+id/config_conclusion_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="?attr/custom_white_black_text"
-            android:id="@+id/config_conclusion_text"
+            android:background="?attr/text_box_bg"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:background="?attr/text_box_bg"
+            android:textColor="?attr/custom_white_black_text"
             android:textSize="@dimen/text18"/>
-
 
 
     </LinearLayout>
@@ -181,26 +180,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginTop="@dimen/layout_margin5dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="left"
-            android:textColor="?attr/custom_fragment_static_text"
             android:text="现场检查说明"
+            android:textColor="?attr/custom_fragment_static_text"
             android:textSize="@dimen/text16"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:background="?attr/text_box_bg"
             android:id="@+id/config_description_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/text_box_bg"
+            android:gravity="center_vertical"
+            android:maxLines="3"
             android:textColor="?attr/custom_white_black_text"
             android:textSize="@dimen/text18"/>
 

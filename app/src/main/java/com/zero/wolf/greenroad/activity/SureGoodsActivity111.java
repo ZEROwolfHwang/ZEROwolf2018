@@ -17,7 +17,6 @@ import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
-import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class SureGoodsActivity111 extends BaseActivity {
     Toolbar mToolbarSure;
     private AppCompatActivity mActivity;
     private Context mContext;
-    private ArrayList<SortModel> mAcacheGoods;
+
     private String mType;
     private SerializableMain2Sure mMain2Sure;
     private ArrayList<MyBitmap> mMyBitmaps;
@@ -146,8 +145,6 @@ public class SureGoodsActivity111 extends BaseActivity {
 
         super.onPause();
         //存入缓存
-        ACache.get(mActivity).put("goods", (ArrayList<SortModel>) mGoodsList);
-
     }
 
     @Override

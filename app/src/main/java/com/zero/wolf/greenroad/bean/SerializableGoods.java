@@ -1,7 +1,5 @@
 package com.zero.wolf.greenroad.bean;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -21,20 +19,36 @@ public class SerializableGoods implements Serializable, Comparable {
 
     public String alias;
 
-    public Bitmap mBitmap;
+
+    public String bitmapUrl;
+    /**
+     * 显示数据拼音的首字母
+     */
+    public String sortLetters;
+    /**
+     * 简拼
+     */
+    public String simpleSpell;
+    /**
+     * 全拼
+     */
+    public String wholeSpell;
+
+
 
     public long time;
 
-    public Bitmap getBitmap() {
-        return mBitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
-    }
 
     public long getTime() {
         return time;
+    }
+
+    public String getBitmapUrl() {
+        return bitmapUrl;
+    }
+
+    public void setBitmapUrl(String bitmapUrl) {
+        this.bitmapUrl = bitmapUrl;
     }
 
     public void setTime(long time) {
@@ -65,6 +79,29 @@ public class SerializableGoods implements Serializable, Comparable {
         this.alias = alias;
     }
 
+    public String getSortLetters() {
+        return sortLetters;
+    }
+
+    public void setSortLetters(String sortLetters) {
+        this.sortLetters = sortLetters;
+    }
+
+    public String getSimpleSpell() {
+        return simpleSpell;
+    }
+
+    public void setSimpleSpell(String simpleSpell) {
+        this.simpleSpell = simpleSpell;
+    }
+
+    public String getWholeSpell() {
+        return wholeSpell;
+    }
+
+    public void setWholeSpell(String wholeSpell) {
+        this.wholeSpell = wholeSpell;
+    }
 
     @Override
     public int compareTo(Object another) {

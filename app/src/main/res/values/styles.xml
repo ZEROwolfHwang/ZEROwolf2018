@@ -208,19 +208,20 @@
 
     <!--扫描结果的显示不改变的字体-->
     <style name="scan_code_info_style">
-
+        <item name="android:layout_marginTop">3dp</item>
         <item name="android:textColor">?attr/custom_fragment_static_text</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:layout_weight">1</item>
     </style>
  <!--扫描结果的显示改变的字体-->
     <style name="scan_code_change_info_style">
+        <item name="android:layout_marginTop">5dp</item>
 
         <item name="android:textColor">?attr/custom_white_black_text</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
     </style>

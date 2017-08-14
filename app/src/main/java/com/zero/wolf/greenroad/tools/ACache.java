@@ -8,6 +8,8 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import com.orhanobut.logger.Logger;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -40,6 +42,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * 这是一个缓存工具类，提供数据的本地化方法
  */
 public class ACache {
+
+    public static final String GOODSACACHE = "goodsacache";
+
 
     public static String TEXTGOODS = "textgoods";
     public static String TEXTNUMBER = "textnumber";
@@ -438,6 +443,7 @@ public class ACache {
             oos = new ObjectOutputStream(baos);
             oos.writeObject(value);
             byte[] data = baos.toByteArray();
+            Logger.i(data.toString());
             if (saveTime != -1) {
                 put(key, data, saveTime);
             } else {

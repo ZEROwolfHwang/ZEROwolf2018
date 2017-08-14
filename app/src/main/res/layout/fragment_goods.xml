@@ -27,7 +27,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
+         <!--   <TextView
                 android:layout_weight="1"
                 android:text="@string/text_car_goods_sure"
                 android:textColor="?attr/custom_fragment_static_text"
@@ -42,7 +42,7 @@
                 android:layout_width="4dp"
                 android:layout_height="30dp"
                 android:focusable="false"
-                android:background="@drawable/shape_static_night"/>
+                android:background="@drawable/shape_static_night"/>-->
 
             <FrameLayout
                 android:layout_width="0dp"

@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity111;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
+import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
@@ -34,24 +36,25 @@ public class DetailsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     Unbinder unbinder;
-    @BindView(R.id.radio_group_color)
-    RadioGroup mRadioGroupColor;
     @BindView(R.id.recycler_view_shoot_photo)
     RecyclerView mRecyclerViewShootPhoto;
-    @BindView(R.id.tv_change_number_detail)
+    private static RadioGroup mRadioGroupColor;
+    private static
     TextView mTvChangeNumberDetail;
-    @BindView(R.id.tv_change_goods_detail)
+    private static
     TextView mTvChangeGoodsDetail;
-    @BindView(R.id.config_conclusion_text)
+    private static
     TextView mConfigConclusionText;
-    @BindView(R.id.config_description_text)
+    private static
     TextView mConfigDescriptionText;
+    private static
+    ToggleButton mToggleIsRoom;
+    private static
+    ToggleButton mToggleIsFree;
 
 
-    private String mCurrent_color;
+    private static String mCurrent_color;
 
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
     private String mCarNumber;
@@ -66,22 +69,19 @@ public class DetailsFragment extends Fragment {
     }
 
 
-    public static DetailsFragment newInstance(String param1, String param2) {
+    public static DetailsFragment newInstance() {
         DetailsFragment fragment = new DetailsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+     /*   if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        }*/
     }
 
     @Override
@@ -89,8 +89,8 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         unbinder = ButterKnife.bind(this, view);
+        initView(view);
         initRadioColor();
-        initView();
         initRecyclerView();
         return view;
     }
@@ -171,12 +171,19 @@ public class DetailsFragment extends Fragment {
         });
     }
 
-    private void initView() {
+    private void initView(View view) {
+        mConfigConclusionText = (TextView) view.findViewById(R.id.config_conclusion_text);
+        mConfigDescriptionText = (TextView) view.findViewById(R.id.config_description_text);
+        mTvChangeNumberDetail = (TextView) view.findViewById(R.id.tv_change_number_detail);
+        mTvChangeGoodsDetail = (TextView) view.findViewById(R.id.tv_change_goods_detail);
+        mToggleIsRoom = (ToggleButton) view.findViewById(R.id.toggle_is_room);
+        mToggleIsFree = (ToggleButton) view.findViewById(R.id.toggle_is_free);
+        mRadioGroupColor = (RadioGroup) view.findViewById(R.id.radio_group_color);
 
     }
 
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
-            R.id.config_conclusion_text,R.id.config_description_text})
+            R.id.config_conclusion_text, R.id.config_description_text})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_change_number_detail:
@@ -265,5 +272,31 @@ public class DetailsFragment extends Fragment {
 
     public interface BitmapListListener {
         void BitmapListener(ArrayList<MyBitmap> bitmaps);
+    }
+
+    public void setSubmitInfoListener(OnFragmentListener listener) {
+
+        String conclusion = mConfigConclusionText.getText().toString().trim();
+        String description = mConfigDescriptionText.getText().toString().trim();
+        String number = mTvChangeNumberDetail.getText().toString().trim();
+        String goods = mTvChangeGoodsDetail.getText().toString().trim();
+        boolean isRoom = mToggleIsRoom.isChecked();
+        boolean isFree = mToggleIsFree.isChecked();
+
+        DetailInfoBean bean = new DetailInfoBean();
+        bean.setColor(mCurrent_color);
+        bean.setConclusion(conclusion);
+        bean.setDescription(description);
+        bean.setNumber(number);
+        bean.setGoods(goods);
+        bean.setIsRoom(isRoom ? 0 : 1);
+        bean.setIsFree(isFree ? 0 : 1);
+
+        listener.onFragmentInteraction(bean);
+    }
+
+    public interface OnFragmentListener {
+
+        void onFragmentInteraction(DetailInfoBean bean);
     }
 }

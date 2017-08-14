@@ -15,6 +15,7 @@ import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SettingActivity;
+import com.zero.wolf.greenroad.bean.ConfigInfoBean;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -62,43 +63,38 @@ public class ConfigFragment extends Fragment {
 
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
 
     private OnFragmentListener mListener;
+    private static TextView mTextExportNumber;
+    private static TextView mText_table_1;
+    private static TextView mText_table_2;
+    private static TextView mText_table_3;
+    private static TextView mText_table_4;
+    private static TextView mText_table_5;
+    private static TextView mText_table_6;
+    private static TextView mText_table_7;
+    private static TextView mText_table_8;
+    private static TextView mText_table_9;
+    private static TextView mText_table_10;
+    private static TextView mText_table_11;
+    private static TextView mText_table_12;
+    private String mRoad_Q;
+    private String mStation_Q;
 
     public ConfigFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ConfigFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ConfigFragment newInstance(String param1, String param2) {
-        Logger.i(param1 + "_____" + param2);
+    public static ConfigFragment newInstance() {
         ConfigFragment fragment = new ConfigFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
     }
 
     @Override
@@ -111,8 +107,39 @@ public class ConfigFragment extends Fragment {
         mTvOperatorCheckConfig= (TextView) view.findViewById(R.id.tv_operator_check_config);
         mTvOperatorLoginConfig= (TextView) view.findViewById(R.id.tv_operator_login_config);
 
-        initView();
+        initView(view);
+        initData();
         return view;
+    }
+
+    private void initView(View view) {
+        mTextExportNumber = (TextView) view.findViewById(R.id.export_number);
+        mText_table_1 = (TextView) view.findViewById(R.id.text_table_1);
+        mText_table_2 = (TextView) view.findViewById(R.id.text_table_2);
+        mText_table_3 = (TextView) view.findViewById(R.id.text_table_3);
+        mText_table_4 = (TextView) view.findViewById(R.id.text_table_4);
+        mText_table_5 = (TextView) view.findViewById(R.id.text_table_5);
+        mText_table_6 = (TextView) view.findViewById(R.id.text_table_6);
+        mText_table_7 = (TextView) view.findViewById(R.id.text_table_7);
+        mText_table_8 = (TextView) view.findViewById(R.id.text_table_8);
+        mText_table_9 = (TextView) view.findViewById(R.id.text_table_9);
+        mText_table_10 = (TextView) view.findViewById(R.id.text_table_10);
+        mText_table_11 = (TextView) view.findViewById(R.id.text_table_11);
+        mText_table_12 = (TextView) view.findViewById(R.id.text_table_12);
+    }
+    private void initData() {
+        // TODO: 2017/8/14 拿到初始化注册时的注册信息
+        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
+        for (int i = 0; i < strListValue.size(); i++) {
+            String string = strListValue.get(i).toString();
+            Logger.i(string);
+        }
+        mRoad_Q = strListValue.get(1).toString();
+        mStation_Q = strListValue.get(2).toString();
+        mTvChangeStationConfig.setText(mStation_Q);
+        // TODO: 2017/8/5
+        mTvOperatorCheckConfig.setOnClickListener(v -> openSettingActivity());
+        mTvOperatorLoginConfig.setOnClickListener(v -> openSettingActivity());
     }
 
     @Override
@@ -150,6 +177,25 @@ public class ConfigFragment extends Fragment {
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     ToastUtils.singleToast("解析结果:" + result);
+                    String[] result_QrCode = result.split(";");
+                    mTextExportNumber.setText(result_QrCode[0]);
+
+                    mText_table_1.setText(result_QrCode[1]);
+                    mText_table_3.setText(result_QrCode[10]);
+                    mText_table_5.setText(result_QrCode[14]);
+                    //入口路段
+                    mText_table_7.setText(result_QrCode[2]);
+                    mText_table_9.setText(result_QrCode[3]);
+                    mText_table_11.setText(result_QrCode[6]);
+
+                    mText_table_2.setText(result_QrCode[11]);
+                    mText_table_4.setText(result_QrCode[12]);
+                    mText_table_6.setText(result_QrCode[13]);
+                    //出口路段
+                    mText_table_8.setText(result_QrCode[4]);
+                    mText_table_10.setText(result_QrCode[5]);
+                    mText_table_12.setText(result_QrCode[9]);
+
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     ToastUtils.singleToast("解析二维码失败");
                 }
@@ -157,17 +203,7 @@ public class ConfigFragment extends Fragment {
         }
     }
 
-    private void initView() {
-        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
-        for (int i = 0; i < strListValue.size(); i++) {
-            String string = strListValue.get(i).toString();
-            Logger.i(string);
-        }
-        mTvChangeStationConfig.setText(strListValue.get(2).toString());
-        // TODO: 2017/8/5
-        mTvOperatorCheckConfig.setOnClickListener(v -> openSettingActivity());
-        mTvOperatorLoginConfig.setOnClickListener(v -> openSettingActivity());
-    }
+
 
     private void openSettingActivity() {
         Intent intent = new Intent(getActivity(), SettingActivity.class);
@@ -220,12 +256,42 @@ public class ConfigFragment extends Fragment {
      */
 
     public void setSubmitInfoListener(OnFragmentListener listener) {
-        listener.onFragmentInteraction(mTvOperatorCheckConfig.getText().toString().trim(),
-                mTvOperatorLoginConfig.getText().toString().trim());
+        String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
+        String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
+
+        String scan_01Q = mText_table_1.getText().toString().trim();
+        String scan_02Q = mText_table_2.getText().toString().trim();
+        String scan_03Q = mText_table_3.getText().toString().trim();
+        String scan_04Q = mText_table_4.getText().toString().trim();
+        String scan_05Q = mText_table_5.getText().toString().trim();
+        String scan_06Q = mText_table_6.getText().toString().trim();
+        String scan_07Q = mText_table_7.getText().toString().trim();
+        String scan_08Q = mText_table_8.getText().toString().trim();
+        String scan_09Q = mText_table_9.getText().toString().trim();
+        String scan_10Q = mText_table_10.getText().toString().trim();
+        String scan_11Q = mText_table_11.getText().toString().trim();
+        String scan_12Q = mText_table_12.getText().toString().trim();
+
+        ConfigInfoBean bean = new ConfigInfoBean();
+        bean.setCheckOperator(checkOperator_Q);
+        bean.setLoginOperator(loginOperator_Q);
+        bean.setScan_01Q(scan_01Q);
+        bean.setScan_02Q(scan_02Q);
+        bean.setScan_03Q(scan_03Q);
+        bean.setScan_04Q(scan_04Q);
+        bean.setScan_05Q(scan_05Q);
+        bean.setScan_06Q(scan_06Q);
+        bean.setScan_07Q(scan_07Q);
+        bean.setScan_08Q(scan_08Q);
+        bean.setScan_09Q(scan_09Q);
+        bean.setScan_10Q(scan_10Q);
+        bean.setScan_11Q(scan_11Q);
+        bean.setScan_12Q(scan_12Q);
+
+        listener.onFragmentInteraction(bean);
     }
 
     public interface OnFragmentListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String tvOperatorCheckConfig, String tvOperatorLoginConfig);
+        void onFragmentInteraction(ConfigInfoBean bean);
     }
 }

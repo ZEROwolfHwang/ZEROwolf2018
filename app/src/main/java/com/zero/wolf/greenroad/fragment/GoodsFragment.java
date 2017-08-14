@@ -1,14 +1,13 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +20,16 @@ import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.SerializableGoods;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
+import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
-import com.zero.wolf.greenroad.smartsearch.SortModel;
+import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
+import com.zero.wolf.greenroad.tools.ACache;
+import com.zero.wolf.greenroad.tools.PingYinUtil;
+import com.zero.wolf.greenroad.tools.ViewUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,7 +41,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2017/7/17.
  */
 
-public class GoodsFragment extends Fragment {
+public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTextListener {
 
     private static final String GOODS_DIR = "good_icon";
     private static GoodsFragment sFragment;
@@ -54,8 +57,6 @@ public class GoodsFragment extends Fragment {
 
     private String mCar_goods;
 
-    private static List<SortModel> sGoodsList;
-
     private String goodsText;
     private static SerializableMain2Sure mMain2Sure;
     private static String mGoods_i;
@@ -67,6 +68,8 @@ public class GoodsFragment extends Fragment {
             "1234124戛洒hiu瓦斯鉴定表", "奥斯卡单位澳大马上", "IQ网上订餐MAU爱打架"};
     private ArrayList<SerializableGoods> mGoodsArrayList;
     private String[] scientific_names;
+    private ArrayList<SerializableGoods> mAsObject;
+    private StringBuilder mGoodsBuilder;
 
 
     public static GoodsFragment newInstance(String goods) {
@@ -86,18 +89,72 @@ public class GoodsFragment extends Fragment {
     }
 
     private void initGoodsData() {
-        mAssetManager = getContext().getAssets();
+
+        mAsObject = (ArrayList<SerializableGoods>) ACache
+                .get(getActivity()).getAsObject(ACache.GOODSACACHE);
+
+//        Logger.i(mAsObject.size() + "");
+
         mGoodsArrayList = new ArrayList<>();
+
+        Logger.i(mGoodsArrayList.size() + "");
+
+        if (mAsObject != null && mAsObject.size() != 0) {
+            if (mAsObject.size() == scientific_names.length) {
+                Logger.i("goods走的缓存");
+                if (mGoodsArrayList.size() == 0) {
+                } else {
+                    mGoodsArrayList.clear();
+                }
+                mGoodsArrayList.addAll(mAsObject);
+            } else {
+                Logger.i("goods未加载完毕未缓存");
+                addGoodsData();
+            }
+        } else {
+            Logger.i("goods直接从头加载数据");
+            addGoodsData();
+        }
+
+
+    }
+
+    private void addGoodsData() {
+        mAssetManager = getContext().getAssets();
         try {
             mGoodsNames = mAssetManager.list(GOODS_DIR);
+            if (mGoodsArrayList.size() == 0) {
+            } else {
+                mGoodsArrayList.clear();
+            }
             for (int i = 0; i < mGoodsNames.length; i++) {
                 Logger.i(mGoodsNames.length + "");
-                Bitmap bitmap = getImageFromAssetsFile(GOODS_DIR+"/"+mGoodsNames[i]);
+                //Bitmap bitmap = getImageFromAssetsFile();
+
+                String scientific_name = scientific_names[i];
+                String alia = alias[i];
+                String bitmap_url = GOODS_DIR + "/" + mGoodsNames[i];
+
                 SerializableGoods goods = new SerializableGoods();
-                goods.setAlias(alias[i]);
-                goods.setScientific_name(scientific_names[i]);
-                goods.setBitmap(bitmap);
+
+                goods.setAlias(alia);
+                goods.setScientific_name(scientific_name);
+                goods.setBitmapUrl(bitmap_url);
+
+                String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientific_name);
+                if (sortLetters == null) {
+                    sortLetters = PingYinUtil.getInstance().getSortLetter(alia);
+                }
+                goods.setSortLetters(sortLetters);
+
+                String sortKey = PingYinUtil.format(scientific_name + alias);
+                goods.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+                goods.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
+
+
                 mGoodsArrayList.add(goods);
+
+
             }
 
         } catch (IOException e) {
@@ -105,26 +162,9 @@ public class GoodsFragment extends Fragment {
             Logger.i(e.getMessage());
             return;
         }
-    }
-     //从Assets中读取图片
-    private Bitmap getImageFromAssetsFile(String fileName)
-    {
-        Bitmap image = null;
-        AssetManager am = getResources().getAssets();
-        try
-        {
-            InputStream is = am.open(fileName);
-            image = BitmapFactory.decodeStream(is);
-            is.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return image;
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,9 +172,10 @@ public class GoodsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_goods, container, false);
 
         unbinder = ButterKnife.bind(this, view);
-        mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
 
-        mEditText.setText(mGoods_i);
+        initEditText(view);
+
+
         initGoodsData();
 
         initView(view);
@@ -142,17 +183,54 @@ public class GoodsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 初始化EditText中的内容
+     *
+     * @param view
+     */
+    private void initEditText(View view) {
+        if (mGoodsBuilder == null) {
+            mGoodsBuilder = new StringBuilder();
+        } else {
+            if (mGoodsBuilder.length() == 0) {
+                mGoodsBuilder.append(mGoods_i);
+            } else {
+                mGoodsBuilder.delete(0, mGoodsBuilder.length());
+                mGoodsBuilder.append(mGoods_i);
+
+            }
+        }
+
+        mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
+
+        mEditText.setText(mGoods_i);
+        mEditText.setSelection(mGoods_i.length());
+
+
+    }
+
     private void initRecyclerView() {
+
+        if (mAsObject == null) {
+            PinyinComparator pinyinComparator = new PinyinComparator();
+            Collections.sort(mGoodsArrayList, pinyinComparator);// 根据a-z进行排序源数据
+        }
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
 
         mGoodsAdapter = new SureGoodsAdapter(getContext(), mGoodsArrayList, new SureGoodsAdapter.onItemClick() {
             @Override
-            public void itemClick(SerializableGoods sortModel, int position) {
-                String scientificname = sortModel.getScientific_name();
-                mEditText.setText(scientificname);
-                mEditText.setSelection(scientificname.length());
+            public void itemClick(SerializableGoods serializableGoods, int position) {
+
+                String scientificname = serializableGoods.getScientific_name();
+                mGoodsBuilder.append(scientificname + ";");
+                mEditText.setText(mGoodsBuilder.toString());
+                mEditText.setSelection(mGoodsBuilder.length());
+                //进行置顶操作
+                serializableGoods.setTop(1);
+                serializableGoods.setTime(System.currentTimeMillis());
+                refreshView();
             }
         });
         mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),
@@ -161,9 +239,40 @@ public class GoodsFragment extends Fragment {
         mRecyclerView.setAdapter(mGoodsAdapter);
     }
 
+    private void refreshView() {
+        Collections.sort(mGoodsArrayList);
+        mGoodsAdapter.updateListView(mGoodsArrayList);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        //mCar_goods = mEditText.getText().toString();
+        String goodString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearTextGoods);
+        String[] split = goodString.split(";");
+        if (split.length == 1) {
+            return;
+        }
+        if (goodString.endsWith(";")) {
+            mGoodsAdapter.updateListView(mGoodsArrayList);
+        }
+        String last_edit = split[split.length - 1];
+        if (goodString.length() > 0) {
+            List<SerializableGoods> fileterList = PingYinUtil.getInstance()
+                    .search_goods(mGoodsArrayList, last_edit);
+            Logger.i(fileterList.toString());
+            mGoodsAdapter.updateListView(fileterList);
+            //mAdapter.updateData(mContacts);
+        } else {
+            if (mGoodsAdapter != null) {
+                mGoodsAdapter.updateListView(mGoodsArrayList);
+            }
+        }
+    }
+
 
     private void initView(View view) {
 
+        mEditText.addTextChangedListener(new TextChangeWatcher(this));
        /* //找到改变的TextView
         String aCacheGoodsText = ACache
                 .get(getActivity()).getAsString("goodsText");
@@ -178,10 +287,6 @@ public class GoodsFragment extends Fragment {
             goodsText = aCacheGoodsText;
             mEditText.setText(aCacheGoodsText);
         }*/
-        //找到清除text的控件
-
-        mIvClearTextGoods.setOnClickListener((v -> mEditText.setText("")));
-
 
 
        /* mButton.setOnClickListener(new View.OnClickListener() {
@@ -327,9 +432,42 @@ public class GoodsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+     /*   new Thread(() -> {
+            ACache.get(getActivity()).put(ACache.GOODSACACHE, mGoodsArrayList);
+        }).start();
+        ArrayList<SerializableGoods> asObject = (ArrayList<SerializableGoods>) ACache.get(getActivity()).getAsObject(ACache.GOODSACACHE);
+        for (int i = 0; i < asObject.size(); i++) {
+            Logger.i(asObject.get(i).toString());
+        }*/
+        ACache.get(getActivity()).put(ACache.GOODSACACHE, mGoodsArrayList);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        Object asObject = ACache.get(getActivity()).getAsObject(ACache.GOODSACACHE);
+        ArrayList<SerializableGoods> asObject1 = (ArrayList<SerializableGoods>) ACache.get(getActivity()).getAsObject(ACache.GOODSACACHE);
+        Logger.i("++++++++" + asObject.toString() + "____" + asObject1.size() + asObject1.get(0).getScientific_name());
     }
 
-    @OnClick(R.id.goods_edit_text)
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
+
+
+    @OnClick({R.id.goods_edit_text,R.id.goods_img_clear_text})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.goods_edit_text:
@@ -337,6 +475,13 @@ public class GoodsFragment extends Fragment {
                 if (goodsEdit != null && !"".equals(goodsEdit)) {
                     mEditText.setSelection(goodsEdit.length());
                     mIvClearTextGoods.setVisibility(View.VISIBLE);
+                    mGoodsBuilder.delete(0, mGoodsBuilder.length());
+                }
+                break;
+            case R.id.goods_img_clear_text:
+                mEditText.setText("");
+                if (mGoodsBuilder != null && mGoodsBuilder.length() != 0) {
+                    mGoodsBuilder.delete(0, mGoodsBuilder.length());
                 }
                 break;
 
