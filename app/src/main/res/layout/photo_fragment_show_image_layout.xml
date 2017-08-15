@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="120dp"
-
+    android:layout_width="0dp"
+    android:layout_weight="1"
     android:layout_height="match_parent"
     tools:showIn="@layout/fragment_photo">
 
@@ -15,8 +15,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/layout_margin5dp"
         android:src="@drawable/demo"
-        custom:border_color="@android:color/black"
-        custom:border_width="2dp"
+        custom:border_color="?attr/custom_white_black_text"
+        custom:border_width="4dp"
         custom:type="circle" />
 
 <!--    <TextView

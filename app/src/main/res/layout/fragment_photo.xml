@@ -8,159 +8,193 @@
     android:orientation="vertical"
     android:padding="@dimen/layout_margin10dp">
 
-<!--    <RelativeLayout
-        android:id="@+id/rl_progress_bar"
-        android:visibility="gone"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ProgressBar
-            android:layout_centerInParent="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+    <!--    <RelativeLayout
+            android:id="@+id/rl_progress_bar"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
 
-    </RelativeLayout>-->
-  <!--  <LinearLayout
-        android:id="@+id/layout_number"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
+        </RelativeLayout>-->
+    <!--  <LinearLayout
+          android:id="@+id/layout_number"
+          android:layout_width="match_parent"
+          android:layout_height="80dp"
+          android:layout_marginTop="@dimen/layout_margin10dp"
+          android:baselineAligned="false"
+          android:orientation="horizontal">
 
-        <TextView
-            style="@style/text_view_2_car"
-            android:layout_gravity="center"
-            android:layout_marginLeft="40dp"
-            android:background="?attr/custom_shape_line_rect"
-            android:text="三证"/>
+          <TextView
+              style="@style/text_view_2_car"
+              android:layout_gravity="center"
+              android:layout_marginLeft="40dp"
+              android:background="?attr/custom_shape_line_rect"
+              android:text="三证"/>
 
-        <ImageView
-            android:id="@+id/iv_car_number"
-            android:layout_width="@dimen/layout_margin80dp"
-            android:layout_height="@dimen/layout_margin80dp"
-            android:layout_marginRight="@dimen/layout_margin10dp"
-            android:background="?attr/custom_car_number_selection"
-            android:scaleType="fitCenter"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:orientation="horizontal">
+          <ImageView
+              android:id="@+id/iv_car_number"
+              android:layout_width="@dimen/layout_margin80dp"
+              android:layout_height="@dimen/layout_margin80dp"
+              android:layout_marginRight="@dimen/layout_margin10dp"
+              android:background="?attr/custom_car_number_selection"
+              android:scaleType="fitCenter"/>
 
 
-        <ImageView
-            android:id="@+id/iv_car_body"
-            android:layout_width="@dimen/layout_margin80dp"
-            android:layout_height="@dimen/layout_margin80dp"
-            android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:background="?attr/custom_car_body_selection"
-            android:scaleType="fitCenter"/>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="80dp"
+          android:layout_marginTop="@dimen/layout_margin10dp"
+          android:orientation="horizontal">
 
 
-        <TextView
-            style="@style/text_view_2_car"
-            android:layout_marginRight="40dp"
-            android:background="?attr/custom_shape_line_rect_center"
-            android:text="车身车型"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/text_view_2_car"
-            android:layout_marginLeft="40dp"
-            android:background="?attr/custom_shape_line_rect"
-            android:text="@string/tv_car_goods"/>
-
-        <ImageView
-            android:id="@+id/iv_car_goods"
-            android:layout_width="@dimen/layout_margin80dp"
-            android:layout_height="@dimen/layout_margin80dp"
-            android:layout_marginRight="@dimen/layout_margin10dp"
-            android:background="?attr/custom_car_goods_selection"
-            android:scaleType="fitCenter"/>
+          <ImageView
+              android:id="@+id/iv_car_body"
+              android:layout_width="@dimen/layout_margin80dp"
+              android:layout_height="@dimen/layout_margin80dp"
+              android:layout_marginLeft="@dimen/layout_margin10dp"
+              android:background="?attr/custom_car_body_selection"
+              android:scaleType="fitCenter"/>
 
 
-    </LinearLayout>-->
+          <TextView
+              style="@style/text_view_2_car"
+              android:layout_marginRight="40dp"
+              android:background="?attr/custom_shape_line_rect_center"
+              android:text="车身车型"/>
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="80dp"
+          android:layout_marginTop="@dimen/layout_margin10dp"
+          android:orientation="horizontal">
+
+          <TextView
+              style="@style/text_view_2_car"
+              android:layout_marginLeft="40dp"
+              android:background="?attr/custom_shape_line_rect"
+              android:text="@string/tv_car_goods"/>
+
+          <ImageView
+              android:id="@+id/iv_car_goods"
+              android:layout_width="@dimen/layout_margin80dp"
+              android:layout_height="@dimen/layout_margin80dp"
+              android:layout_marginRight="@dimen/layout_margin10dp"
+              android:background="?attr/custom_car_goods_selection"
+              android:scaleType="fitCenter"/>
+
+
+      </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/ll_sanzheng"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:gravity="center"
-        android:layout_marginRight="@dimen/layout_margin10dp"
         android:orientation="horizontal">
 
         <include
             android:id="@+id/sanzheng_1"
             layout="@layout/photo_fragment_show_image_layout"/>
+
         <include
             android:id="@+id/sanzheng_2"
             layout="@layout/photo_fragment_show_image_layout"/>
+
         <include
             android:id="@+id/sanzheng_3"
             layout="@layout/photo_fragment_show_image_layout"/>
 
 
-
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_cheshenchexing"
-        android:layout_marginTop="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="145dp"
         android:gravity="center"
-
         android:orientation="horizontal">
 
         <include
             android:id="@+id/cheshenchexing_1"
             layout="@layout/photo_fragment_show_image_layout_14"/>
+
         <include
             android:id="@+id/cheshenchexing_2"
             layout="@layout/photo_fragment_show_image_layout_23"/>
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_huowu"
-        android:layout_marginTop="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="145dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <include
             android:id="@+id/huowu_1"
             layout="@layout/photo_fragment_show_image_layout_23"/>
+
         <include
             android:id="@+id/huowu_2"
             layout="@layout/photo_fragment_show_image_layout_14"/>
 
     </LinearLayout>
-    <Button
-        android:id="@+id/button_selected_all"
-        android:text="选择全部"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <ImageView
-        android:id="@+id/photo_iv_camera"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:elevation="15dp"
-        android:background="?attr/custom_main_shut_selector_btn"
-        android:scaleType="fitCenter"
-        android:layout_below="@+id/linear_layout_main"
-        android:layout_centerHorizontal="true"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/button_selected_all"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_below="@+id/linear_layout_main"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/layout_margin10dp"
+                android:background="?attr/custom_main_shut_selector_btn"
+                android:elevation="15dp"
+                android:scaleType="fitCenter"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/photo_iv_camera"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_below="@+id/linear_layout_main"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/layout_margin10dp"
+                android:background="?attr/custom_main_shut_selector_btn"
+                android:elevation="15dp"
+                android:scaleType="fitCenter"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

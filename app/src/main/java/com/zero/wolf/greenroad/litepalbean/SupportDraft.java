@@ -1,13 +1,22 @@
-package com.zero.wolf.greenroad.bean;
+package com.zero.wolf.greenroad.litepalbean;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
- * Created by Administrator on 2017/8/14.
+ * Created by Administrator on 2017/7/3.
  */
 
-public class ConfigInfoBean {
+public class SupportDraft extends DataSupport {
 
+
+    private String draftTime;
     private String checkOperator;
     private String loginOperator;
+    private String station;
+    private String lane;
+    private String road;
 
     private String scan_time;
     private String scan_01Q;
@@ -22,6 +31,14 @@ public class ConfigInfoBean {
     private String scan_10Q;
     private String scan_11Q;
     private String scan_12Q;
+    private String color;
+    private String number;
+    private String goods;
+    private int isRoom;
+    private int isFree;
+    private String conclusion;
+    private String description;
+    private List<String> bitmapPaths;
 
     public String getScan_time() {
         return scan_time;
@@ -29,6 +46,14 @@ public class ConfigInfoBean {
 
     public void setScan_time(String scan_time) {
         this.scan_time = scan_time;
+    }
+
+    public String getDraftTime() {
+        return draftTime;
+    }
+
+    public void setDraftTime(String draftTime) {
+        this.draftTime = draftTime;
     }
 
     public String getCheckOperator() {
@@ -45,6 +70,30 @@ public class ConfigInfoBean {
 
     public void setLoginOperator(String loginOperator) {
         this.loginOperator = loginOperator;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    public String getLane() {
+        return lane;
+    }
+
+    public void setLane(String lane) {
+        this.lane = lane;
+    }
+
+    public String getRoad() {
+        return road;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
     }
 
     public String getScan_01Q() {
@@ -143,12 +192,79 @@ public class ConfigInfoBean {
         this.scan_12Q = scan_12Q;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getGoods() {
+        return goods;
+    }
+
+    public void setGoods(String goods) {
+        this.goods = goods;
+    }
+
+    public int getIsRoom() {
+        return isRoom;
+    }
+
+    public void setIsRoom(int isRoom) {
+        this.isRoom = isRoom;
+    }
+
+    public int getIsFree() {
+        return isFree;
+    }
+
+    public void setIsFree(int isFree) {
+        this.isFree = isFree;
+    }
+
+    public String getConclusion() {
+        return conclusion;
+    }
+
+    public void setConclusion(String conclusion) {
+        this.conclusion = conclusion;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getBitmapPaths() {
+        return bitmapPaths;
+    }
+
+    public void setBitmapPaths(List<String> bitmapPaths) {
+        this.bitmapPaths = bitmapPaths;
+    }
+
     @Override
     public String toString() {
-        return "ConfigInfoBean{" +
-                "checkOperator='" + checkOperator + '\'' +
+        return "SupportDraft{" +
+                "draftTime='" + draftTime + '\'' +
+                ", checkOperator='" + checkOperator + '\'' +
                 ", loginOperator='" + loginOperator + '\'' +
-                ", scan_time='" + scan_time + '\'' +
+                ", station='" + station + '\'' +
+                ", lane='" + lane + '\'' +
+                ", road='" + road + '\'' +
                 ", scan_01Q='" + scan_01Q + '\'' +
                 ", scan_02Q='" + scan_02Q + '\'' +
                 ", scan_03Q='" + scan_03Q + '\'' +
@@ -161,6 +277,14 @@ public class ConfigInfoBean {
                 ", scan_10Q='" + scan_10Q + '\'' +
                 ", scan_11Q='" + scan_11Q + '\'' +
                 ", scan_12Q='" + scan_12Q + '\'' +
+                ", color='" + color + '\'' +
+                ", number='" + number + '\'' +
+                ", goods='" + goods + '\'' +
+                ", isRoom=" + isRoom +
+                ", isFree=" + isFree +
+                ", conclusion='" + conclusion + '\'' +
+                ", description='" + description + '\'' +
+                ", bitmapPaths=" + bitmapPaths +
                 '}';
     }
 }

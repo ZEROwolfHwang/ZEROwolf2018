@@ -107,7 +107,7 @@ public interface HttpUtilsApi {
     Observable<HttpResultPolling> polling(@Field("polling") String polling);
 
     //@Headers({"Content-type:application/json;charset=UTF-8"})
-    @POST("/tasks")
+    @POST("task")
     Observable<HttpResultPolling> task(@Body RequestBody info);
 
 }

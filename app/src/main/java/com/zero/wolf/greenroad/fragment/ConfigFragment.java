@@ -1,6 +1,5 @@
 package com.zero.wolf.greenroad.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +18,7 @@ import com.zero.wolf.greenroad.bean.ConfigInfoBean;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
@@ -54,7 +54,7 @@ public class ConfigFragment extends Fragment {
     TextView mTvChangeLaneConfig;
 
     //@BindView(R.id.tv_operator_check_config)
-    private  static TextView mTvOperatorCheckConfig;
+    private static TextView mTvOperatorCheckConfig;
 
     //@BindView(R.id.tv_operator_login_config)
     private static TextView mTvOperatorLoginConfig;
@@ -81,6 +81,7 @@ public class ConfigFragment extends Fragment {
     private static TextView mText_table_12;
     private String mRoad_Q;
     private String mStation_Q;
+    private static String mScanTime;
 
     public ConfigFragment() {
         // Required empty public constructor
@@ -104,8 +105,8 @@ public class ConfigFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_config, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        mTvOperatorCheckConfig= (TextView) view.findViewById(R.id.tv_operator_check_config);
-        mTvOperatorLoginConfig= (TextView) view.findViewById(R.id.tv_operator_login_config);
+        mTvOperatorCheckConfig = (TextView) view.findViewById(R.id.tv_operator_check_config);
+        mTvOperatorLoginConfig = (TextView) view.findViewById(R.id.tv_operator_login_config);
 
         initView(view);
         initData();
@@ -127,6 +128,7 @@ public class ConfigFragment extends Fragment {
         mText_table_11 = (TextView) view.findViewById(R.id.text_table_11);
         mText_table_12 = (TextView) view.findViewById(R.id.text_table_12);
     }
+
     private void initData() {
         // TODO: 2017/8/14 拿到初始化注册时的注册信息
         List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
@@ -153,12 +155,14 @@ public class ConfigFragment extends Fragment {
 
     @OnClick(R.id.scan_qr_code)
     public void onClick(View view) {
+        mScanTime = TimeUtil.getCurrentTimeTos();
         Intent intent = new Intent(getActivity(), CaptureActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SCAN);
     }
 
     /**
      * 对扫描二维码后的信息进行解析
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -177,13 +181,19 @@ public class ConfigFragment extends Fragment {
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
                     ToastUtils.singleToast("解析结果:" + result);
+
+
                     String[] result_QrCode = result.split(";");
+                   /* for (int i = 0; i < result_QrCode.length; i++) {
+                        Logger.i(result_QrCode[i]);
+                    }*/
                     mTextExportNumber.setText(result_QrCode[0]);
 
-                    mText_table_1.setText(result_QrCode[1]);
+                    mText_table_1.post(() -> mText_table_1.setText(result_QrCode[1]));
                     mText_table_3.setText(result_QrCode[10]);
                     mText_table_5.setText(result_QrCode[14]);
                     //入口路段
+
                     mText_table_7.setText(result_QrCode[2]);
                     mText_table_9.setText(result_QrCode[3]);
                     mText_table_11.setText(result_QrCode[6]);
@@ -196,13 +206,13 @@ public class ConfigFragment extends Fragment {
                     mText_table_10.setText(result_QrCode[5]);
                     mText_table_12.setText(result_QrCode[9]);
 
+
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     ToastUtils.singleToast("解析二维码失败");
                 }
             }
         }
     }
-
 
 
     private void openSettingActivity() {
@@ -224,73 +234,53 @@ public class ConfigFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-      /*  if (context instanceof OnFragmentListener) {
-            mListener = (OnFragmentListener) context;
-            if (mTvOperatorCheckConfig != null && mTvOperatorLoginConfig != null) {
-                mListener.onFragmentInteraction(mTvOperatorCheckConfig.getText().toString().trim(),
-                        mTvOperatorLoginConfig.getText().toString().trim());
-            }
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
 
     public void setSubmitInfoListener(OnFragmentListener listener) {
-        String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
-        String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
 
-        String scan_01Q = mText_table_1.getText().toString().trim();
-        String scan_02Q = mText_table_2.getText().toString().trim();
-        String scan_03Q = mText_table_3.getText().toString().trim();
-        String scan_04Q = mText_table_4.getText().toString().trim();
-        String scan_05Q = mText_table_5.getText().toString().trim();
-        String scan_06Q = mText_table_6.getText().toString().trim();
-        String scan_07Q = mText_table_7.getText().toString().trim();
-        String scan_08Q = mText_table_8.getText().toString().trim();
-        String scan_09Q = mText_table_9.getText().toString().trim();
-        String scan_10Q = mText_table_10.getText().toString().trim();
-        String scan_11Q = mText_table_11.getText().toString().trim();
-        String scan_12Q = mText_table_12.getText().toString().trim();
+        if (mScanTime != null && !"".equals(mScanTime)) {
+            String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
+            String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
 
-        ConfigInfoBean bean = new ConfigInfoBean();
-        bean.setCheckOperator(checkOperator_Q);
-        bean.setLoginOperator(loginOperator_Q);
-        bean.setScan_01Q(scan_01Q);
-        bean.setScan_02Q(scan_02Q);
-        bean.setScan_03Q(scan_03Q);
-        bean.setScan_04Q(scan_04Q);
-        bean.setScan_05Q(scan_05Q);
-        bean.setScan_06Q(scan_06Q);
-        bean.setScan_07Q(scan_07Q);
-        bean.setScan_08Q(scan_08Q);
-        bean.setScan_09Q(scan_09Q);
-        bean.setScan_10Q(scan_10Q);
-        bean.setScan_11Q(scan_11Q);
-        bean.setScan_12Q(scan_12Q);
+            String scan_01Q = mText_table_1.getText().toString().trim();
+            String scan_02Q = mText_table_2.getText().toString().trim();
+            String scan_03Q = mText_table_3.getText().toString().trim();
+            String scan_04Q = mText_table_4.getText().toString().trim();
+            String scan_05Q = mText_table_5.getText().toString().trim();
+            String scan_06Q = mText_table_6.getText().toString().trim();
+            String scan_07Q = mText_table_7.getText().toString().trim();
+            String scan_08Q = mText_table_8.getText().toString().trim();
+            String scan_09Q = mText_table_9.getText().toString().trim();
+            String scan_10Q = mText_table_10.getText().toString().trim();
+            String scan_11Q = mText_table_11.getText().toString().trim();
+            String scan_12Q = mText_table_12.getText().toString().trim();
 
-        listener.onFragmentInteraction(bean);
+            ConfigInfoBean bean = new ConfigInfoBean();
+            bean.setCheckOperator(checkOperator_Q);
+            bean.setLoginOperator(loginOperator_Q);
+            bean.setScan_01Q(scan_01Q);
+            bean.setScan_02Q(scan_02Q);
+            bean.setScan_03Q(scan_03Q);
+            bean.setScan_04Q(scan_04Q);
+            bean.setScan_05Q(scan_05Q);
+            bean.setScan_06Q(scan_06Q);
+            bean.setScan_07Q(scan_07Q);
+            bean.setScan_08Q(scan_08Q);
+            bean.setScan_09Q(scan_09Q);
+            bean.setScan_10Q(scan_10Q);
+            bean.setScan_11Q(scan_11Q);
+            bean.setScan_12Q(scan_12Q);
+            bean.setScan_time(mScanTime);
+
+            listener.onFragmentInteraction(bean);
+        } else {
+            ToastUtils.singleToast("请扫描二维码");
+        }
     }
-
     public interface OnFragmentListener {
         void onFragmentInteraction(ConfigInfoBean bean);
     }

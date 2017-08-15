@@ -31,4 +31,30 @@ public class PathUtil {
         List<MultipartBody.Part> parts = builder.build().parts();
         return parts;
     }
+
+    /**
+     * 多张图片(7张)
+     * @param bitmapList
+     * @return
+     */
+    public static List<MultipartBody.Part> getBodyPart(List<String> bitmapList) {
+/*
+
+        ArrayList<String> list = new ArrayList<>();
+
+        for (int i = 0; i < bitmapList.size(); i++) {
+            list.add(bitmapList.get(i).getPath());
+        }
+*/
+
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+
+        for (int i = 0; i < bitmapList.size(); i++) {
+            File file = new File(bitmapList.get(i));//filePath 图片地址
+            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
+            builder.addFormDataPart("image" + i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
+        }
+        List<MultipartBody.Part> parts = builder.build().parts();
+        return parts;
+    }
 }

@@ -36,6 +36,7 @@ import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.adapter.MainViewPagerAdapter;
+import com.zero.wolf.greenroad.bean.ConfigInfoBean;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.fragment.ConfigFragment;
@@ -43,11 +44,13 @@ import com.zero.wolf.greenroad.fragment.DetailsFragment;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.https.PostInfo;
+import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
+import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -66,6 +69,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -123,6 +127,8 @@ public class MainActivity extends BaseActivity implements
     private String mLogin_operator_P;
     private String mCheck_operator_P;
     private DetailInfoBean mDetailInfoBean;
+    private ConfigInfoBean mConfigInfoBean;
+    private ArrayList<String> mPhotoPaths;
 
 
     @Override
@@ -188,65 +194,8 @@ public class MainActivity extends BaseActivity implements
     private void initData() {
 
         PermissionUtils.verifyStoragePermissions(mActivity);
-
-
     }
 
-    @OnClick(R.id.main_submit)
-    public void onClick(View view) {
-        SnackbarUtils.showShortSnackbar(view, "提交信息", Color.GREEN, Color.BLUE);
-        submit2Service();
-    }
-
-    private void submit2Service() {
-        ConfigFragment.newInstance().setSubmitInfoListener(bean -> {
-            Logger.i(bean.toString());
-            ToastUtils.singleToast(bean.toString());
-        });
-
-        DetailsFragment.newInstance().setSubmitInfoListener(bean -> {
-            mDetailInfoBean = bean;
-            Logger.i(mDetailInfoBean.toString());
-        });
-        ToastUtils.singleToast(mCheck_operator_P + mLogin_operator_P + mDetailInfoBean.toString());
-
-        PostInfo info = new PostInfo();
-        info.setCheck("苏三");
-        info.setCheck("璟四");
-        Gson gson=new Gson();
-        String route = gson.toJson(info);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-
-
-        HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
-        Observable<HttpResultPolling> observable = api.task(body);
-        observable.subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<HttpResultPolling>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(HttpResultPolling httpResultPolling) {
-                        int code = httpResultPolling.getCode();
-                        Logger.i(code+"");
-                    }
-                });
-    }
 
     private void initView() {
 
@@ -718,12 +667,139 @@ public class MainActivity extends BaseActivity implements
         switch (item.getItemId()) {
             case R.id.caogao:
                 ToastUtils.singleToast("实现保存草稿");
+                saveDraft();
                 break;
 
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.main_submit)
+    public void onClick(View view) {
+        SnackbarUtils.showShortSnackbar(view, "提交信息", Color.GREEN, Color.BLUE);
+        submit2Service();
+    }
+
+    private void submit2Service() {
+        ConfigFragment.newInstance().setSubmitInfoListener(bean -> {
+            mConfigInfoBean = bean;
+            Logger.i(mConfigInfoBean.toString());
+            ToastUtils.singleToast(mConfigInfoBean.toString());
+        });
+
+        DetailsFragment.newInstance().setSubmitInfoListener((bean) -> {
+            mDetailInfoBean = bean;
+            List<String> bitmapList = mDetailInfoBean.getBitmapPaths();
+
+            if (bitmapList != null && bitmapList.size() != 0) {
+                List<MultipartBody.Part> parts = PathUtil
+                        .getBodyPart(bitmapList);
+                Logger.i(mDetailInfoBean.toString());
+                Logger.i(parts.toString());
+            }
+        });
+
+        ToastUtils.singleToast(mConfigInfoBean.toString() + mDetailInfoBean.toString());
+
+        PostInfo info = new PostInfo();
+        info.setCheck("苏三");
+        info.setLogin("璟四");
+        Gson gson = new Gson();
+        String route = gson.toJson(info);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+
+        HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
+
+        Logger.i("json  string" + route);
+
+
+        Observable<HttpResultPolling> observable = api.task(body);
+        observable.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<HttpResultPolling>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(HttpResultPolling httpResultPolling) {
+                        int code = httpResultPolling.getCode();
+                        Logger.i(code + "");
+                    }
+                });
+    }
+
+    /**
+     * 保存草稿
+     * 1.进入草稿的activity并保存
+     * 2.将数据保存到数据库
+     */
+    private void saveDraft() {
+
+        if (mConfigInfoBean == null) {
+            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存");
+        }
+        if (mConfigInfoBean.getScan_time() == null||
+                !"".equals(mConfigInfoBean.getScan_time())) {
+            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存");
+        } else {
+            List<SupportDraft> supportDrafts = DataSupport.where("scan_time=?",
+                    mConfigInfoBean.getScan_time()).find(SupportDraft.class);
+
+            //   DraftActivity.actionStart(this, mConfigInfoBean, mDetailInfoBean, mPhotoPaths);
+            if (supportDrafts.size() == 0) {
+
+                SupportDraft draft = new SupportDraft();
+
+                draft.setBitmapPaths(mDetailInfoBean.getBitmapPaths());
+                draft.setNumber(mDetailInfoBean.getNumber());
+                draft.setColor(mDetailInfoBean.getColor());
+                draft.setIsFree(mDetailInfoBean.getIsFree());
+                draft.setIsRoom(mDetailInfoBean.getIsRoom());
+                draft.setGoods(mDetailInfoBean.getGoods());
+                draft.setConclusion(mDetailInfoBean.getConclusion());
+                draft.setDescription(mDetailInfoBean.getDescription());
+
+//        draft.setRoad(mConfigInfoBean.get);
+                draft.setCheckOperator(mConfigInfoBean.getCheckOperator());
+                draft.setLoginOperator(mConfigInfoBean.getLoginOperator());
+                draft.setScan_01Q(mConfigInfoBean.getScan_01Q());
+                draft.setScan_02Q(mConfigInfoBean.getScan_02Q());
+                draft.setScan_03Q(mConfigInfoBean.getScan_03Q());
+                draft.setScan_04Q(mConfigInfoBean.getScan_04Q());
+                draft.setScan_05Q(mConfigInfoBean.getScan_05Q());
+                draft.setScan_06Q(mConfigInfoBean.getScan_06Q());
+                draft.setScan_07Q(mConfigInfoBean.getScan_07Q());
+                draft.setScan_08Q(mConfigInfoBean.getScan_08Q());
+                draft.setScan_09Q(mConfigInfoBean.getScan_09Q());
+                draft.setScan_10Q(mConfigInfoBean.getScan_10Q());
+                draft.setScan_11Q(mConfigInfoBean.getScan_11Q());
+                draft.setScan_12Q(mConfigInfoBean.getScan_12Q());
+                draft.save();
+                List<SupportDraft> draftList = DataSupport.findAll(SupportDraft.class);
+                Logger.i(draftList.get(0).toString());
+
+            }else{
+                ToastUtils.singleToast("该车信息已经保存为草稿");
+            }
+        }
+
     }
 
 

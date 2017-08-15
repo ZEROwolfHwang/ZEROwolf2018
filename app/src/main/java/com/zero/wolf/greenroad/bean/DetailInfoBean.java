@@ -1,10 +1,12 @@
 package com.zero.wolf.greenroad.bean;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/8/14.
  */
 
-public class DetailInfoBean {
+public class DetailInfoBean{
     private String color;
     private String number;
     private String goods;
@@ -12,6 +14,19 @@ public class DetailInfoBean {
     private int isFree;
     private String conclusion;
     private String description;
+    private List<String> bitmapPaths;
+
+    public DetailInfoBean() {
+    }
+
+
+    public List<String> getBitmapPaths() {
+        return bitmapPaths;
+    }
+
+    public void setBitmapPaths(List<String> bitmapPaths) {
+        this.bitmapPaths = bitmapPaths;
+    }
 
     public String getColor() {
         return color;
@@ -81,4 +96,6 @@ public class DetailInfoBean {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+
 }

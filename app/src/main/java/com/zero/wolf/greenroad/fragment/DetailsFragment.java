@@ -276,6 +276,13 @@ public class DetailsFragment extends Fragment {
 
     public void setSubmitInfoListener(OnFragmentListener listener) {
 
+        ArrayList<String> bitmap_path = new ArrayList<>();
+        if (mMyBitmaps != null) {
+            for (int i = 0; i < mMyBitmaps.size(); i++) {
+                bitmap_path.add(mMyBitmaps.get(i).getPath());
+            }
+        }
+
         String conclusion = mConfigConclusionText.getText().toString().trim();
         String description = mConfigDescriptionText.getText().toString().trim();
         String number = mTvChangeNumberDetail.getText().toString().trim();
@@ -291,7 +298,13 @@ public class DetailsFragment extends Fragment {
         bean.setGoods(goods);
         bean.setIsRoom(isRoom ? 0 : 1);
         bean.setIsFree(isFree ? 0 : 1);
+        bean.setBitmapPaths(bitmap_path);
 
+      /*  //监听图片路径,方便图文上传
+        ArrayList<String> photoPath = new ArrayList<>();
+        for (int i = 0; i < mMyBitmaps.size(); i++) {
+            photoPath.add(mMyBitmaps.get(i).getPath());
+        }*/
         listener.onFragmentInteraction(bean);
     }
 

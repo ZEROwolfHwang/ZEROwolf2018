@@ -11,7 +11,7 @@
 
         <item name="custom_attr_app_bg">@drawable/bg_app_day</item>
         <item name="custom_shape_static">@drawable/shape_static_day</item>
-        <item name="custom_white_black_text">@color/black</item>
+        <item name="custom_white_black_text">@color/change_white_black_text_day</item>
         <item name="custom_my_colorPrimary">@color/toolbar_color_day</item>
         <item name="custom_company_name_text">@color/custom_company_day</item>
         <item name="custom_main_shut_selector_btn">@drawable/main_shut_selector_day</item>
@@ -92,7 +92,7 @@
 
         <item name="custom_attr_app_bg">@drawable/bg_app_night</item>
         <item name="custom_shape_static">@drawable/shape_static_night</item>
-        <item name="custom_white_black_text">@color/white</item>
+        <item name="custom_white_black_text">@color/change_white_black_text_night</item>
         <item name="custom_my_colorPrimary">@color/toolbar_color_night</item>
         <item name="custom_company_name_text">@color/custom_company_night</item>
         <item name="custom_main_shut_selector_btn">@drawable/main_shut_selector_night</item>
@@ -175,7 +175,7 @@
     <color name="shape_line_rect_night">#cfcffa</color>
 
     <!-- 车辆计数数字(小方框)的背景-->
-    <color name="text_view_math_number_night">#02021a</color>
+    <color name="text_view_math_number_night">#0c0c54</color>
     <color name="text_view_math_number_day">#4ec2cf</color>
 
     <!--侧滑菜单的头布局中文字的颜色-->
@@ -191,7 +191,7 @@
 
     <!--fragment 中站名,车牌号,货物三组字段的字体颜色-->
     <color name="fragment_static_text_day">#00007c</color>
-    <color name="fragment_static_text_night">#68aace</color>
+    <color name="fragment_static_text_night">#51c2ff</color>
 
     <!--fragment 中三组RecyclerView的字体颜色-->
     <color name="item_text_color_day">#0075ab</color>
@@ -200,11 +200,5 @@
     <color name="item_text_color_end_day">#556376</color>
     <color name="item_text_color_end_night">#3f8b5e</color>
 
-    <!--设置界面的条目背景-->
-    <color name="setting_bg_text_item_day">#c8371cc7</color>
-    <color name="setting_bg_text_item_night">#cea3a3ae</color>
-
-    <color name="setting_text_color_day">#222226</color>
-    <color name="setting_text_color_night">#ffffff</color>
 
 </resources>

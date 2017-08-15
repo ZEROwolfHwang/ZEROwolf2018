@@ -34,14 +34,29 @@
 
     <color name="setting_bg_text_item">#7dafd1e1</color>
     <!--自定义输入法的按键背景样式-->
-    <color name="key_bg_night">#4b95a1</color>
+    <color name="key_bg_night">#3b72df</color>
     <color name="key_bg_day">#4c42d9</color>
-    <color name="number_fragment_key_text_night">#b0abf4</color>
+
+    <color name="number_fragment_key_text_night">#dedbff</color>
     <color name="number_fragment_key_text_day">#27a5ff</color>
 
     <!--文本框的边框颜色-->
-    <color name="text_box_bg_day">#2c2c84</color>
+    <color name="text_box_bg_day">#a9f9ff</color>
     <color name="text_box_bg_night">#41afce</color>
 
+    <!--字体背景样式的渐变色-->
+    <color name="custom_bg_text_big_shape_night">#6969ff</color>
+    <color name="custom_bg_text_big_shape_day">#aef7fd</color>
+
+    <!--设置界面的条目背景-->
+    <color name="setting_bg_text_item_day">#c8371cc7</color>
+    <color name="setting_bg_text_item_night">#cea3a3ae</color>
+
+    <color name="setting_text_color_day">#222226</color>
+    <color name="setting_text_color_night">#ffffff</color>
+
+    <!--改变的字体的颜色-->
+    <color name="change_white_black_text_day">#0026ff</color>
+    <color name="change_white_black_text_night">#00c5cf</color>
 
 </resources>

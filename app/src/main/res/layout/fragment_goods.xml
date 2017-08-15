@@ -35,23 +35,33 @@
                 android:textSize="@dimen/text16"
                 android:gravity="center"
                 android:layout_height="match_parent"
-                android:layout_width="0dp"/>
+                android:layout_width="0dp"/>-->
 
+ <EditText
+                    android:id="@+id/goods_edit_text1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:focusable="true"
+                    android:textColor="@color/white_light"
+                    android:textSize="@dimen/text22"/>
 
             <ImageView
                 android:layout_width="4dp"
                 android:layout_height="30dp"
                 android:focusable="false"
-                android:background="@drawable/shape_static_night"/>-->
+                android:background="@drawable/shape_static_night"/>
 
             <FrameLayout
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:layout_height="match_parent">
                 <EditText
-                    android:id="@+id/goods_edit_text"
+                    android:id="@+id/goods_edit_text2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

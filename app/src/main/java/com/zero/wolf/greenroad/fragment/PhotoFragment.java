@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,17 +56,17 @@ public class PhotoFragment extends Fragment {
     private static final int CHOOSE_CAR_ALL = 1 * 994;
 
 
+    Unbinder unbinder;
     @BindView(R.id.ll_sanzheng)
     LinearLayout mIvCarNumber;
     @BindView(R.id.ll_cheshenchexing)
     LinearLayout mIvCarBody;
     @BindView(R.id.ll_huowu)
     LinearLayout mIvCarGoods;
-    Unbinder unbinder;
     @BindView(R.id.photo_iv_camera)
     ImageView mPhotoIvCamera;
     @BindView(R.id.button_selected_all)
-    Button mButtonSelectedAll;
+    ImageView mButtonSelectedAll;
 
 
     private String mParam1;
@@ -307,7 +306,7 @@ public class PhotoFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("data", "onActivityResult: " + data);
         //关闭相机之后获得时间；2；
-      //  mRlProgressBar.setVisibility(View.VISIBLE);
+        //  mRlProgressBar.setVisibility(View.VISIBLE);
         // pb.setVisibility(View.VISIBLE);
         systemTime2 = getSystemTime();
 
@@ -354,47 +353,47 @@ public class PhotoFragment extends Fragment {
                 Drawable drawable = getResources().getDrawable(R.drawable.demo);
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
                 Bitmap bitmap1 = bitmapDrawable.getBitmap();
+
                 new Thread(() -> {
 
-                    if (mSelectList.size() < 7) {
-                        for (int i = 0; i < 7; i++) {
-                            mRoundedImageViews[i].setImageBitmap(bitmap1);
-                        }
-                    }
-                    for (int i = 0; i < mSelectList.size(); i++) {
-                        String photo_path = mSelectList.get(i).getPath();
-                        Logger.i(photo_path);
+                    for (int i = 0; i < 7; i++) {
+                        if (i < mSelectList.size()) {
+
+                            String photo_path = mSelectList.get(i).getPath();
+                            Logger.i(photo_path);
 //                    mImgSanzheng_1.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(0).getBm()));
 //                    mImgSanzheng_2.post(() -> mImgSanzheng_2.setImageBitmap(finalList.get(1).getBm()));
 //                    mImgSanzheng_3.post(() -> mImgSanzheng_3.setImageBitmap(finalList.get(2).getBm()));
-                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
-                        MyBitmap myBitmap = new MyBitmap(photo_path, bitmap);
-                        if (i == 0) {
-                            myBitmap.setInfo("三证-1");
-                        } else if (i == 1) {
-                            myBitmap.setInfo("三证-2");
-                        } else if (i == 2) {
-                            myBitmap.setInfo("三证-3");
-                        } else if (i == 3) {
-                            myBitmap.setInfo("车身车型-1");
-                        } else if (i == 4) {
-                            myBitmap.setInfo("车身车型-2");
-                        } else if (i == 5) {
-                            myBitmap.setInfo("货物-1");
-                        } else if (i == 6) {
-                            myBitmap.setInfo("货物-2");
+                            Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                            MyBitmap myBitmap = new MyBitmap(photo_path, bitmap);
+                            if (i == 0) {
+                                myBitmap.setInfo("三证-1");
+                            } else if (i == 1) {
+                                myBitmap.setInfo("三证-2");
+                            } else if (i == 2) {
+                                myBitmap.setInfo("三证-3");
+                            } else if (i == 3) {
+                                myBitmap.setInfo("车身车型-1");
+                            } else if (i == 4) {
+                                myBitmap.setInfo("车身车型-2");
+                            } else if (i == 5) {
+                                myBitmap.setInfo("货物-1");
+                            } else if (i == 6) {
+                                myBitmap.setInfo("货物-2");
+                            }
+                            mMyBitmapList.add(myBitmap);
+                            int finalI = i;
+                            mRoundedImageViews[i].post(() -> {
+                                mRoundedImageViews[finalI].setImageBitmap(bitmap);
+                            });
+                        } else {
+                            int finalI1 = i;
+                            mRoundedImageViews[i].post(() -> mRoundedImageViews[finalI1].
+                                    setImageBitmap(bitmap1));
+
                         }
-                        mMyBitmapList.add(myBitmap);
-                        int finalI = i;
-                        mRoundedImageViews[i].post(() -> {
-                            mRoundedImageViews[finalI].setImageBitmap(bitmap);
-                            //mRlProgressBar.setVisibility(View.GONE);
-                        });
-                      //  mRlProgressBar.setVisibility(View.GONE);
-                   // mRlProgressBar.setVisibility(View.GONE);
                     }
                 }).start();
-              // mRlProgressBar.setVisibility(View.GONE);
                 break;
 
 
@@ -640,7 +639,9 @@ public class PhotoFragment extends Fragment {
     }
 
     public static void setBitmapListListener(BitmapListListener listener) {
-        listener.BitmapListener(mMyBitmapList);
+        if (mMyBitmapList != null && mMyBitmapList.size() != 0) {
+            listener.BitmapListener(mMyBitmapList);
+        }
     }
 
 

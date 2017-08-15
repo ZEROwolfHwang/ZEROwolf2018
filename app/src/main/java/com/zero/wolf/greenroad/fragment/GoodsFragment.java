@@ -201,7 +201,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             }
         }
 
-        mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
+        mEditText = (EditText) view.findViewById(R.id.goods_edit_text2);
 
         mEditText.setText(mGoods_i);
         mEditText.setSelection(mGoods_i.length());
@@ -249,18 +249,35 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         //mCar_goods = mEditText.getText().toString();
         String goodString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearTextGoods);
         String[] split = goodString.split(";");
+        Logger.i("" + split.length + "////////////////" + split.toString());
         if (split.length == 1) {
             return;
         }
-        if (goodString.endsWith(";")) {
+        if ("".equals(goodString)) {
             mGoodsAdapter.updateListView(mGoodsArrayList);
+        } else if (split.length == 1) {
+            if (split[0].endsWith(";")) {
+                mGoodsAdapter.updateListView(mGoodsArrayList);
+            } else {
+                String last_edit = split[split.length - 1];
+                List<SerializableGoods> fileterList = PingYinUtil.getInstance()
+                        .search_goods(mGoodsArrayList, last_edit);
+                Logger.i(fileterList.toString());
+                mGoodsAdapter.updateListView(fileterList);
+            }
+        } else {
+            if (split[split.length - 1].endsWith(";")) {
+                mGoodsAdapter.updateListView(mGoodsArrayList);
+            } else {
+                String last_edit = split[split.length - 1];
+                List<SerializableGoods> fileterList = PingYinUtil.getInstance()
+                        .search_goods(mGoodsArrayList, last_edit);
+                Logger.i(fileterList.toString());
+                mGoodsAdapter.updateListView(fileterList);
+            }
         }
-        String last_edit = split[split.length - 1];
+
         if (goodString.length() > 0) {
-            List<SerializableGoods> fileterList = PingYinUtil.getInstance()
-                    .search_goods(mGoodsArrayList, last_edit);
-            Logger.i(fileterList.toString());
-            mGoodsAdapter.updateListView(fileterList);
             //mAdapter.updateData(mContacts);
         } else {
             if (mGoodsAdapter != null) {
@@ -467,24 +484,23 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     }
 
 
-    @OnClick({R.id.goods_edit_text,R.id.goods_img_clear_text})
+    @OnClick({R.id.goods_edit_text2, R.id.goods_img_clear_text})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.goods_edit_text:
+            case R.id.goods_edit_text2:
                 String goodsEdit = mEditText.getText().toString().trim();
                 if (goodsEdit != null && !"".equals(goodsEdit)) {
                     mEditText.setSelection(goodsEdit.length());
                     mIvClearTextGoods.setVisibility(View.VISIBLE);
-                    mGoodsBuilder.delete(0, mGoodsBuilder.length());
                 }
                 break;
             case R.id.goods_img_clear_text:
                 mEditText.setText("");
                 if (mGoodsBuilder != null && mGoodsBuilder.length() != 0) {
                     mGoodsBuilder.delete(0, mGoodsBuilder.length());
+                    mGoodsAdapter.updateListView(mGoodsArrayList);
                 }
                 break;
-
             default:
                 break;
         }

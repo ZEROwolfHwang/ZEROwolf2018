@@ -1,6 +1,8 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,11 +71,12 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     @Override
     public int getItemCount() {
-        if (mBitmapList.size() == 0) {
+     /*   if (mBitmapList == null && mBitmapList.size() == 0) {
             return 7;
         } else {
             return mBitmapList.size();
-        }
+        }*/
+        return 7;
     }
 
 
@@ -90,12 +93,68 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
         }
 
         public void bindHolder(int position) {
-            if (mBitmapList != null && mBitmapList.size() != 0) {
+            Bitmap bitmap = null;
+            if (mBitmapList != null) {
 
-                MyBitmap myBitmap = mBitmapList.get(position);
-                if (myBitmap != null) {
-                    mDetailRecyclerImg.setImageBitmap(myBitmap.getBm());
-                    mDetailRecyclerText.setText(myBitmap.getInfo());
+                if (position < mBitmapList.size()) {
+                    MyBitmap myBitmap = mBitmapList.get(position);
+                    if (myBitmap != null) {
+                        mDetailRecyclerImg.setImageBitmap(myBitmap.getBm());
+                        mDetailRecyclerText.setText(myBitmap.getInfo());
+                    }
+
+                } else {
+                    if (bitmap == null) {
+                        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
+                    }
+                    mDetailRecyclerImg.setImageBitmap(bitmap);
+                    if (position == 0) {
+                        mDetailRecyclerText.setText("三证1");
+                    } else if (position == 1) {
+
+                        mDetailRecyclerText.setText("三证2");
+                    } else if (position == 2) {
+
+                        mDetailRecyclerText.setText("三证3");
+                    } else if (position == 3) {
+
+                        mDetailRecyclerText.setText("车身车型1");
+                    } else if (position == 4) {
+
+                        mDetailRecyclerText.setText("车身车型2");
+                    } else if (position == 5) {
+
+                        mDetailRecyclerText.setText("货物1");
+                    } else if (position == 6) {
+
+                        mDetailRecyclerText.setText("货物2");
+                    }
+                }
+            } else {
+                if (bitmap == null) {
+                    bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
+                }
+                mDetailRecyclerImg.setImageBitmap(bitmap);
+                if (position == 0) {
+                    mDetailRecyclerText.setText("三证1");
+                } else if (position == 1) {
+
+                    mDetailRecyclerText.setText("三证2");
+                } else if (position == 2) {
+
+                    mDetailRecyclerText.setText("三证3");
+                } else if (position == 3) {
+
+                    mDetailRecyclerText.setText("车身车型1");
+                } else if (position == 4) {
+
+                    mDetailRecyclerText.setText("车身车型2");
+                } else if (position == 5) {
+
+                    mDetailRecyclerText.setText("货物1");
+                } else if (position == 6) {
+
+                    mDetailRecyclerText.setText("货物2");
                 }
             }
 
