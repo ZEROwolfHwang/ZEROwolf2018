@@ -71,21 +71,21 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
     public class SureGoodsHolder extends RecyclerView.ViewHolder {
 
         private final TextView scientific_name;
-        private final TextView alias;
+       // private final TextView alias;
         private final ImageView mImageView;
 
         public SureGoodsHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.iv_recycler_goods);
             scientific_name = (TextView) itemView.findViewById(R.id.tv_sure_recycler_scientific_name);
-            alias = (TextView) itemView.findViewById(R.id.tv_sure_recycler_alias);
+           // alias = (TextView) itemView.findViewById(R.id.tv_sure_recycler_alias);
         }
 
         public void bindHolder(final SerializableGoods model, int position) {
 
             String scientificname = model.getScientific_name();
             scientific_name.setText(scientificname);
-            alias.setText(model.getAlias());
+         //   alias.setText(model.getAlias());
 
             String bitmapUrl = model.getBitmapUrl();
             Bitmap bitmap = getImageFromAssetsFile(bitmapUrl);

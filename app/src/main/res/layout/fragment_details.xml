@@ -153,7 +153,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin70dp"
+        android:layout_height="@dimen/layout_margin80dp"
         android:layout_marginTop="@dimen/layout_margin5dp"
         android:orientation="vertical">
 
@@ -169,9 +169,10 @@
             android:id="@+id/config_conclusion_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:background="?attr/text_box_bg"
-            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/layout_margin5dp"
+            android:paddingRight="@dimen/layout_margin5dp"
+            android:gravity="top|left"
             android:maxLines="2"
             android:textColor="?attr/custom_white_black_text"
             android:textSize="@dimen/text18"/>
@@ -182,7 +183,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:layout_marginTop="15dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -198,9 +199,10 @@
             android:id="@+id/config_description_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:background="?attr/text_box_bg"
-            android:gravity="center_vertical"
+            android:gravity="top|left"
+            android:paddingLeft="@dimen/layout_margin5dp"
+            android:paddingRight="@dimen/layout_margin5dp"
             android:maxLines="3"
             android:textColor="?attr/custom_white_black_text"
             android:textSize="@dimen/text18"/>

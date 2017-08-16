@@ -13,12 +13,12 @@ import com.orhanobut.logger.Logger;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.DraftActivity;
 import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.bean.ConfigInfoBean;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
-import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
@@ -50,8 +50,7 @@ public class ConfigFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.tv_change_station_config)
     TextView mTvChangeStationConfig;
-    @BindView(R.id.tv_change_lane_config)
-    TextView mTvChangeLaneConfig;
+
 
     //@BindView(R.id.tv_operator_check_config)
     private static TextView mTvOperatorCheckConfig;
@@ -67,6 +66,7 @@ public class ConfigFragment extends Fragment {
 
     private OnFragmentListener mListener;
     private static TextView mTextExportNumber;
+    private static TextView mTvChangeLaneConfig;
     private static TextView mText_table_1;
     private static TextView mText_table_2;
     private static TextView mText_table_3;
@@ -81,7 +81,8 @@ public class ConfigFragment extends Fragment {
     private static TextView mText_table_12;
     private String mRoad_Q;
     private String mStation_Q;
-    private static String mScanTime;
+    private TextView mTextDraft;
+    private TextView mTextSubmit;
 
     public ConfigFragment() {
         // Required empty public constructor
@@ -114,6 +115,12 @@ public class ConfigFragment extends Fragment {
     }
 
     private void initView(View view) {
+
+        mTextDraft = (TextView) view.findViewById(R.id.math_number_main_layout).findViewById(R.id.tv_math_number_main_has);
+        mTextSubmit = (TextView) view.findViewById(R.id.math_number_main_layout).findViewById(R.id.tv_math_number_main_has);
+
+
+        mTvChangeLaneConfig= (TextView) view.findViewById(R.id.tv_change_lane_config);
         mTextExportNumber = (TextView) view.findViewById(R.id.export_number);
         mText_table_1 = (TextView) view.findViewById(R.id.text_table_1);
         mText_table_2 = (TextView) view.findViewById(R.id.text_table_2);
@@ -153,11 +160,25 @@ public class ConfigFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.scan_qr_code)
+    @OnClick({R.id.scan_qr_code, R.id.tv_math_number_main_has,
+            R.id.tv_math_number_main_has_not})
     public void onClick(View view) {
-        mScanTime = TimeUtil.getCurrentTimeTos();
-        Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SCAN);
+        switch (view.getId()) {
+            case R.id.scan_qr_code:
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_SCAN);
+                break;
+            case R.id.tv_math_number_main_has:
+
+                break;
+            case R.id.tv_math_number_main_has_not:
+                Intent intent1 = new Intent(getActivity(), DraftActivity.class);
+                startActivity(intent1);
+                break;
+
+            default:
+                break;
+        }
     }
 
     /**
@@ -242,9 +263,12 @@ public class ConfigFragment extends Fragment {
 
     public void setSubmitInfoListener(OnFragmentListener listener) {
 
-        if (mScanTime != null && !"".equals(mScanTime)) {
+        String scanCode = mTextExportNumber.getText().toString().trim();
+
+        if (scanCode != null && !"".equals(scanCode)) {
             String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
             String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
+            String lane_Q = mTvChangeLaneConfig.getText().toString().trim();
 
             String scan_01Q = mText_table_1.getText().toString().trim();
             String scan_02Q = mText_table_2.getText().toString().trim();
@@ -260,8 +284,12 @@ public class ConfigFragment extends Fragment {
             String scan_12Q = mText_table_12.getText().toString().trim();
 
             ConfigInfoBean bean = new ConfigInfoBean();
+            bean.setRoad(mRoad_Q);
+            bean.setStation(mStation_Q);
+            bean.setLane(lane_Q);
             bean.setCheckOperator(checkOperator_Q);
             bean.setLoginOperator(loginOperator_Q);
+            bean.setScan_code(scanCode);
             bean.setScan_01Q(scan_01Q);
             bean.setScan_02Q(scan_02Q);
             bean.setScan_03Q(scan_03Q);
@@ -274,13 +302,14 @@ public class ConfigFragment extends Fragment {
             bean.setScan_10Q(scan_10Q);
             bean.setScan_11Q(scan_11Q);
             bean.setScan_12Q(scan_12Q);
-            bean.setScan_time(mScanTime);
 
             listener.onFragmentInteraction(bean);
         } else {
             ToastUtils.singleToast("请扫描二维码");
+            return;
         }
     }
+
     public interface OnFragmentListener {
         void onFragmentInteraction(ConfigInfoBean bean);
     }

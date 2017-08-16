@@ -18,7 +18,7 @@ public class SupportDraft extends DataSupport {
     private String lane;
     private String road;
 
-    private String scan_time;
+    private String scan_code;
     private String scan_01Q;
     private String scan_02Q;
     private String scan_03Q;
@@ -40,12 +40,12 @@ public class SupportDraft extends DataSupport {
     private String description;
     private List<String> bitmapPaths;
 
-    public String getScan_time() {
-        return scan_time;
+    public String getScan_code() {
+        return scan_code;
     }
 
-    public void setScan_time(String scan_time) {
-        this.scan_time = scan_time;
+    public void setScan_code(String scan_code) {
+        this.scan_code = scan_code;
     }
 
     public String getDraftTime() {

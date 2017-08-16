@@ -1,22 +1,20 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
+import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.SerializableGoods;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
@@ -25,7 +23,6 @@ import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
-import com.zero.wolf.greenroad.tools.ViewUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +31,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -48,8 +44,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     Unbinder unbinder;
 
     private static EditText mEditText;
-    @BindView(R.id.goods_img_clear_text)
-    ImageView mIvClearTextGoods;
+
     @BindView(R.id.recycler_view_goods_sure)
     RecyclerView mRecyclerView;
 
@@ -201,7 +196,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             }
         }
 
-        mEditText = (EditText) view.findViewById(R.id.goods_edit_text2);
+        mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
 
         mEditText.setText(mGoods_i);
         mEditText.setSelection(mGoods_i.length());
@@ -215,8 +210,8 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             PinyinComparator pinyinComparator = new PinyinComparator();
             Collections.sort(mGoodsArrayList, pinyinComparator);// 根据a-z进行排序源数据
         }
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
+        manager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
 
         mGoodsAdapter = new SureGoodsAdapter(getContext(), mGoodsArrayList, new SureGoodsAdapter.onItemClick() {
@@ -233,8 +228,8 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 refreshView();
             }
         });
-        mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),
-                LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
+        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),
+                3));
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
     }
@@ -246,16 +241,20 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
     @Override
     public void afterTextChanged(Editable editable) {
-        //mCar_goods = mEditText.getText().toString();
-        String goodString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearTextGoods);
+        String goodString = mEditText.getText().toString().trim();
+        if (mGoodsBuilder != null) {
+            mGoodsBuilder.delete(0, mGoodsBuilder.length());
+            mGoodsBuilder.append(goodString);
+        }
         String[] split = goodString.split(";");
         Logger.i("" + split.length + "////////////////" + split.toString());
-        if (split.length == 1) {
-            return;
+        for (int i = 0; i < split.length; i++) {
+            Logger.i("~~~~~~~~~~~~~" + split[i]);
         }
+
         if ("".equals(goodString)) {
             mGoodsAdapter.updateListView(mGoodsArrayList);
-        } else if (split.length == 1) {
+        }/* else if (split.length == 1) {
             if (split[0].endsWith(";")) {
                 mGoodsAdapter.updateListView(mGoodsArrayList);
             } else {
@@ -265,14 +264,20 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 Logger.i(fileterList.toString());
                 mGoodsAdapter.updateListView(fileterList);
             }
-        } else {
+        }*/ else {
+                Logger.i(split[split.length - 1]+"********");
             if (split[split.length - 1].endsWith(";")) {
+                Logger.i(split[split.length - 1]+"********");
                 mGoodsAdapter.updateListView(mGoodsArrayList);
             } else {
                 String last_edit = split[split.length - 1];
+                Logger.i(last_edit);
                 List<SerializableGoods> fileterList = PingYinUtil.getInstance()
                         .search_goods(mGoodsArrayList, last_edit);
-                Logger.i(fileterList.toString());
+                for (int i = 0; i < fileterList.size(); i++) {
+                    Logger.i(fileterList.get(i).getScientific_name());
+                    Logger.i(fileterList.get(i).getSimpleSpell());
+                }
                 mGoodsAdapter.updateListView(fileterList);
             }
         }
@@ -415,47 +420,9 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-
-    }
-
- /*   @Override
-    public void afterTextChanged(Editable editable) {
-        mCar_goods = mEditText.getText().toString();
-        String stationString = ViewUtils.showAndDismiss_clear_text(mEditText, mIvClearTextGoods);
-        if (stationString.length() > 0) {
-            List<SortModel> fileterList = PingYinUtil.getInstance()
-                    .search_goods(sGoodsList, stationString);
-            Logger.i(fileterList.toString());
-            mGoodsAdapter.updateListView(fileterList);
-            //mAdapter.updateData(mContacts);
-        } else {
-            if (mGoodsAdapter != null) {
-                mGoodsAdapter.updateListView(sGoodsList);
-            }
-        }
-
-    }*/
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-
-    @Override
     public void onPause() {
         super.onPause();
-     /*   new Thread(() -> {
-            ACache.get(getActivity()).put(ACache.GOODSACACHE, mGoodsArrayList);
-        }).start();
-        ArrayList<SerializableGoods> asObject = (ArrayList<SerializableGoods>) ACache.get(getActivity()).getAsObject(ACache.GOODSACACHE);
-        for (int i = 0; i < asObject.size(); i++) {
-            Logger.i(asObject.get(i).toString());
-        }*/
+
         ACache.get(getActivity()).put(ACache.GOODSACACHE, mGoodsArrayList);
 
         new Thread(() -> {
@@ -472,37 +439,22 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
 
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
-
-
-    @OnClick({R.id.goods_edit_text2, R.id.goods_img_clear_text})
+    /*@OnClick(R.id.goods_edit_text)
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.goods_edit_text2:
+            case R.id.goods_edit_text:
                 String goodsEdit = mEditText.getText().toString().trim();
                 if (goodsEdit != null && !"".equals(goodsEdit)) {
                     mEditText.setSelection(goodsEdit.length());
-                    mIvClearTextGoods.setVisibility(View.VISIBLE);
-                }
-                break;
-            case R.id.goods_img_clear_text:
-                mEditText.setText("");
-                if (mGoodsBuilder != null && mGoodsBuilder.length() != 0) {
-                    mGoodsBuilder.delete(0, mGoodsBuilder.length());
-                    mGoodsAdapter.updateListView(mGoodsArrayList);
                 }
                 break;
             default:
                 break;
         }
-    }
+    }*/
 }

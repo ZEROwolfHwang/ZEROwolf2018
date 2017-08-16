@@ -1,5 +1,7 @@
 package com.zero.wolf.greenroad.bean;
 
+import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+
 import java.util.Comparator;
 
 /**
@@ -12,10 +14,10 @@ public class SortPreviewTime implements Comparator{
 
         int flag2=0;
 
-        SerializablePreview preview1 = (SerializablePreview) o1;
-        SerializablePreview preview2 = (SerializablePreview) o2;
+        SupportDraft preview1 = (SupportDraft) o1;
+        SupportDraft preview2 = (SupportDraft) o2;
 
-        int flag = preview1.getShutTime().compareTo(preview2.getShutTime());
+        int flag = preview1.getDraftTime().compareTo(preview2.getDraftTime());
 
         //倒序
         if(flag>0){

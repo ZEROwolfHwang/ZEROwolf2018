@@ -11,12 +11,9 @@
         android:layout_width="100dp"
         android:layout_height="120dp"
         android:src="?attr/custom_car_number_show"
-
-
         android:layout_marginTop="@dimen/layout_margin5dp"
-
-        app:border_color="@android:color/black"
-        app:border_width="2dp"
+        app:border_color="?attr/custom_white_black_text"
+        app:border_width="3dp"
         app:leftBottom_corner_radius="20dp"
         app:leftTop_corner_radius="0dp"
         app:rightBottom_corner_radius="0dp"

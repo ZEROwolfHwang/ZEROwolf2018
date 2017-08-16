@@ -14,11 +14,7 @@
             android:icon="@drawable/post_not_send"
             android:title="@string/post_upload_not">
         </item>
-        <item
-            android:id="@+id/nav_preview"
-            android:icon="@drawable/nav_preview"
-            android:title="@string/nav_preview">
-        </item>
+
 
         <item
             android:id="@+id/nav_model"

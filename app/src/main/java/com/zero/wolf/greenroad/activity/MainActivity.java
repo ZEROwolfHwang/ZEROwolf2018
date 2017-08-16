@@ -55,6 +55,7 @@ import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.SnackbarUtils;
+import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
 import com.zero.wolf.greenroad.update.CheckUpdateUtils;
@@ -205,7 +206,7 @@ public class MainActivity extends BaseActivity implements
         //  mIvCamera = (ImageView) findViewById(R.id.iv_camera);
 
         //mIvCamera.setOnClickListener(this);
-        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 990).getTitle_text_view();
         title_text_view.setText("绿通车登记");
 
 
@@ -332,8 +333,6 @@ public class MainActivity extends BaseActivity implements
             Logger.i("点击了未上传按钮");
         } else if (id == R.id.nav_model) {
             changeModel();
-        } else if (id == R.id.nav_preview) {
-            previewPhotoInfo();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -341,11 +340,6 @@ public class MainActivity extends BaseActivity implements
         return true;
     }
 
-    private void previewPhotoInfo() {
-        Intent intent = new Intent(this, PreviewPhotoActivity.class);
-        startActivity(intent);
-
-    }
 
 
     /**
@@ -683,25 +677,8 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void submit2Service() {
-        ConfigFragment.newInstance().setSubmitInfoListener(bean -> {
-            mConfigInfoBean = bean;
-            Logger.i(mConfigInfoBean.toString());
-            ToastUtils.singleToast(mConfigInfoBean.toString());
-        });
+        getListenerData();
 
-        DetailsFragment.newInstance().setSubmitInfoListener((bean) -> {
-            mDetailInfoBean = bean;
-            List<String> bitmapList = mDetailInfoBean.getBitmapPaths();
-
-            if (bitmapList != null && bitmapList.size() != 0) {
-                List<MultipartBody.Part> parts = PathUtil
-                        .getBodyPart(bitmapList);
-                Logger.i(mDetailInfoBean.toString());
-                Logger.i(parts.toString());
-            }
-        });
-
-        ToastUtils.singleToast(mConfigInfoBean.toString() + mDetailInfoBean.toString());
 
         PostInfo info = new PostInfo();
         info.setCheck("苏三");
@@ -746,59 +723,93 @@ public class MainActivity extends BaseActivity implements
     }
 
     /**
+     * 拿到两个fragment中被监听的数据
+     * 在提交至服务器以及保存草稿中都要用到
+     */
+    private void getListenerData() {
+        ConfigFragment.newInstance().setSubmitInfoListener(bean -> {
+            mConfigInfoBean = bean;
+            Logger.i(mConfigInfoBean.toString());
+            ToastUtils.singleToast(mConfigInfoBean.toString());
+        });
+
+        DetailsFragment.newInstance().setSubmitInfoListener((bean) -> {
+            mDetailInfoBean = bean;
+            List<String> bitmapList = mDetailInfoBean.getBitmapPaths();
+
+            if (bitmapList != null && bitmapList.size() != 0) {
+                List<MultipartBody.Part> parts = PathUtil
+                        .getBodyPart(bitmapList);
+                Logger.i(mDetailInfoBean.toString());
+                Logger.i(parts.toString());
+            }
+        });
+
+        //ToastUtils.singleToast(mConfigInfoBean.toString() + mDetailInfoBean.toString());
+    }
+
+    /**
      * 保存草稿
      * 1.进入草稿的activity并保存
      * 2.将数据保存到数据库
      */
     private void saveDraft() {
+        getListenerData();
 
-        if (mConfigInfoBean == null) {
-            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存");
+        if (mConfigInfoBean == null || "".equals(mConfigInfoBean.getScan_code())) {
+            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存111");
+            return;
         }
-        if (mConfigInfoBean.getScan_time() == null||
-                !"".equals(mConfigInfoBean.getScan_time())) {
-            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存");
-        } else {
-            List<SupportDraft> supportDrafts = DataSupport.where("scan_time=?",
-                    mConfigInfoBean.getScan_time()).find(SupportDraft.class);
+        Logger.i(mConfigInfoBean.getScan_code());
+        Logger.i(mConfigInfoBean.toString());
+        List<SupportDraft> supportDrafts = DataSupport.where("scan_code = ?",
+                mConfigInfoBean.getScan_code()).find(SupportDraft.class);
 
-            //   DraftActivity.actionStart(this, mConfigInfoBean, mDetailInfoBean, mPhotoPaths);
-            if (supportDrafts.size() == 0) {
+        //   DraftActivity.actionStart(this, mConfigInfoBean, mDetailInfoBean, mPhotoPaths);
+//        if (supportDrafts.size() == 0) {
 
-                SupportDraft draft = new SupportDraft();
+        SupportDraft draft = new SupportDraft();
 
-                draft.setBitmapPaths(mDetailInfoBean.getBitmapPaths());
-                draft.setNumber(mDetailInfoBean.getNumber());
-                draft.setColor(mDetailInfoBean.getColor());
-                draft.setIsFree(mDetailInfoBean.getIsFree());
-                draft.setIsRoom(mDetailInfoBean.getIsRoom());
-                draft.setGoods(mDetailInfoBean.getGoods());
-                draft.setConclusion(mDetailInfoBean.getConclusion());
-                draft.setDescription(mDetailInfoBean.getDescription());
+        draft.setBitmapPaths(mDetailInfoBean.getBitmapPaths());
+        draft.setNumber(mDetailInfoBean.getNumber());
+        draft.setColor(mDetailInfoBean.getColor());
+        draft.setIsFree(mDetailInfoBean.getIsFree());
+        draft.setIsRoom(mDetailInfoBean.getIsRoom());
+        draft.setGoods(mDetailInfoBean.getGoods());
+        draft.setConclusion(mDetailInfoBean.getConclusion());
+        draft.setDescription(mDetailInfoBean.getDescription());
 
 //        draft.setRoad(mConfigInfoBean.get);
-                draft.setCheckOperator(mConfigInfoBean.getCheckOperator());
-                draft.setLoginOperator(mConfigInfoBean.getLoginOperator());
-                draft.setScan_01Q(mConfigInfoBean.getScan_01Q());
-                draft.setScan_02Q(mConfigInfoBean.getScan_02Q());
-                draft.setScan_03Q(mConfigInfoBean.getScan_03Q());
-                draft.setScan_04Q(mConfigInfoBean.getScan_04Q());
-                draft.setScan_05Q(mConfigInfoBean.getScan_05Q());
-                draft.setScan_06Q(mConfigInfoBean.getScan_06Q());
-                draft.setScan_07Q(mConfigInfoBean.getScan_07Q());
-                draft.setScan_08Q(mConfigInfoBean.getScan_08Q());
-                draft.setScan_09Q(mConfigInfoBean.getScan_09Q());
-                draft.setScan_10Q(mConfigInfoBean.getScan_10Q());
-                draft.setScan_11Q(mConfigInfoBean.getScan_11Q());
-                draft.setScan_12Q(mConfigInfoBean.getScan_12Q());
-                draft.save();
-                List<SupportDraft> draftList = DataSupport.findAll(SupportDraft.class);
-                Logger.i(draftList.get(0).toString());
+        draft.setCheckOperator(mConfigInfoBean.getCheckOperator());
+        draft.setLoginOperator(mConfigInfoBean.getLoginOperator());
+        draft.setRoad(mConfigInfoBean.getRoad());
+        draft.setStation(mConfigInfoBean.getStation());
+        draft.setLane(mConfigInfoBean.getLane());
 
-            }else{
-                ToastUtils.singleToast("该车信息已经保存为草稿");
-            }
+        draft.setScan_01Q(mConfigInfoBean.getScan_01Q());
+        draft.setScan_02Q(mConfigInfoBean.getScan_02Q());
+        draft.setScan_03Q(mConfigInfoBean.getScan_03Q());
+        draft.setScan_04Q(mConfigInfoBean.getScan_04Q());
+        draft.setScan_05Q(mConfigInfoBean.getScan_05Q());
+        draft.setScan_06Q(mConfigInfoBean.getScan_06Q());
+        draft.setScan_07Q(mConfigInfoBean.getScan_07Q());
+        draft.setScan_08Q(mConfigInfoBean.getScan_08Q());
+        draft.setScan_09Q(mConfigInfoBean.getScan_09Q());
+        draft.setScan_10Q(mConfigInfoBean.getScan_10Q());
+        draft.setScan_11Q(mConfigInfoBean.getScan_11Q());
+        draft.setScan_12Q(mConfigInfoBean.getScan_12Q());
+        draft.setScan_code(mConfigInfoBean.getScan_code());
+        draft.setDraftTime(TimeUtil.getCurrentTimeTos());
+        draft.save();
+        List<SupportDraft> draftList = DataSupport.findAll(SupportDraft.class);
+        for (int i = 0; i < draftList.size(); i++) {
+            Logger.i(draftList.get(i).toString());
         }
+
+//        } else {
+//            ToastUtils.singleToast("该车信息已经保存为草稿");
+        //     }
+
 
     }
 

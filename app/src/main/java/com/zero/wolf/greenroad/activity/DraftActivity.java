@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,11 +18,11 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.adapter.DraftPhotoAdapter;
 import com.zero.wolf.greenroad.adapter.PreviewPhotoAdapter;
-import com.zero.wolf.greenroad.bean.ConfigInfoBean;
-import com.zero.wolf.greenroad.bean.DetailInfoBean;
-import com.zero.wolf.greenroad.bean.SerializablePreview;
+import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.bean.SortPreviewTime;
+import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.FileUtils;
@@ -43,21 +46,22 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
     @BindView(R.id.toolbar_draft)
     Toolbar mToolbarPreview;
+    @BindView(R.id.draft_photo_recycler_view)
+    RecyclerView mDraftPhotoRecyclerView;
+    @BindView(R.id.recycler_view_preview)
+    RecyclerView mRecyclerViewPreview;
 
     private DraftActivity mActivity;
     private Context mContext;
-    private List<SupportPhotoLite> mPhotoList;
-    private ArrayList<SerializablePreview> mPreviewList;
+    private List<SupportDraft> mPhotoList;
+
     private PreviewPhotoAdapter mAdapter;
     private File mGoodsFile;
     private String mGoodsFilePath;
     private String mFilePath;
 
 
-    private static String MAIN2DRAFT_CONFIG = "main2draft_config";
-    private static String MAIN2DRAFT_DETAIL= "main2draft_detail";
-    private ConfigInfoBean mConfigInfoBean;
-    private DetailInfoBean mDetailInfoBean;
+    private DraftPhotoAdapter mPhotoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,80 +77,65 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         initToolbar();
         initData();
         initView();
+        initPhotoRecycler();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initData();
-        initView();
+    private void initPhotoRecycler() {
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mDraftPhotoRecyclerView.setLayoutManager(manager);
+        // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
+        for (int i = 0; i < mPhotoList.size(); i++) {
+            Logger.i(mPhotoList.get(i).getDraftTime());
+            if (mPhotoList.get(i).getBitmapPaths() != null) {
+
+            Logger.i(mPhotoList.get(i).getBitmapPaths().toString());
+            }
+        }
+        mPhotoAdapter = new DraftPhotoAdapter(getContext(), mPhotoList.get(0).getBitmapPaths(), () -> {
+            // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
+        });
+        mDraftPhotoRecyclerView.setAdapter(mPhotoAdapter);
 
     }
+
+
 
     private void initView() {
 
-        SortPreviewTime sortPreviewTime = new SortPreviewTime();
-
-        Collections.sort(mPreviewList, sortPreviewTime);
-        //Collections.reverse(mPreviewList);
-        for (int i = 0; i < mPreviewList.size(); i++) {
-            Logger.i(mPreviewList.get(i).getShutTime());
-        }
-
-/*
         LinearLayoutManager manager = new LinearLayoutManager(mActivity,
                 LinearLayoutManager.VERTICAL, false);
         mRecyclerViewPreview.setLayoutManager(manager);
 
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
-                LinearLayoutManager.HORIZONTAL, 10, Color.GRAY));
-*/
+                LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        /*, new onItemClick() {
-            @Override
-            public void itemClick(int position) {
-                ToastUtils.singleToast("点击了---------" + position);
+        mAdapter = new PreviewPhotoAdapter(mContext, mActivity, (ArrayList<SupportDraft>) mPhotoList, () -> {
 
-            }
-        }*/
-/*        mAdapter = new PreviewPhotoAdapter(mContext, mActivity, mPreviewList, new PreviewPhotoAdapter.onPreviewItemClick() {
-            @Override
-            public void itemClick(SerializablePreview preview) {
-                if (preview.getPhotoPath1() != null) {
+                    ToastUtils.singleToast("点击了条目");
 
-                    mPreviewItemPhotoNumber.setImageBitmap(getBitmap(preview.getPhotoPath1()));
-                }
-                if (preview.getPhotoPath2() != null) {
-
-                    mPreviewItemPhotoBody.setImageBitmap(getBitmap(preview.getPhotoPath2()));
-                }
-                if (preview.getPhotoPath3() != null) {
-
-                    mPreviewItemPhotoGoods.setImageBitmap(getBitmap(preview.getPhotoPath3()));
-                }
-
-                mPreviewItemPhotoNumber.setOnClickListener(v -> {
-                    PreviewDetailActivity.actionStart(mContext, preview,0);
-                    Logger.i(preview.toString());
-                });
-                mPreviewItemPhotoBody.setOnClickListener(v -> {
-                    PreviewDetailActivity.actionStart(mContext, preview,1);
-                });
-                mPreviewItemPhotoGoods.setOnClickListener(v -> {
-                    PreviewDetailActivity.actionStart(mContext, preview,2);
                 });
 
-            }
-        });
-        mRecyclerViewPreview.setAdapter(mAdapter);*/
+        mRecyclerViewPreview.setAdapter(mAdapter);
     }
 
 
     private void initData() {
-        mPhotoList = DataSupport.findAll(SupportPhotoLite.class);
-        mPreviewList = new ArrayList<>();
+        mPhotoList = DataSupport.findAll(SupportDraft.class);
+
         for (int i = 0; i < mPhotoList.size(); i++) {
-            SupportPhotoLite photoLite = mPhotoList.get(i);
+            Logger.i("------------"+mPhotoList.get(i).toString());
+
+        }
+        SortPreviewTime sortPreviewTime = new SortPreviewTime();
+
+        Collections.sort(mPhotoList, sortPreviewTime);
+        for (int i = 0; i < mPhotoList.size(); i++) {
+            Logger.i("++++++++++++"+mPhotoList.get(i).toString());
+        }
+
+       /* mPreviewList = new ArrayList<>();
+        for (int i = 0; i < mPhotoList.size(); i++) {
+            SupportDraft photoLite = mPhotoList.get(i);
 
             for (int j = 0; j < 5; j++) {
 
@@ -165,7 +154,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 mPreviewList.add(preview);
             }
             Logger.i(mPreviewList.get(i).getShutTime());
-        }
+        }*/
 
 
     }
@@ -188,14 +177,15 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, DraftActivity.class);
        /* Bundle bundle = new Bundle();
-        bundle.putParcelable(MAIN2DRAFT_CONFIG, configInfoBean);
+        bundle.putParcelable(MDRAFT_CONFIG, configInfoBean);
         bundle.putParcelable(MAIN2DRAFT_DETAIL, detailInfoBean);*/
 
         //bundle.putParcelableArrayList("myBitmapList", (ArrayList<? extends Parcelable>) myBitmaps);
-       // intent.putExtras(bundle);
-  //      intent.setType(type);
+        // intent.putExtras(bundle);
+        //      intent.setType(type);
         context.startActivity(intent);
     }
+
     /**
      * 得到从上一个activity中拿到的数据
      */
@@ -208,6 +198,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         Logger.i(mConfigInfoBean.toString());*/
 
     }
+
     /**
      * @param photoPath 得到缩小的Bitmap
      * @return

@@ -19,29 +19,26 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:padding="@dimen/layout_margin5dp"
         android:background="?attr/custom_attr_app_bg"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/preview_item_cars"
-        layout="@layout/preview_item_photos"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/draft_photo_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+        </android.support.v7.widget.RecyclerView>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_preview"
+            android:layout_marginTop="@dimen/layout_margin10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
-    </LinearLayout>
 
-
+    </LinearLayout>
 
 </LinearLayout>

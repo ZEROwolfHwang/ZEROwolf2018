@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/layout_margin100dp"
-    android:layout_height="140dp"
+    android:layout_height="135dp"
     android:layout_marginLeft="@dimen/layout_margin10dp"
     android:layout_marginRight="@dimen/layout_margin10dp"
-    android:layout_marginTop="@dimen/layout_margin10dp"
+    android:layout_marginTop="@dimen/layout_margin5dp"
     android:orientation="vertical"
     tools:showIn="@layout/fragment_photo">
 
@@ -15,10 +15,10 @@
         android:id="@+id/image_show_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:src="@drawable/demo"
         app:border_color="?attr/custom_white_black_text"
-        app:border_width="4dp"
-
+        app:border_width="3dp"
 
         app:leftBottom_corner_radius="20dp"
         app:leftTop_corner_radius="0dp"

@@ -4,7 +4,7 @@
         <dbname value="green" />
 
 
-        <version value="27" />
+        <version value="28" />
 
         <list>
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportCarNumber" />

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="@dimen/layout_margin10dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/layout_margin10dp">
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:padding="@dimen/layout_margin10dp"
-        android:elevation="3dp">
+        android:elevation="3dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/layout_margin10dp">
 
 
         <ImageView
             android:layout_width="@dimen/layout_margin80dp"
-            android:scaleType="fitCenter"
+            android:layout_height="@dimen/layout_margin80dp"
             android:background="?attr/custom_car_goods_sure"
-            android:layout_height="@dimen/layout_margin80dp"/>
+            android:scaleType="fitCenter"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,70 +28,26 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-         <!--   <TextView
-                android:layout_weight="1"
-                android:text="@string/text_car_goods_sure"
-                android:textColor="?attr/custom_fragment_static_text"
-                android:focusable="false"
-                android:textSize="@dimen/text16"
-                android:gravity="center"
+            <EditText
+                android:id="@+id/goods_edit_text"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_width="0dp"/>-->
-
- <EditText
-                    android:id="@+id/goods_edit_text1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:focusable="true"
-                    android:textColor="@color/white_light"
-                    android:textSize="@dimen/text22"/>
-
-            <ImageView
-                android:layout_width="4dp"
-                android:layout_height="30dp"
-                android:focusable="false"
-                android:background="@drawable/shape_static_night"/>
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_gravity="center"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_height="match_parent">
-                <EditText
-                    android:id="@+id/goods_edit_text2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:focusable="true"
-                    android:textColor="@color/white_light"
-                    android:textSize="@dimen/text22"/>
-
-                <ImageView
-                    android:id="@+id/goods_img_clear_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
-                    android:padding="4dp"
-                    android:src="@drawable/clear_button"
-                    android:visibility="invisible"/>
-
-            </FrameLayout>
+                android:gravity="center"
+                android:textColor="@color/white_light"
+                android:textSize="@dimen/text22"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:padding="@dimen/layout_margin5dp"
         android:id="@+id/recycler_view_goods_sure"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="false"/>
+        android:focusable="false"
+        android:padding="@dimen/layout_margin5dp"/>
 
 
 </LinearLayout>

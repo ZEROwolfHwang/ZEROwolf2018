@@ -9,7 +9,11 @@ public class ConfigInfoBean {
     private String checkOperator;
     private String loginOperator;
 
-    private String scan_time;
+    private String road;
+    private String station;
+    private String lane;
+
+    private String scan_code;
     private String scan_01Q;
     private String scan_02Q;
     private String scan_03Q;
@@ -23,12 +27,36 @@ public class ConfigInfoBean {
     private String scan_11Q;
     private String scan_12Q;
 
-    public String getScan_time() {
-        return scan_time;
+    public String getRoad() {
+        return road;
     }
 
-    public void setScan_time(String scan_time) {
-        this.scan_time = scan_time;
+    public void setRoad(String road) {
+        this.road = road;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    public String getLane() {
+        return lane;
+    }
+
+    public void setLane(String lane) {
+        this.lane = lane;
+    }
+
+    public String getScan_code() {
+        return scan_code;
+    }
+
+    public void setScan_code(String scan_code) {
+        this.scan_code = scan_code;
     }
 
     public String getCheckOperator() {
@@ -148,7 +176,10 @@ public class ConfigInfoBean {
         return "ConfigInfoBean{" +
                 "checkOperator='" + checkOperator + '\'' +
                 ", loginOperator='" + loginOperator + '\'' +
-                ", scan_time='" + scan_time + '\'' +
+                ", road='" + road + '\'' +
+                ", station='" + station + '\'' +
+                ", lane='" + lane + '\'' +
+                ", scan_code='" + scan_code + '\'' +
                 ", scan_01Q='" + scan_01Q + '\'' +
                 ", scan_02Q='" + scan_02Q + '\'' +
                 ", scan_03Q='" + scan_03Q + '\'' +

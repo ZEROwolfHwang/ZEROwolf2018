@@ -127,8 +127,9 @@ public class DetailsFragment extends Fragment {
         mConfigConclusionText.setText(mConclusionText);
         mConfigDescriptionText.setText(mDescriptionEditText);
 
-        mAdapter.updateListView(mMyBitmaps);
-
+        if (mMyBitmaps != null && mMyBitmaps.size() != 0) {
+            mAdapter.updateListView(mMyBitmaps);
+        }
     }
 
 

@@ -6,8 +6,8 @@
     <string name="action_settings">设置</string>
     <string name="navigation_drawer_open">打开侧滑栏</string>
     <string name="navigation_drawer_close">关闭侧滑栏</string>
-    <string name="has_shot">已拍摄车辆</string>
-    <string name="has_not_sent">未上传车辆</string>
+    <string name="has_shot">提交展示</string>
+    <string name="has_not_sent">草稿展示</string>
     <string name="tv_car_number">车牌</string>
     <string name="action_person_identify">人工识别</string>
     <string name="tv_car_goods">货物</string>

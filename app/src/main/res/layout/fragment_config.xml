@@ -85,6 +85,7 @@
         </LinearLayout>
 
         <include
+            android:id="@+id/math_number_main_layout"
             layout="@layout/math_number_main"/>
     </LinearLayout>
 

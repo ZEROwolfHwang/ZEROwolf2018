@@ -130,32 +130,6 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
                         mDetailRecyclerText.setText("货物2");
                     }
                 }
-            } else {
-                if (bitmap == null) {
-                    bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
-                }
-                mDetailRecyclerImg.setImageBitmap(bitmap);
-                if (position == 0) {
-                    mDetailRecyclerText.setText("三证1");
-                } else if (position == 1) {
-
-                    mDetailRecyclerText.setText("三证2");
-                } else if (position == 2) {
-
-                    mDetailRecyclerText.setText("三证3");
-                } else if (position == 3) {
-
-                    mDetailRecyclerText.setText("车身车型1");
-                } else if (position == 4) {
-
-                    mDetailRecyclerText.setText("车身车型2");
-                } else if (position == 5) {
-
-                    mDetailRecyclerText.setText("货物1");
-                } else if (position == 6) {
-
-                    mDetailRecyclerText.setText("货物2");
-                }
             }
 
             itemView.setOnClickListener(v -> {

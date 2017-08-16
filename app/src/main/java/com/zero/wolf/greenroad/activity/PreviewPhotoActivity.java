@@ -107,10 +107,15 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
 
             }
         }*/
-        mAdapter = new PreviewPhotoAdapter(mContext, mActivity, mPreviewList, new PreviewPhotoAdapter.onPreviewItemClick() {
+       /* mAdapter = new PreviewPhotoAdapter(mContext, mActivity, mPreviewList, new PreviewPhotoAdapter.onPreviewItemClick() {
             @Override
+            public void itemClick() {
+
+            }
+        });*/
+           /* @Override
             public void itemClick(SerializablePreview preview) {
-                if (preview.getPhotoPath1() != null) {
+              *//*  if (preview.getPhotoPath1() != null) {
 
                     mPreviewItemPhotoNumber.setImageBitmap(getBitmap(preview.getPhotoPath1()));
                 }
@@ -121,9 +126,9 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
                 if (preview.getPhotoPath3() != null) {
 
                     mPreviewItemPhotoGoods.setImageBitmap(getBitmap(preview.getPhotoPath3()));
-                }
+                }*//*
 
-                mPreviewItemPhotoNumber.setOnClickListener(v -> {
+               *//* mPreviewItemPhotoNumber.setOnClickListener(v -> {
                     PreviewDetailActivity.actionStart(mContext, preview,0);
                     Logger.i(preview.toString());
                 });
@@ -132,11 +137,11 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
                 });
                 mPreviewItemPhotoGoods.setOnClickListener(v -> {
                     PreviewDetailActivity.actionStart(mContext, preview,2);
-                });
+                });*//*
 
-            }
-        });
-        mRecyclerViewPreview.setAdapter(mAdapter);
+            }*/
+
+//        mRecyclerViewPreview.setAdapter(mAdapter);
     }
 
 
