@@ -88,16 +88,18 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
             Logger.i(mPhotoList.get(i).getDraftTime());
             if (mPhotoList.get(i).getBitmapPaths() != null) {
 
-            Logger.i(mPhotoList.get(i).getBitmapPaths().toString());
+                Logger.i(mPhotoList.get(i).getBitmapPaths().toString());
             }
         }
-        mPhotoAdapter = new DraftPhotoAdapter(getContext(), mPhotoList.get(0).getBitmapPaths(), () -> {
-            // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
-        });
+        if (mPhotoList.size() != 0 && mPhotoList != null) {
+
+            mPhotoAdapter = new DraftPhotoAdapter(getContext(), mPhotoList.get(0).getBitmapPaths(), () -> {
+                // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
+            });
+        }
         mDraftPhotoRecyclerView.setAdapter(mPhotoAdapter);
 
     }
-
 
 
     private void initView() {
@@ -111,9 +113,9 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
         mAdapter = new PreviewPhotoAdapter(mContext, mActivity, (ArrayList<SupportDraft>) mPhotoList, () -> {
 
-                    ToastUtils.singleToast("点击了条目");
+            ToastUtils.singleToast("点击了条目");
 
-                });
+        });
 
         mRecyclerViewPreview.setAdapter(mAdapter);
     }
@@ -123,14 +125,14 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         mPhotoList = DataSupport.findAll(SupportDraft.class);
 
         for (int i = 0; i < mPhotoList.size(); i++) {
-            Logger.i("------------"+mPhotoList.get(i).toString());
+            Logger.i("------------" + mPhotoList.get(i).toString());
 
         }
         SortPreviewTime sortPreviewTime = new SortPreviewTime();
 
         Collections.sort(mPhotoList, sortPreviewTime);
         for (int i = 0; i < mPhotoList.size(); i++) {
-            Logger.i("++++++++++++"+mPhotoList.get(i).toString());
+            Logger.i("++++++++++++" + mPhotoList.get(i).toString());
         }
 
        /* mPreviewList = new ArrayList<>();

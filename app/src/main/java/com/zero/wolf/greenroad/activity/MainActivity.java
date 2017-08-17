@@ -686,6 +686,8 @@ public class MainActivity extends BaseActivity implements
         Gson gson = new Gson();
         String route = gson.toJson(info);
 
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
                 .addConverterFactory(GsonConverterFactory.create())

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.DividerGridItemDecoration;
+import com.zero.wolf.greenroad.adapter.GoodsTextAdapter;
 import com.zero.wolf.greenroad.adapter.SureGoodsAdapter;
 import com.zero.wolf.greenroad.bean.SerializableGoods;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
@@ -23,6 +25,7 @@ import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.smartsearch.PinyinComparator;
 import com.zero.wolf.greenroad.tools.ACache;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,13 +61,17 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private AssetManager mAssetManager;
     private String[] mGoodsNames;
 
-    private static String[] alias = {"给weus骄傲的行情无限", "说的侮辱大家才能", "都无二的勘测机",
-            "卖家说的法第五", ",设计费都是对你是否及时打开",
-            "1234124戛洒hiu瓦斯鉴定表", "奥斯卡单位澳大马上", "IQ网上订餐MAU爱打架"};
+    private static String[] alias = {"给骄傲;的行情;无限", "说;的侮辱大;家才能", "都无二;的勘测;机",
+            "卖家说的法第五", ",设计费都;是对你是;否及时打开",
+            "戛洒瓦斯鉴定表", "奥斯卡单位澳大马上", "网上订餐爱打架"};
     private ArrayList<SerializableGoods> mGoodsArrayList;
     private String[] scientific_names;
     private ArrayList<SerializableGoods> mAsObject;
-    private StringBuilder mGoodsBuilder;
+
+    private RecyclerView mGoodTextRecycler;
+    private static ArrayList<String> mTextList;
+    private GoodsTextAdapter mTextAdapter;
+    private static StringBuilder sBuilder;
 
 
     public static GoodsFragment newInstance(String goods) {
@@ -84,6 +91,22 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     }
 
     private void initGoodsData() {
+
+        if (mTextList == null) {
+            mTextList = new ArrayList<>();
+        } else {
+            mTextList.clear();
+        }
+        if (mGoods_i != null && mGoods_i.length() != 0) {
+
+            String[] goodsName = mGoods_i.split(";");
+
+            for (int i = 0; i < goodsName.length; i++) {
+                mTextList.add(goodsName[i]);
+
+            }
+        }
+
 
         mAsObject = (ArrayList<SerializableGoods>) ACache
                 .get(getActivity()).getAsObject(ACache.GOODSACACHE);
@@ -142,14 +165,16 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 }
                 goods.setSortLetters(sortLetters);
 
-                String sortKey = PingYinUtil.format(scientific_name + alias);
+                String sortKey = PingYinUtil.format(scientific_name + alia);
                 goods.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
                 goods.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
-
 
                 mGoodsArrayList.add(goods);
 
 
+            }
+            for (int i = 0; i < mGoodsArrayList.size(); i++) {
+                Logger.i(mGoodsArrayList.get(i).getSimpleSpell());
             }
 
         } catch (IOException e) {
@@ -168,39 +193,39 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
         unbinder = ButterKnife.bind(this, view);
 
-        initEditText(view);
 
+        if (mTextList == null) {
+            mTextList = new ArrayList<>();
+        }
 
         initGoodsData();
-
         initView(view);
         initRecyclerView();
+        initGoodsTextRecycler();
         return view;
     }
 
-    /**
-     * 初始化EditText中的内容
-     *
-     * @param view
-     */
-    private void initEditText(View view) {
-        if (mGoodsBuilder == null) {
-            mGoodsBuilder = new StringBuilder();
-        } else {
-            if (mGoodsBuilder.length() == 0) {
-                mGoodsBuilder.append(mGoods_i);
-            } else {
-                mGoodsBuilder.delete(0, mGoodsBuilder.length());
-                mGoodsBuilder.append(mGoods_i);
-
-            }
-        }
-
+    private void initView(View view) {
         mEditText = (EditText) view.findViewById(R.id.goods_edit_text);
+        mEditText.setText("");
+        mEditText.addTextChangedListener(new TextChangeWatcher(this));
+        mGoodTextRecycler = (RecyclerView) view.findViewById(R.id.goods_text_recycler);
 
-        mEditText.setText(mGoods_i);
-        mEditText.setSelection(mGoods_i.length());
+    }
 
+    /**
+     * 添加的货物信息
+     */
+    private void initGoodsTextRecycler() {
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        mGoodTextRecycler.setLayoutManager(manager);
+
+        mTextAdapter = new GoodsTextAdapter(getContext(), mTextList, pos -> {
+            mTextList.remove(pos);
+            mTextAdapter.notifyDataSetChanged();
+        });
+        mGoodTextRecycler.setAdapter(mTextAdapter);
 
     }
 
@@ -218,10 +243,17 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             @Override
             public void itemClick(SerializableGoods serializableGoods, int position) {
 
-                String scientificname = serializableGoods.getScientific_name();
-                mGoodsBuilder.append(scientificname + ";");
-                mEditText.setText(mGoodsBuilder.toString());
-                mEditText.setSelection(mGoodsBuilder.length());
+                String scientificName = serializableGoods.getScientific_name();
+                if (mTextList.contains(scientificName)) {
+                    ToastUtils.singleToast("已经选择了此货物");
+                } else {
+                    mTextList.add(scientificName);
+                }
+                //  mGoodsBuilder.append(scientificName + ";");
+//                mEditText.setText(mGoodsBuilder.toString());
+//                mEditText.setSelection(mGoodsBuilder.length());
+                mEditText.setText("");
+                mTextAdapter.updateListView(mTextList);
                 //进行置顶操作
                 serializableGoods.setTop(1);
                 serializableGoods.setTime(System.currentTimeMillis());
@@ -242,200 +274,56 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     @Override
     public void afterTextChanged(Editable editable) {
         String goodString = mEditText.getText().toString().trim();
-        if (mGoodsBuilder != null) {
-            mGoodsBuilder.delete(0, mGoodsBuilder.length());
-            mGoodsBuilder.append(goodString);
-        }
-        String[] split = goodString.split(";");
-        Logger.i("" + split.length + "////////////////" + split.toString());
-        for (int i = 0; i < split.length; i++) {
-            Logger.i("~~~~~~~~~~~~~" + split[i]);
-        }
 
         if ("".equals(goodString)) {
             mGoodsAdapter.updateListView(mGoodsArrayList);
-        }/* else if (split.length == 1) {
-            if (split[0].endsWith(";")) {
-                mGoodsAdapter.updateListView(mGoodsArrayList);
-            } else {
-                String last_edit = split[split.length - 1];
-                List<SerializableGoods> fileterList = PingYinUtil.getInstance()
-                        .search_goods(mGoodsArrayList, last_edit);
-                Logger.i(fileterList.toString());
-                mGoodsAdapter.updateListView(fileterList);
-            }
-        }*/ else {
-                Logger.i(split[split.length - 1]+"********");
-            if (split[split.length - 1].endsWith(";")) {
-                Logger.i(split[split.length - 1]+"********");
-                mGoodsAdapter.updateListView(mGoodsArrayList);
-            } else {
-                String last_edit = split[split.length - 1];
-                Logger.i(last_edit);
-                List<SerializableGoods> fileterList = PingYinUtil.getInstance()
-                        .search_goods(mGoodsArrayList, last_edit);
-                for (int i = 0; i < fileterList.size(); i++) {
-                    Logger.i(fileterList.get(i).getScientific_name());
-                    Logger.i(fileterList.get(i).getSimpleSpell());
-                }
-                mGoodsAdapter.updateListView(fileterList);
-            }
-        }
-
-        if (goodString.length() > 0) {
-            //mAdapter.updateData(mContacts);
         } else {
-            if (mGoodsAdapter != null) {
-                mGoodsAdapter.updateListView(mGoodsArrayList);
+            Logger.i(goodString);
+            List<SerializableGoods> fileterList = PingYinUtil.getInstance()
+                    .search_goods(mGoodsArrayList, goodString);
+            for (int i = 0; i < fileterList.size(); i++) {
+                Logger.i(fileterList.get(i).getScientific_name());
+                Logger.i(fileterList.get(i).getSimpleSpell());
             }
+            mGoodsAdapter.updateListView(fileterList);
         }
-    }
-
-
-    private void initView(View view) {
-
-        mEditText.addTextChangedListener(new TextChangeWatcher(this));
-       /* //找到改变的TextView
-        String aCacheGoodsText = ACache
-                .get(getActivity()).getAsString("goodsText");
-        String editText = mEditText.getText().toString().trim();
-        if (editText != null) {
-            mEditText.setSelection(editText.length());
-        }
-        if (aCacheGoodsText == null || "".equals(aCacheGoodsText)) {
-            mEditText.setText("西兰花");
-            goodsText = "苹果";
-        } else {
-            goodsText = aCacheGoodsText;
-            mEditText.setText(aCacheGoodsText);
-        }*/
-
-
-       /* mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CarNumberFragment.setTextChangedFragment((edittext -> {
-                    mCar_number = edittext;
-                }));
-
-                if ("".equals(mCar_number.substring(2).trim())) {
-                    ToastUtils.singleToast(getString(R.string.sure_number));
-                    return;
-                }
-
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                dialog.setTitle(getString(R.string.dialog_title_sure));
-                dialog.setMessage(getDialogSendMessage());
-                dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //saveLocalLite();
-                        CarNumberCount.CarNumberAdd(getContext());
-                        mCurrentTimeTos = TimeUtil.getCurrentTimeTos();
-                        if (NetWorkManager.isnetworkConnected(getContext())) {
-                            startPostIntentService();
-                            //BackToPhotoActivityHelper.backToPhotoActivity((AppCompatActivity) getActivity(),mUsername,sStationName);
-                            backToPhotoActivity();
-                            // postAccept(TimeUtil.getCurrentTimeTos());
-                        } else {
-                            SaveToLocation.saveLocalLite(mCurrentTimeTos, "卡车", mOperator, mUsername, mColor,
-                                    mCar_number, mCar_station, mCar_goods,
-                                    mPhotoPath1, mPhotoPath2, mPhotoPath3, 0);
-                            Logger.i(mOperator + "///////////////////");
-                            backToPhotoActivity();
-                            ToastUtils.singleToast("上传失败,已保存至本地");
-                        }
-                    }
-                });
-                dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
-                    Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
-                    dialog1.dismiss();
-                });
-
-                dialog.show();
-
-        }
-    });*/
     }
 
     public static void setTextChangedFragment(TextFragmentListener listener) {
-        if (mEditText != null) {
-            String number = mEditText.getText().toString().trim();
-            listener.textChanged(number);
+
+        //初始化sBuilder,将其归零
+        if (sBuilder == null) {
+            sBuilder = new StringBuilder();
+        } else if (sBuilder.length() != 0) {
+            sBuilder.delete(0, sBuilder.length());
+        }
+        if (mTextList != null && mTextList.size() != 0) {
+
+            for (int i = 0; i < mTextList.size(); i++) {
+                if (i == mTextList.size() - 1) {
+                    sBuilder.append(mTextList.get(i));
+                } else {
+                    sBuilder.append(mTextList.get(i) + ";");
+                }
+            }
+            listener.textChanged(sBuilder.toString());
+        } else {
+            listener.textChanged("");
         }
     }
 
-
- /*   private void startPostIntentService() {
-        List<MultipartBody.Part> parts = PathUtil
-                .getMultipartBodyPart(mPhotoPath1, mPhotoPath2, mPhotoPath3);
-        PostContent content = new PostContent();
-        content.setStatiomName(sStationName);
-        content.setCar_type("卡车");
-        content.setColor(mColor);
-        content.setCar_number(mCar_number);
-        content.setCar_station(mCar_station);
-        content.setCar_goods(mCar_goods);
-        content.setUsername(mUsername);
-        content.setOperator(mOperator);
-        content.setParts(parts);
-        content.setCurrentTime(mCurrentTimeTos);
-        content.setPhotoPath1(mPhotoPath1);
-        content.setPhotoPath2(mPhotoPath2);
-        content.setPhotoPath3(mPhotoPath3);
-
-        PostIntentService.startActionPost((AppCompatActivity) getActivity(), content);
-    }*/
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-/*
-        PinyinComparator pinyinComparator = new PinyinComparator();
 
-        Collections.sort(sGoodsList, pinyinComparator);// 根据a-z进行排序源数据
-
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-
-        mGoodsAdapter = new SureGoodsAdapter(getContext(), sGoodsList, new SureGoodsAdapter.onItemClick() {
-            @Override
-            public void itemClick(SortModel sortModel, int position) {
-                String scientificname = sortModel.getScientificname();
-                mEditText.setText(scientificname);
-                mGoodsAdapter.updateListView(sGoodsList);
-                mEditText.setSelection(scientificname.length());
-            }
-        });
-        mRecyclerView.addItemDecoration(new RecycleViewDivider(getContext(),
-                LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
-        // mListView.setAdapter(mGoodsAdapter);
-        mRecyclerView.setAdapter(mGoodsAdapter);*/
-
-     /*   mEditText.addTextChangedListener(new TextChangeWatcher(this));
-        mEditText.setOnClickListener(this);*/
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-
         ACache.get(getActivity()).put(ACache.GOODSACACHE, mGoodsArrayList);
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        Object asObject = ACache.get(getActivity()).getAsObject(ACache.GOODSACACHE);
-        ArrayList<SerializableGoods> asObject1 = (ArrayList<SerializableGoods>) ACache.get(getActivity()).getAsObject(ACache.GOODSACACHE);
-        Logger.i("++++++++" + asObject.toString() + "____" + asObject1.size() + asObject1.get(0).getScientific_name());
     }
 
     @Override
@@ -444,17 +332,5 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         unbinder.unbind();
 
     }
-    /*@OnClick(R.id.goods_edit_text)
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.goods_edit_text:
-                String goodsEdit = mEditText.getText().toString().trim();
-                if (goodsEdit != null && !"".equals(goodsEdit)) {
-                    mEditText.setSelection(goodsEdit.length());
-                }
-                break;
-            default:
-                break;
-        }
-    }*/
+
 }
