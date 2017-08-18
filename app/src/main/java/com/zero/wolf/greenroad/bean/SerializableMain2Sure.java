@@ -12,9 +12,7 @@ public class SerializableMain2Sure implements Serializable {
 
     private String goods_I;
 
-    private String conclusion_I;
 
-    private String description_I;
 
 
 
@@ -34,29 +32,12 @@ public class SerializableMain2Sure implements Serializable {
         this.goods_I = goods_I;
     }
 
-    public String getConclusion_I() {
-        return conclusion_I;
-    }
-
-    public void setConclusion_I(String conclusion_I) {
-        this.conclusion_I = conclusion_I;
-    }
-
-    public String getDescription_I() {
-        return description_I;
-    }
-
-    public void setDescription_I(String description_I) {
-        this.description_I = description_I;
-    }
 
     @Override
     public String toString() {
         return "SerializableMain2Sure{" +
                 "carNumber_I='" + carNumber_I + '\'' +
                 ", goods_I='" + goods_I + '\'' +
-                ", conclusion_I='" + conclusion_I + '\'' +
-                ", description_I='" + description_I + '\'' +
                 '}';
     }
 }

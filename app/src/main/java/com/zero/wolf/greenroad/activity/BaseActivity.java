@@ -1,6 +1,7 @@
 package com.zero.wolf.greenroad.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,12 @@ public  class BaseActivity extends AppCompatActivity implements ThemeChangeObser
         setupActivityBeforeCreate();
         super.onCreate(savedInstanceState);
 
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            // Activity was brought to front and not created,
+            // Thus finishing this will get us to the last viewed activity
+            finish();
+            return;
+        }
         ActivityCollector.addActivity(this);
 
         Logger.init(TAG).logLevel(LogLevel.FULL);

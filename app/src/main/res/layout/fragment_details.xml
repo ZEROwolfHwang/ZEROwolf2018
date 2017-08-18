@@ -6,12 +6,6 @@
               android:padding="@dimen/layout_margin10dp"
               tools:context="com.zero.wolf.greenroad.fragment.DetailsFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_shoot_photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layout_margin5dp"/>
-
     <RadioGroup
         android:layout_marginTop="@dimen/layout_margin10dp"
         android:id="@+id/radio_group_color"
@@ -79,14 +73,13 @@
             <TextView
                 style="@style/main_text_static_tv_style"
                 android:text="车牌号"/>
-
             <ImageView
                 style="@style/main_text_static_iv_style"/>
+
 
             <TextView
                 android:id="@+id/tv_change_number_detail"
                 style="@style/main_text_change_tv_style"/>
-
         </LinearLayout>
 
 
@@ -120,4 +113,11 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_shoot_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_margin5dp"/>
+
 </LinearLayout>

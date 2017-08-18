@@ -13,17 +13,8 @@ import com.orhanobut.logger.Logger;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.activity.DraftActivity;
-import com.zero.wolf.greenroad.activity.SettingActivity;
-import com.zero.wolf.greenroad.bean.ConfigInfoBean;
-import com.zero.wolf.greenroad.litepalbean.SupportOperator;
-import com.zero.wolf.greenroad.tools.SPListUtil;
-import com.zero.wolf.greenroad.tools.SPUtils;
+import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.tools.ToastUtils;
-
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,10 +26,10 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link ConfigFragment1#newInstance} factory method to
+ * Use the {@link ScanFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConfigFragment1 extends Fragment {
+public class ScanFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -48,15 +39,7 @@ public class ConfigFragment1 extends Fragment {
 
 
     Unbinder unbinder;
-    @BindView(R.id.tv_change_station_config)
-    TextView mTvChangeStationConfig;
 
-
-    //@BindView(R.id.tv_operator_check_config)
-    private static TextView mTvOperatorCheckConfig;
-
-    //@BindView(R.id.tv_operator_login_config)
-    private static TextView mTvOperatorLoginConfig;
     @BindView(R.id.scan_qr_code)
     ImageButton mScanQrCode;
 
@@ -64,9 +47,8 @@ public class ConfigFragment1 extends Fragment {
     // TODO: Rename and change types of parameters
 
 
-    private OnFragmentListener mListener;
+    private ScanBeanConnectListener mListener;
     private static TextView mTextExportNumber;
-    private static TextView mTvChangeLaneConfig;
     private static TextView mText_table_1;
     private static TextView mText_table_2;
     private static TextView mText_table_3;
@@ -79,19 +61,19 @@ public class ConfigFragment1 extends Fragment {
     private static TextView mText_table_10;
     private static TextView mText_table_11;
     private static TextView mText_table_12;
-    private String mRoad_Q;
-    private String mStation_Q;
-    private TextView mTextDraft;
-    private TextView mTextSubmit;
 
-    public ConfigFragment1() {
+    private static ScanFragment sFragment;
+
+    public ScanFragment() {
         // Required empty public constructor
     }
 
-    public static ConfigFragment1 newInstance() {
-        ConfigFragment1 fragment = new ConfigFragment1();
+    public static ScanFragment newInstance() {
+        if (sFragment == null) {
+            sFragment = new ScanFragment();
+        }
 
-        return fragment;
+        return sFragment;
     }
 
     @Override
@@ -103,24 +85,17 @@ public class ConfigFragment1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_config, container, false);
+        View view = inflater.inflate(R.layout.fragment_scan, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        mTvOperatorCheckConfig = (TextView) view.findViewById(R.id.tv_operator_check_config);
-        mTvOperatorLoginConfig = (TextView) view.findViewById(R.id.tv_operator_login_config);
 
         initView(view);
-        initData();
         return view;
     }
 
     private void initView(View view) {
 
-        mTextDraft = (TextView) view.findViewById(R.id.math_number_main_layout).findViewById(R.id.tv_math_number_main_has);
-        mTextSubmit = (TextView) view.findViewById(R.id.math_number_main_layout).findViewById(R.id.tv_math_number_main_has);
-
-
-        mTvChangeLaneConfig= (TextView) view.findViewById(R.id.tv_change_lane_config);
+//        mTvChangeLaneConfig= (TextView) view.findViewById(R.id.tv_change_lane_config);
         mTextExportNumber = (TextView) view.findViewById(R.id.export_number);
         mText_table_1 = (TextView) view.findViewById(R.id.text_table_1);
         mText_table_2 = (TextView) view.findViewById(R.id.text_table_2);
@@ -136,44 +111,13 @@ public class ConfigFragment1 extends Fragment {
         mText_table_12 = (TextView) view.findViewById(R.id.text_table_12);
     }
 
-    private void initData() {
-        // TODO: 2017/8/14 拿到初始化注册时的注册信息
-        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
-        for (int i = 0; i < strListValue.size(); i++) {
-            String string = strListValue.get(i).toString();
-            Logger.i(string);
-        }
-        mRoad_Q = strListValue.get(1).toString();
-        mStation_Q = strListValue.get(2).toString();
-        mTvChangeStationConfig.setText(mStation_Q);
-        // TODO: 2017/8/5
-        mTvOperatorCheckConfig.setOnClickListener(v -> openSettingActivity());
-        mTvOperatorLoginConfig.setOnClickListener(v -> openSettingActivity());
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setOperatorInfo("check_select = ?", mTvOperatorCheckConfig);
-        setOperatorInfo("login_select = ?", mTvOperatorLoginConfig);
-        mTvChangeLaneConfig.setText((String) SPUtils.get(getActivity(), SPUtils.TEXTLANE, "66"));
-
-    }
-
-    @OnClick({R.id.scan_qr_code, R.id.tv_math_number_main_has,
-            R.id.tv_math_number_main_has_not})
+    @OnClick({R.id.scan_qr_code})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_qr_code:
                 Intent intent = new Intent(getActivity(), CaptureActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SCAN);
-                break;
-            case R.id.tv_math_number_main_has:
-
-                break;
-            case R.id.tv_math_number_main_has_not:
-                Intent intent1 = new Intent(getActivity(), DraftActivity.class);
-                startActivity(intent1);
                 break;
 
             default:
@@ -236,24 +180,6 @@ public class ConfigFragment1 extends Fragment {
     }
 
 
-    private void openSettingActivity() {
-        Intent intent = new Intent(getActivity(), SettingActivity.class);
-        startActivity(intent);
-    }
-
-    private void setOperatorInfo(String condition, TextView textView) {
-        List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
-        if (operatorList.size() != 0) {
-            Logger.i(operatorList.toString());
-            String job_number = operatorList.get(0).getJob_number();
-            String operator_name = operatorList.get(0).getOperator_name();
-            textView.setText(job_number + "(" + operator_name + ")");
-        } else {
-            textView.setText("500001(苏三)");
-        }
-
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -261,14 +187,14 @@ public class ConfigFragment1 extends Fragment {
     }
 
 
-    public void setSubmitInfoListener(OnFragmentListener listener) {
+    public static void setScanConnectListener(ScanBeanConnectListener listener) {
 
         String scanCode = mTextExportNumber.getText().toString().trim();
 
         if (scanCode != null && !"".equals(scanCode)) {
-            String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
-            String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
-            String lane_Q = mTvChangeLaneConfig.getText().toString().trim();
+//            String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
+//            String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
+      //      String lane_Q = mTvChangeLaneConfig.getText().toString().trim();
 
             String scan_01Q = mText_table_1.getText().toString().trim();
             String scan_02Q = mText_table_2.getText().toString().trim();
@@ -283,12 +209,12 @@ public class ConfigFragment1 extends Fragment {
             String scan_11Q = mText_table_11.getText().toString().trim();
             String scan_12Q = mText_table_12.getText().toString().trim();
 
-            ConfigInfoBean bean = new ConfigInfoBean();
-            bean.setRoad(mRoad_Q);
-            bean.setStation(mStation_Q);
-            bean.setLane(lane_Q);
-            bean.setCheckOperator(checkOperator_Q);
-            bean.setLoginOperator(loginOperator_Q);
+            ScanInfoBean bean = new ScanInfoBean();
+//            bean.setRoad(mRoad_Q);
+//            bean.setStation(mStation_Q);
+        //    bean.setLane(lane_Q);
+//            bean.setCheckOperator(checkOperator_Q);
+//            bean.setLoginOperator(loginOperator_Q);
             bean.setScan_code(scanCode);
             bean.setScan_01Q(scan_01Q);
             bean.setScan_02Q(scan_02Q);
@@ -303,14 +229,16 @@ public class ConfigFragment1 extends Fragment {
             bean.setScan_11Q(scan_11Q);
             bean.setScan_12Q(scan_12Q);
 
-            listener.onFragmentInteraction(bean);
+            Logger.i("!!!!!!!!!!!!!!!!!"+bean.toString());
+
+            listener.beanConnect(bean);
         } else {
             ToastUtils.singleToast("请扫描二维码");
             return;
         }
     }
 
-    public interface OnFragmentListener {
-        void onFragmentInteraction(ConfigInfoBean bean);
+    public interface ScanBeanConnectListener {
+        void beanConnect(ScanInfoBean bean);
     }
 }

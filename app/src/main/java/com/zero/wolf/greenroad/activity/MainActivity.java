@@ -8,11 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,38 +20,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
-import com.zero.wolf.greenroad.adapter.MainViewPagerAdapter;
-import com.zero.wolf.greenroad.bean.ConfigInfoBean;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
+import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
-import com.zero.wolf.greenroad.fragment.ConfigFragment;
-import com.zero.wolf.greenroad.fragment.DetailsFragment;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
-import com.zero.wolf.greenroad.https.HttpUtilsApi;
-import com.zero.wolf.greenroad.https.PostInfo;
-import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
-import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
-import com.zero.wolf.greenroad.tools.SnackbarUtils;
-import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
 import com.zero.wolf.greenroad.update.CheckUpdateUtils;
@@ -68,15 +56,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -88,10 +67,26 @@ public class MainActivity extends BaseActivity implements
 
     @BindView(R.id.toolbar_main)
     Toolbar mToolbarMain;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
-    @BindView(R.id.drawer_layout)
-    FloatingActionButton mMainSubmit;
+    @BindView(R.id.tv_change_station_main)
+    TextView mTvChangeStationMain;
+    @BindView(R.id.tv_change_lane_main)
+    TextView mTvChangeLaneMain;
+    @BindView(R.id.tv_operator_check_main)
+    TextView mTvOperatorCheckMain;
+    @BindView(R.id.tv_operator_login_main)
+    TextView mTvOperatorLoginMain;
+    @BindView(R.id.custom_shape_line_rect_has)
+    TextView mCustomShapeLineRectHas;
+    @BindView(R.id.tv_math_number_main_has)
+    TextView mTvMathNumberMainHas;
+    @BindView(R.id.custom_shape_line_rect_has_not)
+    TextView mCustomShapeLineRectHasNot;
+    @BindView(R.id.tv_math_number_main_has_not)
+    TextView mTvMathNumberMainHasNot;
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -115,13 +110,12 @@ public class MainActivity extends BaseActivity implements
     private int thumb_margin_left_day = 0;
     private int thumb_margin_left_night = 0;
 
-    private MainViewPagerAdapter mPagerAdapter;
-    private String mLogin_operator_P;
-    private String mCheck_operator_P;
-    private DetailInfoBean mDetailInfoBean;
-    private ConfigInfoBean mConfigInfoBean;
-    private ArrayList<String> mPhotoPaths;
 
+    private DetailInfoBean mDetailInfoBean;
+    private ScanInfoBean mScanInfoBean;
+
+    private String mRoad_Q;
+    private String mStation_Q;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +126,7 @@ public class MainActivity extends BaseActivity implements
 
         ButterKnife.bind(this);
         mActivity = this;
+
         List app_config_info = new ArrayList<String>();
 
         app_config_info.add("163127841234");
@@ -141,16 +136,47 @@ public class MainActivity extends BaseActivity implements
         Logger.i(app_config_info.toString());
         SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
 
+
+
+        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
+        for (int i = 0; i < strListValue.size(); i++) {
+            String string = strListValue.get(i).toString();
+            Logger.i(string);
+        }
+        mRoad_Q = strListValue.get(1).toString();
+        mStation_Q = strListValue.get(2).toString();
+
+        mTvOperatorCheckMain = (TextView) findViewById(R.id.tv_operator_check_main);
+        mTvOperatorLoginMain = (TextView) findViewById(R.id.tv_operator_login_main);
+
+        mTvChangeLaneMain.setOnClickListener(v -> openSettingActivity());
+        mTvOperatorCheckMain.setOnClickListener(v -> openSettingActivity());
+        mTvOperatorLoginMain.setOnClickListener(v -> openSettingActivity());
+
+        mTvChangeStationMain.setText(mStation_Q);
+
+        Button button = (Button) findViewById(R.id.btn_enter_show);
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ShowActivity.class);
+            startActivity(intent);
+        });
+
+        mCustomShapeLineRectHasNot.setOnClickListener(v -> {
+            Intent intent1 = new Intent(MainActivity.this, DraftActivity.class);
+            startActivity(intent1);
+        });
+        mCustomShapeLineRectHas.setOnClickListener(v -> {
+            Intent intent1 = new Intent(MainActivity.this, DraftActivity.class);
+            startActivity(intent1);
+        });
+
+
         initData();
         //initSp();
         initView();
 
 
-
-
-
     }
-
 
     private void initData() {
 
@@ -245,7 +271,6 @@ public class MainActivity extends BaseActivity implements
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     /**
@@ -360,7 +385,22 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        setOperatorInfo("check_select = ?", mTvOperatorCheckMain);
+        setOperatorInfo("login_select = ?", mTvOperatorLoginMain);
+        mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
 
+
+    }
+    private void setOperatorInfo(String condition, TextView textView) {
+        List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
+        if (operatorList.size() != 0) {
+            Logger.i(operatorList.toString());
+            String job_number = operatorList.get(0).getJob_number();
+            String operator_name = operatorList.get(0).getOperator_name();
+            textView.setText(job_number + "(" + operator_name + ")");
+        } else {
+            textView.setText("500001(苏三)");
+        }
 
     }
 
@@ -555,177 +595,8 @@ public class MainActivity extends BaseActivity implements
         Logger.i("mainactivity被销毁");
         //  PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    private void openSettingActivity() {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.caogao:
-                ToastUtils.singleToast("实现保存草稿");
-                saveDraft();
-                break;
-
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @OnClick(R.id.main_submit)
-    public void onClick(View view) {
-        SnackbarUtils.showShortSnackbar(view, "提交信息", Color.GREEN, Color.BLUE);
-        submit2Service();
-    }
-
-    private void submit2Service() {
-        getListenerData();
-
-
-        PostInfo info = new PostInfo();
-        info.setCheck("苏三");
-        info.setLogin("璟四");
-        Gson gson = new Gson();
-        String route = gson.toJson(info);
-
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-
-
-        HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
-
-        Logger.i("json  string" + route);
-
-
-        Observable<HttpResultPolling> observable = api.task(body);
-        observable.subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<HttpResultPolling>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(HttpResultPolling httpResultPolling) {
-                        int code = httpResultPolling.getCode();
-                        Logger.i(code + "");
-                    }
-                });
-    }
-
-    /**
-     * 拿到两个fragment中被监听的数据
-     * 在提交至服务器以及保存草稿中都要用到
-     */
-    private void getListenerData() {
-        ConfigFragment.newInstance().setSubmitInfoListener(bean -> {
-            mConfigInfoBean = bean;
-            Logger.i(mConfigInfoBean.toString());
-            ToastUtils.singleToast(mConfigInfoBean.toString());
-        });
-
-        DetailsFragment.newInstance().setSubmitInfoListener((bean) -> {
-            mDetailInfoBean = bean;
-            List<String> bitmapList = mDetailInfoBean.getBitmapPaths();
-
-            if (bitmapList != null && bitmapList.size() != 0) {
-                List<MultipartBody.Part> parts = PathUtil
-                        .getBodyPart(bitmapList);
-                Logger.i(mDetailInfoBean.toString());
-                Logger.i(parts.toString());
-            }
-        });
-
-        //ToastUtils.singleToast(mConfigInfoBean.toString() + mDetailInfoBean.toString());
-    }
-
-    /**
-     * 保存草稿
-     * 1.进入草稿的activity并保存
-     * 2.将数据保存到数据库
-     */
-    private void saveDraft() {
-        getListenerData();
-
-        if (mConfigInfoBean == null || "".equals(mConfigInfoBean.getScan_code())) {
-            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存111");
-            return;
-        }
-        Logger.i(mConfigInfoBean.getScan_code());
-        Logger.i(mConfigInfoBean.toString());
-        List<SupportDraft> supportDrafts = DataSupport.where("scan_code = ?",
-                mConfigInfoBean.getScan_code()).find(SupportDraft.class);
-
-        //   DraftActivity.actionStart(this, mConfigInfoBean, mDetailInfoBean, mPhotoPaths);
-//        if (supportDrafts.size() == 0) {
-
-        SupportDraft draft = new SupportDraft();
-
-        draft.setBitmapPaths(mDetailInfoBean.getBitmapPaths());
-        draft.setNumber(mDetailInfoBean.getNumber());
-        draft.setColor(mDetailInfoBean.getColor());
-        draft.setIsFree(mDetailInfoBean.getIsFree());
-        draft.setIsRoom(mDetailInfoBean.getIsRoom());
-        draft.setGoods(mDetailInfoBean.getGoods());
-        draft.setConclusion(mDetailInfoBean.getConclusion());
-        draft.setDescription(mDetailInfoBean.getDescription());
-
-//        draft.setRoad(mConfigInfoBean.get);
-        draft.setCheckOperator(mConfigInfoBean.getCheckOperator());
-        draft.setLoginOperator(mConfigInfoBean.getLoginOperator());
-        draft.setRoad(mConfigInfoBean.getRoad());
-        draft.setStation(mConfigInfoBean.getStation());
-        draft.setLane(mConfigInfoBean.getLane());
-
-        draft.setScan_01Q(mConfigInfoBean.getScan_01Q());
-        draft.setScan_02Q(mConfigInfoBean.getScan_02Q());
-        draft.setScan_03Q(mConfigInfoBean.getScan_03Q());
-        draft.setScan_04Q(mConfigInfoBean.getScan_04Q());
-        draft.setScan_05Q(mConfigInfoBean.getScan_05Q());
-        draft.setScan_06Q(mConfigInfoBean.getScan_06Q());
-        draft.setScan_07Q(mConfigInfoBean.getScan_07Q());
-        draft.setScan_08Q(mConfigInfoBean.getScan_08Q());
-        draft.setScan_09Q(mConfigInfoBean.getScan_09Q());
-        draft.setScan_10Q(mConfigInfoBean.getScan_10Q());
-        draft.setScan_11Q(mConfigInfoBean.getScan_11Q());
-        draft.setScan_12Q(mConfigInfoBean.getScan_12Q());
-        draft.setScan_code(mConfigInfoBean.getScan_code());
-        draft.setDraftTime(TimeUtil.getCurrentTimeTos());
-        draft.save();
-        List<SupportDraft> draftList = DataSupport.findAll(SupportDraft.class);
-        for (int i = 0; i < draftList.size(); i++) {
-            Logger.i(draftList.get(i).toString());
-        }
-
-//        } else {
-//            ToastUtils.singleToast("该车信息已经保存为草稿");
-        //     }
-
-
-    }
-
-
-    /*@Override
-    public void onFragmentInteraction(String tvOperatorCheckConfig, String tvOperatorLoginConfig) {
-        mCheck_operator_P = tvOperatorCheckConfig;
-        mLogin_operator_P = tvOperatorLoginConfig;
-        Logger.i(mCheck_operator_P+mLogin_operator_P);
-    }*/
 }

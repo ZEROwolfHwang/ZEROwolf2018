@@ -138,8 +138,8 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
         }
 
         public void bindHolder(SupportDraft supportDraft) {
-            String check = supportDraft.getCheckOperator();
-            String login = supportDraft.getLoginOperator();
+            String check = supportDraft.getSiteCheck();
+            String login = supportDraft.getSiteLogin();
             String goods = supportDraft.getGoods();
             String car_number = supportDraft.getNumber();
             String shutTime = supportDraft.getDraftTime();

@@ -5,102 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/layout_margin10dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:elevation="3dp"
-            android:gravity="center">
-
-            <ImageView
-                style="@style/main_left_image_view"
-                android:background="?attr/custom_car_station_main"/>
-
-            <LinearLayout
-                style="@style/main_text_layout_bg_style">
-
-                <TextView
-                    style="@style/main_text_static_tv_style"
-                    android:text="登记站"/>
-
-                <ImageView
-                    style="@style/main_text_static_iv_style"/>
-
-                <TextView
-                    android:id="@+id/tv_change_station_config"
-                    style="@style/main_text_change_tv_style"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="@dimen/layout_margin5dp"
-            android:elevation="3dp"
-            android:gravity="center">
-
-            <ImageView
-                style="@style/main_left_image_view"
-                android:background="?attr/custom_car_station_main"/>
-
-            <LinearLayout
-                style="@style/main_text_layout_bg_style">
-
-                <TextView
-                    style="@style/main_text_static_tv_style"
-                    android:text="登记车道"/>
-
-                <ImageView
-                    style="@style/main_text_static_iv_style"/>
-
-                <TextView
-                    android:id="@+id/tv_change_lane_config"
-                    style="@style/main_text_change_tv_style"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="@dimen/layout_margin5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                style="@style/main_left_image_view"
-                android:background="?attr/custom_car_station_main"/>
-
-            <include
-                layout="@layout/layout_text_group_main_operator"/>
-
-        </LinearLayout>
-
-        <include
-            android:id="@+id/math_number_main_layout"
-            layout="@layout/math_number_main"/>
-    </LinearLayout>
-
-
-    <!--  <ImageView
-          android:id="@+id/iv_camera"
-          android:layout_width="160dp"
-          android:layout_height="160dp"
-          android:layout_gravity="center"
-          android:layout_marginTop="@dimen/layout_margin10dp"
-          android:elevation="15dp"
-          android:background="?attr/custom_main_shut_selector_btn"
-          android:scaleType="fitCenter"
-          android:layout_below="@+id/linear_layout_main"
-          android:layout_centerHorizontal="true"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -112,12 +17,11 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:text="出口流水号"
-            android:textColor="?attr/custom_fragment_static_text"
             android:textSize="@dimen/text16"/>
 
         <TextView

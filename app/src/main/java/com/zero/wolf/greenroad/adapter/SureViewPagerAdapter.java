@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
-import com.zero.wolf.greenroad.fragment.CheckFragment;
 import com.zero.wolf.greenroad.fragment.GoodsFragment;
 import com.zero.wolf.greenroad.fragment.PhotoFragment;
 
@@ -27,12 +26,7 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
         mMain2Sure = main2Sure;
 
     }
-  /*  @Override
-    public Parcelable saveState() {
-        Bundle bundle = (Bundle) super.saveState();
-        bundle.putParcelableArray("states", null); // Never maintain any states from the base class to avoid TransactionTooLargeException
-        return bundle;
-    }*/
+
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
@@ -46,9 +40,6 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 fragment = PhotoFragment.newInstance();
                 break;
-            case 3:
-                fragment =  CheckFragment.newInstance(mMain2Sure.getConclusion_I(),mMain2Sure.getDescription_I());
-                break;
 
             default:
                 fragment = CarNumberFragment.newInstance(mMain2Sure.getCarNumber_I());
@@ -59,7 +50,7 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -68,11 +59,9 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "车牌号";
             case 1:
-                return "货物";
+                return "载物";
             case 2:
                 return "照片";
-            case 3:
-                return "检查结果";
 
         }
         return null;

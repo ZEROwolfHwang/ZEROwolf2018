@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
+        android:persistent="true"
         android:name=".GreenRoadApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo_green_road"
@@ -37,7 +38,7 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -45,14 +46,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activity.PhotoActivity"
-            android:launchMode="singleTask"
+            android:name=".activity.ShowActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden">
+            android:windowSoftInputMode="adjustPan"
+            android:clearTaskOnLaunch="false"
+            android:alwaysRetainTaskState="true">
         </activity>
         <activity
-            android:name=".activity.SureGoodsActivity111"
+            android:name=".activity.SureGoodsActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">

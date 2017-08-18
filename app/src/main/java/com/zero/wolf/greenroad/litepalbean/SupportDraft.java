@@ -12,8 +12,8 @@ public class SupportDraft extends DataSupport {
 
 
     private String draftTime;
-    private String checkOperator;
-    private String loginOperator;
+    private String siteCheck;
+    private String siteLogin;
     private String station;
     private String lane;
     private String road;
@@ -56,20 +56,20 @@ public class SupportDraft extends DataSupport {
         this.draftTime = draftTime;
     }
 
-    public String getCheckOperator() {
-        return checkOperator;
+    public String getSiteCheck() {
+        return siteCheck;
     }
 
-    public void setCheckOperator(String checkOperator) {
-        this.checkOperator = checkOperator;
+    public void setSiteCheck(String siteCheck) {
+        this.siteCheck = siteCheck;
     }
 
-    public String getLoginOperator() {
-        return loginOperator;
+    public String getSiteLogin() {
+        return siteLogin;
     }
 
-    public void setLoginOperator(String loginOperator) {
-        this.loginOperator = loginOperator;
+    public void setSiteLogin(String siteLogin) {
+        this.siteLogin = siteLogin;
     }
 
     public String getStation() {
@@ -260,8 +260,8 @@ public class SupportDraft extends DataSupport {
     public String toString() {
         return "SupportDraft{" +
                 "draftTime='" + draftTime + '\'' +
-                ", checkOperator='" + checkOperator + '\'' +
-                ", loginOperator='" + loginOperator + '\'' +
+                ", checkOperator='" + siteCheck + '\'' +
+                ", loginOperator='" + siteLogin + '\'' +
                 ", station='" + station + '\'' +
                 ", lane='" + lane + '\'' +
                 ", road='" + road + '\'' +

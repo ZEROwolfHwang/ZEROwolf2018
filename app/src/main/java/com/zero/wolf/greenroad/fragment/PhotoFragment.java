@@ -63,8 +63,6 @@ public class PhotoFragment extends Fragment {
     LinearLayout mIvCarBody;
     @BindView(R.id.ll_huowu)
     LinearLayout mIvCarGoods;
-    @BindView(R.id.photo_iv_camera)
-    ImageView mPhotoIvCamera;
     @BindView(R.id.button_selected_all)
     ImageView mButtonSelectedAll;
 
@@ -140,52 +138,15 @@ public class PhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mImgSanzheng_1 = (RoundImageView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_photo);
-        mImgSanzheng_2 = (RoundImageView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_photo);
-        mImgSanzheng_3 = (RoundImageView) view.findViewById(R.id.sanzheng_3).findViewById(R.id.image_show_photo);
-        mImgCheshen_1 = (RoundImageView) view.findViewById(R.id.cheshenchexing_1).findViewById(R.id.image_show_photo);
-        mImgCheshen_2 = (RoundImageView) view.findViewById(R.id.cheshenchexing_2).findViewById(R.id.image_show_photo);
-        mImgHuowu_1 = (RoundImageView) view.findViewById(R.id.huowu_1).findViewById(R.id.image_show_photo);
-        mImgHuowu_2 = (RoundImageView) view.findViewById(R.id.huowu_2).findViewById(R.id.image_show_photo);
 
-        mRoundedImageViews = new RoundImageView[]{mImgSanzheng_1, mImgSanzheng_2, mImgSanzheng_3,
-                mImgCheshen_1, mImgCheshen_2, mImgHuowu_1, mImgHuowu_2};
-
-       /* mTextSanzheng_1 = (TextView) view.findViewById(R.id.sanzheng_1).findViewById(R.id.image_show_text);
-        mTextSanzheng_2 = (TextView) view.findViewById(R.id.sanzheng_2).findViewById(R.id.image_show_text);
-        mTextSanzheng_3 = (TextView) view.findViewById(R.id.sanzheng_3).findViewById(R.id.image_show_text);
-        mTextCheshen_1 = (TextView) view.findViewById(R.id.cheshenchexing_1).findViewById(R.id.image_show_text);
-        mTextCheshen_2 = (TextView) view.findViewById(R.id.cheshenchexing_2).findViewById(R.id.image_show_text);
-        mTextHuowu_1 = (TextView) view.findViewById(R.id.huowu_1).findViewById(R.id.image_show_text);
-        mTextHuowu_2 = (TextView) view.findViewById(R.id.huowu_2).findViewById(R.id.image_show_text);
-
-        mTextSanzheng_1.setText("三证-1");
-        mTextSanzheng_2.setText("三证-2");
-        mTextSanzheng_3.setText("三证-3");
-        mTextCheshen_1.setText("车身车型-1");
-        mTextCheshen_2.setText("车身车型-2");
-        mTextHuowu_1.setText("货物-1");
-        mTextHuowu_2.setText("货物-2");
-*/
 
         if (mMyBitmaps != null && mMyBitmaps.size() != 0) {
-/*
-            if (mMyBitmapList == null) {
-                mMyBitmapList = new ArrayList<>();
-                mMyBitmapList.addAll(mMyBitmaps);
-            } else {
-                if (mMyBitmapList.size() != 0) {
-                    mMyBitmapList.clear();
-                    mMyBitmapList.addAll(mMyBitmaps);
-                }
-            }*/
+
             for (int i = 0; i < mMyBitmaps.size(); i++) {
                 mRoundedImageViews[i].setImageBitmap(mMyBitmaps.get(i).getBm());
             }
         }
-      /*  if (mMyBitmapList != null && mMyBitmapList.size() != 0) {
-        }
-*/
+
         return view;
     }
 
@@ -196,8 +157,7 @@ public class PhotoFragment extends Fragment {
         }
     }
 
-    @OnClick({R.id.ll_sanzheng, R.id.ll_cheshenchexing, R.id.ll_huowu,
-            R.id.button_selected_all, R.id.photo_iv_camera})
+    @OnClick({R.id.ll_sanzheng, R.id.ll_cheshenchexing, R.id.ll_huowu})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_sanzheng:
@@ -230,11 +190,6 @@ public class PhotoFragment extends Fragment {
 
                 }*/
                 Logger.i("onClick: " + "点击了选择货物的照片");
-                break;
-            case R.id.button_selected_all:
-                openPicture(7, CHOOSE_CAR_ALL);
-
-                Logger.i("onClick: " + "点击了拍车牌的照片");
                 break;
 
             case R.id.photo_iv_camera:

@@ -4,14 +4,7 @@ package com.zero.wolf.greenroad.bean;
  * Created by Administrator on 2017/8/14.
  */
 
-public class ConfigInfoBean {
-
-    private String checkOperator;
-    private String loginOperator;
-
-    private String road;
-    private String station;
-    private String lane;
+public class ScanInfoBean {
 
     private String scan_code;
     private String scan_01Q;
@@ -27,52 +20,12 @@ public class ConfigInfoBean {
     private String scan_11Q;
     private String scan_12Q;
 
-    public String getRoad() {
-        return road;
-    }
-
-    public void setRoad(String road) {
-        this.road = road;
-    }
-
-    public String getStation() {
-        return station;
-    }
-
-    public void setStation(String station) {
-        this.station = station;
-    }
-
-    public String getLane() {
-        return lane;
-    }
-
-    public void setLane(String lane) {
-        this.lane = lane;
-    }
-
     public String getScan_code() {
         return scan_code;
     }
 
     public void setScan_code(String scan_code) {
         this.scan_code = scan_code;
-    }
-
-    public String getCheckOperator() {
-        return checkOperator;
-    }
-
-    public void setCheckOperator(String checkOperator) {
-        this.checkOperator = checkOperator;
-    }
-
-    public String getLoginOperator() {
-        return loginOperator;
-    }
-
-    public void setLoginOperator(String loginOperator) {
-        this.loginOperator = loginOperator;
     }
 
     public String getScan_01Q() {
@@ -173,13 +126,8 @@ public class ConfigInfoBean {
 
     @Override
     public String toString() {
-        return "ConfigInfoBean{" +
-                "checkOperator='" + checkOperator + '\'' +
-                ", loginOperator='" + loginOperator + '\'' +
-                ", road='" + road + '\'' +
-                ", station='" + station + '\'' +
-                ", lane='" + lane + '\'' +
-                ", scan_code='" + scan_code + '\'' +
+        return "ScanInfoBean{" +
+                "scan_code='" + scan_code + '\'' +
                 ", scan_01Q='" + scan_01Q + '\'' +
                 ", scan_02Q='" + scan_02Q + '\'' +
                 ", scan_03Q='" + scan_03Q + '\'' +

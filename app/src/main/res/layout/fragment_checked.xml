@@ -1,96 +1,382 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:tools="http://schemas.android.com/tools"
-       xmlns:android="http://schemas.android.com/apk/res/android"
-       tools:showIn="@layout/fragment_details">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/layout_margin5dp"
-        android:orientation="horizontal">
 
-        <ToggleButton
-            android:id="@+id/toggle_is_room"
-            android:layout_width="@dimen/layout_margin0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/layout_margin20dp"
-            android:layout_marginRight="@dimen/layout_margin30dp"
-            android:layout_weight="1"
-            android:background="?attr/custom_toggle_selector_room"
-            android:textOff="@null"
-            android:textOn="@null"/>
-
-        <ToggleButton
-            android:id="@+id/toggle_is_free"
-            android:layout_width="@dimen/layout_margin0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/layout_margin20dp"
-            android:layout_weight="1"
-            android:background="?attr/custom_toggle_selector_free"
-            android:textOff="@null"
-            android:textOn="@null"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin80dp"
-        android:layout_marginTop="@dimen/layout_margin5dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="现场检查结论"
-            android:textColor="?attr/custom_fragment_static_text"
-            android:textSize="@dimen/text16"/>
-
-        <TextView
-            android:id="@+id/config_conclusion_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/text_box_bg"
-            android:paddingLeft="@dimen/layout_margin5dp"
-            android:paddingRight="@dimen/layout_margin5dp"
-            android:gravity="top|left"
-            android:maxLines="2"
-            android:textColor="?attr/custom_white_black_text"
-            android:textSize="@dimen/text18"/>
+            android:orientation="vertical">
+
+            <ScrollView
+                android:fillViewport="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="@dimen/layout_margin5dp"
+                        android:orientation="horizontal">
+
+                        <ToggleButton
+                            android:id="@+id/toggle_is_room"
+                            android:layout_width="@dimen/layout_margin0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/layout_margin20dp"
+                            android:layout_marginRight="@dimen/layout_margin30dp"
+                            android:layout_weight="1"
+                            android:background="?attr/custom_toggle_selector_room"
+                            android:textOff="@null"
+                            android:textOn="@null"/>
+
+                        <ToggleButton
+                            android:id="@+id/toggle_is_free"
+                            android:layout_width="@dimen/layout_margin0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/layout_margin20dp"
+                            android:layout_weight="1"
+                            android:background="?attr/custom_toggle_selector_free"
+                            android:textOff="@null"
+                            android:textOn="@null"/>
+
+                    </LinearLayout>
+
+                    <include
+                        layout="@layout/layout_text_group_main_operator"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_margin80dp"
+                        android:layout_marginTop="@dimen/layout_margin20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text="现场检查结论"
+                            android:textColor="?attr/custom_fragment_static_text"
+                            android:textSize="@dimen/text16"/>
+
+                        <TextView
+                            android:id="@+id/checked_conclusion_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/text_box_bg"
+                            android:gravity="top|left"
+                            android:maxLines="2"
+                            android:paddingLeft="@dimen/layout_margin5dp"
+                            android:paddingRight="@dimen/layout_margin5dp"
+                            android:textColor="?attr/custom_white_black_text"
+                            android:textSize="@dimen/text18"/>
 
 
-    </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="15dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="现场检查说明"
-            android:textColor="?attr/custom_fragment_static_text"
-            android:textSize="@dimen/text16"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/config_description_text"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="现场检查说明"
+                    android:textColor="?attr/custom_fragment_static_text"
+                    android:textSize="@dimen/text16"/>
+
+                <EditText
+                    android:id="@+id/checked_description_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/text_box_bg"
+                    android:gravity="top|left"
+                    android:paddingLeft="@dimen/layout_margin5dp"
+                    android:paddingRight="@dimen/layout_margin5dp"
+                    android:textColor="?attr/custom_white_black_text"
+                    android:textSize="@dimen/text18"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_conclusion"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/text_box_bg"
-            android:gravity="top|left"
-            android:paddingLeft="@dimen/layout_margin5dp"
-            android:paddingRight="@dimen/layout_margin5dp"
-            android:maxLines="3"
-            android:textColor="?attr/custom_white_black_text"
-            android:textSize="@dimen/text18"/>
+            android:background="#0ff"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/layout_margin10dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <!--左半边-->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
 
-</merge>
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="1"
+                            android:text="免费绿通车"/>
+
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="2"
+                            android:text="假冒三证"/>
+
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="3"
+                            android:text="装载产品"/>
+
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="1"
+                            android:text="超限超载"/>
+
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="1"
+                            android:text="不足80%"/>
+
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="3"
+                            android:text="假冒第三方文件"/>
+
+                        <TextView
+                            style="@style/conclusion_title_style"
+                            android:layout_weight="1"
+                            android:text="其他"/>
+
+
+                    </LinearLayout>
+
+                    <!--右半边-->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/check_111_001"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@drawable/conclusion_check_fragment_box"
+                            android:button="@null"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/layout_margin10dp"
+                            android:paddingRight="@dimen/layout_margin10dp"
+                            android:text="符合绿通放行规定"
+                            android:textSize="@dimen/text16"/>
+
+                        <LinearLayout
+                            style="@style/conclusion_check_fragment_layout_style"
+                            android:layout_weight="2">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/layout_margin5dp"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/check_222_001"
+                                    style="@style/conclusion_check_box_style"
+                                    android:paddingLeft="@dimen/layout_margin5dp"
+                                    android:paddingRight="@dimen/layout_margin5dp"
+                                    android:text="三证证件有效期过期"/>
+
+                                <CheckBox
+                                    android:id="@+id/check_222_002"
+                                    style="@style/conclusion_check_box_style"
+                                    android:layout_marginLeft="@dimen/layout_margin10dp"
+                                    android:paddingLeft="@dimen/layout_margin5dp"
+                                    android:paddingRight="@dimen/layout_margin5dp"
+                                    android:text="假冒行驶证"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/check_222_003"
+                                    style="@style/conclusion_check_box_style"
+
+                                    android:text="假冒驾驶证"/>
+
+                                <CheckBox
+                                    android:id="@+id/check_222_004"
+                                    style="@style/conclusion_check_box_style"
+                                    android:layout_marginLeft="@dimen/layout_margin20dp"
+                                    android:text="假冒运营证"/>
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/conclusion_check_fragment_layout_style"
+                            android:layout_weight="3">
+
+                            <CheckBox
+                                android:id="@+id/check_333_001"
+                                style="@style/conclusion_check_box_style"
+                                android:text="目录外农产品"/>
+
+
+                            <CheckBox
+                                android:id="@+id/check_333_002"
+                                style="@style/conclusion_check_box_style"
+                                android:layout_marginBottom="@dimen/layout_margin5dp"
+                                android:layout_marginTop="@dimen/layout_margin5dp"
+                                android:text="混装目录外农产品超过20%"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <CheckBox
+                                    android:id="@+id/check_333_003"
+                                    style="@style/conclusion_check_box_style"
+                                    android:text="混装非农产品"/>
+
+                                <CheckBox
+                                    android:id="@+id/check_333_004"
+                                    style="@style/conclusion_check_box_style"
+                                    android:layout_marginLeft="@dimen/layout_margin20dp"
+                                    android:text="伪装农产品"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/conclusion_check_fragment_layout_style"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            >
+
+                            <CheckBox
+                                android:id="@+id/check_444_001"
+                                style="@style/conclusion_check_box_style"
+                                android:text="超限"/>
+
+                            <CheckBox
+                                android:id="@+id/check_444_002"
+                                style="@style/conclusion_check_box_style"
+                                android:layout_marginLeft="@dimen/layout_margin20dp"
+                                android:layout_marginRight="@dimen/layout_margin20dp"
+                                android:text="超载"/>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            style="@style/conclusion_check_fragment_layout_style"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            >
+
+                            <CheckBox
+                                android:id="@+id/check_555_001"
+                                style="@style/conclusion_check_box_style"
+                                android:text="重量不足80%"/>
+
+                            <CheckBox
+                                android:id="@+id/check_555_002"
+                                style="@style/conclusion_check_box_style"
+                                android:layout_marginLeft="@dimen/layout_margin20dp"
+                                android:text="容积不足80%"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/conclusion_check_fragment_layout_style"
+                            android:layout_weight="3"
+                            >
+
+                            <CheckBox
+                                android:id="@+id/check_666_001"
+                                style="@style/conclusion_check_box_style"
+                                android:text="假冒海关证明单据"/>
+
+                            <CheckBox
+                                android:id="@+id/check_666_002"
+                                style="@style/conclusion_check_box_style"
+                                android:layout_marginBottom="@dimen/layout_margin5dp"
+                                android:layout_marginTop="@dimen/layout_margin5dp"
+                                android:text="假冒货物重量证明文件"/>
+
+
+                            <CheckBox
+                                android:id="@+id/check_666_003"
+                                style="@style/conclusion_check_box_style"
+                                android:text="假冒其他绿通有关证明文件"/>
+
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/check_777_001"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@drawable/conclusion_check_fragment_box"
+                            android:button="@null"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/layout_margin10dp"
+                            android:paddingRight="@dimen/layout_margin10dp"
+                            android:text="其他"
+                            android:textSize="@dimen/text16"/>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_sure_conclusion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="确定检查结论"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+</RelativeLayout>
