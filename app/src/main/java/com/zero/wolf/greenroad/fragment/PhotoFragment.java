@@ -245,6 +245,7 @@ public class PhotoFragment extends Fragment {
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE_SECURE);
                 startActivityForResult(intent, 101);
 
+
             } catch (Exception e1) {
                 try {
                     intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA_SECURE);
