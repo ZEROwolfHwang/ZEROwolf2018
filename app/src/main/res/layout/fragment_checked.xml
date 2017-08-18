@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       tools:showIn="@layout/fragment_details">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/toggle_is_room"
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/layout_margin20dp"
+            android:layout_marginRight="@dimen/layout_margin30dp"
+            android:layout_weight="1"
+            android:background="?attr/custom_toggle_selector_room"
+            android:textOff="@null"
+            android:textOn="@null"/>
+
+        <ToggleButton
+            android:id="@+id/toggle_is_free"
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/layout_margin20dp"
+            android:layout_weight="1"
+            android:background="?attr/custom_toggle_selector_free"
+            android:textOff="@null"
+            android:textOn="@null"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin80dp"
+        android:layout_marginTop="@dimen/layout_margin5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="现场检查结论"
+            android:textColor="?attr/custom_fragment_static_text"
+            android:textSize="@dimen/text16"/>
+
+        <TextView
+            android:id="@+id/config_conclusion_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/text_box_bg"
+            android:paddingLeft="@dimen/layout_margin5dp"
+            android:paddingRight="@dimen/layout_margin5dp"
+            android:gravity="top|left"
+            android:maxLines="2"
+            android:textColor="?attr/custom_white_black_text"
+            android:textSize="@dimen/text18"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="现场检查说明"
+            android:textColor="?attr/custom_fragment_static_text"
+            android:textSize="@dimen/text16"/>
+
+        <TextView
+            android:id="@+id/config_description_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/text_box_bg"
+            android:gravity="top|left"
+            android:paddingLeft="@dimen/layout_margin5dp"
+            android:paddingRight="@dimen/layout_margin5dp"
+            android:maxLines="3"
+            android:textColor="?attr/custom_white_black_text"
+            android:textSize="@dimen/text18"/>
+
+
+    </LinearLayout>
+
+
+</merge>

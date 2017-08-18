@@ -8,8 +8,7 @@
     android:background="?attr/custom_shape_background_fragment"
     android:gravity="center"
     android:id="@+id/layout_bg_operator_config"
-    android:orientation="horizontal"
-    tools:showIn="@layout/content_main">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"

@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -82,15 +84,22 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/6/20.
  */
 
-public class MainActivity extends BaseActivity implements
+public class MainActivity1 extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         SubscriberOnNextListener<List<Subject>> {
 
+
+    @BindView(R.id.tab_main)
+    TabLayout mTabMain;
+    @BindView(R.id.view_pager_main)
+    ViewPager mViewPagerMain;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbarMain;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
     @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.main_submit)
     FloatingActionButton mMainSubmit;
     private long firstClick;
     private static final String TAG = "MainActivity";
@@ -141,16 +150,47 @@ public class MainActivity extends BaseActivity implements
         Logger.i(app_config_info.toString());
         SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
 
+        initViewPagerAndTabs();
         initData();
         //initSp();
         initView();
 
 
+//        mIvCamera.setOnClickListener(new View.OnClickListener() {
+        //          @Override
+        //        public void onClick(View v) {
+/*
+                String android_ID = Settings.Secure
+                        .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+                String macID = (String) SPUtils.get(mActivity, SPUtils.ISACTIVATIONSUCCESS, "");
+
+                Logger.i(macID);
+                if (macID == null) {
+                    Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
+                    startActivity(intent);
+                } else {
+                    if (macID.equals(android_ID)) {
+                        Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                        intent.putExtra("username", mUsername);
+                        intent.putExtra("stationName", mStationName);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, ActivationCodeActivity.class);
+                        startActivity(intent);
+                    }
+                }*/
 
 
     }
 
+    private void initViewPagerAndTabs() {
+        mPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), this);
+        mViewPagerMain.setOffscreenPageLimit(2);//设置viewpager预加载页面数
+        mViewPagerMain.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
+//        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
+        mTabMain.setupWithViewPager(mViewPagerMain);
+    }
 
     private void initData() {
 
@@ -180,7 +220,61 @@ public class MainActivity extends BaseActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+/*
+
+
+
+        //得到版本号
+        mCustom_Version_number = (TextView) findViewById(R.id.version_number);
+        mCustom_Version_number.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
+
+        mCompany_name_text = (TextView) findViewById(R.id.custom_company_name_text);
+
+        mCustom_shape_line_rect_has = (TextView) findViewById(R.id.math_number_main_two)
+                .findViewById(R.id.custom_shape_line_rect_has);
+        mCustom_shape_line_rect_has_not = (TextView) findViewById(R.id.math_number_main_two)
+                .findViewById(R.id.custom_shape_line_rect_has_not);
+
+        mTv_math_number_main_has = (TextView) findViewById(R.id.tv_math_number_main_has);
+        mTv_math_number_main_has_not = (TextView) findViewById(R.id.tv_math_number_main_has_not);
+*/
+
+     /*   mTv_math_number_main_has_not.setOnClickListener(v ->
+        {
+            post_not_upload();
+            onResume();
+            Logger.i("点击了未上传的TextVIEW按钮");
+        });
+*/
     }
+/*
+    private void initSp() {
+        //如果cra_count为空则创建，否则不创建
+        if (SPUtils.get(getApplicationContext(), SPUtils.CAR_COUNT, 0) == null) {
+            Logger.i("zoule?");
+            SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_COUNT, 0);
+        }
+        //如果cra_not_count为空则创建，否则不创建
+        if (SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0) == null) {
+            SPUtils.putAndApply(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
+
+        }
+    }*/
+/*
+    private void initCount() {
+        //找到两个计数的textview
+        mMath_number_main_two = (LinearLayout) findViewById(R.id.math_number_main_two);
+        mTv_number_has_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has).findViewById(R.id.tv_math_number_main_has);
+        mTv_number_has_not_send = (TextView) mMath_number_main_two.findViewById(R.id.math_number_main_has_not).findViewById(R.id.tv_math_number_main_has_not);
+
+
+        int count_shut = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_COUNT, 0);
+        int count_cut = (int) SPUtils.get(getApplicationContext(), SPUtils.CAR_NOT_COUNT, 0);
+
+        mTv_number_has_send.setText(String.valueOf(count_shut));
+        mTv_number_has_not_send.setText(String.valueOf(count_cut));
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -409,17 +503,17 @@ public class MainActivity extends BaseActivity implements
 
                         if (("1".equals(isForce)) && !TextUtils.isEmpty(updateinfo)) {//强制更新
                             Logger.i("强制更新");
-                            forceUpdate(MainActivity.this, appName, downUrl, updateinfo);
+                            forceUpdate(MainActivity1.this, appName, downUrl, updateinfo);
                         } else {//非强制更新
                             //正常升级
                             Logger.i("正常升级");
-                            normalUpdate(MainActivity.this, appName, downUrl, updateinfo);
+                            normalUpdate(MainActivity1.this, appName, downUrl, updateinfo);
                         }
                     }
 
                     @Override
                     public void onError() {
-                        noneUpdate(MainActivity.this);
+                        noneUpdate(MainActivity1.this);
                         Logger.i("返回信息为空,更新错误!");
 
                     }
@@ -447,7 +541,7 @@ public class MainActivity extends BaseActivity implements
                     return;
                 }
                 //   DownLoadApk.download(MainActivity.this,downUrl,updateinfo,appName);
-                AppInnerDownLoder.downLoadApk(MainActivity.this, downUrl, appName);
+                AppInnerDownLoder.downLoadApk(MainActivity1.this, downUrl, appName);
             }
         }).setCancelable(false).create().show();
     }
