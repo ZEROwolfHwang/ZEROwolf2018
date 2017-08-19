@@ -76,7 +76,7 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
         } else {
             return mBitmapList.size();
         }*/
-        return 7;
+        return mBitmapList.size();
     }
 
 
@@ -100,7 +100,7 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
                     MyBitmap myBitmap = mBitmapList.get(position);
                     if (myBitmap != null) {
                         mDetailRecyclerImg.setImageBitmap(myBitmap.getBm());
-                        mDetailRecyclerText.setText(myBitmap.getInfo());
+                        mDetailRecyclerText.setText(myBitmap.getTitle());
                     }
 
                 } else {

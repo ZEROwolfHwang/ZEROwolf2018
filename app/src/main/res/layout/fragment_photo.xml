@@ -15,16 +15,22 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
+
         <TextView
-            android:text="三证照"
-            android:textSize="24sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <android.support.v7.widget.RecyclerView
+            android:layout_height="wrap_content"
+            android:text="三证照"
+            android:textSize="24sp"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/image_sanzheng_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -35,13 +41,15 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
+
         <TextView
-            android:text="车辆照"
-            android:textSize="24sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="车辆照"
+            android:textSize="24sp"/>
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/image_cheshen_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -59,12 +67,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:text="货物照"
-            android:textSize="24sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="货物照"
+            android:textSize="24sp"/>
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/image_huozhao_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

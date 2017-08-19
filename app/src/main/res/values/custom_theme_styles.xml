@@ -9,7 +9,7 @@
 
         <!-- __________________  MainActivity __________________ -->
 
-        <item name="custom_attr_app_bg">@drawable/bg_app_day</item>
+        <item name="custom_attr_app_bg">@color/bg_app_day</item>
         <item name="custom_shape_static">@drawable/shape_static_day</item>
         <item name="custom_white_black_text">@color/change_white_black_text_day</item>
         <item name="custom_my_colorPrimary">@color/toolbar_color_day</item>
@@ -90,7 +90,7 @@
 
         <!-- __________________  MainActivity __________________ -->
 
-        <item name="custom_attr_app_bg">@drawable/bg_app_night</item>
+        <item name="custom_attr_app_bg">@color/bg_app_night</item>
         <item name="custom_shape_static">@drawable/shape_static_night</item>
         <item name="custom_white_black_text">@color/change_white_black_text_night</item>
         <item name="custom_my_colorPrimary">@color/toolbar_color_night</item>
@@ -168,7 +168,7 @@
 
     <!-- ToolBar的背景颜色-->
     <color name="toolbar_color_night">#050326</color>
-    <color name="toolbar_color_day">#52c6cc</color>
+    <color name="toolbar_color_day">#50C6CA</color>
 
     <!-- 车辆计数(大横条)背景以及 车牌,车身,货物 的背景-->
     <color name="shape_line_rect_day">#b0a4ef</color>
@@ -199,6 +199,10 @@
 
     <color name="item_text_color_end_day">#556376</color>
     <color name="item_text_color_end_night">#3f8b5e</color>
+
+    <!--背景颜色-->
+    <color name="bg_app_night">#303039</color>
+    <color name="bg_app_day">#ffffff</color>
 
 
 </resources>

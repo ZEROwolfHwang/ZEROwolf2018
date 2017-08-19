@@ -47,8 +47,11 @@ public class DetailsFragment extends Fragment {
     private String mCarNumber;
     private String mCarGoods;
 
-    private static ArrayList<MyBitmap> mMyBitmaps;
+    private static ArrayList<MyBitmap> mMyBitmaps_sanzheng;
+    private static ArrayList<MyBitmap> mMyBitmaps_cheshen;
+    private static ArrayList<MyBitmap> mMyBitmaps_huowu;
     private DetailsRecyclerAdapter mAdapter;
+    private ArrayList<MyBitmap> mMyBitmaps_recycler_all;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -96,18 +99,30 @@ public class DetailsFragment extends Fragment {
             mCarGoods = edittext;
         });
 
-        PhotoFragment.setBitmapListListener(bitmaps -> {
-            mMyBitmaps = bitmaps;
+        PhotoFragment.setBitmapListListener((mSanZhengBitmaps, mCheShenBitmaps, mHuowuBitmaps) ->{
+            mMyBitmaps_sanzheng = mSanZhengBitmaps;
+            mMyBitmaps_cheshen = mCheShenBitmaps;
+            mMyBitmaps_huowu = mHuowuBitmaps;
         });
+        mMyBitmaps_recycler_all = new ArrayList<>();
+        if (mMyBitmaps_sanzheng != null) {
+        mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
+        }
+        if (mMyBitmaps_cheshen != null) {
 
+        mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
+        }
+        if (mMyBitmaps_huowu != null) {
 
+        mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
+        }
 
         Logger.i(mCarNumber + "]]]]]]]]]");
         mTvChangeNumberDetail.setText(mCarNumber);
         mTvChangeGoodsDetail.setText(mCarGoods);
 
-        if (mMyBitmaps != null && mMyBitmaps.size() != 0) {
-            mAdapter.updateListView(mMyBitmaps);
+        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
+            mAdapter.updateListView(mMyBitmaps_recycler_all);
         }
     }
 
@@ -115,7 +130,7 @@ public class DetailsFragment extends Fragment {
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(manager);
-        mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps, () -> {
+        mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps_sanzheng, () -> {
             enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
         });
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
@@ -201,22 +216,24 @@ public class DetailsFragment extends Fragment {
      * @param listener
      */
     public static void setBitmapListListener(BitmapListListener listener) {
-        if (mMyBitmaps != null) {
-            listener.BitmapListener(mMyBitmaps);
+        if (mMyBitmaps_sanzheng != null && mMyBitmaps_cheshen != null && mMyBitmaps_huowu != null) {
+
+            listener.BitmapListener(mMyBitmaps_sanzheng,mMyBitmaps_cheshen,mMyBitmaps_huowu);
         }
     }
 
 
     public interface BitmapListListener {
-        void BitmapListener(ArrayList<MyBitmap> bitmaps);
+        void BitmapListener(ArrayList<MyBitmap> mMyBitmaps_sanzheng,
+                            ArrayList<MyBitmap> mMyBitmaps_cheshen,ArrayList<MyBitmap> mMyBitmaps_huowu);
     }
 
     public void setDetailsConnectListener(DetailsBeanConnectListener listener) {
 
         ArrayList<String> bitmap_path = new ArrayList<>();
-        if (mMyBitmaps != null) {
-            for (int i = 0; i < mMyBitmaps.size(); i++) {
-                bitmap_path.add(mMyBitmaps.get(i).getPath());
+        if (mMyBitmaps_sanzheng != null) {
+            for (int i = 0; i < mMyBitmaps_sanzheng.size(); i++) {
+                bitmap_path.add(mMyBitmaps_sanzheng.get(i).getPath());
             }
         }
 

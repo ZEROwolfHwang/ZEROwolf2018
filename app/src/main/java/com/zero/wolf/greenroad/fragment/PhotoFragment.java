@@ -1,26 +1,20 @@
 package com.zero.wolf.greenroad.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
@@ -30,13 +24,10 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.activity.RoundImageView;
-import com.zero.wolf.greenroad.tools.SPUtils;
-import com.zero.wolf.greenroad.tools.ToastUtils;
+import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
+import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,8 +54,13 @@ public class PhotoFragment extends Fragment {
     LinearLayout mIvCarBody;
     @BindView(R.id.ll_huowu)
     LinearLayout mIvCarGoods;
-    @BindView(R.id.button_selected_all)
-    ImageView mButtonSelectedAll;
+    @BindView(R.id.image_sanzheng_recycler)
+    RecyclerView mImageSanzhengRecycler;
+    @BindView(R.id.image_cheshen_recycler)
+    RecyclerView mImageCheshenRecycler;
+    @BindView(R.id.image_huozhao_recycler)
+    RecyclerView mImageHuozhaoRecycler;
+
 
 
     private String mParam1;
@@ -78,27 +74,25 @@ public class PhotoFragment extends Fragment {
     private File mFile;
     private String mFilePath_str;
 
-    private OnFragmentInteractionListener mListener;
-    private RoundImageView mImgSanzheng_1;
-    private RoundImageView mImgSanzheng_2;
-    private RoundImageView mImgSanzheng_3;
-    private RoundImageView mImgCheshen_1;
-    private RoundImageView mImgCheshen_2;
-    private RoundImageView mImgHuowu_1;
-    private RoundImageView mImgHuowu_2;
 
-    private TextView mTextSanzheng_1;
-    private TextView mTextSanzheng_2;
-    private TextView mTextSanzheng_3;
-    private TextView mTextCheshen_1;
-    private TextView mTextCheshen_2;
-    private TextView mTextHuowu_1;
-    private TextView mTextHuowu_2;
-    private List<LocalMedia> mSelectList;
-    private RoundImageView[] mRoundedImageViews;
-    private static ArrayList<MyBitmap> mMyBitmapList;
+    private List<LocalMedia> mSelectList_sanzheng;
+    private List<LocalMedia> mSelectList_cheshen;
+    private List<LocalMedia> mSelectList_huowu;
+
+
     private static PhotoFragment sPhotoFragment;
     private static ArrayList<MyBitmap> mMyBitmaps;
+    private BasePhotoAdapter<MyBitmap> mSanZhengAdapter;
+    private BasePhotoAdapter<MyBitmap> mCheShenAdapter;
+    private BasePhotoAdapter<MyBitmap> mHuoWUAdapter;
+    private static ArrayList<MyBitmap> mSanZhengBitmaps;
+    private static ArrayList<MyBitmap> mCheShenBitmaps;
+    private static ArrayList<MyBitmap> mHuoWuBitmaps;
+    private static Bitmap mBitmap_add;
+    private static MyBitmap mMyBitmapAdd;
+    private static ArrayList<MyBitmap> sBitmaps_sanzheng;
+    private static ArrayList<MyBitmap> sBitmaps_cheshen;
+    private static ArrayList<MyBitmap> sBitmaps_huowu;
 
 
     public PhotoFragment() {
@@ -111,9 +105,10 @@ public class PhotoFragment extends Fragment {
 
             sPhotoFragment = new PhotoFragment();
         }
-        DetailsFragment.setBitmapListListener(bitmaps -> {
-            mMyBitmaps = bitmaps;
-            Logger.i(mMyBitmaps.toString());
+        DetailsFragment.setBitmapListListener((mMyBitmaps_sanzheng, mMyBitmaps_cheshen, mMyBitmaps_huowu) -> {
+            sBitmaps_sanzheng = mMyBitmaps_sanzheng;
+            sBitmaps_cheshen = mMyBitmaps_cheshen;
+            sBitmaps_huowu = mMyBitmaps_huowu;
         });
 
         return sPhotoFragment;
@@ -138,62 +133,111 @@ public class PhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
         unbinder = ButterKnife.bind(this, view);
-
+        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.photo_image_add);
+        mMyBitmapAdd = new MyBitmap(mBitmap_add);
+        initRecycler();
 
         if (mMyBitmaps != null && mMyBitmaps.size() != 0) {
 
             for (int i = 0; i < mMyBitmaps.size(); i++) {
-                mRoundedImageViews[i].setImageBitmap(mMyBitmaps.get(i).getBm());
+                //  mRoundedImageViews[i].setImageBitmap(mMyBitmaps.get(i).getBm());
             }
         }
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    /**
+     * 初始化三组照片的recyclerview
+     */
+    private void initRecycler() {
+        mSanZhengBitmaps = new ArrayList<>();
+        if (sBitmaps_sanzheng != null) {
+            mSanZhengBitmaps.addAll(sBitmaps_sanzheng);
         }
+        mCheShenBitmaps = new ArrayList<>();
+        if (sBitmaps_cheshen != null) {
+            mCheShenBitmaps.addAll(sBitmaps_cheshen);
+        }
+        mHuoWuBitmaps = new ArrayList<>();
+        if (sBitmaps_huowu != null) {
+            mHuoWuBitmaps.addAll(sBitmaps_huowu);
+        }
+        mSanZhengBitmaps.add(mMyBitmapAdd);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mImageSanzhengRecycler.setLayoutManager(manager);
+        mSanZhengAdapter = new BasePhotoAdapter<MyBitmap>(getContext(),
+                R.layout.layout_photo_fragment_image, mSanZhengBitmaps) {
+            @Override
+            public void convert(BasePhotoViewHolder holder, int position, MyBitmap bitmap) {
+
+                ImageView imageView = holder.getView(R.id.photo_fragment_image);
+                imageView.setImageBitmap(bitmap.getBm());
+                if (position == mSanZhengBitmaps.size()-1) {
+                    imageView.setOnClickListener(v -> {
+                        openPicture(5,CHOOSE_CAR_NUMBER);
+                    });
+                }
+            }
+        };
+        mImageSanzhengRecycler.setAdapter(mSanZhengAdapter);
+        //车辆车身
+         mCheShenBitmaps.add(mMyBitmapAdd);
+        LinearLayoutManager manager1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mImageCheshenRecycler.setLayoutManager(manager1);
+        mCheShenAdapter = new BasePhotoAdapter<MyBitmap>(getContext(),
+                R.layout.layout_photo_fragment_image, mCheShenBitmaps) {
+            @Override
+            public void convert(BasePhotoViewHolder holder, int position, MyBitmap bitmap) {
+
+                ImageView imageView = holder.getView(R.id.photo_fragment_image);
+                imageView.setImageBitmap(bitmap.getBm());
+                if (position == mCheShenBitmaps.size()-1) {
+                    imageView.setOnClickListener(v -> {
+                        openPicture(5,CHOOSE_CAR_BODY);
+                    });
+                }
+            }
+        };
+        mImageCheshenRecycler.setAdapter(mCheShenAdapter);
+
+        //货物
+         mHuoWuBitmaps.add(mMyBitmapAdd);
+        LinearLayoutManager manager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mImageHuozhaoRecycler.setLayoutManager(manager2);
+        mHuoWUAdapter = new BasePhotoAdapter<MyBitmap>(getContext(),
+                R.layout.layout_photo_fragment_image, mHuoWuBitmaps) {
+            @Override
+            public void convert(BasePhotoViewHolder holder, int position, MyBitmap bitmap) {
+
+                ImageView imageView = holder.getView(R.id.photo_fragment_image);
+                imageView.setImageBitmap(bitmap.getBm());
+                if (position == mHuoWuBitmaps.size()-1) {
+                    imageView.setOnClickListener(v -> {
+                        openPicture(5,CHOOSE_CAR_GOODS);
+                    });
+                }
+            }
+        };
+        mImageHuozhaoRecycler.setAdapter(mHuoWUAdapter);
+
     }
 
-    @OnClick({R.id.ll_sanzheng, R.id.ll_cheshenchexing, R.id.ll_huowu})
+
+    @OnClick({ R.id.ll_cheshenchexing, R.id.ll_huowu})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ll_sanzheng:
-              /*  if (getThemeTag() == 1) {
-                    mIvCarNumber.setImageDrawable(getResources().getDrawable(R.drawable.car_number_dark));
-                } else {
-                    mIvCarNumber.setImageDrawable(getResources().getDrawable(R.drawable.car_number_light));
-
-                Logger.i("onClick: " + "点击了选择车牌的照片");
-                openPicture(3, CHOOSE_CAR_NUMBER);}*/
-                break;
+           /* case R.id.open_picture_sanzheng:
+                openPicture(5, CHOOSE_CAR_NUMBER);
+                break;*/
             case R.id.ll_cheshenchexing:
-               /* openPicture(2, CHOOSE_CAR_BODY);
-                if (getThemeTag() == 1) {
-
-                    mIvCarBody.setImageDrawable(getResources().getDrawable(R.drawable.car_body_dark));
-                } else {
-                    mIvCarBody.setImageDrawable(getResources().getDrawable(R.drawable.car_body_light));
-
-                }*/
-                Logger.i("onClick: " + "点击了选择车身的照片");
+                // openPicture(2, CHOOSE_CAR_BODY);
                 break;
             case R.id.ll_huowu:
                 /*openPicture(2, CHOOSE_CAR_GOODS);
-                if (getThemeTag() == 1) {
 
-                    mIvCarGoods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_dark));
-                } else {
-                    mIvCarGoods.setImageDrawable(getResources().getDrawable(R.drawable.car_goods_light));
-
-                }*/
                 Logger.i("onClick: " + "点击了选择货物的照片");
-                break;
-
-            case R.id.photo_iv_camera:
-                takeOnCamera();
+*/
                 break;
             default:
                 break;
@@ -227,7 +271,8 @@ public class PhotoFragment extends Fragment {
                 //   .showCropFrame(cb_showCropFrame.isChecked())
                 //   .showCropGrid(cb_showCropGrid.isChecked())
                 //   .openClickSound(cb_voice.isChecked())
-                .selectionMedia(mSelectList)
+                .selectionMedia(choose_type==CHOOSE_CAR_NUMBER?mSelectList_sanzheng:
+                        choose_type==CHOOSE_CAR_BODY?mSelectList_cheshen:mSelectList_huowu)
                 .forResult(choose_type);
     }
 
@@ -269,246 +314,87 @@ public class PhotoFragment extends Fragment {
         switch (requestCode) {
             case CHOOSE_CAR_NUMBER:
                 // 图片选择
-               /* Logger.i("回调成功number");
-                mSelectList = PictureSelector.obtainMultipleResult(data);
-                   *//* adapter.setList(selectList);
-                    adapter.notifyDataSetChanged();
-                    DebugUtil.i(TAG, "onActivityResult:" + selectList.size());*//*
-                for (int i = 0; i < mSelectList.size(); i++) {
-                    Logger.i(mSelectList.get(i).getPath());
-                }*/
-                break;
-            case CHOOSE_CAR_BODY:
-            /*    // 图片选择
-                Logger.i("回调成功body");
-                mSelectList = PictureSelector.obtainMultipleResult(data);
-                for (int i = 0; i < mSelectList.size(); i++) {
-                    Logger.i(mSelectList.get(i).getPath());
-                }*/
-                break;
-            case CHOOSE_CAR_GOODS:
-             /*   // 图片选择
-                Logger.i("回调成功goods");
-                mSelectList = PictureSelector.obtainMultipleResult(data);
-                for (int i = 0; i < mSelectList.size(); i++) {
-                    Logger.i(mSelectList.get(i).getPath());
-                }*/
-                break;
-            case CHOOSE_CAR_ALL:
-                // 图片选择
-
-                if (mMyBitmapList == null) {
-                    mMyBitmapList = new ArrayList<>();
+                if (mSanZhengBitmaps == null) {
+                    mSanZhengBitmaps = new ArrayList<>();
                 } else {
-                    if (mMyBitmapList.size() != 0) {
-                        mMyBitmapList.clear();
+                    if (mSanZhengBitmaps.size() != 0 ) {
+                        mSanZhengBitmaps.clear();
                     }
                 }
                 Logger.i("回调成功goods");
-                mSelectList = PictureSelector.obtainMultipleResult(data);
-                Drawable drawable = getResources().getDrawable(R.drawable.demo);
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bitmap1 = bitmapDrawable.getBitmap();
-
+                mSelectList_sanzheng = PictureSelector.obtainMultipleResult(data);
                 new Thread(() -> {
-
-                    for (int i = 0; i < 7; i++) {
-                        if (i < mSelectList.size()) {
-
-                            String photo_path = mSelectList.get(i).getPath();
-                            Logger.i(photo_path);
-//                    mImgSanzheng_1.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(0).getBm()));
-//                    mImgSanzheng_2.post(() -> mImgSanzheng_2.setImageBitmap(finalList.get(1).getBm()));
-//                    mImgSanzheng_3.post(() -> mImgSanzheng_3.setImageBitmap(finalList.get(2).getBm()));
-                            Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
-                            MyBitmap myBitmap = new MyBitmap(photo_path, bitmap);
-                            if (i == 0) {
-                                myBitmap.setInfo("三证-1");
-                            } else if (i == 1) {
-                                myBitmap.setInfo("三证-2");
-                            } else if (i == 2) {
-                                myBitmap.setInfo("三证-3");
-                            } else if (i == 3) {
-                                myBitmap.setInfo("车身车型-1");
-                            } else if (i == 4) {
-                                myBitmap.setInfo("车身车型-2");
-                            } else if (i == 5) {
-                                myBitmap.setInfo("货物-1");
-                            } else if (i == 6) {
-                                myBitmap.setInfo("货物-2");
-                            }
-                            mMyBitmapList.add(myBitmap);
-                            int finalI = i;
-                            mRoundedImageViews[i].post(() -> {
-                                mRoundedImageViews[finalI].setImageBitmap(bitmap);
-                            });
-                        } else {
-                            int finalI1 = i;
-                            mRoundedImageViews[i].post(() -> mRoundedImageViews[finalI1].
-                                    setImageBitmap(bitmap1));
-
-                        }
+                    for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
+                        String photo_path = mSelectList_sanzheng.get(i).getPath();
+                        Logger.i(photo_path);
+                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        String title = "三证-" + (i + 1);
+                        MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
+                        mSanZhengBitmaps.add(myBitmap);
                     }
+                    mSanZhengBitmaps.add(mMyBitmapAdd);
+                    mImageSanzhengRecycler.post(() -> {
+                        mSanZhengAdapter.updataRecyclerView(mSanZhengBitmaps);
+                    });
+                }).start();
+                break;
+            case CHOOSE_CAR_BODY:
+                if (mCheShenBitmaps == null) {
+                    mCheShenBitmaps = new ArrayList<>();
+                } else {
+                    if (mCheShenBitmaps.size() != 0 ) {
+                        mCheShenBitmaps.clear();
+                    }
+                }
+                Logger.i("回调成功goods");
+                mSelectList_cheshen = PictureSelector.obtainMultipleResult(data);
+                new Thread(() -> {
+                    for (int i = 0; i < mSelectList_cheshen.size(); i++) {
+                        String photo_path = mSelectList_cheshen.get(i).getPath();
+                        Logger.i(photo_path);
+                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        String title = "车辆-" + (i + 1);
+                        MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
+                        mCheShenBitmaps.add(myBitmap);
+                    }
+                    mCheShenBitmaps.add(mMyBitmapAdd);
+                    mImageCheshenRecycler.post(() -> {
+                        mCheShenAdapter.updataRecyclerView(mCheShenBitmaps);
+                    });
+                }).start();
+                break;
+            case CHOOSE_CAR_GOODS:
+                if (mHuoWuBitmaps == null) {
+                    mHuoWuBitmaps = new ArrayList<>();
+                } else {
+                    if (mHuoWuBitmaps.size() != 0 ) {
+                        mHuoWuBitmaps.clear();
+                    }
+                }
+                Logger.i("回调成功goods");
+                mSelectList_huowu = PictureSelector.obtainMultipleResult(data);
+                new Thread(() -> {
+                    for (int i = 0; i < mSelectList_huowu.size(); i++) {
+                        String photo_path = mSelectList_huowu.get(i).getPath();
+                        Logger.i(photo_path);
+                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        String title = "货照-" + (i + 1);
+                        MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
+                        mHuoWuBitmaps.add(myBitmap);
+                    }
+                    mHuoWuBitmaps.add(mMyBitmapAdd);
+                    mImageHuozhaoRecycler.post(() -> {
+                        mHuoWUAdapter.updataRecyclerView(mHuoWuBitmaps);
+                    });
                 }).start();
                 break;
 
-
-         /*   case 101:
-                //这里可以拓展不同按钮，给下面的方法传不同的参数
-              //  getContactList();
-                break;*/
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void getContactList() {
-
-        //  读取照片然后选择合适的照片保存再list里面
-        final String[] projection = {MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATA};
-        final String orderBy = MediaStore.Images.Media.DISPLAY_NAME;
-        final Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-       /* new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<MyBitmap> list2 = getContentProvider(uri, projection, orderBy);//到时候抽取接口
-
-                Log.e("list", "call: " + list2.toString() + ".size" + list2.size());
-                if (list2 != null) {
-                    if (list2.size() > 3) {//这里看要求最多几张照片
-                        list2 = list2.subList(list2.size() - 7, list2.size());
-                    }
-                    for (int i = 0; i < list2.size(); i++) {
-                        Logger.i(list2.get(i).getPath());
-                    }
-                    final List<MyBitmap> finalList = list2;
-                    mImgSanzheng_1.post(() -> mImgSanzheng_1.setImageBitmap(finalList.get(0).getBm()));
-                    mImgSanzheng_2.post(() -> mImgSanzheng_2.setImageBitmap(finalList.get(1).getBm()));
-                    mImgSanzheng_3.post(() -> mImgSanzheng_3.setImageBitmap(finalList.get(2).getBm()));
-
-                }
-
-            }
-        }).start();*/
 
     }
 
-
-    /**
-     * 获取ContentProvider
-     *
-     * @param projection
-     * @param orderBy
-     */
-    public List<MyBitmap> getContentProvider(Uri uri, String[] projection, String orderBy) {
-
-        List<MyBitmap> myBitmapList = new ArrayList<>();
-        ArrayList<String> IMG_NAME_LIST = new ArrayList<>();
-
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null,
-                null, orderBy);
-        if (null == cursor) {
-            return null;
-        }
-
-        while (cursor.moveToNext()) {
-            Log.e("lengthpro", "getContentProvider: " + projection.length);
-            for (int i = 0; i < projection.length; i++) {
-                String IMG_PATH = cursor.getString(i);
-                if (IMG_PATH != null) {
-                    int length = IMG_PATH.length();
-                    String ss = null;
-                    if (length >= 30) {//根据实际路径得到的。大一点保险
-                        ss = IMG_PATH.substring(length - 23, length);
-                        String substring = ss.substring(0, 4);//大致判断一下是系统图片，后面严格塞选
-                        String hen = ss.substring(12, 13);
-                        if (substring.equals("IMG_") && hen.equals("_")) {
-                            String laststring = ss.substring(4, 19).replace("_", "");
-                            try {
-                                long time = Long.valueOf(laststring).longValue();
-                                Logger.i(String.valueOf(time));
-                                if (time > systemTime1 && time <= systemTime2) {
-                                    IMG_NAME_LIST.add(IMG_PATH);
-                                }
-                            } catch (Exception e) {
-                                Log.e("exception", "getContentProvider: " + e.toString());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        for (int i = 0; i < IMG_NAME_LIST.size(); i++) {
-            try {
-                Bitmap bitmap = convertToBitmap(IMG_NAME_LIST.get(i), 800, 1080);
-
-              /*  String mFilePath_str_new = mFilePath_str + "/" + System.currentTimeMillis()
-                        + "sanzheng" + i + ".jpg";
-
-                saveFile(bitmap, mFilePath_str_new);
-
-                MyBitmap myBitmap = new MyBitmap(mFilePath_str_new, bitmap);
-
-                // FileUtils.deleteJpgPreview(strings);
-                doDelete(IMG_NAME_LIST.get(i));
-                */
-                MyBitmap myBitmap = new MyBitmap(IMG_NAME_LIST.get(i), bitmap);
-                myBitmapList.add(myBitmap);
-            } catch (Exception e) {
-                Log.e("exceptionee", "getSystemTime: " + e.toString());
-
-            }
-        }
-        // Log.e("setsize", "getContentProvider: " + strings);
-
-
-        return myBitmapList;
-    }
-
-    //1、删除图片
-    private void doDelete(String filePath) {
-        Logger.i(" scteenshot event filePath = " + filePath);
-        if (filePath == null) return;
-        File file = new File(filePath);
-        boolean ret = file.delete();
-        Logger.i(" current file is delete result = " + ret);
-        if (ret) {
-            scanFileAsync(filePath);
-        }
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                ToastUtils.singleToast("已删除缩略图");
-            }
-        });
-    }
-
-    //2.需要发广播通知，更新缩略图
-    private void scanFileAsync(String filePath) {
-        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        scanIntent.setData(Uri.fromFile(new File(filePath)));
-        getContext().sendBroadcast(scanIntent);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     public void onDestroyView() {
@@ -516,23 +402,8 @@ public class PhotoFragment extends Fragment {
         unbinder.unbind();
     }
 
-
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentInteraction(Uri uri);
-
-    }
-
-    /**
-     * 得到当前主题标签
-     */
-    protected int getThemeTag() {
-
-        return (int) SPUtils.get(getActivity(), SPUtils.KEY_THEME_TAG, 1);
-    }
-
     public long getSystemTime() {
-//("yyyy年MM月dd日 HH时MM分ss秒"
+        //("yyyy年MM月dd日 HH时MM分ss秒"
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         long times = System.currentTimeMillis();
         System.out.println(times);
@@ -579,29 +450,18 @@ public class PhotoFragment extends Fragment {
         return BitmapFactory.decodeFile(filePath, options);
     }
 
-    //存储进SD卡
-    public void saveFile(Bitmap bm, String fileName) throws Exception {
-        File dirFile = new File(fileName);
-        //检测图片是否存在
-        if (dirFile.exists()) {
-            dirFile.delete();  //删除原图片
-        }
-        File myCaptureFile = new File(fileName);
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-        //100表示不进行压缩，70表示压缩率为30%
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-        bos.flush();
-        bos.close();
-    }
-
     public static void setBitmapListListener(BitmapListListener listener) {
-        if (mMyBitmapList != null && mMyBitmapList.size() != 0) {
-            listener.BitmapListener(mMyBitmapList);
+        if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
+            mSanZhengBitmaps.remove(mSanZhengBitmaps.size() - 1);
+            mCheShenBitmaps.remove(mCheShenBitmaps.size() - 1);
+            mHuoWuBitmaps.remove(mHuoWuBitmaps.size() - 1);
+            listener.BitmapListener(mSanZhengBitmaps, mCheShenBitmaps, mHuoWuBitmaps);
         }
     }
 
 
     public interface BitmapListListener {
-        void BitmapListener(ArrayList<MyBitmap> bitmaps);
+        void BitmapListener(ArrayList<MyBitmap> mSanZhengBitmaps,
+                            ArrayList<MyBitmap> mCheShenBitmaps, ArrayList<MyBitmap> mHuowuBitmaps);
     }
 }

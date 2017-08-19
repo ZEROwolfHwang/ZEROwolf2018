@@ -11,15 +11,17 @@ import android.os.Parcelable;
 public class MyBitmap implements Parcelable{
     String path;
     Bitmap bm;
-    String info;
+    String title;
 
-    public MyBitmap() {
-    }
-
-    public MyBitmap(String path, Bitmap bm) {
-        this.path = path;
+    public MyBitmap(Bitmap bm) {
         this.bm = bm;
 
+    }
+
+    public MyBitmap(String path, Bitmap bm,String title) {
+        this.path = path;
+        this.bm = bm;
+        this.title = title;
 //
 //        E/setsize: getContentProvider: /storage/emulated/0/DCIM/Camera/IMG_20170413_165655.jpg
 //        E/setsize: getContentProvider: /storage/emulated/0/DCIM/Camera/IMG_20170413_165652.jpg
@@ -34,7 +36,7 @@ public class MyBitmap implements Parcelable{
     protected MyBitmap(Parcel in) {
         path = in.readString();
         bm = in.readParcelable(Bitmap.class.getClassLoader());
-        info = in.readString();
+        title = in.readString();
     }
 
     public static final Creator<MyBitmap> CREATOR = new Creator<MyBitmap>() {
@@ -65,12 +67,12 @@ public class MyBitmap implements Parcelable{
         this.bm = bm;
     }
 
-    public String getInfo() {
-        return info;
+    public String getTitle() {
+        return title;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MyBitmap implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(path);
         dest.writeParcelable(bm, flags);
-        dest.writeString(info);
+        dest.writeString(title);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class MyBitmap implements Parcelable{
         return "MyBitmap{" +
                 "path='" + path + '\'' +
                 ", bm=" + bm +
-                ", info='" + info + '\'' +
+                ", title='" + title + '\'' +
                 '}';
     }
 }
