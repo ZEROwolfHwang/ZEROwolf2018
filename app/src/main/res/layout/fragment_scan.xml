@@ -5,15 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin40dp"
+        android:layout_height="55dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/layout_margin10dp"
-        android:paddingRight="@dimen/layout_margin10dp">
+        android:orientation="horizontal">
 
 
         <TextView
@@ -21,33 +17,27 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:text="出口流水号"
-            android:textSize="@dimen/text16"/>
+            android:text="出口流水号:"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:textColor="#808080"
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/export_number"
             android:layout_width="0dp"
-            android:gravity="center_vertical"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="?attr/custom_white_black_text"
-            android:textSize="@dimen/text20"/>
+            android:gravity="center_vertical"
+            android:textColor="#333333"
+            android:textSize="15sp"/>
 
-
-        <ImageButton
-            android:id="@+id/scan_qr_code"
-            android:layout_width="@dimen/layout_margin40dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:layout_marginRight="@dimen/layout_margin10dp"
-            android:background="@drawable/qr_code_day"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/layout_margin10dp"
         >
 
         <LinearLayout
@@ -63,27 +53,27 @@
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="出口车牌"/>
+                    android:text="出口车牌:"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="整备质量(吨)"/>
+                    android:text="整备质量(吨):"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="收费金额(元)"/>
+                    android:text="收费金额(元):"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="入口路段"/>
+                    android:text="入口路段:"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="入口站"/>
+                    android:text="入口站:"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="入口车道"/>
+                    android:text="入口车道:"/>
 
             </LinearLayout>
 
@@ -94,10 +84,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:textSize="@dimen/text16"
-                    android:maxLines="1"
                     android:id="@+id/text_table_1"
-                    style="@style/scan_code_change_info_style"/>
+                    style="@style/scan_code_change_info_style"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text16"/>
 
                 <TextView
                     android:id="@+id/text_table_3"
@@ -123,7 +113,10 @@
             </LinearLayout>
 
         </LinearLayout>
-
+<!--<TextView
+    android:layout_width="1dp"
+    android:background="#f0f0f0"
+    android:layout_height="match_parent"/>-->
         <LinearLayout
             android:layout_width="@dimen/layout_margin0dp"
             android:layout_height="match_parent"
@@ -137,27 +130,27 @@
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="荷载质量(吨)"/>
+                    android:text="荷载质量(吨):"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="称重质量(吨)"/>
+                    android:text="称重质量(吨):"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="免费金额(元)"/>
+                    android:text="免费金额(元):"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="出口路段"/>
+                    android:text="出口路段:"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="出口站"/>
+                    android:text="出口站:"/>
 
                 <TextView
                     style="@style/scan_code_info_style"
-                    android:text="出口车道"/>
+                    android:text="出口车道:"/>
 
             </LinearLayout>
 
@@ -197,209 +190,34 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:layout_marginBottom="@dimen/layout_margin80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-    <!--
-            <TableRow>
+        <Button
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_weight="1"
+            android:text="编辑"
+            android:layout_height="50dp"
+            android:textSize="20sp"
+            android:textColor="@color/day_color_green"
+            android:layout_marginRight="@dimen/layout_margin20dp"
+            android:background="@drawable/scan_fragment_bg_btn_scan"/>
 
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/scan_qr_code"
+            android:layout_width="@dimen/layout_margin0dp"
+            android:text="扫描"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_height="50dp"
+            android:background="@drawable/scan_fragment_bg_btn_saveoredit"/>
 
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="核载质量(吨)"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_1"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="整备质量(吨)"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_2"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="称重质量(吨)"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_3"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-            </TableRow>
-
-            <TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:text="收费金额(元)"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_4"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="免费金额(元)"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_5"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="出口车牌"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_6"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-            </TableRow>
-
-            <TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="入口路段"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table7"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="入口站"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_8"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="入口车道"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_9"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-            </TableRow>
-            <TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="出口路段"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table10"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="出口站"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_11"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="@dimen/layout_margin0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:text="出口车道"
-                        style="@style/scan_code_info_style"/>
-
-                    <TextView
-                        android:id="@+id/text_table_12"
-                        android:text="10"
-                        style="@style/scan_code_change_info_style"/>
-                </TableRow>
-
-            </TableRow>
-        </TableLayout>
-    -->
+    </LinearLayout>
 
 </LinearLayout>

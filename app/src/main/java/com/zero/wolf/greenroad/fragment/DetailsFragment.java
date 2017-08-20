@@ -1,5 +1,7 @@
 package com.zero.wolf.greenroad.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -28,21 +32,17 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     Unbinder unbinder;
     @BindView(R.id.recycler_view_shoot_photo)
     RecyclerView mRecyclerViewShootPhoto;
-    private static RadioGroup mRadioGroupColor;
     private static TextView mTvChangeNumberDetail;
     private static TextView mTvChangeGoodsDetail;
 
-
-
     private static String mCurrent_color;
-
 
     private String mCarNumber;
     private String mCarGoods;
@@ -52,6 +52,15 @@ public class DetailsFragment extends Fragment {
     private static ArrayList<MyBitmap> mMyBitmaps_huowu;
     private DetailsRecyclerAdapter mAdapter;
     private ArrayList<MyBitmap> mMyBitmaps_recycler_all;
+    private static Bitmap mBitmap_add;
+    private RadioGroup mRadioGroup_top;
+    private RadioGroup mRadioGroup_bottom;
+    private RadioButton mLicense_yellow;
+    private RadioButton mLicense_blue;
+    private RadioButton mLicense_black;
+    private RadioButton mLicense_white;
+    private RadioButton mLicense_green;
+    private LinearLayoutManager mLayoutManager;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -79,7 +88,6 @@ public class DetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         unbinder = ButterKnife.bind(this, view);
         initView(view);
-        initRadioColor();
         initRecyclerView();
         return view;
     }
@@ -99,22 +107,31 @@ public class DetailsFragment extends Fragment {
             mCarGoods = edittext;
         });
 
-        PhotoFragment.setBitmapListListener((mSanZhengBitmaps, mCheShenBitmaps, mHuowuBitmaps) ->{
+        PhotoFragment.setBitmapListListener((mSanZhengBitmaps, mCheShenBitmaps, mHuowuBitmaps) -> {
             mMyBitmaps_sanzheng = mSanZhengBitmaps;
             mMyBitmaps_cheshen = mCheShenBitmaps;
             mMyBitmaps_huowu = mHuowuBitmaps;
         });
-        mMyBitmaps_recycler_all = new ArrayList<>();
-        if (mMyBitmaps_sanzheng != null) {
-        mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
+        if (mMyBitmaps_recycler_all == null) {
+            initRecyclerAdd();
+        } else {
+            mMyBitmaps_recycler_all.clear();
+            initRecyclerAdd();
         }
-        if (mMyBitmaps_cheshen != null) {
-
-        mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
+        if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
+            for (int i = 0; i < mMyBitmaps_sanzheng.size() - 1; i++) {
+                mMyBitmaps_recycler_all.add(mMyBitmaps_sanzheng.get(i));
+            }
         }
-        if (mMyBitmaps_huowu != null) {
-
-        mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
+        if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
+            for (int i = 0; i < mMyBitmaps_cheshen.size() - 1; i++) {
+                mMyBitmaps_recycler_all.add(mMyBitmaps_cheshen.get(i));
+            }
+        }
+        if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
+            for (int i = 0; i < mMyBitmaps_huowu.size() - 1; i++) {
+                mMyBitmaps_recycler_all.add(mMyBitmaps_huowu.get(i));
+            }
         }
 
         Logger.i(mCarNumber + "]]]]]]]]]");
@@ -123,56 +140,105 @@ public class DetailsFragment extends Fragment {
 
         if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
             mAdapter.updateListView(mMyBitmaps_recycler_all);
+
+            if (mMyBitmaps_recycler_all.size() > 3) {
+                scrollToPosition(mLayoutManager, 3);
+            }
         }
+    }
+
+    private void scrollToPosition(LinearLayoutManager manager, int index) {
+        manager.scrollToPositionWithOffset(index,
+                (int) manager.computeScrollVectorForPosition(index).y);
     }
 
 
     private void initRecyclerView() {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerViewShootPhoto.setLayoutManager(manager);
-        mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps_sanzheng, () -> {
+        initRecyclerAdd();
+        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewShootPhoto.setLayoutManager(mLayoutManager);
+        mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps_recycler_all, () -> {
             enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
         });
+//        mRecyclerViewShootPhoto.scrollToPosition(3);
+        // scrollToPosition(mLayoutManager,3);
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
+        /*LinearLayoutManager llm = (LinearLayoutManager) mRecyclerViewShootPhoto.getLayoutManager();
+        llm.scrollToPositionWithOffset(3, 0);
+        llm.setStackFromEnd(false);*/
+
     }
 
-    private void initRadioColor() {
-        mRadioGroupColor.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.license_yellow:
-                    mCurrent_color = CarColorManager.COLOR_YELLOW;
-                    Logger.i(mCurrent_color);
-                    break;
-                case R.id.license_blue:
-                    mCurrent_color = CarColorManager.COLOR_BLUE;
-                    Logger.i(mCurrent_color);
-                    break;
-                case R.id.license_black:
-                    mCurrent_color = CarColorManager.COLOR_BLACK;
-                    Logger.i(mCurrent_color);
-                    break;
-                case R.id.license_green:
-                    mCurrent_color = CarColorManager.COLOR_GREEN;
-                    Logger.i(mCurrent_color);
-                    break;
-                case R.id.license_white:
-                    Logger.i(mCurrent_color);
-                    mCurrent_color = CarColorManager.COLOR_WHITE;
-                    break;
-
-                default:
-                    break;
+    private void initRecyclerAdd() {
+        if (mMyBitmaps_recycler_all == null) {
+            mMyBitmaps_recycler_all = new ArrayList<>();
+        }
+        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.photo_image_add);
+        MyBitmap bitmap = null;
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                bitmap = new MyBitmap(mBitmap_add, "三证");
             }
-        });
+            if (i == 1) {
+                bitmap = new MyBitmap(mBitmap_add, "车身车型");
+            }
+            if (i == 2) {
+                bitmap = new MyBitmap(mBitmap_add, "货照");
+            }
+            mMyBitmaps_recycler_all.add(bitmap);
+        }
     }
+
 
     private void initView(View view) {
 
         mTvChangeNumberDetail = (TextView) view.findViewById(R.id.tv_change_number_detail);
         mTvChangeGoodsDetail = (TextView) view.findViewById(R.id.tv_change_goods_detail);
 
-        mRadioGroupColor = (RadioGroup) view.findViewById(R.id.radio_group_color);
+        mRadioGroup_top = (RadioGroup) view.findViewById(R.id.radio_group_top);
+        mRadioGroup_bottom = (RadioGroup) view.findViewById(R.id.radio_group_bottom);
 
+        mLicense_yellow = (RadioButton) view.findViewById(R.id.license_yellow);
+        mLicense_blue = (RadioButton) view.findViewById(R.id.license_blue);
+        mLicense_black = (RadioButton) view.findViewById(R.id.license_black);
+        mLicense_white = (RadioButton) view.findViewById(R.id.license_white);
+        mLicense_green = (RadioButton) view.findViewById(R.id.license_green);
+
+        mLicense_yellow.setOnCheckedChangeListener(this);
+        mLicense_blue.setOnCheckedChangeListener(this);
+        mLicense_black.setOnCheckedChangeListener(this);
+        mLicense_white.setOnCheckedChangeListener(this);
+        mLicense_green.setOnCheckedChangeListener(this);
+        Logger.i(mCurrent_color);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.license_yellow:
+                mRadioGroup_bottom.clearCheck();
+                mCurrent_color = CarColorManager.COLOR_YELLOW;
+                break;
+            case R.id.license_blue:
+                mRadioGroup_bottom.clearCheck();
+                mCurrent_color = CarColorManager.COLOR_BLUE;
+                break;
+            case R.id.license_black:
+                mRadioGroup_top.clearCheck();
+                mCurrent_color = CarColorManager.COLOR_BLACK;
+                break;
+            case R.id.license_white:
+                mRadioGroup_top.clearCheck();
+                mCurrent_color = CarColorManager.COLOR_WHITE;
+                break;
+            case R.id.license_green:
+                mRadioGroup_top.clearCheck();
+                mCurrent_color = CarColorManager.COLOR_GREEN;
+                break;
+            default:
+                break;
+
+        }
     }
 
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail})
@@ -213,19 +279,20 @@ public class DetailsFragment extends Fragment {
 
     /**
      * 将数据再传递进子fragment的回调操作
+     *
      * @param listener
      */
     public static void setBitmapListListener(BitmapListListener listener) {
         if (mMyBitmaps_sanzheng != null && mMyBitmaps_cheshen != null && mMyBitmaps_huowu != null) {
 
-            listener.BitmapListener(mMyBitmaps_sanzheng,mMyBitmaps_cheshen,mMyBitmaps_huowu);
+            listener.BitmapListener(mMyBitmaps_sanzheng, mMyBitmaps_cheshen, mMyBitmaps_huowu);
         }
     }
 
 
     public interface BitmapListListener {
         void BitmapListener(ArrayList<MyBitmap> mMyBitmaps_sanzheng,
-                            ArrayList<MyBitmap> mMyBitmaps_cheshen,ArrayList<MyBitmap> mMyBitmaps_huowu);
+                            ArrayList<MyBitmap> mMyBitmaps_cheshen, ArrayList<MyBitmap> mMyBitmaps_huowu);
     }
 
     public void setDetailsConnectListener(DetailsBeanConnectListener listener) {

@@ -27,9 +27,9 @@
         <item name="custom_car_body_selection">@drawable/car_body_selection_day</item>
         <item name="custom_car_goods_selection">@drawable/car_goods_selection_day</item>
 
-        <item name="custom_car_number_show">@drawable/car_number_light</item>
-        <item name="custom_car_body_show">@drawable/car_body_light</item>
-        <item name="custom_car_goods_show">@drawable/car_goods_light</item>
+        <item name="custom_car_number_show">@drawable/image_car_number</item>
+        <item name="custom_car_body_show">@drawable/image_car_goods</item>
+        <item name="custom_car_goods_show">@drawable/image_car_goods</item>
 
         <item name="custom_sure_button_selector">@drawable/sure_button_select_day</item>
 
@@ -37,18 +37,18 @@
         <!-- __________________  SureGoodsActivity __________________ -->
 
         <item name="custom_tab_text_color">@color/tab_text_color_day</item>
-        <item name="custom_tab_text_color_selected">@color/tab_text_color_selected_day</item>
+        <item name="custom_tab_text_color_selected">@color/day_color_green</item>
 
-        <item name="custom_tab_bg_pager_view">@drawable/tab_bg_view_pager_day</item>
+        <item name="custom_tab_bg_pager_view">@color/tab_bg_view_pager_day</item>
 
 
         <!-- __________________     Fragment      __________________ -->
 
-        <item name="custom_car_number_sure">@drawable/car_number_light</item>
+        <item name="custom_car_number_sure">@drawable/image_car_number</item>
         <item name="custom_car_station_main">@drawable/car_station_light</item>
-        <item name="custom_car_goods_sure">@drawable/car_goods_light</item>
+        <item name="custom_car_goods_sure">@drawable/image_car_goods</item>
 
-        <item name="custom_shape_background_fragment">@drawable/shape_background_sure_day</item>
+        <item name="custom_shape_background_fragment">@drawable/shape_background_main_station_day</item>
         <item name="custom_fragment_static_text">@color/fragment_static_text_day</item>
 
         <item name="custom_item_text_color_number">@color/item_text_color_day</item>
@@ -120,7 +120,7 @@
 
         <item name="custom_tab_text_color">@color/tab_text_color_night</item>
         <item name="custom_tab_text_color_selected">@color/tab_text_color_selected_night</item>
-        <item name="custom_tab_bg_pager_view">@drawable/tab_bg_view_pager_night</item>
+        <item name="custom_tab_bg_pager_view">@color/tab_bg_view_pager_night</item>
 
 
         <!-- __________________     Fragment      __________________ -->
@@ -183,15 +183,15 @@
     <color name="head_layout_text_day">#28287e</color>
 
     <!--tabLayoutw文字选中与未选中的字体颜色-->
-    <color name="tab_text_color_day">#2525ff</color>
+    <color name="tab_text_color_day">#666666</color>
     <color name="tab_text_color_night">#fffefe</color>
 
-    <color name="tab_text_color_selected_day">#8484ff</color>
+    <color name="tab_text_color_selected_day">#66ccaa</color>
     <color name="tab_text_color_selected_night">#00eeff</color>
 
     <!--fragment 中站名,车牌号,货物三组字段的字体颜色-->
-    <color name="fragment_static_text_day">#00007c</color>
-    <color name="fragment_static_text_night">#51c2ff</color>
+    <color name="fragment_static_text_day">#333333</color>
+    <color name="fragment_static_text_night">#333333</color>
 
     <!--fragment 中三组RecyclerView的字体颜色-->
     <color name="item_text_color_day">#0075ab</color>
@@ -203,6 +203,9 @@
     <!--背景颜色-->
     <color name="bg_app_night">#303039</color>
     <color name="bg_app_day">#ffffff</color>
+    <!--tablayout的背景颜色-->
+    <color name="tab_bg_view_pager_night">#00f</color>
+    <color name="tab_bg_view_pager_day">#ffffff</color>
 
 
 </resources>

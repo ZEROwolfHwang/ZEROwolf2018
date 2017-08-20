@@ -79,8 +79,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static EditText mEditDescriptionView;
     private String mConclusionText;
     private String mDescriptionEditText;
-    private TextView mCheckOperator;
-    private TextView mLogonOperator;
     private static CheckedFragment sFragment;
     private RelativeLayout mRelativeLayout;
     private Button mBtnSureConclusion;
@@ -123,17 +121,15 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
 
         mTextConclusionView = (TextView) view.findViewById(R.id.checked_conclusion_text);
         mEditDescriptionView = (EditText) view.findViewById(R.id.checked_description_text);
-        mCheckOperator = (TextView) view.findViewById(R.id.tv_operator_check_main);
-        mLogonOperator = (TextView) view.findViewById(R.id.tv_operator_login_main);
         mToggleIsRoom = (ToggleButton) view.findViewById(R.id.toggle_is_room);
         mToggleIsFree = (ToggleButton) view.findViewById(R.id.toggle_is_free);
         mRelativeLayout = (RelativeLayout) view.findViewById(R.id.relative_layout_conclusion);
         mBtnSureConclusion = (Button) view.findViewById(R.id.btn_sure_conclusion);
-        mSiteCheck = (TextView) view.findViewById(R.id.tv_operator_check_main);
-        mSiteLogin = (TextView) view.findViewById(R.id.tv_operator_login_main);
+        mSiteCheck = (TextView) view.findViewById(R.id.site_check_operator);
+        mSiteLogin = (TextView) view.findViewById(R.id.site_login_operator);
 
-        setOperatorInfo("check_select = ?", mCheckOperator);
-        setOperatorInfo("login_select = ?", mLogonOperator);
+        setOperatorInfo("check_select = ?", mSiteCheck);
+        setOperatorInfo("login_select = ?", mSiteLogin);
 
         mTextConclusionView.setOnClickListener(this);
         mBtnSureConclusion.setOnClickListener(this);
@@ -219,7 +215,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.checked_conclusion_text:
                 mRelativeLayout.setVisibility(View.VISIBLE);
-                mEditDescriptionView.setFocusable(false);
+
                 initOnclick(mBuilder, mCheck111001);
                 initOnclick(mBuilder, mCheck222001);
                 initOnclick(mBuilder, mCheck222002);
@@ -237,11 +233,12 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                 initOnclick(mBuilder, mCheck666002);
                 initOnclick(mBuilder, mCheck666003);
                 initOnclick(mBuilder, mCheck777001);
-
+                mEditDescriptionView.setClickable(false);
                 break;
             case R.id.btn_sure_conclusion:
                 mRelativeLayout.setVisibility(View.GONE);
-                mEditDescriptionView.setFocusable(true);
+                //mEditDescriptionView.setFocusable(true);
+                mEditDescriptionView.setClickable(true);
                 mTextConclusionView.setText(mBuilder.toString());
                 break;
             default:

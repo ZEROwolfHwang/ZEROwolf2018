@@ -34,13 +34,17 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <activity
@@ -50,22 +54,15 @@
             android:windowSoftInputMode="adjustPan"
             android:clearTaskOnLaunch="false"
             android:alwaysRetainTaskState="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.SureGoodsActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
+            android:clearTaskOnLaunch="false"
+            android:alwaysRetainTaskState="true"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
-        </activity>
-        <activity
-            android:name=".activity.ShootVideoActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".activity.AboutActivity"
@@ -76,11 +73,6 @@
             android:theme="@style/MyDialogStyle">
         </activity>
         <activity android:name=".activity.AnimatorActivity">
-        </activity>
-        <activity
-            android:name=".activity.RecordActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullTheme">
         </activity>
         <activity
             android:name=".activity.SettingActivity"

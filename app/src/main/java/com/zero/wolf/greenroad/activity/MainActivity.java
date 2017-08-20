@@ -23,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,11 +81,11 @@ public class MainActivity extends BaseActivity implements
     @BindView(R.id.tv_operator_login_main)
     TextView mTvOperatorLoginMain;
     @BindView(R.id.custom_shape_line_rect_has)
-    TextView mCustomShapeLineRectHas;
+    RelativeLayout mCustomShapeLineRectHas;
     @BindView(R.id.tv_math_number_main_has)
     TextView mTvMathNumberMainHas;
     @BindView(R.id.custom_shape_line_rect_has_not)
-    TextView mCustomShapeLineRectHasNot;
+    RelativeLayout mCustomShapeLineRectHasNot;
     @BindView(R.id.tv_math_number_main_has_not)
     TextView mTvMathNumberMainHasNot;
     private long firstClick;
@@ -192,7 +193,7 @@ public class MainActivity extends BaseActivity implements
         //  mIvCamera = (ImageView) findViewById(R.id.iv_camera);
 
         //mIvCamera.setOnClickListener(this);
-        TextView title_text_view = ActionBarTool.getInstance(mActivity, 990).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText("绿通车登记");
 
 
@@ -263,8 +264,6 @@ public class MainActivity extends BaseActivity implements
             post_not_upload();
             refresh();
             Logger.i("点击了未上传按钮");
-        } else if (id == R.id.nav_model) {
-            changeModel();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -573,14 +572,6 @@ public class MainActivity extends BaseActivity implements
         return true;
     }
 
-    private void changeModel() {
-        switchCurrentCameraModel();
-        if (getModelTag() == 1) {
-            ToastUtils.singleToast("切换为拍照模式");
-        } else {
-            ToastUtils.singleToast("切换为摄影模式");
-        }
-    }
 
     @OnClick(R.id.footer_item_setting)
     public void onSetting(View view) {

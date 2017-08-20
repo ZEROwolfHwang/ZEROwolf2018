@@ -6,55 +6,70 @@
               android:padding="@dimen/layout_margin10dp"
               tools:context="com.zero.wolf.greenroad.fragment.DetailsFragment">
 
-    <RadioGroup
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:id="@+id/radio_group_color"
+    <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/radio_group_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/license_blue"
+                style="@style/RadioButtonStyle"
+                android:background="@drawable/rb_bg_selector"
+                android:text="蓝牌"
+                android:layout_marginRight="@dimen/layout_margin5dp"
+                android:textColor="@color/license_color_text"/>
+
+            <RadioButton
+                android:id="@+id/license_yellow"
+                style="@style/RadioButtonStyle"
+                android:layout_marginLeft="@dimen/layout_margin5dp"
+                android:background="@drawable/rb_bg_selector"
+                android:text="黄牌"
+                android:textColor="@color/license_color_text"
+                />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/radio_group_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/license_black"
+                style="@style/RadioButtonStyle"
+                android:background="@drawable/rb_bg_selector"
+                android:text="黑牌"
+                android:textColor="@color/license_color_text"
+                />
+
+            <RadioButton
+                android:id="@+id/license_green"
+                style="@style/RadioButtonStyle"
+                android:layout_marginLeft="@dimen/layout_margin10dp"
+                android:layout_marginRight="@dimen/layout_margin10dp"
+                android:background="@drawable/rb_bg_selector"
+                android:text="绿牌"
+                android:textColor="@color/license_color_text"/>
+
+            <RadioButton
+                android:id="@+id/license_white"
+                style="@style/RadioButtonStyle"
+                android:background="@drawable/rb_bg_selector"
+                android:text="白牌"
+                android:textColor="@color/license_color_text"/>
+        </RadioGroup>
 
 
-        <RadioButton
-            android:id="@+id/license_black"
-            style="@style/RadioButtonStyle"
-            android:background="@drawable/rb_black_selector"
-            android:text="黑牌"
-            android:textColor="@color/license_color_yellow_text"
-            />
-
-        <RadioButton
-            android:id="@+id/license_blue"
-            style="@style/RadioButtonStyle"
-            android:layout_marginLeft="@dimen/layout_margin2dp"
-            android:layout_marginRight="@dimen/layout_margin2dp"
-            android:background="@drawable/rb_blue_selector"
-            android:text="蓝牌"
-            android:textColor="@color/license_color_yellow_text"/>
-
-        <RadioButton
-            android:id="@+id/license_yellow"
-            style="@style/RadioButtonStyle"
-            android:background="@drawable/rb_yellow_selector"
-            android:text="黄牌"
-            android:textColor="@color/license_color_yellow_text"
-            />
-
-        <RadioButton
-            android:id="@+id/license_green"
-            style="@style/RadioButtonStyle"
-            android:layout_marginLeft="@dimen/layout_margin2dp"
-            android:layout_marginRight="@dimen/layout_margin2dp"
-            android:background="@drawable/rb_green_selector"
-            android:text="绿牌"
-            android:textColor="@color/license_color_yellow_text"/>
-
-        <RadioButton
-            android:id="@+id/license_white"
-            style="@style/RadioButtonStyle"
-            android:background="@drawable/rb_white_selector"
-            android:text="白牌"
-            android:textColor="@color/license_color_white_text"/>
-    </RadioGroup>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,14 +83,14 @@
             android:background="?attr/custom_car_number_sure"/>
 
         <LinearLayout
-            style="@style/main_text_layout_bg_style">
+            style="@style/main_text_layout_bg_station_style">
 
             <TextView
                 style="@style/main_text_static_tv_style"
                 android:text="车牌号"/>
+
             <ImageView
                 style="@style/main_text_static_iv_style"/>
-
 
             <TextView
                 android:id="@+id/tv_change_number_detail"
@@ -97,7 +112,7 @@
             android:background="?attr/custom_car_goods_sure"/>
 
         <LinearLayout
-            style="@style/main_text_layout_bg_style">
+            style="@style/main_text_layout_bg_station_style">
 
             <TextView
                 style="@style/main_text_static_tv_style"
@@ -117,7 +132,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_shoot_photo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layout_margin5dp"/>
+        android:layout_height="160dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"/>
 
 </LinearLayout>

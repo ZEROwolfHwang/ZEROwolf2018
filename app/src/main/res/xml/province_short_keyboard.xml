@@ -5,7 +5,7 @@
     android:horizontalGap="1%p"
     android:keyWidth="13%p"
     android:verticalGap="0.5%p">
-    <Row >
+    <Row android:verticalGap="1%p">
         <Key
             android:codes="0"
             android:keyEdgeFlags="left"
@@ -16,7 +16,6 @@
             android:keyLabel="津"/>
         <Key
             android:codes="2"
-
             android:keyLabel="冀"/>
         <Key
             android:codes="3"

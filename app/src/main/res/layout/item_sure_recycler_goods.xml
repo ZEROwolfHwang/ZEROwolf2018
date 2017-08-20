@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="90dp"
-                android:layout_height="130dp"
-                android:elevation="3dp"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/layout_margin5dp"
-                android:paddingTop="@dimen/layout_margin5dp">
+              android:background="@drawable/goods_item_image_bg"
+                android:layout_height="120dp"
+                android:orientation="vertical">
 
     <ImageView
+        android:layout_margin="1dp"
         android:id="@+id/iv_recycler_goods"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
         android:layout_height="90dp"
         android:background="@color/white"/>
 

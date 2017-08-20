@@ -72,6 +72,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private static ArrayList<String> mTextList;
     private GoodsTextAdapter mTextAdapter;
     private static StringBuilder sBuilder;
+    private LinearLayoutManager mLayoutManager;
 
 
     public static GoodsFragment newInstance(String goods) {
@@ -217,16 +218,16 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
      * 添加的货物信息
      */
     private void initGoodsTextRecycler() {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(),
+        mLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false);
-        mGoodTextRecycler.setLayoutManager(manager);
+        mGoodTextRecycler.setLayoutManager(mLayoutManager);
 
         mTextAdapter = new GoodsTextAdapter(getContext(), mTextList, pos -> {
             mTextList.remove(pos);
+
             mTextAdapter.notifyDataSetChanged();
         });
         mGoodTextRecycler.setAdapter(mTextAdapter);
-
     }
 
     private void initRecyclerView() {
@@ -254,14 +255,18 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 //                mEditText.setSelection(mGoodsBuilder.length());
                 mEditText.setText("");
                 mTextAdapter.updateListView(mTextList);
+                if (mTextList.size() > 3) {
+                    scrollToPosition(mLayoutManager,mTextList.size()-3);
+                }
                 //进行置顶操作
                 serializableGoods.setTop(1);
                 serializableGoods.setTime(System.currentTimeMillis());
                 refreshView();
             }
         });
-        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),
-                3));
+//        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),
+//                3));
+        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),3));
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
     }
@@ -324,6 +329,11 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     public void onPause() {
         super.onPause();
         ACache.get(getActivity()).put(ACache.GOODSACACHE, mGoodsArrayList);
+    }
+
+    private void scrollToPosition(LinearLayoutManager manager, int index) {
+        manager.scrollToPositionWithOffset(index,
+                (int) manager.computeScrollVectorForPosition(index).y);
     }
 
     @Override

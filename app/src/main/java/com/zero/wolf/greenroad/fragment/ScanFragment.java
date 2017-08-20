@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -41,7 +41,7 @@ public class ScanFragment extends Fragment {
     Unbinder unbinder;
 
     @BindView(R.id.scan_qr_code)
-    ImageButton mScanQrCode;
+    Button mScanQrCode;
 
 
     // TODO: Rename and change types of parameters

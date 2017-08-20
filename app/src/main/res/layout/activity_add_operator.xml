@@ -10,7 +10,6 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="@dimen/layout_margin10dp"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -21,19 +20,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_margin10dp"
+        android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:paddingLeft="@dimen/layout_margin10dp"
-        android:layout_height="@dimen/layout_margin50dp"
-        android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="?attr/custom_attr_setting_text_bg"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/setting_item_change_bg"
         android:orientation="horizontal">
 
         <TextView
+            android:layout_marginLeft="20dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="left|center_vertical"
             android:text="工号"
-            android:textSize="@dimen/text22"/>
+            android:textSize="@dimen/text18"/>
 
 
         <android.support.design.widget.TextInputLayout
@@ -49,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:gravity="left|center_vertical"
                 android:hint="请输入六位数的工号"
-                android:textSize="@dimen/text22"
+                android:textSize="@dimen/text18"
                 android:imeActionId="@+id/login"
                 android:imeOptions="actionUnspecified"
                 android:inputType="number"
@@ -66,18 +73,19 @@
     <LinearLayout
         android:paddingLeft="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="?attr/custom_attr_setting_text_bg"
+        android:background="@drawable/setting_item_change_bg"
         android:orientation="horizontal">
 
         <TextView
+            android:layout_marginLeft="20dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="left|center_vertical"
             android:text="姓名"
-            android:textSize="@dimen/text22"/>
+            android:textSize="@dimen/text18"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
@@ -91,7 +99,7 @@
                 android:layout_height="match_parent"
                 android:gravity="left|center_vertical"
                 android:hint="请输入姓名"
-                android:textSize="@dimen/text22"
+                android:textSize="@dimen/text18"
                 android:background="@null"
                 android:maxLines="1"
                 android:singleLine="true"/>
@@ -105,68 +113,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:paddingLeft="@dimen/layout_margin10dp"
-        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="?attr/custom_attr_setting_text_bg"
+        android:background="@drawable/setting_item_change_bg"
         android:orientation="horizontal">
 
         <TextView
+            android:layout_marginLeft="20dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="left|center_vertical"
             android:text="默认检查人"
-            android:textSize="@dimen/text22"/>
+            android:textSize="@dimen/text18"/>
 
         <CheckBox
             android:id="@+id/add_operator_check_person"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:gravity="left|center_vertical"
-            android:textSize="@dimen/text24"/>
+            android:gravity="left|center_vertical"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:paddingLeft="@dimen/layout_margin10dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="@dimen/layout_margin10dp"
-        android:background="?attr/custom_attr_setting_text_bg"
+        android:background="@drawable/setting_item_change_bg"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:layout_marginLeft="20dp"
             android:gravity="left|center_vertical"
             android:text="默认检查人"
-            android:textSize="@dimen/text22"/>
+            android:textSize="@dimen/text18"/>
 
         <CheckBox
             android:id="@+id/add_operator_login_person"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:gravity="left|center_vertical"
-            android:textSize="@dimen/text24"/>
+            android:gravity="left|center_vertical"/>
 
     </LinearLayout>
 
     <Button
         android:id="@+id/save_operator_info_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="@dimen/layout_margin20dp"
+        android:layout_height="55dp"
         android:layout_marginTop="@dimen/layout_margin20dp"
-        android:background="?attr/custom_attr_setting_text_bg"
+        android:background="@drawable/shape_main_to_show_btn"
         android:elevation="@dimen/layout_margin10dp"
         android:gravity="center"
         android:text="保存"
         android:textColor="@color/white_dark_login_selector"
         android:textSize="@dimen/text20"/>
-
+    </LinearLayout>
 
 </LinearLayout>

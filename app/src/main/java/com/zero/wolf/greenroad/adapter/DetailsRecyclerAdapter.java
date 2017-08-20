@@ -2,15 +2,14 @@ package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.activity.RoundImageView;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
 
 import java.util.ArrayList;
@@ -34,6 +33,7 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     private final Context mContext;
     private final itemClickListener mLisener;
+
     private List<MyBitmap> mBitmapList;
 
 
@@ -59,7 +59,7 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     @Override
     public DetailsRecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.detail_item_show_recycler_photo, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_detail_fragment_image, parent, false);
 
         return new DetailsRecyclerHolder(view);
     }
@@ -71,20 +71,16 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
 
     @Override
     public int getItemCount() {
-     /*   if (mBitmapList == null && mBitmapList.size() == 0) {
-            return 7;
-        } else {
-            return mBitmapList.size();
-        }*/
         return mBitmapList.size();
+
     }
 
 
     public class DetailsRecyclerHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.detail_recycler_item_img)
-        RoundImageView mDetailRecyclerImg;
-        @BindView(R.id.detail_recycler_text)
-        TextView mDetailRecyclerText;
+        @BindView(R.id.detail_fragment_image)
+        ImageView mDetailFragmentImage;
+        @BindView(R.id.detail_fragment_text)
+        TextView mDetailFragmentText;
 
         public DetailsRecyclerHolder(View itemView) {
             super(itemView);
@@ -96,45 +92,18 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
             Bitmap bitmap = null;
             if (mBitmapList != null) {
 
-                if (position < mBitmapList.size()) {
-                    MyBitmap myBitmap = mBitmapList.get(position);
-                    if (myBitmap != null) {
-                        mDetailRecyclerImg.setImageBitmap(myBitmap.getBm());
-                        mDetailRecyclerText.setText(myBitmap.getTitle());
-                    }
-
-                } else {
-                    if (bitmap == null) {
-                        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.demo);
-                    }
-                    mDetailRecyclerImg.setImageBitmap(bitmap);
-                    if (position == 0) {
-                        mDetailRecyclerText.setText("三证1");
-                    } else if (position == 1) {
-
-                        mDetailRecyclerText.setText("三证2");
-                    } else if (position == 2) {
-
-                        mDetailRecyclerText.setText("三证3");
-                    } else if (position == 3) {
-
-                        mDetailRecyclerText.setText("车身车型1");
-                    } else if (position == 4) {
-
-                        mDetailRecyclerText.setText("车身车型2");
-                    } else if (position == 5) {
-
-                        mDetailRecyclerText.setText("货物1");
-                    } else if (position == 6) {
-
-                        mDetailRecyclerText.setText("货物2");
-                    }
+                MyBitmap myBitmap = mBitmapList.get(position);
+                if (myBitmap != null) {
+                    mDetailFragmentImage.setImageBitmap(myBitmap.getBm());
+                    mDetailFragmentText.setText(myBitmap.getTitle());
+                }
+                if (position < 3) {
+                    itemView.setOnClickListener(v -> {
+                        mLisener.itemListener();
+                    });
                 }
             }
 
-            itemView.setOnClickListener(v -> {
-                mLisener.itemListener();
-            });
         }
     }
 

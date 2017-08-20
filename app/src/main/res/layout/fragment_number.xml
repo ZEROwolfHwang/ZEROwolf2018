@@ -7,14 +7,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:elevation="3dp"
-        android:orientation="horizontal"
-        android:padding="@dimen/layout_margin10dp">
+        android:layout_height="60dp"
+        android:layout_marginBottom="@dimen/layout_margin20dp"
+        android:layout_marginTop="@dimen/layout_margin20dp"
+        android:layout_marginLeft="@dimen/layout_margin10dp"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="@dimen/layout_margin80dp"
-            android:layout_height="@dimen/layout_margin80dp"
+            android:layout_width="@dimen/layout_margin60dp"
+            android:layout_height="@dimen/layout_margin60dp"
             android:layout_marginLeft="@dimen/layout_margin10dp"
             android:background="?attr/custom_car_number_sure"
             android:scaleType="fitCenter"/>
@@ -22,10 +24,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/layout_margin20dp"
-            android:background="?attr/custom_shape_background_fragment"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:background="@drawable/shape_background_main_else_day"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -50,7 +52,7 @@
 
 
             <ImageView
-                android:layout_width="4dp"
+                android:layout_width="1dp"
                 android:layout_height="30dp"
                 android:background="?attr/custom_shape_static"
                 android:focusable="false"/>
@@ -102,8 +104,8 @@
         android:focusableInTouchMode="true"
         android:keyBackground="?attr/number_fragment_key_bg"
         android:keyTextColor="?attr/number_fragment_key_text"
-        android:keyTextSize="18sp"
-        android:labelTextSize="18sp"
+        android:keyTextSize="20sp"
+        android:labelTextSize="20sp"
         android:paddingTop="5dp"
         android:shadowColor="#ffffff"
         android:shadowRadius="1"

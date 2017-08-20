@@ -10,6 +10,7 @@
     tools:context="com.zero.wolf.greenroad.LoginActivity">
 
     <FrameLayout
+        android:layout_marginTop="120dp"
         android:id="@+id/layout_user_name"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margin50dp"
@@ -100,23 +101,14 @@
         android:text="@string/login"
         />
 <TextView
-    android:layout_below="@id/bt_login"
-    android:layout_marginTop="@dimen/layout_margin50dp"
+    android:padding="@dimen/layout_margin10dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
     android:text="注册用户"
     android:textSize="24sp"
     android:gravity="center"
     android:textColor="@color/white"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
-
-        <!--<Button
-
-            android:id="@+id/bt_login1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bt_login"
-            android:layout_marginTop="16dp"
-            android:text="@string/login"/>
--->
 
 </RelativeLayout>

@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:background="?attr/custom_attr_app_bg"
     android:baselineAligned="false"
-    android:orientation="vertical"
-    android:padding="@dimen/layout_margin10dp">
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:padding="@dimen/layout_margin5dp"
         android:id="@+id/ll_sanzheng"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -17,36 +17,39 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_marginBottom="@dimen/layout_margin5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="三证照"
-            android:textSize="24sp"/>
+            android:textSize="18sp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/image_sanzheng_recycler"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </LinearLayout>
 
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#f0f0f0"
+            android:layout_height="12dp"/>
 
     <LinearLayout
         android:id="@+id/ll_cheshenchexing"
         android:layout_width="match_parent"
+        android:padding="@dimen/layout_margin5dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
+            android:layout_marginBottom="@dimen/layout_margin5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="车辆照"
-            android:textSize="24sp"/>
+            android:textSize="18sp"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/image_cheshen_recycler"
@@ -55,24 +58,31 @@
 
         </android.support.v7.widget.RecyclerView>
 
-
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:background="#f0f0f0"
+            android:layout_height="12dp"/>
 
     <LinearLayout
         android:id="@+id/ll_huowu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="@dimen/layout_margin5dp"
         android:layout_weight="1"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
+            android:layout_marginBottom="@dimen/layout_margin5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="货物照"
-            android:textSize="24sp"/>
+            android:textSize="18sp"/>
 
         <android.support.v7.widget.RecyclerView
+
             android:id="@+id/image_huozhao_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

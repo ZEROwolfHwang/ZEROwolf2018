@@ -1,11 +1,13 @@
 package com.zero.wolf.greenroad.adapter;
 
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
@@ -79,6 +81,8 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
 
         @BindView(R.id.text_setting_recycler_delete)
         TextView mTextSettingRecyclerDelete;
+        @BindView(R.id.ll_setting_operator)
+        LinearLayout mLlSettingOperator;
         @BindView(R.id.text_setting_recycler_job_number)
         TextView mTextSettingRecyclerJobNumber;
         @BindView(R.id.text_setting_recycler_name)
@@ -94,6 +98,12 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
         }
 
         public void bindHolder(SettingOperatorInfo info, int position) {
+
+            if (position % 2 == 0) {
+                mLlSettingOperator.setBackgroundColor(Color.CYAN);
+
+            }
+
             String job_number = info.getJob_number();
             mTextSettingRecyclerJobNumber.setText(job_number);
             mTextSettingRecyclerName.setText(info.getOperator_name());

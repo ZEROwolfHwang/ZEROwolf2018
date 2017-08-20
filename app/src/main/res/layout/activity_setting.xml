@@ -10,7 +10,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="@dimen/layout_margin10dp"
+        android:elevation="0dp"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -20,80 +20,94 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:padding="@dimen/layout_margin10dp"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/text_layout_road_setting"
-            layout="@layout/setting_text_item_layout_road"/>
-
-        <include
-            android:id="@+id/text_layout_station_setting"
-            layout="@layout/setting_text_item_layout_station"/>
-
-        <include
-            android:id="@+id/text_layout_lane_setting"
-            layout="@layout/setting_text_item_layout_lane"/>
-
-        <include
-            android:id="@+id/text_layout_operator_setting"
-            layout="@layout/setting_text_item_layout_operator"/>
         <LinearLayout
-            android:elevation="@dimen/layout_margin10dp"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="@dimen/layout_margin40dp">
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_margin10dp">
+
+            <include
+                android:id="@+id/text_layout_road_setting"
+                layout="@layout/setting_text_item_layout_road"/>
+
+            <include
+                android:id="@+id/text_layout_station_setting"
+                layout="@layout/setting_text_item_layout_station"/>
+
+            <include
+                android:id="@+id/text_layout_lane_setting"
+                layout="@layout/setting_text_item_layout_lane"/>
+
+            <include
+                android:id="@+id/text_layout_operator_setting"
+                layout="@layout/setting_text_item_layout_operator"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/layout_margin10dp"
+            android:background="#e5e5e5"
+            android:elevation="@dimen/layout_margin2dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_weight="3"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/layout_margin5dp"
+                android:layout_gravity="left"
+                android:layout_weight="3"
+                android:gravity="center_vertical"
                 android:text="工号"
-                android:textSize="@dimen/text16"
-                android:gravity="center_vertical"
-                android:layout_gravity="left"
-                android:layout_height="match_parent"/>
+                android:textSize="@dimen/text16"/>
+
             <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
                 android:layout_weight="3"
-                android:layout_width="0dp"
-                android:text="姓名"
-                android:textSize="@dimen/text16"
                 android:gravity="center_vertical"
-                android:layout_gravity="left"
-                android:layout_height="match_parent"/>
+                android:text="姓名"
+                android:textSize="@dimen/text16"/>
+
             <TextView
-                android:layout_weight="2"
                 android:layout_width="0dp"
-                android:text="默认\n检查人"
-                android:textSize="@dimen/text16"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_height="wrap_content"/>
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="默认\n检查人"
+                android:textSize="@dimen/text16"/>
+
             <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
                 android:layout_weight="2"
-                android:layout_width="0dp"
-                android:text="默认\n登记人"
-                android:textSize="@dimen/text16"
                 android:gravity="center"
-                android:layout_gravity="left"
-                android:layout_height="wrap_content"/>
+                android:text="默认\n登记人"
+                android:textSize="@dimen/text16"/>
 
             <TextView
-                android:text="@null"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@null"/>
 
 
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="@dimen/layout_margin10dp"
             android:id="@+id/setting_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/layout_margin10dp"/>
 
     </LinearLayout>
 

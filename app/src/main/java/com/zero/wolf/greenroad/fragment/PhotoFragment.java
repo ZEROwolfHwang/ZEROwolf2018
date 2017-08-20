@@ -137,13 +137,6 @@ public class PhotoFragment extends Fragment {
         mMyBitmapAdd = new MyBitmap(mBitmap_add);
         initRecycler();
 
-        if (mMyBitmaps != null && mMyBitmaps.size() != 0) {
-
-            for (int i = 0; i < mMyBitmaps.size(); i++) {
-                //  mRoundedImageViews[i].setImageBitmap(mMyBitmaps.get(i).getBm());
-            }
-        }
-
         return view;
     }
 
@@ -152,16 +145,26 @@ public class PhotoFragment extends Fragment {
      */
     private void initRecycler() {
         mSanZhengBitmaps = new ArrayList<>();
-        if (sBitmaps_sanzheng != null) {
-            mSanZhengBitmaps.addAll(sBitmaps_sanzheng);
-        }
+
         mCheShenBitmaps = new ArrayList<>();
-        if (sBitmaps_cheshen != null) {
-            mCheShenBitmaps.addAll(sBitmaps_cheshen);
-        }
+
         mHuoWuBitmaps = new ArrayList<>();
-        if (sBitmaps_huowu != null) {
-            mHuoWuBitmaps.addAll(sBitmaps_huowu);
+
+
+        if (sBitmaps_sanzheng != null && sBitmaps_sanzheng.size() != 0) {
+            for (int i = 0; i < sBitmaps_sanzheng.size() - 1; i++) {
+                mSanZhengBitmaps.add(sBitmaps_sanzheng.get(i));
+            }
+        }
+        if (sBitmaps_cheshen != null && sBitmaps_cheshen.size() != 0) {
+            for (int i = 0; i < sBitmaps_cheshen.size() - 1; i++) {
+                mCheShenBitmaps.add(sBitmaps_cheshen.get(i));
+            }
+        }
+        if (mHuoWuBitmaps != null && mHuoWuBitmaps.size() != 0) {
+            for (int i = 0; i < mHuoWuBitmaps.size() - 1; i++) {
+                mHuoWuBitmaps.add(mHuoWuBitmaps.get(i));
+            }
         }
         mSanZhengBitmaps.add(mMyBitmapAdd);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -452,9 +455,6 @@ public class PhotoFragment extends Fragment {
 
     public static void setBitmapListListener(BitmapListListener listener) {
         if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
-            mSanZhengBitmaps.remove(mSanZhengBitmaps.size() - 1);
-            mCheShenBitmaps.remove(mCheShenBitmaps.size() - 1);
-            mHuoWuBitmaps.remove(mHuoWuBitmaps.size() - 1);
             listener.BitmapListener(mSanZhengBitmaps, mCheShenBitmaps, mHuoWuBitmaps);
         }
     }

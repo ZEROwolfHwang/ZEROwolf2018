@@ -64,11 +64,7 @@ public  class BaseActivity extends AppCompatActivity implements ThemeChangeObser
         setThemeTag(0 - getThemeTag());
         loadingCurrentTheme();
     }
-    /**
-     * */
-    public void switchCurrentCameraModel() {
-        setModelTag(0 - getModelTag());
-    }
+
 
     @Override
     public void loadingCurrentTheme() {
@@ -92,8 +88,6 @@ public  class BaseActivity extends AppCompatActivity implements ThemeChangeObser
      * 得到当前主题标签
      * */
     protected int getThemeTag() {
-       /* SharedPreferences preferences = getSharedPreferences("MarioCache", Context.MODE_PRIVATE);
-        return preferences.getInt(KEY_MARIO_CACHE_THEME_TAG, 1);*/
         return (int) SPUtils.get(this, SPUtils.KEY_THEME_TAG, 1);
     }
 
@@ -101,25 +95,9 @@ public  class BaseActivity extends AppCompatActivity implements ThemeChangeObser
      * 设置主题标签并记录下来
      * */
     protected void setThemeTag(int tag) {
-      /*  SharedPreferences preferences = getSharedPreferences("MarioCache", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = preferences.edit();
-        edit.putInt(SPUtils.KEY_THEME_TAG, tag);*/
         SPUtils.putAndApply(this, SPUtils.KEY_THEME_TAG, tag);
     }
-    /**
-     * 得到当前模式标签
-     * */
-    protected int getModelTag() {
-        return (int) SPUtils.get(this, SPUtils.KEY_CAMERA_MODEL, 1);
-    }
 
-    /**
-     * 设置模式标签并记录下来
-     * */
-    protected void setModelTag(int tag) {
-
-        SPUtils.putAndApply(this, SPUtils.KEY_CAMERA_MODEL, tag);
-    }
 
 
     /**

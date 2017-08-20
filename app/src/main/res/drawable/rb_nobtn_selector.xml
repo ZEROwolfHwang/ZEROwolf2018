@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/car_number_dark" android:state_checked="true"></item>
-    <item android:drawable="@drawable/car_number_light" android:state_checked="false"></item>
+    <item android:drawable="@drawable/image_car_number" android:state_checked="false"></item>
 
 </selector>

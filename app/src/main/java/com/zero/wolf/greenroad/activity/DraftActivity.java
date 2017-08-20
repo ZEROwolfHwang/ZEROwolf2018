@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.DraftPhotoAdapter;
 import com.zero.wolf.greenroad.adapter.PreviewPhotoAdapter;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.bean.SortPreviewTime;
@@ -61,7 +60,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     private String mFilePath;
 
 
-    private DraftPhotoAdapter mPhotoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +79,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initPhotoRecycler() {
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+       /* LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mDraftPhotoRecyclerView.setLayoutManager(manager);
         // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
         for (int i = 0; i < mPhotoList.size(); i++) {
@@ -97,7 +95,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
             });
         }
-        mDraftPhotoRecyclerView.setAdapter(mPhotoAdapter);
+        mDraftPhotoRecyclerView.setAdapter(mPhotoAdapter);*/
 
     }
 

@@ -17,6 +17,11 @@ public class MyBitmap implements Parcelable{
         this.bm = bm;
 
     }
+    public MyBitmap(Bitmap bm,String title) {
+        this.bm = bm;
+        this.title = title;
+
+    }
 
     public MyBitmap(String path, Bitmap bm,String title) {
         this.path = path;

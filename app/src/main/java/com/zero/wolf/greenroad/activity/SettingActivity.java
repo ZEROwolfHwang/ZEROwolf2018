@@ -1,7 +1,6 @@
 package com.zero.wolf.greenroad.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SettingOperatorAdapter;
 import com.zero.wolf.greenroad.bean.SettingOperatorInfo;
 import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
@@ -132,9 +130,6 @@ public class SettingActivity extends BaseActivity {
 
         });
         mSettingRecyclerView.setLayoutManager(manager);
-        mSettingRecyclerView.addItemDecoration(new RecycleViewDivider(this,
-                LinearLayoutManager.HORIZONTAL, 10, Color.TRANSPARENT));
-
         mSettingRecyclerView.setAdapter(mAdapter);
     }
 
