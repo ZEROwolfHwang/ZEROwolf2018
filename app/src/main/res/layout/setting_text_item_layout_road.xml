@@ -27,6 +27,7 @@
         android:maxLines="1"
         android:id="@+id/text_setting_road"
         android:layout_width="0dp"
+        android:textColor="?attr/custom_attr_setting_text_color"
         android:text="京沪高速"
         android:textSize="@dimen/text18"
         android:layout_height="match_parent"/>

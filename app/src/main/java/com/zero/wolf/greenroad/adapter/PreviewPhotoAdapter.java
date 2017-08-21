@@ -1,6 +1,7 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,7 +72,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
     public void onBindViewHolder(PreviewPhotoHolder holder, int position) {
 //        holder.bindHolder(mPreviewList.get(position));
         //
-        holder.bindHolder(mPreviewList.get(position));
+        holder.bindHolder(mPreviewList.get(position),position);
     }
 
 
@@ -121,14 +122,9 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
         @BindView(R.id.preview_text_login)
         TextView mPreviewTextLogin;
 
-        @BindView(R.id.preview_text_goods)
-        TextView mPreviewTextGoods;
-        @BindView(R.id.preview_text_station)
-        TextView mPreviewTextStation;
         @BindView(R.id.preview_text_shutTime)
         TextView mPreviewTextShutTime;
-        @BindView(R.id.preview_item_color_img)
-        ImageView mPreviewItemColorImg;
+
 
 
         public PreviewPhotoHolder(View itemView) {
@@ -137,7 +133,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
 
         }
 
-        public void bindHolder(SupportDraft supportDraft) {
+        public void bindHolder(SupportDraft supportDraft, int position) {
             String check = supportDraft.getSiteCheck();
             String login = supportDraft.getSiteLogin();
             String goods = supportDraft.getGoods();
@@ -151,15 +147,17 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
             for (int i = 0; i < split.length; i++) {
                 Logger.i(split[i]);
             }*/
-
+            if (position % 2 == 0) {
+                itemView.setBackgroundColor(Color.WHITE);
+            }
             mPreviewTextCarNumber.setText(car_number);
-            mPreviewTextGoods.setText(goods);
+           // mPreviewTextGoods.setText(goods);
             mPreviewTextCheck.setText(check);
             mPreviewTextLogin.setText(login);
             mPreviewTextShutTime.setText(shutTime);
-            mPreviewTextStation.setText(scan_code);
+            //mPreviewTextStation.setText(scan_code);
 
-            setColor(mPreviewItemColorImg, color);
+            //setColor(mPreviewItemColorImg, color);
 
             itemView.setOnClickListener(v -> {
                      mItemClick.itemClick();

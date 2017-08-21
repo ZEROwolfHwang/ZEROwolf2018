@@ -62,7 +62,6 @@ public class PhotoFragment extends Fragment {
     RecyclerView mImageHuozhaoRecycler;
 
 
-
     private String mParam1;
     private String mParam2;
 
@@ -133,7 +132,7 @@ public class PhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.photo_image_add);
+        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
         mMyBitmapAdd = new MyBitmap(mBitmap_add);
         initRecycler();
 
@@ -161,9 +160,9 @@ public class PhotoFragment extends Fragment {
                 mCheShenBitmaps.add(sBitmaps_cheshen.get(i));
             }
         }
-        if (mHuoWuBitmaps != null && mHuoWuBitmaps.size() != 0) {
-            for (int i = 0; i < mHuoWuBitmaps.size() - 1; i++) {
-                mHuoWuBitmaps.add(mHuoWuBitmaps.get(i));
+        if (sBitmaps_huowu != null && sBitmaps_huowu.size() != 0) {
+            for (int i = 0; i < sBitmaps_huowu.size() - 1; i++) {
+                mHuoWuBitmaps.add(sBitmaps_huowu.get(i));
             }
         }
         mSanZhengBitmaps.add(mMyBitmapAdd);
@@ -176,16 +175,16 @@ public class PhotoFragment extends Fragment {
 
                 ImageView imageView = holder.getView(R.id.photo_fragment_image);
                 imageView.setImageBitmap(bitmap.getBm());
-                if (position == mSanZhengBitmaps.size()-1) {
+                if (position == mSanZhengBitmaps.size() - 1) {
                     imageView.setOnClickListener(v -> {
-                        openPicture(5,CHOOSE_CAR_NUMBER);
+                        openPicture(5, CHOOSE_CAR_NUMBER);
                     });
                 }
             }
         };
         mImageSanzhengRecycler.setAdapter(mSanZhengAdapter);
         //车辆车身
-         mCheShenBitmaps.add(mMyBitmapAdd);
+        mCheShenBitmaps.add(mMyBitmapAdd);
         LinearLayoutManager manager1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mImageCheshenRecycler.setLayoutManager(manager1);
         mCheShenAdapter = new BasePhotoAdapter<MyBitmap>(getContext(),
@@ -195,9 +194,9 @@ public class PhotoFragment extends Fragment {
 
                 ImageView imageView = holder.getView(R.id.photo_fragment_image);
                 imageView.setImageBitmap(bitmap.getBm());
-                if (position == mCheShenBitmaps.size()-1) {
+                if (position == mCheShenBitmaps.size() - 1) {
                     imageView.setOnClickListener(v -> {
-                        openPicture(5,CHOOSE_CAR_BODY);
+                        openPicture(5, CHOOSE_CAR_BODY);
                     });
                 }
             }
@@ -205,7 +204,7 @@ public class PhotoFragment extends Fragment {
         mImageCheshenRecycler.setAdapter(mCheShenAdapter);
 
         //货物
-         mHuoWuBitmaps.add(mMyBitmapAdd);
+        mHuoWuBitmaps.add(mMyBitmapAdd);
         LinearLayoutManager manager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mImageHuozhaoRecycler.setLayoutManager(manager2);
         mHuoWUAdapter = new BasePhotoAdapter<MyBitmap>(getContext(),
@@ -215,9 +214,9 @@ public class PhotoFragment extends Fragment {
 
                 ImageView imageView = holder.getView(R.id.photo_fragment_image);
                 imageView.setImageBitmap(bitmap.getBm());
-                if (position == mHuoWuBitmaps.size()-1) {
+                if (position == mHuoWuBitmaps.size() - 1) {
                     imageView.setOnClickListener(v -> {
-                        openPicture(5,CHOOSE_CAR_GOODS);
+                        openPicture(5, CHOOSE_CAR_GOODS);
                     });
                 }
             }
@@ -227,7 +226,7 @@ public class PhotoFragment extends Fragment {
     }
 
 
-    @OnClick({ R.id.ll_cheshenchexing, R.id.ll_huowu})
+    @OnClick({R.id.ll_cheshenchexing, R.id.ll_huowu})
     public void onClick(View view) {
         switch (view.getId()) {
            /* case R.id.open_picture_sanzheng:
@@ -274,8 +273,8 @@ public class PhotoFragment extends Fragment {
                 //   .showCropFrame(cb_showCropFrame.isChecked())
                 //   .showCropGrid(cb_showCropGrid.isChecked())
                 //   .openClickSound(cb_voice.isChecked())
-                .selectionMedia(choose_type==CHOOSE_CAR_NUMBER?mSelectList_sanzheng:
-                        choose_type==CHOOSE_CAR_BODY?mSelectList_cheshen:mSelectList_huowu)
+                .selectionMedia(choose_type == CHOOSE_CAR_NUMBER ? mSelectList_sanzheng :
+                        choose_type == CHOOSE_CAR_BODY ? mSelectList_cheshen : mSelectList_huowu)
                 .forResult(choose_type);
     }
 
@@ -320,7 +319,7 @@ public class PhotoFragment extends Fragment {
                 if (mSanZhengBitmaps == null) {
                     mSanZhengBitmaps = new ArrayList<>();
                 } else {
-                    if (mSanZhengBitmaps.size() != 0 ) {
+                    if (mSanZhengBitmaps.size() != 0) {
                         mSanZhengBitmaps.clear();
                     }
                 }
@@ -345,7 +344,7 @@ public class PhotoFragment extends Fragment {
                 if (mCheShenBitmaps == null) {
                     mCheShenBitmaps = new ArrayList<>();
                 } else {
-                    if (mCheShenBitmaps.size() != 0 ) {
+                    if (mCheShenBitmaps.size() != 0) {
                         mCheShenBitmaps.clear();
                     }
                 }
@@ -370,7 +369,7 @@ public class PhotoFragment extends Fragment {
                 if (mHuoWuBitmaps == null) {
                     mHuoWuBitmaps = new ArrayList<>();
                 } else {
-                    if (mHuoWuBitmaps.size() != 0 ) {
+                    if (mHuoWuBitmaps.size() != 0) {
                         mHuoWuBitmaps.clear();
                     }
                 }
@@ -457,6 +456,32 @@ public class PhotoFragment extends Fragment {
         if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
             listener.BitmapListener(mSanZhengBitmaps, mCheShenBitmaps, mHuoWuBitmaps);
         }
+    }
+
+    /**
+     * 当采集界面退出时,初始化photofragment的数据
+     */
+    public void notifyDataChange() {
+        if (mSelectList_sanzheng != null) {
+            mSelectList_sanzheng = null;
+        }
+        if (mSelectList_cheshen != null) {
+            mSelectList_cheshen = null;
+        }
+        if (mSelectList_huowu != null) {
+            mSelectList_huowu = null;
+        }
+        if (mSanZhengBitmaps != null) {
+            mSanZhengBitmaps.clear();
+        }
+        if (mCheShenBitmaps != null) {
+            mCheShenBitmaps.clear();
+        }
+        if (mHuoWuBitmaps != null) {
+            mHuoWuBitmaps.clear();
+        }
+
+
     }
 
 

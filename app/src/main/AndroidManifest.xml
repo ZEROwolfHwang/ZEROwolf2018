@@ -58,10 +58,8 @@
         </activity>
         <activity
             android:name=".activity.SureGoodsActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
-            android:clearTaskOnLaunch="false"
-            android:alwaysRetainTaskState="true"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
         </activity>
         <activity

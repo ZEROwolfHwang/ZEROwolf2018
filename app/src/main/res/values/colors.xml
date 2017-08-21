@@ -41,8 +41,8 @@
     <color name="number_fragment_key_text_day">#333333</color>
 
     <!--文本框的边框颜色-->
-    <color name="text_box_bg_day">#a9f9ff</color>
-    <color name="text_box_bg_night">#41afce</color>
+    <color name="text_box_bg_day">#b3b3b3</color>
+    <color name="text_box_bg_night">#b3b3b3</color>
 
     <!--字体背景样式的渐变色-->
     <color name="custom_bg_text_big_shape_night">#6969ff</color>

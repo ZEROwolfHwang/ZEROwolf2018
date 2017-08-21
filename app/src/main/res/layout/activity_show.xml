@@ -56,14 +56,32 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/show_submit"
+    <com.ddz.floatingactionbutton.FloatingActionMenu
+        android:id="@+id/fab4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:rippleColor="@color/blue"
-        app:srcCompat="@android:drawable/ic_menu_compass"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        app:fab_addButton_collapsed_rotation="0"
+        app:fab_addButton_expanded_rotation="45"
+        app:fab_addButton_rotation_duration="800"
+        app:fab_labelsPosition="right">
+
+        <com.ddz.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:id="@+id/show_submit"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_menu_share"
+            app:fab_size="mini"
+            app:fab_title="提交" />
+        <com.ddz.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_menu_send"
+            app:fab_size="normal"
+            app:fab_title="存稿" />
+    </com.ddz.floatingactionbutton.FloatingActionMenu>
 </android.support.design.widget.CoordinatorLayout>
 
 

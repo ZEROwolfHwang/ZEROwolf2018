@@ -98,12 +98,13 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
                     mDetailFragmentText.setText(myBitmap.getTitle());
                 }
                 if (position < 3) {
-                    itemView.setOnClickListener(v -> {
+                    mDetailFragmentImage.setOnClickListener(v -> {
                         mLisener.itemListener();
                     });
+                } else {
+                    mDetailFragmentImage.setClickable(false);
                 }
             }
-
         }
     }
 

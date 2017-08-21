@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:visibility="gone"
+    tools:showIn="@layout/fragment_checked">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="免费绿通车"
+              />
+
+            <CheckBox
+                android:id="@+id/check_111_001"
+                style="@style/conclusion_check_box_style"
+                android:text="符合绿通放行规定"/>
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="假冒三证"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_222_001"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_222_002"
+                    style="@style/conclusion_check_box_style"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_222_003"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_222_004"
+                    style="@style/conclusion_check_box_style"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="装载产品"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_333_001"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_333_003"
+                    style="@style/conclusion_check_box_style"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_333_004"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_333_002"
+                    style="@style/conclusion_check_box_style"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="超限超载"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_444_001"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_444_002"
+                    style="@style/conclusion_check_box_style"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="不足80%"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_555_001"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_555_002"
+                    style="@style/conclusion_check_box_style"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="假冒第三方文件"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_666_001"
+                    style="@style/conclusion_check_box_style"/>
+
+                <CheckBox
+                    android:id="@+id/check_666_002"
+                    style="@style/conclusion_check_box_style"/>
+
+
+            </LinearLayout>
+
+            <CheckBox
+                android:layout_marginTop="@dimen/layout_margin5dp"
+                android:id="@+id/check_666_003"
+                style="@style/conclusion_check_box_style"/>
+
+
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/rl_checked_conclusion_style"
+                android:text="其他"/>
+
+                <CheckBox
+                    android:id="@+id/check_777_001"
+                    style="@style/conclusion_check_box_style"/>
+
+        </LinearLayout>
+
+        <include layout="@layout/divice_item_bg"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/layout_margin5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_sure_conclusion"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="确定检查结论"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

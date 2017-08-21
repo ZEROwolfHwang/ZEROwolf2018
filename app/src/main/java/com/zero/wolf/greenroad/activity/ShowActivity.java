@@ -2,7 +2,6 @@ package com.zero.wolf.greenroad.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -18,17 +17,17 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.ShowViewPagerAdapter;
 import com.zero.wolf.greenroad.bean.CheckedBean;
-import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
+import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.fragment.CheckedFragment;
 import com.zero.wolf.greenroad.fragment.DetailsFragment;
+import com.zero.wolf.greenroad.fragment.PhotoFragment;
 import com.zero.wolf.greenroad.fragment.ScanFragment;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.https.PostInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
-import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SnackbarUtils;
@@ -43,7 +42,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.MultipartBody;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -57,7 +56,7 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/6/20.
  */
 
-public class ShowActivity extends BaseActivity{
+public class ShowActivity extends BaseActivity {
 
 
     @BindView(R.id.tab_show)
@@ -67,16 +66,17 @@ public class ShowActivity extends BaseActivity{
     @BindView(R.id.toolbar_show)
     Toolbar mToolbarShow;
     @BindView(R.id.show_submit)
-    FloatingActionButton mShowSubmit;
+    com.ddz.floatingactionbutton.FloatingActionButton mShowSubmit;
+    @BindView(R.id.fab4)
+    com.ddz.floatingactionbutton.FloatingActionMenu mFab4;
+
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
 
     private AppCompatActivity mActivity;
 
-
     private AlertDialog.Builder mDialog;
-
 
     private AlertDialog.Builder mNotPostDialog;
 
@@ -92,7 +92,6 @@ public class ShowActivity extends BaseActivity{
     private ArrayList<String> mPhotoPaths;
     private List<String> mBitmapList;
     private CheckedBean mCheckedBean_Q;
-
 
 
     @Override
@@ -125,6 +124,7 @@ public class ShowActivity extends BaseActivity{
     private void initData() {
 
     }
+
     private void initViewPagerAndTabs() {
         mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this);
         mViewPagerShow.setOffscreenPageLimit(3);//设置viewpager预加载页面数
@@ -132,7 +132,6 @@ public class ShowActivity extends BaseActivity{
 //        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
         mTabShow.setupWithViewPager(mViewPagerShow);
     }
-
 
 
     private void initView() {
@@ -145,7 +144,7 @@ public class ShowActivity extends BaseActivity{
         mToolbarShow.setNavigationIcon(R.drawable.back_up_logo);
 
         //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
-        mToolbarShow.setNavigationOnClickListener(v -> finish());
+        mToolbarShow.setNavigationOnClickListener(v -> backToMain());
     }
 
     @Override
@@ -157,7 +156,7 @@ public class ShowActivity extends BaseActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.caogao:
+            case R.id.menu_draft:
                 ToastUtils.singleToast("实现保存草稿");
                 saveDraft();
                 break;
@@ -185,7 +184,6 @@ public class ShowActivity extends BaseActivity{
         String route = gson.toJson(info);
 
 
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -194,7 +192,7 @@ public class ShowActivity extends BaseActivity{
 
 
         HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), route);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
 
         Logger.i("json  string" + route);
 
@@ -232,12 +230,12 @@ public class ShowActivity extends BaseActivity{
             mDetailInfoBean_Q = bean;
             mBitmapList = mDetailInfoBean_Q.getBitmapPaths();
             //拿到图片的体进行网络传递
-            if (mBitmapList != null && mBitmapList.size() != 0) {
+           /* if (mBitmapList != null && mBitmapList.size() != 0) {
                 List<MultipartBody.Part> parts = PathUtil
                         .getBodyPart(mBitmapList);
                 Logger.i(mDetailInfoBean_Q.toString());
                 Logger.i(parts.toString());
-            }
+            }*/
         });
         //拿到checkFragment的数据
         CheckedFragment.setCheckedBeanConnectListener(bean -> {
@@ -249,8 +247,6 @@ public class ShowActivity extends BaseActivity{
             mScanInfoBean_Q = bean;
             Logger.i(mScanInfoBean_Q.toString());
         });
-
-
 
     }
 
@@ -318,4 +314,23 @@ public class ShowActivity extends BaseActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        backToMain();
+    }
+
+    private void backToMain() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        builder.setTitle("是否确定退出采集页面");
+        builder.setMessage("点击确定保存为草稿并退出\n点击取消则继续采集车辆信息");
+        builder.setNegativeButton("取消", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.setPositiveButton("确定", (dialog, which) -> {
+            //在这里做保存草稿的操作
+            PhotoFragment.newInstance().notifyDataChange();
+            mActivity.finish();
+        });
+        builder.show();
+    }
 }

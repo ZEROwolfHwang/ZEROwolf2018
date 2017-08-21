@@ -75,33 +75,38 @@
     </LinearLayout>
 
     <Button
-        android:layout_margin="@dimen/layout_margin10dp"
         android:id="@+id/btn_enter_show"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="@dimen/layout_margin10dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="@dimen/layout_margin20dp"
+        android:layout_marginLeft="@dimen/layout_margin10dp"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:layout_marginTop="@dimen/layout_margin20dp"
         android:background="@drawable/shape_main_to_show_btn"
-        android:elevation="@dimen/layout_margin10dp"
-        android:text="开始采集"/>
+        android:elevation="@dimen/layout_margin30dp"
+        android:text="现场采集"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin0dp"
         android:layout_weight="1"
-        android:background="#f0f0f0"
-        android:layout_height="@dimen/layout_margin0dp">
+        android:background="#f0f0f0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:padding="@dimen/layout_margin10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_margin10dp">
 
             <RelativeLayout
                 android:id="@+id/custom_shape_line_rect_has"
                 android:layout_width="110dp"
+                android:layout_height="100dp"
                 android:background="#ffffff"
-                android:elevation="3dp"
-                android:layout_height="100dp">
+                android:elevation="3dp">
 
                 <TextView
                     android:id="@+id/tv_math_number_main_has"
@@ -111,34 +116,36 @@
                     android:text="100"
                     android:textColor="#f64545"
                     android:textSize="@dimen/text24"/>
+
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:text="保存草稿"
                     android:layout_marginBottom="@dimen/layout_margin10dp"
+                    android:text="草稿列表"
                     android:textColor="#808080"
                     android:textSize="@dimen/text14"/>
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="110dp"
                 android:id="@+id/custom_shape_line_rect_has_not"
+                android:layout_width="110dp"
+                android:layout_height="100dp"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
                 android:layout_marginRight="@dimen/layout_margin10dp"
                 android:background="#ffffff"
-                android:elevation="3dp"
-                android:layout_height="100dp">
+                android:elevation="3dp">
+
                 <TextView
 
                     android:layout_width="wrap_content"
-                    android:layout_marginBottom="@dimen/layout_margin10dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:text="已提交内容"
+                    android:layout_marginBottom="@dimen/layout_margin10dp"
+                    android:text="提交列表"
                     android:textColor="#808080"
                     android:textSize="@dimen/text14"/>
 
@@ -154,9 +161,10 @@
 
             <RelativeLayout
                 android:layout_width="110dp"
+                android:layout_height="100dp"
                 android:background="#ffffff"
-                android:elevation="3dp"
-                android:layout_height="100dp">
+                android:elevation="3dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,13 +172,14 @@
                     android:text="100"
                     android:textColor="#f64545"
                     android:textSize="@dimen/text24"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/layout_margin10dp"
-                    android:text="黑名单展示"
+                    android:text="黑名单列表"
                     android:textColor="#808080"
                     android:textSize="@dimen/text14"/>
 
@@ -179,37 +188,41 @@
 
         </LinearLayout>
     </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:background="#d8d8d8"
-    android:layout_height="35dp">
 
     <LinearLayout
-        android:layout_width="@dimen/layout_margin0dp"
-        android:layout_weight="2"
-        android:background="#b3b3b3"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="#d8d8d8">
+
+        <LinearLayout
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="#b3b3b3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_margin10dp"
+                android:drawableLeft="@drawable/main_room_left_img"
+                android:gravity="center_vertical"
+                android:text="16G"
+                android:textColor="#4d4d4d"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="/24G"
+                android:textColor="#4d4d4d"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:drawableLeft="@drawable/main_room_left_img"
-            android:text="16G"
-            android:textSize="20sp"
-            android:gravity="center_vertical"
-            android:textColor="#4d4d4d"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:textColor="#4d4d4d"
-            android:text="/24G"
-            android:textSize="20sp"
-            android:layout_height="wrap_content"/>
-        
+            android:layout_width="@dimen/layout_margin0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
     </LinearLayout>
-    <TextView
-        android:layout_width="@dimen/layout_margin0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"/>
-</LinearLayout>
 </LinearLayout>

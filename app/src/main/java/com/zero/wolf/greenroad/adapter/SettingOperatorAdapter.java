@@ -100,7 +100,7 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
         public void bindHolder(SettingOperatorInfo info, int position) {
 
             if (position % 2 == 0) {
-                mLlSettingOperator.setBackgroundColor(Color.CYAN);
+                mLlSettingOperator.setBackgroundColor(Color.WHITE);
 
             }
 

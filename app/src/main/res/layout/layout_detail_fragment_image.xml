@@ -14,7 +14,7 @@
         android:gravity="center"
         android:id="@+id/detail_fragment_text"
         android:padding="@dimen/layout_margin10dp"
-        android:textSize="@dimen/text18"
+        android:textSize="15sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

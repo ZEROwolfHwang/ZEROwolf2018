@@ -82,7 +82,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static CheckedFragment sFragment;
     private RelativeLayout mRelativeLayout;
     private Button mBtnSureConclusion;
-    private CheckBox[] mCheckBoxes;
+
     private static String sDescriptionQ;
     private static String sConclusionQ;
     private static boolean sIsFree;
@@ -92,6 +92,9 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static String sSiteLogin_Q;
     private String sSiteCheck_q;
     private static String sSiteCheck_Q;
+
+    private static CheckBox[] mCheckBoxes;
+    private String[] mConclusionArrays;
 
     public CheckedFragment() {
 
@@ -137,13 +140,15 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mTextConclusionView.setText(mConclusion_I);
         //初始化各个checkbox的状态
 
-
-        String conclusion = mTextConclusionView.getText().toString();
-
         mCheckBoxes = new CheckBox[]{mCheck111001, mCheck222001, mCheck222002, mCheck222003,
                 mCheck222004, mCheck333001, mCheck333002, mCheck333003, mCheck333004,
                 mCheck444001, mCheck444002, mCheck555001, mCheck555002,
                 mCheck666001, mCheck666002, mCheck666003, mCheck777001};
+        mConclusionArrays = getResources().getStringArray(R.array.checked_conclusion);
+
+        for (int i = 0; i < mCheckBoxes.length; i++) {
+            mCheckBoxes[i].setText(mConclusionArrays[i]);
+        }
 
         return view;
     }

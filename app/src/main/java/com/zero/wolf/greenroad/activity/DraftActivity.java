@@ -45,8 +45,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
     @BindView(R.id.toolbar_draft)
     Toolbar mToolbarPreview;
-    @BindView(R.id.draft_photo_recycler_view)
-    RecyclerView mDraftPhotoRecyclerView;
     @BindView(R.id.recycler_view_preview)
     RecyclerView mRecyclerViewPreview;
 
@@ -75,28 +73,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         initToolbar();
         initData();
         initView();
-        initPhotoRecycler();
-    }
-
-    private void initPhotoRecycler() {
-       /* LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mDraftPhotoRecyclerView.setLayoutManager(manager);
-        // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
-        for (int i = 0; i < mPhotoList.size(); i++) {
-            Logger.i(mPhotoList.get(i).getDraftTime());
-            if (mPhotoList.get(i).getBitmapPaths() != null) {
-
-                Logger.i(mPhotoList.get(i).getBitmapPaths().toString());
-            }
-        }
-        if (mPhotoList.size() != 0 && mPhotoList != null) {
-
-            mPhotoAdapter = new DraftPhotoAdapter(getContext(), mPhotoList.get(0).getBitmapPaths(), () -> {
-                // enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
-            });
-        }
-        mDraftPhotoRecyclerView.setAdapter(mPhotoAdapter);*/
-
     }
 
 

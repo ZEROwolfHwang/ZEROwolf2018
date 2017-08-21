@@ -108,6 +108,8 @@
     </style>
 
     <style name="RadioButtonStyle">
+        <item name="android:textColor">@color/license_color_text</item>
+        <item name="android:background">@drawable/rb_bg_selector</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">@dimen/layout_margin40dp</item>
         <item name="android:layout_weight">1</item>
@@ -138,6 +140,7 @@
         <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
     </style>
+
     <style name="main_text_layout_bg_else_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
@@ -190,8 +193,10 @@
     <style name="conclusion_check_box_style">
         <item name="android:background">@drawable/conclusion_check_fragment_box</item>
         <item name="android:button">@null</item>
-        <item name="android:paddingLeft">@dimen/layout_margin10dp</item>
-        <item name="android:paddingRight">@dimen/layout_margin10dp</item>
+        <item name="android:layout_marginLeft">@dimen/layout_margin10dp</item>
+        <item name="android:layout_marginRight">@dimen/layout_margin10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
         <item name="android:textSize">@dimen/text16</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/layout_margin25dp</item>
@@ -226,15 +231,34 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textSize">15sp</item>
     </style>
- <!--扫描结果的显示改变的字体-->
+    <!--扫描结果的显示不改变的字体-->
+    <style name="scan_code_info_style1">
+        <item name="android:textColor">#808080</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">10</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <!--扫描结果的显示改变的字体-->
     <style name="scan_code_change_info_style">
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_marginLeft">3dp</item>
         <item name="android:textColor">#333333</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="scan_code_change_info_style1">
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">9</item>
     </style>
 
     <dimen name="layout_margin80dp">80dp</dimen>
@@ -297,4 +321,45 @@
         <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
     </style>
 
+    <!--draftActivity列表的text样式-->
+    <style name="layout_dragft_activity_style_top">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:layout_width">@dimen/layout_margin0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="layout_dragft_activity_style_content">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:layout_width">@dimen/layout_margin0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ll_scan_item_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingBottom">@dimen/layout_margin10dp</item>
+        <item name="android:paddingLeft">@dimen/layout_margin10dp</item>
+        <item name="android:paddingTop">@dimen/layout_margin10dp</item>
+    </style>
+
+    <style name="rl_checked_conclusion_style">
+        <item name="android:background">#d2d2d2</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/layout_margin5dp</item>
+        <item name="android:layout_marginTop">@dimen/layout_margin5dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <!--Floating的样式-->
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

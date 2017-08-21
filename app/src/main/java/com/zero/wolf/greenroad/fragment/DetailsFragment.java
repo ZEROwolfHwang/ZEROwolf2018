@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,7 +31,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class DetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class DetailsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -62,6 +61,7 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
     private RadioButton mLicense_green;
     private LinearLayoutManager mLayoutManager;
 
+    private static RadioGroup mRadioGroupColor;
     public DetailsFragment() {
         // Required empty public constructor
     }
@@ -88,6 +88,7 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         unbinder = ButterKnife.bind(this, view);
         initView(view);
+        initRadioColor();
         initRecyclerView();
         return view;
     }
@@ -141,15 +142,22 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
         if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
             mAdapter.updateListView(mMyBitmaps_recycler_all);
 
-            if (mMyBitmaps_recycler_all.size() > 3) {
+            if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
                 scrollToPosition(mLayoutManager, 3);
             }
         }
     }
 
     private void scrollToPosition(LinearLayoutManager manager, int index) {
-        manager.scrollToPositionWithOffset(index,
-                (int) manager.computeScrollVectorForPosition(index).y);
+
+        try {
+            manager.scrollToPositionWithOffset(index,
+                    (int) manager.computeScrollVectorForPosition(index).y);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.i("重新进入照片数据异常");
+        }
+
     }
 
 
@@ -173,7 +181,7 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
         if (mMyBitmaps_recycler_all == null) {
             mMyBitmaps_recycler_all = new ArrayList<>();
         }
-        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.photo_image_add);
+        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
         MyBitmap bitmap = null;
         for (int i = 0; i < 3; i++) {
             if (i == 0) {
@@ -194,53 +202,40 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
 
         mTvChangeNumberDetail = (TextView) view.findViewById(R.id.tv_change_number_detail);
         mTvChangeGoodsDetail = (TextView) view.findViewById(R.id.tv_change_goods_detail);
+        mRadioGroupColor = (RadioGroup) view.findViewById(R.id.radio_group_color);
 
-        mRadioGroup_top = (RadioGroup) view.findViewById(R.id.radio_group_top);
-        mRadioGroup_bottom = (RadioGroup) view.findViewById(R.id.radio_group_bottom);
-
-        mLicense_yellow = (RadioButton) view.findViewById(R.id.license_yellow);
-        mLicense_blue = (RadioButton) view.findViewById(R.id.license_blue);
-        mLicense_black = (RadioButton) view.findViewById(R.id.license_black);
-        mLicense_white = (RadioButton) view.findViewById(R.id.license_white);
-        mLicense_green = (RadioButton) view.findViewById(R.id.license_green);
-
-        mLicense_yellow.setOnCheckedChangeListener(this);
-        mLicense_blue.setOnCheckedChangeListener(this);
-        mLicense_black.setOnCheckedChangeListener(this);
-        mLicense_white.setOnCheckedChangeListener(this);
-        mLicense_green.setOnCheckedChangeListener(this);
-        Logger.i(mCurrent_color);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.license_yellow:
-                mRadioGroup_bottom.clearCheck();
-                mCurrent_color = CarColorManager.COLOR_YELLOW;
-                break;
-            case R.id.license_blue:
-                mRadioGroup_bottom.clearCheck();
-                mCurrent_color = CarColorManager.COLOR_BLUE;
-                break;
-            case R.id.license_black:
-                mRadioGroup_top.clearCheck();
-                mCurrent_color = CarColorManager.COLOR_BLACK;
-                break;
-            case R.id.license_white:
-                mRadioGroup_top.clearCheck();
-                mCurrent_color = CarColorManager.COLOR_WHITE;
-                break;
-            case R.id.license_green:
-                mRadioGroup_top.clearCheck();
-                mCurrent_color = CarColorManager.COLOR_GREEN;
-                break;
-            default:
-                break;
+    private void initRadioColor() {
 
-        }
+        mRadioGroupColor.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.license_yellow:
+                    mCurrent_color = CarColorManager.COLOR_YELLOW;
+                    Logger.i(mCurrent_color);
+                    break;
+                case R.id.license_blue:
+                    mCurrent_color = CarColorManager.COLOR_BLUE;
+                    Logger.i(mCurrent_color);
+                    break;
+                case R.id.license_black:
+                    mCurrent_color = CarColorManager.COLOR_BLACK;
+                    Logger.i(mCurrent_color);
+                    break;
+                case R.id.license_green:
+                    mCurrent_color = CarColorManager.COLOR_GREEN;
+                    Logger.i(mCurrent_color);
+                    break;
+                case R.id.license_white:
+                    mCurrent_color = CarColorManager.COLOR_WHITE;
+                    Logger.i(mCurrent_color);
+                    break;
+
+                default:
+                    break;
+            }
+        });
     }
-
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -289,7 +284,6 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
         }
     }
 
-
     public interface BitmapListListener {
         void BitmapListener(ArrayList<MyBitmap> mMyBitmaps_sanzheng,
                             ArrayList<MyBitmap> mMyBitmaps_cheshen, ArrayList<MyBitmap> mMyBitmaps_huowu);
@@ -320,5 +314,12 @@ public class DetailsFragment extends Fragment implements CompoundButton.OnChecke
     public interface DetailsBeanConnectListener {
 
         void beanConnect(DetailInfoBean bean);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMyBitmaps_recycler_all.clear();
+
     }
 }
