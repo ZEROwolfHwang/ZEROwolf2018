@@ -144,7 +144,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:padding="@dimen/layout_margin10dp"
-                    android:layout_height="120dp"
+                    android:layout_height="140dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -162,7 +162,7 @@
                         android:background="?attr/text_box_bg"
                         android:layout_marginTop="@dimen/layout_margin5dp"
                         android:gravity="top|left"
-                        android:maxLines="2"
+                        android:maxLines="3"
                         android:paddingLeft="@dimen/layout_margin5dp"
                         android:paddingRight="@dimen/layout_margin5dp"
                         android:textColor="?attr/custom_white_black_text"
@@ -177,7 +177,7 @@
         </ScrollView>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="140dp"
             android:padding="@dimen/layout_margin10dp"
             android:orientation="vertical">
 
@@ -203,9 +203,5 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <include
-        android:id="@+id/relative_layout_conclusion"
-        layout="@layout/layout_checked_relative_conclusion"/>
 
 </RelativeLayout>

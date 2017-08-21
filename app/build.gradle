@@ -52,9 +52,9 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     compile 'com.zhengliang:shadow-view:1.0.1'
     compile 'com.android.support:support-v4:25.3.1'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'cn.yipianfengye.android:zxing-library:2.2'
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
     compile 'com.ddz.materialdesign:FloatingActionButton:1.0.4'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 }

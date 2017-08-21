@@ -1,6 +1,5 @@
 package com.zero.wolf.greenroad.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -9,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -30,7 +28,6 @@ import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
-import com.zero.wolf.greenroad.tools.SnackbarUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -41,7 +38,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
@@ -65,10 +61,9 @@ public class ShowActivity extends BaseActivity {
     ViewPager mViewPagerShow;
     @BindView(R.id.toolbar_show)
     Toolbar mToolbarShow;
-    @BindView(R.id.show_submit)
-    com.ddz.floatingactionbutton.FloatingActionButton mShowSubmit;
-    @BindView(R.id.fab4)
-    com.ddz.floatingactionbutton.FloatingActionMenu mFab4;
+ /*   @BindView(R.id.show_submit)
+    FloatingActionButton mShowSubmit;
+*/
 
     private long firstClick;
     private static final String TAG = "MainActivity";
@@ -167,11 +162,11 @@ public class ShowActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.show_submit)
+ /*   @OnClick(R.id.show_submit)
     public void onClick(View view) {
         SnackbarUtils.showShortSnackbar(view, "提交信息", Color.GREEN, Color.BLUE);
         submit2Service();
-    }
+    }*/
 
     private void submit2Service() {
         getListenerData();

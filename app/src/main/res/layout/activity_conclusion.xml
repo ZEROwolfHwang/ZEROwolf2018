@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:visibility="gone"
-    tools:showIn="@layout/fragment_checked">
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_conclusion"
+            style="@style/style_toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/layout_margin10dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 style="@style/rl_checked_conclusion_style"
                 android:text="免费绿通车"
-              />
+                />
 
             <CheckBox
                 android:id="@+id/check_111_001"
@@ -58,6 +71,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_margin5dp"
                 android:orientation="horizontal">
 
                 <CheckBox
@@ -102,6 +116,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_margin5dp"
                 android:orientation="horizontal">
 
                 <CheckBox
@@ -194,15 +209,19 @@
 
                 <CheckBox
                     android:id="@+id/check_666_002"
-                    style="@style/conclusion_check_box_style"/>
+                    android:layout_marginLeft="@dimen/layout_margin5dp"
+                    android:paddingRight="@dimen/layout_margin5dp"
+                    android:paddingLeft="@dimen/layout_margin5dp"
+                    style="@style/conclusion_check_box_style"
+                    />
 
 
             </LinearLayout>
 
             <CheckBox
-                android:layout_marginTop="@dimen/layout_margin5dp"
                 android:id="@+id/check_666_003"
-                style="@style/conclusion_check_box_style"/>
+                style="@style/conclusion_check_box_style"
+                android:layout_marginTop="@dimen/layout_margin5dp"/>
 
 
         </LinearLayout>
@@ -218,36 +237,28 @@
                 style="@style/rl_checked_conclusion_style"
                 android:text="其他"/>
 
-                <CheckBox
-                    android:id="@+id/check_777_001"
-                    style="@style/conclusion_check_box_style"/>
+            <CheckBox
+                android:id="@+id/check_777_001"
+                style="@style/conclusion_check_box_style"/>
 
         </LinearLayout>
 
         <include layout="@layout/divice_item_bg"/>
 
+
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_sure_conclusion"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="@dimen/layout_margin10dp"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:background="@drawable/shape_main_to_show_btn"
+        android:elevation="@dimen/layout_margin10dp"
+        android:text="确定检查结论"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/layout_margin5dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_sure_conclusion"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="确定检查结论"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

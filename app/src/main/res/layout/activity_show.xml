@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -24,13 +25,13 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
             <android.support.design.widget.TabLayout
-                app:tabIndicatorColor="@color/day_color_green"
                 android:id="@+id/tab_show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/custom_tab_bg_pager_view"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:tabGravity="fill"
+                app:tabIndicatorColor="@color/day_color_green"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="?attr/custom_tab_text_color_selected"
                 app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
@@ -56,32 +57,69 @@
 
     </LinearLayout>
 
-    <com.ddz.floatingactionbutton.FloatingActionMenu
+   <!-- <com.ddz.floatingactionbutton.FloatingActionMenu
         android:id="@+id/fab4"
+        app:layout_anchor="@id/coordinator_layout"
+        app:layout_anchorGravity="bottom|right"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="5dp"
-        app:fab_addButton_collapsed_rotation="0"
-        app:fab_addButton_expanded_rotation="45"
-        app:fab_addButton_rotation_duration="800"
-        app:fab_labelsPosition="right">
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="60dp"
+            android:layout_height="60dp">
+
+            <com.ddz.floatingactionbutton.FloatingActionButton
+                android:id="@+id/show_draft"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:fab_size="normal"
+                app:fab_title="存稿"/>
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:text="存稿"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
 
         <com.ddz.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
             android:id="@+id/show_submit"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@drawable/ic_menu_share"
-            app:fab_size="mini"
-            app:fab_title="提交" />
-        <com.ddz.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_icon="@drawable/ic_menu_send"
             app:fab_size="normal"
-            app:fab_title="存稿" />
-    </com.ddz.floatingactionbutton.FloatingActionMenu>
+            app:fab_title="提交"/>
+    </com.ddz.floatingactionbutton.FloatingActionMenu>-->
+  <!--  <android.support.design.widget.FloatingActionButton
+        android:id="@+id/show_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:backgroundTint="#d10e38"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/coordinator_layout"
+        app:layout_anchorGravity="bottom|right"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="#a6a6a6" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/show_draft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:backgroundTint="#0ec2ad"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:layout_anchor="@id/show_submit"
+        app:layout_anchorGravity="left"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="#a6a6a6" />-->
+
 </android.support.design.widget.CoordinatorLayout>
 
 
