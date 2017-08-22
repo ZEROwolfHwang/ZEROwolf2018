@@ -70,6 +70,8 @@ public class PreviewDetailActivity extends BaseActivity {
     TextView mCheck001;
     @BindView(R.id.check_002)
     TextView mCheck002;
+    @BindView(R.id.draft_save_time)
+    TextView mDraftSaveTime;
     private SupportDraft mCurrentDraft;
 
 
@@ -88,6 +90,9 @@ public class PreviewDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+
+        mDraftSaveTime.setText(mCurrentDraft.getCurrent_time());
+
         //采集信息的条目
         mPick001.setText(mCurrentDraft.getLane());
         mPick002.setText(mCurrentDraft.getSiteCheck());
@@ -113,7 +118,7 @@ public class PreviewDetailActivity extends BaseActivity {
 
         //检查结论的条目
         mCheck001.setText(mCurrentDraft.getIsRoom() == 0 ? "否" : "是");
-        mCheck002.setText(mCurrentDraft.getIsRoom() == 0 ? "否" : "是");
+        mCheck002.setText(mCurrentDraft.getIsFree() == 0 ? "否" : "是");
         mCheckedConclusionText.setText(mCurrentDraft.getConclusion());
         mCheckedDescriptionText.setText(mCurrentDraft.getDescription());
     }
@@ -139,6 +144,5 @@ public class PreviewDetailActivity extends BaseActivity {
         intent.putExtra(SUPPORTDRAFT_ITEM, supportDraft);
         context.startActivity(intent);
     }
-
 
 }

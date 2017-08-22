@@ -38,24 +38,20 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
 
 
     private static TextView mTextConclusionView;
-    private String mConclusion_I;
-    private String mDescription_I;
-    private StringBuilder mBuilder;
     private static EditText mEditDescriptionView;
-    private String mConclusionText;
-    private String mDescriptionEditText;
     private static CheckedFragment sFragment;
 
-    private static String sDescriptionQ;
-    private static String sConclusionQ;
+
     private static boolean sIsFree;
     private static boolean sIsRoom;
     private static TextView mSiteCheck;
     private static TextView mSiteLogin;
-    private static String sSiteLogin_Q;
-    private String sSiteCheck_q;
-    private static String sSiteCheck_Q;
     private String mConclusions;
+
+    private static String mLoginOperator;
+    private static String mCheckOperator;
+    private static String sConclusionQ;
+    private static String sDescriptionQ;
 
 
     public CheckedFragment() {
@@ -94,8 +90,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mSiteCheck.setOnClickListener(this);
         mSiteLogin.setOnClickListener(this);
 
-
-        mTextConclusionView.setText(mConclusion_I);
         //初始化各个checkbox的状态
 
 
@@ -103,17 +97,18 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void setOperatorInfo(String condition, TextView textView) {
+    private String setOperatorInfo(String condition, TextView textView) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
         if (operatorList.size() != 0) {
             Logger.i(operatorList.toString());
-            String job_number = operatorList.get(0).getJob_number();
-            String operator_name = operatorList.get(0).getOperator_name();
-            textView.setText(job_number + "(" + operator_name + ")");
+            String mJob_number = operatorList.get(0).getJob_number();
+            String mOperator_name = operatorList.get(0).getOperator_name();
+            textView.setText(mJob_number + "(" + mOperator_name + ")");
+            return mJob_number + "/" + mOperator_name;
         } else {
             textView.setText("500001(苏三)");
         }
-
+        return null;
     }
 
 
@@ -139,21 +134,21 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         if (mToggleIsRoom != null) {
             sIsRoom = mToggleIsRoom.isChecked();
         }
-        if (mSiteCheck != null) {
-            sSiteCheck_Q = mSiteCheck.getText().toString().trim();
-        }
-
-        if (mSiteLogin != null) {
-            sSiteLogin_Q = mSiteLogin.getText().toString().trim();
-        }
         CheckedBean bean = new CheckedBean();
+
         bean.setConclusion(sConclusionQ);
         bean.setDescription(sDescriptionQ);
-        bean.setSiteCheck(sSiteCheck_Q);
-        bean.setSiteLogin(sSiteLogin_Q);
-        bean.setIsRoom(sIsRoom ? 1 : 0);
-        bean.setIsFree(sIsFree ? 1 : 0);
+        if (mCheckOperator != null) {
+            bean.setSiteCheck(mCheckOperator);
+        }
+        if (mLoginOperator != null) {
+            bean.setSiteLogin(mLoginOperator);
+        }
+        //默认是"是"的状态,所以点击后为true,返回0"否"的状态
+        bean.setIsRoom(sIsRoom ? 0 : 1);
+        bean.setIsFree(sIsFree ? 0 : 1);
 
+        Logger.i(bean.toString());
         listener.beanConnect(bean);
 
     }
@@ -161,13 +156,13 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        ConclusionActivity.setTextChangeListener(conclusions ->{
+        ConclusionActivity.setTextChangeListener(conclusions -> {
             mConclusions = conclusions;
         });
         mTextConclusionView.setText(mConclusions);
 
-        setOperatorInfo("check_select = ?", mSiteCheck);
-        setOperatorInfo("login_select = ?", mSiteLogin);
+        mCheckOperator = setOperatorInfo("check_select = ?", mSiteCheck);
+        mLoginOperator = setOperatorInfo("login_select = ?", mSiteLogin);
 
     }
 
@@ -200,6 +195,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         Intent intent = new Intent(getContext(), SettingActivity.class);
         startActivity(intent);
     }
+
     public interface CheckedBeanConnectListener {
         void beanConnect(CheckedBean bean);
     }

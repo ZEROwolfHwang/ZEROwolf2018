@@ -17,13 +17,11 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.PreviewPhotoAdapter;
+import com.zero.wolf.greenroad.adapter.PreviewDraftAdapter;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.bean.SortPreviewTime;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
-import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
-import com.zero.wolf.greenroad.tools.FileUtils;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
@@ -51,7 +49,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     private Context mContext;
     private List<SupportDraft> mDraftList;
 
-    private PreviewPhotoAdapter mAdapter;
+    private PreviewDraftAdapter mAdapter;
     private File mGoodsFile;
     private String mGoodsFilePath;
     private String mFilePath;
@@ -84,7 +82,8 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        mAdapter = new PreviewPhotoAdapter(mContext, mActivity, (ArrayList<SupportDraft>) mDraftList, (SupportDraft supportDraft) -> {
+        mAdapter = new PreviewDraftAdapter(mContext, mActivity,
+                (ArrayList<SupportDraft>) mDraftList, (SupportDraft supportDraft) -> {
 
             ToastUtils.singleToast("点击了条目");
             PreviewDetailActivity.actionStart(mContext,supportDraft);
@@ -139,8 +138,8 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         setSupportActionBar(mToolbarPreview);
 
 
-        TextView title_text_view = ActionBarTool.getInstance(mActivity, 990).getTitle_text_view();
-        title_text_view.setText("草稿文件");
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 992).getTitle_text_view();
+        title_text_view.setText("草稿列表");
 
         mToolbarPreview.setNavigationIcon(R.drawable.back_up_logo);
         mToolbarPreview.setNavigationOnClickListener(v -> finish());
@@ -236,14 +235,15 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 mGoodsFile = new File(mFilePath, "GreenShoot");
                 mGoodsFile.mkdirs();
             }
-            mGoodsFilePath = mGoodsFile.getPath();*/
+            mGoodsFilePath = mGoodsFile.getPath();
 
-            FileUtils.deleteJpg(new File(mGoodsFilePath));
+            FileUtils.deleteJpg(new File(mGoodsFilePath));*/
             //顺便将计数清空，进行重新计数
             SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
             SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
 
-            onResume();
+            List<SupportDraft> supportDraftList = DataSupport.findAll(SupportDraft.class);
+            mAdapter.updateListView(supportDraftList);
         });
         dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
             dialog1.dismiss();
@@ -264,20 +264,23 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         dialog.setCancelable(false);
         dialog.setPositiveButton(getString(R.string.dialog_messge_OK), (dialog1, which) -> {
             String currentTimeToDate = TimeUtil.getCurrentTimeToDate();
-            List<SupportPhotoLite> photoLiteList = DataSupport.findAll(SupportPhotoLite.class);
+            List<SupportDraft> photoLiteList = DataSupport.findAll(SupportDraft.class);
 
             for (int i = 0; i < photoLiteList.size(); i++) {
-                String shutTime = photoLiteList.get(i).getShutTime();
+                String shutTime = photoLiteList.get(i).getCurrent_time();
                 int dayGap = TimeUtil.differentDaysByMillisecond(shutTime, currentTimeToDate);
                 if (dayGap > day) {
-                    DataSupport.deleteAll(SupportPhotoLite.class, "shutTime = ?", shutTime);
+                    DataSupport.deleteAll(SupportDraft.class, "shutTime = ?", shutTime);
                     //删除三张本地照片
-                    FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
+                    /*FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
                     FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath2());
                     FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath3());
+                    */
                 }
             }
-            onResume();
+            List<SupportDraft> supportDraftList = DataSupport.findAll(SupportDraft.class);
+            mAdapter.updateListView(supportDraftList);
+
         });
         dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
             dialog1.dismiss();

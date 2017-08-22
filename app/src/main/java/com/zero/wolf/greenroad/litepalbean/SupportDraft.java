@@ -14,7 +14,7 @@ import java.util.List;
 public class SupportDraft extends DataSupport implements Parcelable{
 
 
-    private String draftTime;
+    private String current_time;
     private String siteCheck;
     private String siteLogin;
     private String station;
@@ -34,6 +34,7 @@ public class SupportDraft extends DataSupport implements Parcelable{
     private String scan_10Q;
     private String scan_11Q;
     private String scan_12Q;
+
     private String color;
     private String number;
     private String goods;
@@ -47,7 +48,7 @@ public class SupportDraft extends DataSupport implements Parcelable{
     }
 
     public SupportDraft(Parcel in) {
-        draftTime = in.readString();
+        current_time = in.readString();
         siteCheck = in.readString();
         siteLogin = in.readString();
         station = in.readString();
@@ -96,12 +97,12 @@ public class SupportDraft extends DataSupport implements Parcelable{
         this.scan_code = scan_code;
     }
 
-    public String getDraftTime() {
-        return draftTime;
+    public String getCurrent_time() {
+        return current_time;
     }
 
-    public void setDraftTime(String draftTime) {
-        this.draftTime = draftTime;
+    public void setCurrent_time(String current_time) {
+        this.current_time = current_time;
     }
 
     public String getSiteCheck() {
@@ -307,7 +308,7 @@ public class SupportDraft extends DataSupport implements Parcelable{
     @Override
     public String toString() {
         return "SupportDraft{" +
-                "draftTime='" + draftTime + '\'' +
+                "current_time='" + current_time + '\'' +
                 ", checkOperator='" + siteCheck + '\'' +
                 ", loginOperator='" + siteLogin + '\'' +
                 ", station='" + station + '\'' +
@@ -343,7 +344,7 @@ public class SupportDraft extends DataSupport implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(draftTime);
+        dest.writeString(current_time);
         dest.writeString(siteCheck);
         dest.writeString(siteLogin);
         dest.writeString(station);

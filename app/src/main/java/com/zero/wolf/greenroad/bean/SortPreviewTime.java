@@ -17,7 +17,7 @@ public class SortPreviewTime implements Comparator{
         SupportDraft preview1 = (SupportDraft) o1;
         SupportDraft preview2 = (SupportDraft) o2;
 
-        int flag = preview1.getDraftTime().compareTo(preview2.getDraftTime());
+        int flag = preview1.getCurrent_time().compareTo(preview2.getCurrent_time());
 
         //倒序
         if(flag>0){

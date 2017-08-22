@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/7/28.
  */
 
-public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapter.PreviewPhotoHolder> {
+public class PreviewDraftAdapter extends RecyclerView.Adapter<PreviewDraftAdapter.PreviewPhotoHolder> {
 
 
     private final Context mContext;
@@ -36,7 +36,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
     // private final onItemClick mItemClick;
 
 
-    public PreviewPhotoAdapter(Context context, AppCompatActivity activity,
+    public PreviewDraftAdapter(Context context, AppCompatActivity activity,
                                ArrayList<SupportDraft> previewList,
                                onPreviewItemClick onPreviewItemClick) {
         mContext = context;
@@ -139,7 +139,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
             String login = supportDraft.getSiteLogin();
             String goods = supportDraft.getGoods();
             String car_number = supportDraft.getNumber();
-            String shutTime = supportDraft.getDraftTime();
+            String shutTime = supportDraft.getCurrent_time();
             int isFree = supportDraft.getIsFree();
             String station = supportDraft.getStation();
             String color = supportDraft.getColor();
@@ -155,11 +155,11 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
             }
 
             if (check != null) {
-                String[] checks = check.split("()");
+                String[] checks = check.split("/");
                 mPreviewTextCheck.setText(checks[0]);
             }
             if ( login!= null) {
-                String[] logins = login.split("()");
+                String[] logins = login.split("/");
                 mPreviewTextLogin.setText(logins[0]);
             }
 

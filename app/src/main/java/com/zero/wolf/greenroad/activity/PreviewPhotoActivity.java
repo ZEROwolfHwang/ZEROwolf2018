@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.PreviewPhotoAdapter;
+import com.zero.wolf.greenroad.adapter.PreviewDraftAdapter;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.bean.SerializablePreview;
 import com.zero.wolf.greenroad.bean.SortPreviewTime;
@@ -56,7 +56,7 @@ public class PreviewPhotoActivity extends BaseActivity implements View.OnClickLi
     private Context mContext;
     private List<SupportPhotoLite> mPhotoList;
     private ArrayList<SerializablePreview> mPreviewList;
-    private PreviewPhotoAdapter mAdapter;
+    private PreviewDraftAdapter mAdapter;
     private File mGoodsFile;
     private String mGoodsFilePath;
     private String mFilePath;

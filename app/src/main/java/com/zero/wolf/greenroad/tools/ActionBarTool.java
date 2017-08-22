@@ -43,6 +43,8 @@ public class ActionBarTool {
             mTitleView = inflater.inflate(R.layout.action_bar_title_photo_right, null);
         } else if (mType == 990){
             mTitleView = inflater.inflate(R.layout.action_bar_title_photo_center, null);
+        }else if (mType == 992){
+            mTitleView = inflater.inflate(R.layout.action_bar_title_photo_small, null);
         }
 
 

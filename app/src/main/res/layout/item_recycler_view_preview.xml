@@ -18,16 +18,16 @@
         style="@style/layout_dragft_activity_style_content"/>
     <TextView
         android:id="@+id/preview_text_isFree"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:text="是"
         style="@style/layout_dragft_activity_style_content"/>
     <TextView
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:text="检查人"
         android:id="@+id/preview_text_check"
         style="@style/layout_dragft_activity_style_content"/>
     <TextView
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:id="@+id/preview_text_login"
         android:text="登记人"
         style="@style/layout_dragft_activity_style_content"/>

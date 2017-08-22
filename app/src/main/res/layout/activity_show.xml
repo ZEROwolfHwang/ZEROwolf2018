@@ -63,11 +63,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="@dimen/layout_margin20dp"
         app:fab_addButton_collapsed_rotation="0"
         app:fab_addButton_expanded_rotation="45"
         app:fab_addButton_rotation_duration="800">
-
+        <!--放在上面的第二个-->
         <FrameLayout
             android:layout_width="60dp"
             android:layout_height="60dp">
@@ -95,10 +96,9 @@
 
             <com.ddz.floatingactionbutton.FloatingActionButton
                 android:id="@+id/show_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_size="normal"
-                app:fab_title="提交"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fab_size="normal"/>
 
             <TextView
                 android:layout_width="wrap_content"

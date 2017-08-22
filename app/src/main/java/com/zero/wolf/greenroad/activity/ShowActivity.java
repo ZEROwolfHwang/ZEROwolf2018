@@ -66,7 +66,7 @@ public class ShowActivity extends BaseActivity {
 
     private static String ARG_ROAD = "arg_road";
     private static String ARG_STATION = "arg_station";
-    private static String ACTION_MAIN_ENTER_SHOW= "action_main_enter_show";
+    private static String ACTION_MAIN_ENTER_SHOW = "action_main_enter_show";
     @BindView(R.id.tab_show)
     TabLayout mTabShow;
     @BindView(R.id.view_pager_show)
@@ -196,17 +196,17 @@ public class ShowActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.show_submit,R.id.show_draft})
+    @OnClick({R.id.show_submit, R.id.show_draft})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.show_submit:
-                ToastUtils.singleToast("实现保存草稿");
-                saveDraft();
 
-                break;
-            case R.id.show_draft:
                 ToastUtils.singleToast("向服务端提交采集的数据");
                 submit2Service();
+                break;
+            case R.id.show_draft:
+                ToastUtils.singleToast("实现保存草稿");
+                saveDraft();
                 break;
 
             default:
@@ -219,8 +219,28 @@ public class ShowActivity extends BaseActivity {
 
 
         PostInfo info = new PostInfo();
-        info.setCheck("苏三");
-        info.setLogin("璟四");
+        //从扫描中拿到的数据
+        if (mScanInfoBean_Q != null) {
+
+            info.setScan_code(mScanInfoBean_Q.getScan_code());
+            info.setScan_code(mScanInfoBean_Q.getScan_01Q());
+            info.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
+            info.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
+            info.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
+            info.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
+            info.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
+            info.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
+            info.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
+            info.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
+            info.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
+            info.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
+            info.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
+            info.setScan_code(mScanInfoBean_Q.getScan_code());
+            info.setCurrent_time(TimeUtil.getCurrentTimeTos());
+        } else {
+            ToastUtils.singleToast("请扫描二维码");
+        }
+
         Gson gson = new Gson();
         String route = gson.toJson(info);
 
@@ -311,6 +331,7 @@ public class ShowActivity extends BaseActivity {
         //   DraftActivity.actionStart(this, mConfigInfoBean, mDetailInfoBean_Q, mPhotoPaths);
 //        if (supportDrafts.size() == 0) {
 
+
         SupportDraft draft = new SupportDraft();
 
         //从采集的fragment中拿到数据
@@ -320,9 +341,9 @@ public class ShowActivity extends BaseActivity {
         draft.setGoods(mDetailInfoBean_Q.getGoods());
 
         // 从主界面拿到的信息
-      draft.setRoad(mRoad_Q);
-       draft.setStation(mStation_Q);
-       draft.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+        draft.setRoad(mRoad_Q);
+        draft.setStation(mStation_Q);
+        draft.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
 
         //从扫描中拿到的数据
         draft.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
@@ -338,7 +359,7 @@ public class ShowActivity extends BaseActivity {
         draft.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
         draft.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
         draft.setScan_code(mScanInfoBean_Q.getScan_code());
-        draft.setDraftTime(TimeUtil.getCurrentTimeTos());
+        draft.setCurrent_time(TimeUtil.getCurrentTimeTos());
 
         //从checkedFragment中拿到的数据
         draft.setIsFree(mCheckedBean_Q.getIsFree());
@@ -365,18 +386,26 @@ public class ShowActivity extends BaseActivity {
         builder.setTitle("是否保存为草稿");
         builder.setMessage("点击确定保存为草稿并退出\n点击直接退出则清空当前采集");
         builder.setNegativeButton("直接退出", (dialog, which) -> {
-            saveDraft();
             dialog.dismiss();
+            notifyDataChangeAndFinish();
+
         });
 
         builder.setPositiveButton("保存并退出", (dialog, which) -> {
+            saveDraft();
             //在这里做保存草稿的操作
-            CarNumberFragment.notifyDataChange();
-            GoodsFragment.notifyDataChange();
-            PhotoFragment.newInstance().notifyDataChange();
-            ConclusionActivity.notifyDataChange();
-            mActivity.finish();
+            notifyDataChangeAndFinish();
+
         });
         builder.show();
+    }
+
+    private void notifyDataChangeAndFinish() {
+        CarNumberFragment.notifyDataChange();
+        GoodsFragment.notifyDataChange();
+        PhotoFragment.newInstance().notifyDataChange();
+        ConclusionActivity.notifyDataChange();
+
+        mActivity.finish();
     }
 }

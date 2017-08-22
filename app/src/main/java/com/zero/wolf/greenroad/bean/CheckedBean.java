@@ -5,6 +5,7 @@ package com.zero.wolf.greenroad.bean;
  */
 
 public class CheckedBean {
+
     private String conclusion;
     private String description;
     private String siteCheck;
