@@ -12,7 +12,6 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
-import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -135,7 +134,7 @@ public class PreviewDetailActivity extends BaseActivity {
 
     private void getIntentData() {
         mCurrentDraft = getIntent().getParcelableExtra(SUPPORTDRAFT_ITEM);
-        ToastUtils.singleToast(mCurrentDraft.toString());
+     //   ToastUtils.singleToast(mCurrentDraft.toString());
         Logger.i(mCurrentDraft.toString());
     }
 

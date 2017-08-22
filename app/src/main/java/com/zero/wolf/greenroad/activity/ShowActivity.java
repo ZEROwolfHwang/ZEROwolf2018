@@ -3,6 +3,7 @@ package com.zero.wolf.greenroad.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -13,8 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.ddz.floatingactionbutton.FloatingActionButton;
-import com.ddz.floatingactionbutton.FloatingActionMenu;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
@@ -73,10 +74,10 @@ public class ShowActivity extends BaseActivity {
     ViewPager mViewPagerShow;
     @BindView(R.id.toolbar_show)
     Toolbar mToolbarShow;
-    @BindView(R.id.show_draft)
-    FloatingActionButton mShowDraft;
-    @BindView(R.id.show_submit)
-    FloatingActionButton mShowSubmit;
+    @BindView(R.id.fab_draft)
+    FloatingActionButton mFabDraft;
+    @BindView(R.id.fab_submit)
+    FloatingActionButton mFabSubmit;
     @BindView(R.id.menu_fab)
     FloatingActionMenu mMenuFab;
 
@@ -105,6 +106,7 @@ public class ShowActivity extends BaseActivity {
     private static CheckedBean mCheckedBean_Q;
     private static String mStation_Q;
     private static String mRoad_Q;
+    private Handler mUiHandler = new Handler();
 
     public static void avtionStart(Context context, String road, String station) {
         Intent intent = new Intent(context, ShowActivity.class);
@@ -123,6 +125,19 @@ public class ShowActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         mActivity = this;
+
+        mMenuFab.setClosedOnTouchOutside(true);
+
+        mMenuFab.hideMenuButton(false);
+        int delay = 400;
+
+        mUiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mMenuFab.showMenuButton(true);
+            }
+        }, delay);
+
 
         initData();
         initViewPagerAndTabs();
@@ -196,16 +211,32 @@ public class ShowActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.show_submit, R.id.show_draft})
+    @OnClick({R.id.fab_submit, R.id.fab_draft})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.show_submit:
 
+            case R.id.menu_fab:
                 ToastUtils.singleToast("向服务端提交采集的数据");
+                if (mMenuFab.isOpened()) {
+                ToastUtils.singleToast("打开fab menu");
+                } else {
+                    mFabDraft.showButtonInMenu(true);
+                    mFabSubmit.showButtonInMenu(true);
+                }
+                mMenuFab.toggle(true);
+                break;
+            case R.id.fab_submit:
+                ToastUtils.singleToast("向服务端提交采集的数据");
+                mFabDraft.hideButtonInMenu(true);
+                mFabSubmit.hideButtonInMenu(true);
+                mMenuFab.toggle(false);
                 submit2Service();
                 break;
-            case R.id.show_draft:
+            case R.id.fab_draft:
                 ToastUtils.singleToast("实现保存草稿");
+                mFabDraft.hideButtonInMenu(true);
+                mFabSubmit.hideButtonInMenu(true);
+                mMenuFab.toggle(false);
                 saveDraft();
                 break;
 

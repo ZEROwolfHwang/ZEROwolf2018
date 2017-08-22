@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -56,62 +57,37 @@
 
 
     </LinearLayout>
-
-    <com.ddz.floatingactionbutton.FloatingActionMenu
+    <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="@dimen/layout_margin20dp"
-        app:fab_addButton_collapsed_rotation="0"
-        app:fab_addButton_expanded_rotation="45"
-        app:fab_addButton_rotation_duration="800">
-        <!--放在上面的第二个-->
-        <FrameLayout
-            android:layout_width="60dp"
-            android:layout_height="60dp">
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_backgroundColor="#ccffffff"
+        fab:menu_fab_label="Menu label">
 
-            <com.ddz.floatingactionbutton.FloatingActionButton
-                android:id="@+id/show_draft"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                app:fab_size="mini"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_draft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_send"
+            fab:fab_size="mini"
+            fab:fab_label="Remove button" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="存稿"
-                android:textColor="@color/white"
-                android:textSize="12sp"/>
-        </FrameLayout>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_send"
+            fab:fab_size="mini"
+            fab:fab_label="Restore Button" />
 
-        <FrameLayout
-            android:layout_width="60dp"
-            android:layout_height="60dp">
-
-            <com.ddz.floatingactionbutton.FloatingActionButton
-                android:id="@+id/show_submit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:fab_size="normal"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="提交"
-                android:textColor="@color/white"
-                android:textSize="12sp"/>
-        </FrameLayout>
-    </com.ddz.floatingactionbutton.FloatingActionMenu>
-
-
+    </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>
 
 
