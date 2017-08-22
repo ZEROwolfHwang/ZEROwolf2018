@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +49,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
     private DraftActivity mActivity;
     private Context mContext;
-    private List<SupportDraft> mPhotoList;
+    private List<SupportDraft> mDraftList;
 
     private PreviewPhotoAdapter mAdapter;
     private File mGoodsFile;
@@ -85,10 +84,10 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        mAdapter = new PreviewPhotoAdapter(mContext, mActivity, (ArrayList<SupportDraft>) mPhotoList, () -> {
+        mAdapter = new PreviewPhotoAdapter(mContext, mActivity, (ArrayList<SupportDraft>) mDraftList, (SupportDraft supportDraft) -> {
 
             ToastUtils.singleToast("点击了条目");
-
+            PreviewDetailActivity.actionStart(mContext,supportDraft);
         });
 
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -96,22 +95,22 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void initData() {
-        mPhotoList = DataSupport.findAll(SupportDraft.class);
+        mDraftList = DataSupport.findAll(SupportDraft.class);
 
-        for (int i = 0; i < mPhotoList.size(); i++) {
-            Logger.i("------------" + mPhotoList.get(i).toString());
+        for (int i = 0; i < mDraftList.size(); i++) {
+            Logger.i("------------" + mDraftList.get(i).toString());
 
         }
         SortPreviewTime sortPreviewTime = new SortPreviewTime();
 
-        Collections.sort(mPhotoList, sortPreviewTime);
-        for (int i = 0; i < mPhotoList.size(); i++) {
-            Logger.i("++++++++++++" + mPhotoList.get(i).toString());
+        Collections.sort(mDraftList, sortPreviewTime);
+        for (int i = 0; i < mDraftList.size(); i++) {
+            Logger.i("++++++++++++" + mDraftList.get(i).toString());
         }
 
        /* mPreviewList = new ArrayList<>();
-        for (int i = 0; i < mPhotoList.size(); i++) {
-            SupportDraft photoLite = mPhotoList.get(i);
+        for (int i = 0; i < mDraftList.size(); i++) {
+            SupportDraft photoLite = mDraftList.get(i);
 
             for (int j = 0; j < 5; j++) {
 
@@ -231,13 +230,13 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         dialog.setCancelable(false);
         dialog.setPositiveButton(getString(R.string.dialog_messge_OK), (dialog1, which) -> {
 
-            DataSupport.deleteAll(SupportPhotoLite.class);
-            if (mGoodsFile == null) {
+            DataSupport.deleteAll(SupportDraft.class);
+          /*  if (mGoodsFile == null) {
                 mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
                 mGoodsFile = new File(mFilePath, "GreenShoot");
                 mGoodsFile.mkdirs();
             }
-            mGoodsFilePath = mGoodsFile.getPath();
+            mGoodsFilePath = mGoodsFile.getPath();*/
 
             FileUtils.deleteJpg(new File(mGoodsFilePath));
             //顺便将计数清空，进行重新计数

@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-       >
+        >
 
         <ScrollView
 
@@ -34,24 +34,25 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="容积超过80%"
-                        android:textColor="#424242"
+                        android:textColor="@color/color808080"
                         android:textSize="18sp"/>
 
                     <ToggleButton
                         android:id="@+id/toggle_is_room"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:textOff="@null"
+                        android:textOn="@null"
+                        android:layout_width="75dp"
+                        android:layout_height="30dp"
                         android:layout_marginRight="10dp"
-                        android:textOff="否"
-                        android:textOn="是"/>
+                        android:background="@drawable/toggle_selector_day"/>
 
                 </LinearLayout>
 
-                <include layout="@layout/divice_item_bg"/>
+                <include layout="@layout/device_item_bg_1dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -62,24 +63,27 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_margin10dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/layout_margin10dp"
                         android:text="是否免费"
-                        android:textColor="#424242"
+                        android:textColor="@color/color808080"
                         android:textSize="18sp"/>
 
                     <ToggleButton
+                        android:paddingBottom="@dimen/layout_margin10dp"
+                        android:paddingTop="@dimen/layout_margin10dp"
                         android:id="@+id/toggle_is_free"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_width="75dp"
+                        android:layout_height="30dp"
                         android:layout_marginRight="10dp"
-                        android:textOff="否"
-                        android:textOn="是"/>
+                        android:background="@drawable/toggle_selector_day"
+                        android:textOff="@null"
+                        android:textOn="@null"/>
 
                 </LinearLayout>
 
-                <include layout="@layout/divice_item_bg"/>
+                <include layout="@layout/device_item_bg_1dp"/>
 
 
                 <LinearLayout
@@ -90,11 +94,11 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginLeft="@dimen/layout_margin10dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="现场检查人"
-                        android:textColor="#424242"
+                        android:textColor="@color/color808080"
                         android:textSize="18sp"/>
 
                     <TextView
@@ -109,7 +113,7 @@
 
                 </LinearLayout>
 
-                <include layout="@layout/divice_item_bg"/>
+                <include layout="@layout/device_item_bg_1dp"/>
 
 
                 <LinearLayout
@@ -120,47 +124,47 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginLeft="@dimen/layout_margin10dp"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="现场登记人"
-                        android:textColor="#424242"
+                        android:textColor="@color/color808080"
                         android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/site_login_operator"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="center"
                         android:layout_marginRight="@dimen/layout_margin10dp"
+                        android:gravity="center"
                         android:textColor="#333333"
                         android:textSize="18sp"/>
 
 
                 </LinearLayout>
 
-                <include layout="@layout/divice_item_bg"/>
+                <include layout="@layout/device_item_bg_1dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:padding="@dimen/layout_margin10dp"
-                    android:layout_height="140dp"
-                    android:orientation="vertical">
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="@dimen/layout_margin10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="现场检查结论"
-                        android:textColor="#424242"
+                        android:textColor="@color/color808080"
                         android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/checked_conclusion_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="?attr/text_box_bg"
                         android:layout_marginTop="@dimen/layout_margin5dp"
+                        android:background="?attr/text_box_bg"
                         android:gravity="top|left"
                         android:maxLines="3"
                         android:paddingLeft="@dimen/layout_margin5dp"
@@ -170,30 +174,31 @@
 
                 </LinearLayout>
 
-                <include layout="@layout/divice_item_bg"/>
+                <include layout="@layout/device_item_bg_1dp"/>
 
             </LinearLayout>
 
         </ScrollView>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:padding="@dimen/layout_margin10dp"
-            android:orientation="vertical">
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:padding="@dimen/layout_margin10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="现场检查说明"
-                android:textColor="#424242"
+                android:textColor="@color/color808080"
                 android:textSize="@dimen/text18"/>
 
             <EditText
                 android:id="@+id/checked_description_text"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/layout_margin5dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_margin5dp"
                 android:background="?attr/text_box_bg"
                 android:gravity="top|left"
                 android:paddingLeft="@dimen/layout_margin5dp"

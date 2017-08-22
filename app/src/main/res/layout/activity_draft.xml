@@ -26,7 +26,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:text="车牌号"
             style="@style/layout_dragft_activity_style_top"/>
         <TextView
@@ -34,15 +34,15 @@
             android:text="保存时间"
             style="@style/layout_dragft_activity_style_top"/>
         <TextView
-            android:layout_weight="3"
-            android:text="收费情况"
+            android:layout_weight="4"
+            android:text="是否收费"
             style="@style/layout_dragft_activity_style_top"/>
         <TextView
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:text="检查人"
             style="@style/layout_dragft_activity_style_top"/>
         <TextView
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:text="登记人"
             style="@style/layout_dragft_activity_style_top"/>
 

@@ -74,8 +74,7 @@
         <!-- __________________     DetailFragment      __________________ -->
 
 
-        <item name="custom_toggle_selector_room">@drawable/toggle_selector_room_day</item>
-        <item name="custom_toggle_selector_free">@drawable/toggle_selector_free_day</item>
+        <item name="custom_toggle_selector">@drawable/toggle_selector_day</item>
 
     </style>
 
@@ -150,8 +149,7 @@
 
         <!-- __________________     DetailFragment      __________________ -->
 
-        <item name="custom_toggle_selector_room">@drawable/toggle_selector_room_night</item>
-        <item name="custom_toggle_selector_free">@drawable/toggle_selector_free_night</item>
+        <item name="custom_toggle_selector">@drawable/toggle_selector_night</item>
 
 
 

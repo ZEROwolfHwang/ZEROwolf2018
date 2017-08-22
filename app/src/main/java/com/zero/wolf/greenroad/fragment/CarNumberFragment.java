@@ -57,7 +57,7 @@ public class CarNumberFragment extends Fragment {
     private static EditText mEtInputBox7;
     private static SerializableMain2Sure mMain2Sure;
     private static String mNumber_I;
-    private EditText[] mEditTextViews;
+    private static EditText[] mEditTextViews;
 
     public static CarNumberFragment newInstance(String number) {
         if (sFragment == null) {
@@ -240,5 +240,14 @@ public class CarNumberFragment extends Fragment {
         }*/
     }
 
-
+    /**
+     * 当采集界面退出时,初始化numberfragment的数据
+     */
+    public static void notifyDataChange() {
+        if (mEditTextViews != null) {
+            for (int i = 0; i < mEditTextViews.length; i++) {
+                mEditTextViews[i].setText("");
+            }
+        }
+    }
 }

@@ -108,7 +108,6 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             }
         }
 
-
         mAsObject = (ArrayList<SerializableGoods>) ACache
                 .get(getActivity()).getAsObject(ACache.GOODSACACHE);
 
@@ -311,7 +310,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                     sBuilder.append(mTextList.get(i) + ";");
                 }
             }
-            listener.textChanged(sBuilder.toString());
+            listener.textChanged(sBuilder.toString().trim());
         } else {
             listener.textChanged("");
         }
@@ -342,5 +341,12 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         unbinder.unbind();
 
     }
-
+    /**
+     * 当采集界面退出时,初始化numberfragment的数据
+     */
+    public static void notifyDataChange() {
+        if (mTextList != null) {
+            mTextList.clear();
+        }
+    }
 }

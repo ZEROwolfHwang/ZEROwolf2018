@@ -19,7 +19,7 @@
             android:layout_marginLeft="@dimen/layout_margin10dp"
             android:gravity="center_vertical"
             android:text="出口流水号:"
-            android:textColor="#808080"
+            android:textColor="@color/color808080"
             android:textSize="15sp"/>
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:textColor="#333333"
+            android:textColor="@color/color333333"
             android:textSize="15sp"/>
 
         <TextView
@@ -39,150 +39,139 @@
             android:background="#c1fbf0"
             android:gravity="center"
             android:text="扫描二维码"
-            android:textColor="#666666"
+            android:textColor="@color/color666666"
             android:textSize="16sp"/>
 
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
+    <include layout="@layout/device_item_bg_1dp"/>
 
     <LinearLayout
         style="@style/ll_scan_item_style">
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="出口车牌:"/>
             />
         <TextView
             android:id="@+id/text_table_1"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="荷载质量(吨):"/>
             />
         <TextView
             android:id="@+id/text_table_2"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
+    <include layout="@layout/device_item_bg_1dp"/>
     <LinearLayout
         style="@style/ll_scan_item_style">
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="整备质量(吨):"/>
             />
         <TextView
             android:id="@+id/text_table_3"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="称重质量(吨):"/>
             />
         <TextView
             android:id="@+id/text_table_4"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
+    <include layout="@layout/device_item_bg_1dp"/>
     <LinearLayout
         style="@style/ll_scan_item_style">
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="收费金额(元):"/>
             />
         <TextView
             android:id="@+id/text_table_5"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="免费金额(元):"/>
             />
         <TextView
             android:id="@+id/text_table_6"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
+    <include layout="@layout/device_item_bg_1dp"/>
     <LinearLayout
         style="@style/ll_scan_item_style">
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="入口路段:"/>
             />
         <TextView
             android:id="@+id/text_table_7"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="出口路段:"/>
             />
         <TextView
             android:id="@+id/text_table_8"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
+    <include layout="@layout/device_item_bg_1dp"/>
     <LinearLayout
         style="@style/ll_scan_item_style">
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="入口站:"/>
             />
         <TextView
             android:id="@+id/text_table_9"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="出口站:"/>
             />
         <TextView
             android:id="@+id/text_table_10"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
+    <include layout="@layout/device_item_bg_1dp"/>
      <LinearLayout
         style="@style/ll_scan_item_style">
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="入口车道:"/>
             />
         <TextView
             android:id="@+id/text_table_11"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
 
         <TextView
-            style="@style/scan_code_info_style1"
+            style="@style/scan_code_info_style"
             android:text="出口车道:"/>
             />
         <TextView
             android:id="@+id/text_table_12"
-            style="@style/scan_code_change_info_style1"/>
+            style="@style/scan_code_change_info_style"/>
     </LinearLayout>
 
-    <include layout="@layout/divice_item_bg"/>
-
-        <Button
-            android:layout_width="@dimen/layout_margin0dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="@dimen/layout_margin20dp"
-            android:layout_weight="1"
-            android:background="@drawable/scan_fragment_bg_btn_scan"
-            android:text="编辑"
-            android:textColor="@color/day_color_green"
-            android:textSize="20sp"/>
-
+    <include layout="@layout/device_item_bg_1dp"/>
 
 
 </LinearLayout>

@@ -228,4 +228,12 @@ public class ConclusionActivity extends BaseActivity {
         super.onDestroy();
         mUnbinder.unbind();
     }
+    /**
+     * 当采集界面退出时,初始化numberfragment的数据
+     */
+    public static void notifyDataChange() {
+        if (mBuilder != null) {
+            mBuilder.delete(0,mBuilder.length());
+        }
+    }
 }

@@ -73,5 +73,9 @@
 
     <!--车牌未选中时边框的颜色-->
     <color name="licence_text_box_day">#b3b3b3</color>
+    <color name="color808080">#808080</color>
+    <color name="color333333">#333333</color>
+    <color name="color666666">#666666</color>
+    <color name="color4d4d4d">#4d4d4d</color>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.zero.wolf.greenroad.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.ToggleButton;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.ConclusionActivity;
+import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.bean.CheckedBean;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 
@@ -87,10 +89,11 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mSiteCheck = (TextView) view.findViewById(R.id.site_check_operator);
         mSiteLogin = (TextView) view.findViewById(R.id.site_login_operator);
 
-        setOperatorInfo("check_select = ?", mSiteCheck);
-        setOperatorInfo("login_select = ?", mSiteLogin);
 
         mTextConclusionView.setOnClickListener(this);
+        mSiteCheck.setOnClickListener(this);
+        mSiteLogin.setOnClickListener(this);
+
 
         mTextConclusionView.setText(mConclusion_I);
         //初始化各个checkbox的状态
@@ -98,6 +101,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
 
         return view;
     }
+
 
     private void setOperatorInfo(String condition, TextView textView) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
@@ -144,9 +148,9 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         }
         CheckedBean bean = new CheckedBean();
         bean.setConclusion(sConclusionQ);
-        bean.setConclusion(sDescriptionQ);
-        bean.setConclusion(sSiteCheck_Q);
-        bean.setConclusion(sSiteLogin_Q);
+        bean.setDescription(sDescriptionQ);
+        bean.setSiteCheck(sSiteCheck_Q);
+        bean.setSiteLogin(sSiteLogin_Q);
         bean.setIsRoom(sIsRoom ? 1 : 0);
         bean.setIsFree(sIsFree ? 1 : 0);
 
@@ -161,6 +165,10 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             mConclusions = conclusions;
         });
         mTextConclusionView.setText(mConclusions);
+
+        setOperatorInfo("check_select = ?", mSiteCheck);
+        setOperatorInfo("login_select = ?", mSiteLogin);
+
     }
 
     @Override
@@ -176,13 +184,22 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                 ConclusionActivity.actionStart(getContext(),
                         mTextConclusionView.getText().toString().trim());
                 break;
+            case R.id.site_check_operator:
+                openSettingActivity();
+                break;
+            case R.id.site_login_operator:
+                openSettingActivity();
+                break;
 
             default:
                 break;
         }
     }
 
-
+    private void openSettingActivity() {
+        Intent intent = new Intent(getContext(), SettingActivity.class);
+        startActivity(intent);
+    }
     public interface CheckedBeanConnectListener {
         void beanConnect(CheckedBean bean);
     }

@@ -100,7 +100,7 @@ public class DetailsFragment extends Fragment {
             if (edittext.length() == 7) {
                 mCarNumber = edittext;
             } else {
-                mCarNumber = "车牌号格式不正确";
+                mCarNumber = "";
             }
         }));
 
@@ -289,7 +289,7 @@ public class DetailsFragment extends Fragment {
                             ArrayList<MyBitmap> mMyBitmaps_cheshen, ArrayList<MyBitmap> mMyBitmaps_huowu);
     }
 
-    public void setDetailsConnectListener(DetailsBeanConnectListener listener) {
+    public static void setDetailsConnectListener(DetailsBeanConnectListener listener) {
 
         ArrayList<String> bitmap_path = new ArrayList<>();
         if (mMyBitmaps_sanzheng != null) {

@@ -388,7 +388,6 @@ public class MainActivity extends BaseActivity implements
         setOperatorInfo("login_select = ?", mTvOperatorLoginMain);
         mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
 
-
     }
     private void setOperatorInfo(String condition, TextView textView) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);

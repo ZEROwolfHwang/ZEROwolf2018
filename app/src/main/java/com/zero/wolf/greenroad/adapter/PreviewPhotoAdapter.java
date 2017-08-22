@@ -72,7 +72,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
     public void onBindViewHolder(PreviewPhotoHolder holder, int position) {
 //        holder.bindHolder(mPreviewList.get(position));
         //
-        holder.bindHolder(mPreviewList.get(position),position);
+        holder.bindHolder(mPreviewList.get(position), position);
     }
 
 
@@ -121,10 +121,11 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
         TextView mPreviewTextCheck;
         @BindView(R.id.preview_text_login)
         TextView mPreviewTextLogin;
+        @BindView(R.id.preview_text_isFree)
+        TextView mPreviewTextIsFree;
 
         @BindView(R.id.preview_text_shutTime)
         TextView mPreviewTextShutTime;
-
 
 
         public PreviewPhotoHolder(View itemView) {
@@ -139,6 +140,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
             String goods = supportDraft.getGoods();
             String car_number = supportDraft.getNumber();
             String shutTime = supportDraft.getDraftTime();
+            int isFree = supportDraft.getIsFree();
             String station = supportDraft.getStation();
             String color = supportDraft.getColor();
             String scan_code = supportDraft.getScan_code();
@@ -147,20 +149,31 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
             for (int i = 0; i < split.length; i++) {
                 Logger.i(split[i]);
             }*/
+
             if (position % 2 == 0) {
                 itemView.setBackgroundColor(Color.WHITE);
             }
+
+            if (check != null) {
+                String[] checks = check.split("()");
+                mPreviewTextCheck.setText(checks[0]);
+            }
+            if ( login!= null) {
+                String[] logins = login.split("()");
+                mPreviewTextLogin.setText(logins[0]);
+            }
+
             mPreviewTextCarNumber.setText(car_number);
-           // mPreviewTextGoods.setText(goods);
-            mPreviewTextCheck.setText(check);
+            // mPreviewTextGoods.setText(goods);
             mPreviewTextLogin.setText(login);
             mPreviewTextShutTime.setText(shutTime);
+            mPreviewTextIsFree.setText(isFree == 0 ? "否" : "是");
             //mPreviewTextStation.setText(scan_code);
 
             //setColor(mPreviewItemColorImg, color);
 
             itemView.setOnClickListener(v -> {
-                     mItemClick.itemClick();
+                mItemClick.itemClick(supportDraft);
 
             });
         }
@@ -168,7 +181,7 @@ public class PreviewPhotoAdapter extends RecyclerView.Adapter<PreviewPhotoAdapte
 
 
     public interface onPreviewItemClick {
-         void itemClick();
+        void itemClick(SupportDraft supportDraft);
     }
 }
 

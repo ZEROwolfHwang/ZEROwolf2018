@@ -1,5 +1,8 @@
 package com.zero.wolf.greenroad.litepalbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * Created by Administrator on 2017/7/3.
  */
 
-public class SupportDraft extends DataSupport {
+public class SupportDraft extends DataSupport implements Parcelable{
 
 
     private String draftTime;
@@ -39,6 +42,51 @@ public class SupportDraft extends DataSupport {
     private String conclusion;
     private String description;
     private List<String> bitmapPaths;
+
+    public SupportDraft() {
+    }
+
+    public SupportDraft(Parcel in) {
+        draftTime = in.readString();
+        siteCheck = in.readString();
+        siteLogin = in.readString();
+        station = in.readString();
+        lane = in.readString();
+        road = in.readString();
+        scan_code = in.readString();
+        scan_01Q = in.readString();
+        scan_02Q = in.readString();
+        scan_03Q = in.readString();
+        scan_04Q = in.readString();
+        scan_05Q = in.readString();
+        scan_06Q = in.readString();
+        scan_07Q = in.readString();
+        scan_08Q = in.readString();
+        scan_09Q = in.readString();
+        scan_10Q = in.readString();
+        scan_11Q = in.readString();
+        scan_12Q = in.readString();
+        color = in.readString();
+        number = in.readString();
+        goods = in.readString();
+        isRoom = in.readInt();
+        isFree = in.readInt();
+        conclusion = in.readString();
+        description = in.readString();
+        bitmapPaths = in.createStringArrayList();
+    }
+
+    public static final Creator<SupportDraft> CREATOR = new Creator<SupportDraft>() {
+        @Override
+        public SupportDraft createFromParcel(Parcel in) {
+            return new SupportDraft(in);
+        }
+
+        @Override
+        public SupportDraft[] newArray(int size) {
+            return new SupportDraft[size];
+        }
+    };
 
     public String getScan_code() {
         return scan_code;
@@ -286,5 +334,41 @@ public class SupportDraft extends DataSupport {
                 ", description='" + description + '\'' +
                 ", bitmapPaths=" + bitmapPaths +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(draftTime);
+        dest.writeString(siteCheck);
+        dest.writeString(siteLogin);
+        dest.writeString(station);
+        dest.writeString(lane);
+        dest.writeString(road);
+        dest.writeString(scan_code);
+        dest.writeString(scan_01Q);
+        dest.writeString(scan_02Q);
+        dest.writeString(scan_03Q);
+        dest.writeString(scan_04Q);
+        dest.writeString(scan_05Q);
+        dest.writeString(scan_06Q);
+        dest.writeString(scan_07Q);
+        dest.writeString(scan_08Q);
+        dest.writeString(scan_09Q);
+        dest.writeString(scan_10Q);
+        dest.writeString(scan_11Q);
+        dest.writeString(scan_12Q);
+        dest.writeString(color);
+        dest.writeString(number);
+        dest.writeString(goods);
+        dest.writeInt(isRoom);
+        dest.writeInt(isFree);
+        dest.writeString(conclusion);
+        dest.writeString(description);
+        dest.writeStringList(bitmapPaths);
     }
 }
