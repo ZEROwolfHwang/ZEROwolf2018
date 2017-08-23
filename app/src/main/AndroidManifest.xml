@@ -76,6 +76,11 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".activity.SubmitActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <service
             android:name=".servicy.PostIntentService"
@@ -93,7 +98,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.PreviewDetailActivity">
+        <activity android:name=".activity.PreviewDraftDetailActivity">
+        </activity>
+        <activity android:name=".activity.PreviewSubmitDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <!--
@@ -131,9 +139,12 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name=".activity.ConclusionActivity"
-                  android:launchMode="singleTask"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activity.ConclusionActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".activity.RegisterActivity">
         </activity>
     </application>
 

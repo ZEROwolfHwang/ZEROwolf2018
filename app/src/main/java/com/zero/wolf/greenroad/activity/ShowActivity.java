@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.ShowViewPagerAdapter;
@@ -33,6 +35,8 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.https.PostInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+import com.zero.wolf.greenroad.litepalbean.SupportMedia;
+import com.zero.wolf.greenroad.litepalbean.SupportSubmit;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
@@ -64,10 +68,17 @@ import rx.schedulers.Schedulers;
 
 public class ShowActivity extends BaseActivity {
 
+    private static int SAVE_TO_DRAFT = 998;
+    private static int SAVE_TO_SUBMIT = 999;
 
-    private static String ARG_ROAD = "arg_road";
+    private static String ARG_SCANINFOBEAN = "arg_scaninfobean";
     private static String ARG_STATION = "arg_station";
+
     private static String ACTION_MAIN_ENTER_SHOW = "action_main_enter_show";
+    public static String TYPE_MAIN_ENTER_SHOW = "type_main_enter_show";
+
+    private static String ACTION_DRAFT_ENTER_SHOW = "action_draft_enter_show";
+    public static String TYPE_DRAFT_ENTER_SHOW = "type_draft_enter_show";
     @BindView(R.id.tab_show)
     TabLayout mTabShow;
     @BindView(R.id.view_pager_show)
@@ -102,19 +113,28 @@ public class ShowActivity extends BaseActivity {
     private static DetailInfoBean mDetailInfoBean_Q;
     private static ScanInfoBean mScanInfoBean_Q;
     private ArrayList<String> mPhotoPaths;
-    private List<String> mBitmapList;
+
     private static CheckedBean mCheckedBean_Q;
     private static String mStation_Q;
     private static String mRoad_Q;
     private Handler mUiHandler = new Handler();
+    private Intent mData;
 
-    public static void avtionStart(Context context, String road, String station) {
+
+    public static void actionStart(Context context, ScanInfoBean scanInfoBean) {
         Intent intent = new Intent(context, ShowActivity.class);
-        intent.setAction(ACTION_MAIN_ENTER_SHOW);
-        intent.putExtra(ARG_ROAD, road);
-        intent.putExtra(ARG_STATION, station);
+        intent.setAction(ACTION_DRAFT_ENTER_SHOW);
+        intent.putExtra(ARG_SCANINFOBEAN, scanInfoBean);
+        intent.setType(TYPE_DRAFT_ENTER_SHOW);
         context.startActivity(intent);
     }
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, ShowActivity.class);
+        intent.setAction(ACTION_MAIN_ENTER_SHOW);
+        intent.setType(TYPE_MAIN_ENTER_SHOW);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,24 +145,42 @@ public class ShowActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         mActivity = this;
+        initFab();
+        initData();
 
+        getIntentData();
+
+        initViewPagerAndTabs();
+
+        initView();
+
+
+    }
+
+    private void getIntentData() {
+        Intent intent = getIntent();
+        if (ACTION_DRAFT_ENTER_SHOW.equals(intent.getAction())) {
+            ScanInfoBean scanInfoBean = (ScanInfoBean) intent.getSerializableExtra(ARG_SCANINFOBEAN);
+            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,scanInfoBean,intent.getType());
+            Logger.i(scanInfoBean.toString());
+        } else if (ACTION_MAIN_ENTER_SHOW.equals(intent.getAction())) {
+            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,intent.getType());
+        }
+            mViewPagerShow.setOffscreenPageLimit(3);//设置viewpager预加载页面数
+            mViewPagerShow.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
+//        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
+            mTabShow.setupWithViewPager(mViewPagerShow);
+    }
+
+    private void initFab() {
         mMenuFab.setClosedOnTouchOutside(true);
 
         mMenuFab.hideMenuButton(false);
         int delay = 400;
-
-        mUiHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mMenuFab.showMenuButton(true);
-            }
-        }, delay);
-
-
-        initData();
-        initViewPagerAndTabs();
-        initView();
-
+        mUiHandler.postDelayed(() -> {
+                    mMenuFab.showMenuButton(true);
+                }
+                , delay);
 
     }
 
@@ -164,11 +202,8 @@ public class ShowActivity extends BaseActivity {
     }
 
     private void initViewPagerAndTabs() {
-        mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this);
-        mViewPagerShow.setOffscreenPageLimit(3);//设置viewpager预加载页面数
-        mViewPagerShow.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
-//        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
-        mTabShow.setupWithViewPager(mViewPagerShow);
+
+
     }
 
 
@@ -211,19 +246,21 @@ public class ShowActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.fab_submit, R.id.fab_draft})
+    @OnClick({R.id.menu_fab, R.id.fab_submit, R.id.fab_draft})
     public void onClick(View view) {
         switch (view.getId()) {
-
             case R.id.menu_fab:
-                ToastUtils.singleToast("向服务端提交采集的数据");
                 if (mMenuFab.isOpened()) {
-                ToastUtils.singleToast("打开fab menu");
-                } else {
+                    Logger.i("打开fab menu");
                     mFabDraft.showButtonInMenu(true);
                     mFabSubmit.showButtonInMenu(true);
+                    mMenuFab.toggle(false);
+                } else {
+                    mFabDraft.showButtonInMenu(false);
+                    mFabSubmit.showButtonInMenu(false);
+
+                    mMenuFab.toggle(true);
                 }
-                mMenuFab.toggle(true);
                 break;
             case R.id.fab_submit:
                 ToastUtils.singleToast("向服务端提交采集的数据");
@@ -248,13 +285,14 @@ public class ShowActivity extends BaseActivity {
     private void submit2Service() {
         getListenerData();
 
+        save2Litepal(SAVE_TO_SUBMIT);
 
         PostInfo info = new PostInfo();
         //从扫描中拿到的数据
         if (mScanInfoBean_Q != null) {
 
             info.setScan_code(mScanInfoBean_Q.getScan_code());
-            info.setScan_code(mScanInfoBean_Q.getScan_01Q());
+            info.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
             info.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
             info.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
             info.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
@@ -268,6 +306,7 @@ public class ShowActivity extends BaseActivity {
             info.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
             info.setScan_code(mScanInfoBean_Q.getScan_code());
             info.setCurrent_time(TimeUtil.getCurrentTimeTos());
+
         } else {
             ToastUtils.singleToast("请扫描二维码");
         }
@@ -277,7 +316,8 @@ public class ShowActivity extends BaseActivity {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
+                //.baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
+                .baseUrl("http://greenft.githubshop.com/index.php/Interfacy/Api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -302,12 +342,14 @@ public class ShowActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         Logger.i(e.getMessage());
+                        ToastUtils.singleToast(e.getMessage());
                     }
 
                     @Override
                     public void onNext(HttpResultPolling httpResultPolling) {
                         int code = httpResultPolling.getCode();
                         Logger.i(code + "");
+                        ToastUtils.singleToast(code + "");
                     }
                 });
     }
@@ -320,7 +362,8 @@ public class ShowActivity extends BaseActivity {
 
         DetailsFragment.setDetailsConnectListener((bean) -> {
             mDetailInfoBean_Q = bean;
-            mBitmapList = mDetailInfoBean_Q.getBitmapPaths();
+
+
             //拿到图片的体进行网络传递
            /* if (mBitmapList != null && mBitmapList.size() != 0) {
                 List<MultipartBody.Part> parts = PathUtil
@@ -351,59 +394,120 @@ public class ShowActivity extends BaseActivity {
         getListenerData();
 
         if (mScanInfoBean_Q == null || "".equals(mScanInfoBean_Q.getScan_code())) {
-            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存111");
+            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存");
             return;
         }
         Logger.i(mScanInfoBean_Q.getScan_code());
         Logger.i(mScanInfoBean_Q.toString());
+
+        //如果数据库中的数据已经存在了一条与当前流水号相同的则视为已经保存过的
+
         List<SupportDraft> supportDrafts = DataSupport.where("scan_code = ?",
                 mScanInfoBean_Q.getScan_code()).find(SupportDraft.class);
 
         //   DraftActivity.actionStart(this, mConfigInfoBean, mDetailInfoBean_Q, mPhotoPaths);
 //        if (supportDrafts.size() == 0) {
 
-
-        SupportDraft draft = new SupportDraft();
-
-        //从采集的fragment中拿到数据
-        draft.setBitmapPaths(mDetailInfoBean_Q.getBitmapPaths());
-        draft.setNumber(mDetailInfoBean_Q.getNumber());
-        draft.setColor(mDetailInfoBean_Q.getColor());
-        draft.setGoods(mDetailInfoBean_Q.getGoods());
-
-        // 从主界面拿到的信息
-        draft.setRoad(mRoad_Q);
-        draft.setStation(mStation_Q);
-        draft.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
-
-        //从扫描中拿到的数据
-        draft.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
-        draft.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
-        draft.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
-        draft.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
-        draft.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
-        draft.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
-        draft.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
-        draft.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
-        draft.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
-        draft.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
-        draft.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
-        draft.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
-        draft.setScan_code(mScanInfoBean_Q.getScan_code());
-        draft.setCurrent_time(TimeUtil.getCurrentTimeTos());
-
-        //从checkedFragment中拿到的数据
-        draft.setIsFree(mCheckedBean_Q.getIsFree());
-        draft.setIsRoom(mCheckedBean_Q.getIsRoom());
-        draft.setConclusion(mCheckedBean_Q.getConclusion());
-        draft.setDescription(mCheckedBean_Q.getDescription());
-        draft.setSiteCheck(mCheckedBean_Q.getSiteCheck());
-        draft.setSiteLogin(mCheckedBean_Q.getSiteLogin());
-
-        draft.save();
+        //保存至本地数据库
+        save2Litepal(SAVE_TO_DRAFT);
         List<SupportDraft> draftList = DataSupport.findAll(SupportDraft.class);
         for (int i = 0; i < draftList.size(); i++) {
             Logger.i(draftList.get(i).toString());
+        }
+            Logger.i(draftList.get(0).toString());
+    }
+
+    /**
+     * 将保存草稿数据或者提交网络的数据保存之后本地服务器
+     */
+    private void save2Litepal(int type) {
+        if (type == SAVE_TO_DRAFT) {
+
+            PhotoFragment.setSelectedListListener(data -> {
+                mData = data;
+                Logger.i("data-------"+data);
+                List<LocalMedia> localMedias = PictureSelector.obtainMultipleResult(mData);
+                SupportMedia supportMedia = new SupportMedia();
+                supportMedia.setChecked(localMedias.get(0).isChecked());
+                supportMedia.setCompressed(localMedias.get(0).isCompressed());
+                supportMedia.setCompressPath(localMedias.get(0).getCompressPath());
+                supportMedia.setPath(localMedias.get(0).getPath());
+                supportMedia.save();
+                Logger.i(supportMedia.toString());
+
+            });
+
+            SupportDraft support = new SupportDraft();
+
+            //从采集的fragment中拿到数据
+
+            support.setPath_sanzheng(mDetailInfoBean_Q.getPath_sanzheng());
+            support.setPath_cheshen(mDetailInfoBean_Q.getPath_cheshen());
+            support.setPath_huowu(mDetailInfoBean_Q.getPath_huowu());
+            support.setNumber(mDetailInfoBean_Q.getNumber());
+            support.setColor(mDetailInfoBean_Q.getColor());
+            support.setGoods(mDetailInfoBean_Q.getGoods());
+
+            // 从主界面拿到的信息
+            support.setRoad(mRoad_Q);
+            support.setStation(mStation_Q);
+            support.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+
+            //从扫描中拿到的数据
+            support.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
+            support.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
+            support.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
+            support.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
+            support.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
+            support.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
+            support.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
+            support.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
+            support.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
+            support.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
+            support.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
+            support.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
+            support.setScan_code(mScanInfoBean_Q.getScan_code());
+            support.setCurrent_time(TimeUtil.getCurrentTimeTos());
+
+            //从checkedFragment中拿到的数据
+            support.setIsFree(mCheckedBean_Q.getIsFree());
+            support.setIsRoom(mCheckedBean_Q.getIsRoom());
+            support.setConclusion(mCheckedBean_Q.getConclusion());
+            support.setDescription(mCheckedBean_Q.getDescription());
+            support.setSiteCheck(mCheckedBean_Q.getSiteCheck());
+            support.setSiteLogin(mCheckedBean_Q.getSiteLogin());
+
+            support.save();
+        } else if (type == SAVE_TO_SUBMIT) {
+            SupportSubmit support = new SupportSubmit();
+
+            //从采集的fragment中拿到数据
+            support.setPath_sanzheng(mDetailInfoBean_Q.getPath_sanzheng());
+            support.setPath_cheshen(mDetailInfoBean_Q.getPath_cheshen());
+            support.setPath_huowu(mDetailInfoBean_Q.getPath_huowu());
+            support.setNumber(mDetailInfoBean_Q.getNumber());
+            support.setColor(mDetailInfoBean_Q.getColor());
+            support.setGoods(mDetailInfoBean_Q.getGoods());
+
+            // 从主界面拿到的信息
+            support.setRoad(mRoad_Q);
+            support.setStation(mStation_Q);
+            support.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+
+            //从扫描中拿到的数据
+
+            support.setScanbean(mScanInfoBean_Q);
+            support.setCurrent_time(TimeUtil.getCurrentTimeTos());
+
+            //从checkedFragment中拿到的数据
+            support.setIsFree(mCheckedBean_Q.getIsFree());
+            support.setIsRoom(mCheckedBean_Q.getIsRoom());
+            support.setConclusion(mCheckedBean_Q.getConclusion());
+            support.setDescription(mCheckedBean_Q.getDescription());
+            support.setSiteCheck(mCheckedBean_Q.getSiteCheck());
+            support.setSiteLogin(mCheckedBean_Q.getSiteLogin());
+
+            support.save();
         }
     }
 
@@ -426,7 +530,6 @@ public class ShowActivity extends BaseActivity {
             saveDraft();
             //在这里做保存草稿的操作
             notifyDataChangeAndFinish();
-
         });
         builder.show();
     }

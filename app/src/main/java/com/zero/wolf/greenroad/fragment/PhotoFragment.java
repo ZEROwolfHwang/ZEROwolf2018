@@ -74,9 +74,9 @@ public class PhotoFragment extends Fragment {
     private String mFilePath_str;
 
 
-    private List<LocalMedia> mSelectList_sanzheng;
-    private List<LocalMedia> mSelectList_cheshen;
-    private List<LocalMedia> mSelectList_huowu;
+    private static List<LocalMedia> mSelectList_sanzheng;
+    private static List<LocalMedia> mSelectList_cheshen;
+    private static List<LocalMedia> mSelectList_huowu;
 
 
     private static PhotoFragment sPhotoFragment;
@@ -92,6 +92,7 @@ public class PhotoFragment extends Fragment {
     private static ArrayList<MyBitmap> sBitmaps_sanzheng;
     private static ArrayList<MyBitmap> sBitmaps_cheshen;
     private static ArrayList<MyBitmap> sBitmaps_huowu;
+    private static Intent mData;
 
 
     public PhotoFragment() {
@@ -308,6 +309,7 @@ public class PhotoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("data", "onActivityResult: " + data);
+
         //关闭相机之后获得时间；2；
         //  mRlProgressBar.setVisibility(View.VISIBLE);
         // pb.setVisibility(View.VISIBLE);
@@ -324,11 +326,26 @@ public class PhotoFragment extends Fragment {
                     }
                 }
                 Logger.i("回调成功goods");
+                mData = data;
                 mSelectList_sanzheng = PictureSelector.obtainMultipleResult(data);
                 new Thread(() -> {
                     for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
-                        String photo_path = mSelectList_sanzheng.get(i).getPath();
-                        Logger.i(photo_path);
+                        LocalMedia localMedia = mSelectList_sanzheng.get(i);
+                        String photo_path = localMedia.getPath();
+                        //Logger.i(photo_path);
+                        Logger.i(localMedia.getPath()+"---"+
+                                    localMedia.getCompressPath()+"---"+
+                                    localMedia.getCutPath()+"---"+
+                                    localMedia.getDuration()+"---"+
+                                    localMedia.getHeight()+"---"+
+                                    localMedia.getMimeType()+"---"+
+                                    localMedia.getNum()+"---"+
+                                    localMedia.getPictureType()+"---"+
+                                    localMedia.getPosition()+"---"+
+                                    localMedia.isChecked()+"---"+
+                                    localMedia.isCompressed()+"---"+
+                                    localMedia.isCut()+"---"+
+                                    localMedia.getWidth());
                         Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
                         String title = "三证-" + (i + 1);
                         MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
@@ -456,7 +473,16 @@ public class PhotoFragment extends Fragment {
         if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
             listener.BitmapListener(mSanZhengBitmaps, mCheShenBitmaps, mHuoWuBitmaps);
         }
+
     }
+
+    public static void setSelectedListListener(SelectedListListener listener) {
+        if (mData != null) {
+            listener.Selected(mData);
+        }
+
+    }
+
 
     /**
      * 当采集界面退出时,初始化photofragment的数据
@@ -488,5 +514,12 @@ public class PhotoFragment extends Fragment {
     public interface BitmapListListener {
         void BitmapListener(ArrayList<MyBitmap> mSanZhengBitmaps,
                             ArrayList<MyBitmap> mCheShenBitmaps, ArrayList<MyBitmap> mHuowuBitmaps);
+    }
+
+    public interface SelectedListListener {
+        void Selected(Intent data
+          //            List<LocalMedia> mSelectList_cheshen,
+        //              List<LocalMedia> mSelectList_huowu
+        );
     }
 }

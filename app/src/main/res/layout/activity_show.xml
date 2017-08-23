@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/coordinator_layout"
+
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_show"
+            style="@style/style_toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-        <android.support.design.widget.AppBarLayout
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_show"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="0dp"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:background="?attr/custom_tab_bg_pager_view"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/day_color_green"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="?attr/custom_tab_text_color_selected"
+            app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
+            app:tabTextColor="?attr/custom_tab_text_color"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    </android.support.design.widget.AppBarLayout>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_show"
-                style="@style/style_toolbar"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tab_show"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/custom_tab_bg_pager_view"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="@color/day_color_green"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="?attr/custom_tab_text_color_selected"
-                app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
-                app:tabTextColor="?attr/custom_tab_text_color"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-        </android.support.design.widget.AppBarLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -55,39 +56,51 @@
 
         </android.support.v4.widget.NestedScrollView>
 
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/menu_fab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="@dimen/layout_margin10dp"
+            android:paddingLeft="@dimen/layout_margin10dp"
+            android:paddingRight="@dimen/layout_margin10dp"
+            fab:menu_backgroundColor="#ccffffff"
+            fab:menu_colorNormal="#1ab0ce"
+            fab:menu_colorPressed="#6f65ba"
+            fab:menu_fab_label="存稿或提交"
+            fab:menu_fab_size="normal"
+            fab:menu_labels_ellipsize="end"
+            fab:menu_labels_singleLine="true"
+            fab:menu_shadowColor="#eb1920da">
 
-    </LinearLayout>
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/menu_fab"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        fab:menu_labels_ellipsize="end"
-        fab:menu_labels_singleLine="true"
-        fab:menu_backgroundColor="#ccffffff"
-        fab:menu_fab_label="Menu label">
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_draft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fab_draft"
+                fab:fab_colorNormal="#1ab0ce"
+                fab:fab_colorPressed="#6f65ba"
+                fab:fab_label="存稿"
+                fab:fab_shadowColor="#eb1920da"
+                fab:fab_size="mini"/>
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_draft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_send"
-            fab:fab_size="mini"
-            fab:fab_label="Remove button" />
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fab_submit"
+                fab:fab_colorNormal="#1ab0ce"
+                fab:fab_colorPressed="#6f65ba"
+                fab:fab_label="提交"
+                fab:fab_shadowColor="#eb1920da"
+                fab:fab_size="normal"/>
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_send"
-            fab:fab_size="mini"
-            fab:fab_label="Restore Button" />
+        </com.github.clans.fab.FloatingActionMenu>
+    </RelativeLayout>
 
-    </com.github.clans.fab.FloatingActionMenu>
-</RelativeLayout>
+</LinearLayout>
+
+
 
 

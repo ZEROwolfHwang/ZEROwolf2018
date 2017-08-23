@@ -19,7 +19,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.PreviewDraftAdapter;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
-import com.zero.wolf.greenroad.bean.SortPreviewTime;
+import com.zero.wolf.greenroad.helper.SortDraftTime;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
@@ -55,7 +55,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     private String mFilePath;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,11 +81,9 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        mAdapter = new PreviewDraftAdapter(mContext, mActivity,
-                (ArrayList<SupportDraft>) mDraftList, (SupportDraft supportDraft) -> {
-
+        mAdapter = new PreviewDraftAdapter(mContext, mActivity, (ArrayList) mDraftList, support -> {
             ToastUtils.singleToast("点击了条目");
-            PreviewDetailActivity.actionStart(mContext,supportDraft);
+            PreviewDraftDetailActivity.actionStart(mContext, (SupportDraft) support);
         });
 
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -100,9 +97,9 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
             Logger.i("------------" + mDraftList.get(i).toString());
 
         }
-        SortPreviewTime sortPreviewTime = new SortPreviewTime();
+        SortDraftTime sortDraftTime = new SortDraftTime();
 
-        Collections.sort(mDraftList, sortPreviewTime);
+        Collections.sort(mDraftList, sortDraftTime);
         for (int i = 0; i < mDraftList.size(); i++) {
             Logger.i("++++++++++++" + mDraftList.get(i).toString());
         }

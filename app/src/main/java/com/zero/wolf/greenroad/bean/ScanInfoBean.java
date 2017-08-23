@@ -1,10 +1,12 @@
 package com.zero.wolf.greenroad.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/8/14.
  */
 
-public class ScanInfoBean {
+public class ScanInfoBean implements Serializable{
 
     private String scan_code;
     private String scan_01Q;

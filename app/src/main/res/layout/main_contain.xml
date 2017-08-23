@@ -102,14 +102,14 @@
             android:padding="@dimen/layout_margin10dp">
 
             <RelativeLayout
-                android:id="@+id/custom_shape_line_rect_has"
+                android:id="@+id/rl_main_draft"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
                 android:background="#ffffff"
                 android:elevation="3dp">
 
                 <TextView
-                    android:id="@+id/tv_math_number_main_has"
+                    android:id="@+id/tv_math_number_submit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -130,7 +130,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/custom_shape_line_rect_has_not"
+                android:id="@+id/rl_main_submit"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
@@ -139,7 +139,14 @@
                 android:elevation="3dp">
 
                 <TextView
-
+                    android:id="@+id/tv_math_number_draft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="100"
+                    android:textColor="#f64545"
+                    android:textSize="@dimen/text24"/>
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -149,23 +156,17 @@
                     android:textColor="#808080"
                     android:textSize="@dimen/text14"/>
 
-                <TextView
-                    android:id="@+id/tv_math_number_main_has_not"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="100"
-                    android:textColor="#f64545"
-                    android:textSize="@dimen/text24"/>
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_main_blacklist"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
                 android:background="#ffffff"
                 android:elevation="3dp">
 
                 <TextView
+                    android:id="@+id/tv_math_number_blacklist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

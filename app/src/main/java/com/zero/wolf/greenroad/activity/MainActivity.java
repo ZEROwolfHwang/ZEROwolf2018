@@ -31,8 +31,6 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
-import com.zero.wolf.greenroad.bean.DetailInfoBean;
-import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
@@ -80,14 +78,14 @@ public class MainActivity extends BaseActivity implements
     TextView mTvOperatorCheckMain;
     @BindView(R.id.tv_operator_login_main)
     TextView mTvOperatorLoginMain;
-    @BindView(R.id.custom_shape_line_rect_has)
-    RelativeLayout mCustomShapeLineRectHas;
-    @BindView(R.id.tv_math_number_main_has)
-    TextView mTvMathNumberMainHas;
-    @BindView(R.id.custom_shape_line_rect_has_not)
-    RelativeLayout mCustomShapeLineRectHasNot;
-    @BindView(R.id.tv_math_number_main_has_not)
-    TextView mTvMathNumberMainHasNot;
+    @BindView(R.id.rl_main_draft)
+    RelativeLayout mRlMainDraft;
+    @BindView(R.id.tv_math_number_submit)
+    TextView mTvMathNumberSubmit;
+    @BindView(R.id.rl_main_submit)
+    RelativeLayout mRlMainSubmit;
+    @BindView(R.id.tv_math_number_draft)
+    TextView mTvMathNumberDraft;
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -111,9 +109,6 @@ public class MainActivity extends BaseActivity implements
     private int thumb_margin_left_day = 0;
     private int thumb_margin_left_night = 0;
 
-
-    private DetailInfoBean mDetailInfoBean;
-    private ScanInfoBean mScanInfoBean;
 
     private String mRoad_Q;
     private String mStation_Q;
@@ -158,17 +153,16 @@ public class MainActivity extends BaseActivity implements
 
         Button button = (Button) findViewById(R.id.btn_enter_show);
         button.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ShowActivity.class);
-            startActivity(intent);
+            ShowActivity.actionStart(MainActivity.this);
         });
 
-        mCustomShapeLineRectHasNot.setOnClickListener(v -> {
-            Intent intent1 = new Intent(MainActivity.this, DraftActivity.class);
-            startActivity(intent1);
+        mRlMainSubmit.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SubmitActivity.class);
+            startActivity(intent);
         });
-        mCustomShapeLineRectHas.setOnClickListener(v -> {
-            Intent intent1 = new Intent(MainActivity.this, DraftActivity.class);
-            startActivity(intent1);
+        mRlMainDraft.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, DraftActivity.class);
+            startActivity(intent);
         });
 
 

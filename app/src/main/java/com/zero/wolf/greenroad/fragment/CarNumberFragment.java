@@ -87,6 +87,8 @@ public class CarNumberFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         int currentVersion = android.os.Build.VERSION.SDK_INT;
+
+        //这些步骤是用来阻止点击editView弹出系统输入法的
         String methodName = null;
         if (currentVersion >= 16) {
             // 4.2

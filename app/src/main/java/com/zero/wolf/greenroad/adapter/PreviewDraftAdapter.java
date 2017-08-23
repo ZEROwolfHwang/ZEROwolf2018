@@ -7,12 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
-import com.zero.wolf.greenroad.manager.CarColorManager;
+import com.zero.wolf.greenroad.litepalbean.SupportSubmit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +23,20 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/7/28.
  */
 
-public class PreviewDraftAdapter extends RecyclerView.Adapter<PreviewDraftAdapter.PreviewPhotoHolder> {
+public  class PreviewDraftAdapter<T> extends RecyclerView.Adapter<PreviewDraftAdapter<T>.PreviewPhotoHolder>  {
 
 
     private final Context mContext;
 
 
-    private ArrayList<SupportDraft> mPreviewList;
+    private ArrayList<T> mPreviewList;
     private final AppCompatActivity mActivity;
     private final onPreviewItemClick mItemClick;
     // private final onItemClick mItemClick;
 
 
     public PreviewDraftAdapter(Context context, AppCompatActivity activity,
-                               ArrayList<SupportDraft> previewList,
+                               ArrayList<T> previewList,
                                onPreviewItemClick onPreviewItemClick) {
         mContext = context;
         mPreviewList = previewList;
@@ -52,11 +51,11 @@ public class PreviewDraftAdapter extends RecyclerView.Adapter<PreviewDraftAdapte
      *
      * @param list
      */
-    public void updateListView(List<SupportDraft> list) {
+    public void updateListView(List<T> list) {
         if (list == null) {
-            this.mPreviewList = new ArrayList<SupportDraft>();
+            this.mPreviewList = new ArrayList();
         } else {
-            this.mPreviewList = (ArrayList<SupportDraft>) list;
+            this.mPreviewList = (ArrayList<T>) list;
         }
         notifyDataSetChanged();
     }
@@ -70,8 +69,7 @@ public class PreviewDraftAdapter extends RecyclerView.Adapter<PreviewDraftAdapte
 
     @Override
     public void onBindViewHolder(PreviewPhotoHolder holder, int position) {
-//        holder.bindHolder(mPreviewList.get(position));
-        //
+
         holder.bindHolder(mPreviewList.get(position), position);
     }
 
@@ -81,37 +79,6 @@ public class PreviewDraftAdapter extends RecyclerView.Adapter<PreviewDraftAdapte
         return mPreviewList.size();
     }
 
-
-    /**
-     * 设置预览信息的颜色图标
-     *
-     * @param imageView
-     * @param color
-     */
-    private void setColor(ImageView imageView, String color) {
-        if (imageView != null && color != null) {
-            if (CarColorManager.COLOR_BLACK.equals(color)) {
-                imageView.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.preview_item_color_black));
-            }
-            if (CarColorManager.COLOR_BLUE.equals(color)) {
-                imageView.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.preview_item_color_blue));
-            }
-            if (CarColorManager.COLOR_YELLOW.equals(color)) {
-                imageView.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.preview_item_color_yellow));
-            }
-            if (CarColorManager.COLOR_GREEN.equals(color)) {
-                imageView.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.preview_item_color_green));
-            }
-            if (CarColorManager.COLOR_WHITE.equals(color)) {
-                imageView.setImageDrawable(mContext.getResources()
-                        .getDrawable(R.drawable.preview_item_color_white));
-            }
-        }
-    }
 
     public class PreviewPhotoHolder extends RecyclerView.ViewHolder {
 
@@ -134,54 +101,50 @@ public class PreviewDraftAdapter extends RecyclerView.Adapter<PreviewDraftAdapte
 
         }
 
-        public void bindHolder(SupportDraft supportDraft, int position) {
-            String check = supportDraft.getSiteCheck();
-            String login = supportDraft.getSiteLogin();
-            String goods = supportDraft.getGoods();
-            String car_number = supportDraft.getNumber();
-            String shutTime = supportDraft.getCurrent_time();
-            int isFree = supportDraft.getIsFree();
-            String station = supportDraft.getStation();
-            String color = supportDraft.getColor();
-            String scan_code = supportDraft.getScan_code();
+        public void bindHolder(T support, int position) {
+            String check = null;
+            String login = null;
+            String car_number = null;
+            String shutTime= null;
+            int isFree = 0;
+            if (support instanceof SupportDraft) {
 
-        /*    String[] split = check.split("()");
-            for (int i = 0; i < split.length; i++) {
-                Logger.i(split[i]);
-            }*/
+                check = ((SupportDraft) support).getSiteCheck();
+                login = ((SupportDraft) support).getSiteLogin();
+                car_number = ((SupportDraft) support).getNumber();
+                shutTime = ((SupportDraft) support).getCurrent_time();
+                isFree = ((SupportDraft) support).getIsFree();
+            } else if (support instanceof SupportSubmit) {
+                check = ((SupportSubmit) support).getSiteCheck();
+                login = ((SupportSubmit) support).getSiteLogin();
+                car_number = ((SupportSubmit) support).getNumber();
+                shutTime = ((SupportSubmit) support).getCurrent_time();
+                isFree = ((SupportSubmit) support).getIsFree();
+
+            }
 
             if (position % 2 == 0) {
                 itemView.setBackgroundColor(Color.WHITE);
             }
-
             if (check != null) {
                 String[] checks = check.split("/");
                 mPreviewTextCheck.setText(checks[0]);
             }
-            if ( login!= null) {
+            if (login != null) {
                 String[] logins = login.split("/");
                 mPreviewTextLogin.setText(logins[0]);
             }
-
             mPreviewTextCarNumber.setText(car_number);
-            // mPreviewTextGoods.setText(goods);
-            mPreviewTextLogin.setText(login);
             mPreviewTextShutTime.setText(shutTime);
             mPreviewTextIsFree.setText(isFree == 0 ? "否" : "是");
-            //mPreviewTextStation.setText(scan_code);
-
-            //setColor(mPreviewItemColorImg, color);
 
             itemView.setOnClickListener(v -> {
-                mItemClick.itemClick(supportDraft);
-
+                mItemClick.itemClick(support);
             });
         }
     }
-
-
-    public interface onPreviewItemClick {
-        void itemClick(SupportDraft supportDraft);
+    public interface onPreviewItemClick<T> {
+        void itemClick(T support);
     }
 }
 

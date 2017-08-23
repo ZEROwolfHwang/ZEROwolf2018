@@ -18,6 +18,7 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
+import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
@@ -291,12 +292,32 @@ public class DetailsFragment extends Fragment {
 
     public static void setDetailsConnectListener(DetailsBeanConnectListener listener) {
 
-        ArrayList<String> bitmap_path = new ArrayList<>();
+        ArrayList<PathTitleBean> pathTitleList_sanzheng = new ArrayList<>();
+        ArrayList<PathTitleBean> pathTitleList_cheshen = new ArrayList<>();
+        ArrayList<PathTitleBean> pathTitleList_huowu = new ArrayList<>();
         if (mMyBitmaps_sanzheng != null) {
             for (int i = 0; i < mMyBitmaps_sanzheng.size(); i++) {
-                bitmap_path.add(mMyBitmaps_sanzheng.get(i).getPath());
+                MyBitmap myBitmap = mMyBitmaps_sanzheng.get(i);
+                PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
+                pathTitleList_sanzheng.add(titleBean);
             }
         }
+        if (mMyBitmaps_cheshen != null) {
+            for (int i = 0; i < mMyBitmaps_cheshen.size(); i++) {
+                MyBitmap myBitmap = mMyBitmaps_cheshen.get(i);
+                PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
+                pathTitleList_cheshen.add(titleBean);
+            }
+        }
+        if (mMyBitmaps_huowu != null) {
+            for (int i = 0; i < mMyBitmaps_huowu.size(); i++) {
+                MyBitmap myBitmap = mMyBitmaps_huowu.get(i);
+                PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
+                pathTitleList_huowu.add(titleBean);
+            }
+        }
+
+
 
         String number = mTvChangeNumberDetail.getText().toString().trim();
         String goods = mTvChangeGoodsDetail.getText().toString().trim();
@@ -305,9 +326,9 @@ public class DetailsFragment extends Fragment {
         bean.setColor(mCurrent_color);
         bean.setNumber(number);
         bean.setGoods(goods);
-
-        bean.setBitmapPaths(bitmap_path);
-
+        bean.setPath_sanzheng(pathTitleList_sanzheng);
+        bean.setPath_cheshen(pathTitleList_cheshen);
+        bean.setPath_huowu(pathTitleList_huowu);
         listener.beanConnect(bean);
     }
 

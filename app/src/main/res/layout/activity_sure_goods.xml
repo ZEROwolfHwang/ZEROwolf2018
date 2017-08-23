@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
@@ -15,6 +16,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_sure"
             style="@style/style_toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <android.support.design.widget.TabLayout
@@ -22,9 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/custom_tab_bg_pager_view"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:tabGravity="fill"
-            app:tabMode="fixed"
             app:tabIndicatorColor="@color/day_color_green"
+            app:tabMode="fixed"
             app:tabSelectedTextColor="?attr/custom_tab_text_color_selected"
             app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
             app:tabTextColor="?attr/custom_tab_text_color"
@@ -47,4 +50,4 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

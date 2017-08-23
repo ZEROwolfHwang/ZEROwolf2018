@@ -4,7 +4,7 @@
         <dbname value="green" />
 
 
-        <version value="30" />
+        <version value="34" />
 
         <list>
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportCarNumber" />
@@ -14,6 +14,8 @@
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportLoginUser" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportOperator" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportDraft" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportSubmit" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportMedia" />
 
         </list>
 

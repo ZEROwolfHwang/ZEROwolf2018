@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad.bean;
+package com.zero.wolf.greenroad.helper;
 
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
 
@@ -8,7 +8,7 @@ import java.util.Comparator;
  * Created by Administrator on 2017/7/28.
  */
 
-public class SortPreviewTime implements Comparator{
+public class SortDraftTime implements Comparator{
     @Override
     public int compare(Object o1, Object o2) {
 

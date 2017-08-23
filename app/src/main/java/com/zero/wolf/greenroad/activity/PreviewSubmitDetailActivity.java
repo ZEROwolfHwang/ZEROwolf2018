@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+import com.zero.wolf.greenroad.litepalbean.SupportSubmit;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PreviewDetailActivity extends BaseActivity {
+public class PreviewSubmitDetailActivity extends BaseActivity {
 
     private static String SUPPORTDRAFT_ITEM = "supportdraft_item";
     @BindView(R.id.toolbar_preview_detail)
@@ -71,7 +71,7 @@ public class PreviewDetailActivity extends BaseActivity {
     TextView mCheck002;
     @BindView(R.id.draft_save_time)
     TextView mDraftSaveTime;
-    private SupportDraft mCurrentDraft;
+    private SupportSubmit mCurrentSupport;
 
 
     @Override
@@ -90,42 +90,42 @@ public class PreviewDetailActivity extends BaseActivity {
 
     private void initView() {
 
-        mDraftSaveTime.setText(mCurrentDraft.getCurrent_time());
+        mDraftSaveTime.setText(mCurrentSupport.getCurrent_time());
 
         //采集信息的条目
-        mPick001.setText(mCurrentDraft.getLane());
-        mPick002.setText(mCurrentDraft.getSiteCheck());
-        mPick003.setText(mCurrentDraft.getSiteLogin());
-        mPick004.setText(mCurrentDraft.getNumber());
-        mPick005.setText(mCurrentDraft.getColor());
-        mPick006.setText(mCurrentDraft.getGoods());
+        mPick001.setText(mCurrentSupport.getLane());
+        mPick002.setText(mCurrentSupport.getSiteCheck());
+        mPick003.setText(mCurrentSupport.getSiteLogin());
+        mPick004.setText(mCurrentSupport.getNumber());
+        mPick005.setText(mCurrentSupport.getColor());
+        mPick006.setText(mCurrentSupport.getGoods());
 
         //扫描的条目
-        mExportNumber.setText(mCurrentDraft.getScan_code());
-        mTextTable1.setText(mCurrentDraft.getScan_01Q());
-        mTextTable2.setText(mCurrentDraft.getScan_02Q());
-        mTextTable3.setText(mCurrentDraft.getScan_03Q());
-        mTextTable4.setText(mCurrentDraft.getScan_04Q());
-        mTextTable5.setText(mCurrentDraft.getScan_05Q());
-        mTextTable6.setText(mCurrentDraft.getScan_06Q());
-        mTextTable7.setText(mCurrentDraft.getScan_07Q());
-        mTextTable8.setText(mCurrentDraft.getScan_08Q());
-        mTextTable9.setText(mCurrentDraft.getScan_09Q());
-        mTextTable10.setText(mCurrentDraft.getScan_10Q());
-        mTextTable11.setText(mCurrentDraft.getScan_11Q());
-        mTextTable12.setText(mCurrentDraft.getScan_12Q());
+        mExportNumber.setText(mCurrentSupport.getScan_code());
+        mTextTable1.setText(mCurrentSupport.getScan_01Q());
+        mTextTable2.setText(mCurrentSupport.getScan_02Q());
+        mTextTable3.setText(mCurrentSupport.getScan_03Q());
+        mTextTable4.setText(mCurrentSupport.getScan_04Q());
+        mTextTable5.setText(mCurrentSupport.getScan_05Q());
+        mTextTable6.setText(mCurrentSupport.getScan_06Q());
+        mTextTable7.setText(mCurrentSupport.getScan_07Q());
+        mTextTable8.setText(mCurrentSupport.getScan_08Q());
+        mTextTable9.setText(mCurrentSupport.getScan_09Q());
+        mTextTable10.setText(mCurrentSupport.getScan_10Q());
+        mTextTable11.setText(mCurrentSupport.getScan_11Q());
+        mTextTable12.setText(mCurrentSupport.getScan_12Q());
 
         //检查结论的条目
-        mCheck001.setText(mCurrentDraft.getIsRoom() == 0 ? "否" : "是");
-        mCheck002.setText(mCurrentDraft.getIsFree() == 0 ? "否" : "是");
-        mCheckedConclusionText.setText(mCurrentDraft.getConclusion());
-        mCheckedDescriptionText.setText(mCurrentDraft.getDescription());
+        mCheck001.setText(mCurrentSupport.getIsRoom() == 0 ? "否" : "是");
+        mCheck002.setText(mCurrentSupport.getIsFree() == 0 ? "否" : "是");
+        mCheckedConclusionText.setText(mCurrentSupport.getConclusion());
+        mCheckedDescriptionText.setText(mCurrentSupport.getDescription());
     }
 
     private void initToolbar() {
         setSupportActionBar(mToolbarPreviewDetail);
         TextView title_text_view = ActionBarTool.getInstance(this, 991).getTitle_text_view();
-        title_text_view.setText("车辆采集");
+        title_text_view.setText("提交详情页");
         mToolbarPreviewDetail.setNavigationIcon(R.drawable.back_up_logo);
         mToolbarPreviewDetail.setNavigationOnClickListener(v -> finish());
 
@@ -133,13 +133,13 @@ public class PreviewDetailActivity extends BaseActivity {
 
 
     private void getIntentData() {
-        mCurrentDraft = getIntent().getParcelableExtra(SUPPORTDRAFT_ITEM);
-     //   ToastUtils.singleToast(mCurrentDraft.toString());
-        Logger.i(mCurrentDraft.toString());
+        mCurrentSupport = getIntent().getParcelableExtra(SUPPORTDRAFT_ITEM);
+     //   ToastUtils.singleToast(mCurrentSupport.toString());
+        Logger.i(mCurrentSupport.toString());
     }
 
-    public static void actionStart(Context context, SupportDraft supportDraft) {
-        Intent intent = new Intent(context, PreviewDetailActivity.class);
+    public static void actionStart(Context context, SupportSubmit supportDraft) {
+        Intent intent = new Intent(context, PreviewSubmitDetailActivity.class);
         intent.putExtra(SUPPORTDRAFT_ITEM, supportDraft);
         context.startActivity(intent);
     }

@@ -11,10 +11,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.BaseActivity;
 import com.zero.wolf.greenroad.activity.MainActivity;
+import com.zero.wolf.greenroad.activity.RegisterActivity;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.adapter.SpinnerAdapter;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
@@ -43,6 +45,7 @@ import retrofit2.Response;
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
 
+
     private ImageButton mPopup_button;
     private ArrayList<String> mList;
     private Button mBt_login;
@@ -57,6 +60,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private List<SupportLoginUser> mSupportLoginUsers;
     private static int TIMEGAP = 10;
     private SpinnerAdapter mSpinnerAdapter;
+    private TextView mLoginRegister;
 
 
     @Override
@@ -69,8 +73,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // TODO: 2017/8/5 客户端的认证信息，移至注册账号是的返回储存
 
 
-
-
         Connector.getDatabase();
 
 
@@ -79,7 +81,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
         mBt_login = (Button) findViewById(R.id.bt_login);
+        mLoginRegister = (TextView) findViewById(R.id.login_register);
+
         mBt_login.setOnClickListener(this);
+        mLoginRegister.setOnClickListener(this);
 
         mEt_user_name.addTextChangedListener(
                 new TextChangeWatcher(editable -> {
@@ -120,6 +125,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.bt_login:
                 startMainActivity();
+                break;
+            case R.id.login_register:
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+
                 break;
             default:
                 break;
@@ -301,8 +311,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
     }
 
-   /* *//**
+   /* */
+
+    /**
      * 登陆成功开启服务
+     *
      * @param username
      */
     private void startPollingService(String username) {
@@ -311,6 +324,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         PollingUtils.startPollingService(this, 5, PollingService.class, PollingService.ACTION);
 
     }
+
     /**
      * 登录成功进入mainActivity
      */

@@ -80,6 +80,7 @@ public class LicenseKeyboardUtil {
 
         @Override
         public void onPress(int primaryCode) {
+
         }
 
         @Override
@@ -99,17 +100,9 @@ public class LicenseKeyboardUtil {
                 }
                 if (currentEditText < 0) {
                     currentEditText = 0;
+
                 }
-            }/*else if(primaryCode == 66){ //xml中定义的完成键值为66
-                Intent intent = new Intent();
-                String license = "";
-                for (int i=0;i<7;i++){
-                    license += edits[i].getText().toString();
-                }
-                intent.putExtra(CarNumberFragment.INPUT_LICENSE_KEY, license);
-                intent.setAction(CarNumberFragment.INPUT_LICENSE_COMPLETE);
-                mCtx.sendBroadcast(intent);
-            }*/ else { //其它字符按键
+            } else { //其它字符按键
                 if (currentEditText == 0) {
                     //如果currentEditText==0代表当前为省份键盘,
                     // 按下一个按键后,设置相应的EditText的值

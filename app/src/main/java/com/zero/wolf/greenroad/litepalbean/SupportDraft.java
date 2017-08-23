@@ -3,6 +3,8 @@ package com.zero.wolf.greenroad.litepalbean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.zero.wolf.greenroad.bean.PathTitleBean;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -42,12 +44,15 @@ public class SupportDraft extends DataSupport implements Parcelable{
     private int isFree;
     private String conclusion;
     private String description;
-    private List<String> bitmapPaths;
+
+    private List<PathTitleBean> mPath_sanzheng;
+    private List<PathTitleBean> mPath_cheshen;
+    private List<PathTitleBean> mPath_huowu;
 
     public SupportDraft() {
     }
 
-    public SupportDraft(Parcel in) {
+    protected SupportDraft(Parcel in) {
         current_time = in.readString();
         siteCheck = in.readString();
         siteLogin = in.readString();
@@ -74,7 +79,6 @@ public class SupportDraft extends DataSupport implements Parcelable{
         isFree = in.readInt();
         conclusion = in.readString();
         description = in.readString();
-        bitmapPaths = in.createStringArrayList();
     }
 
     public static final Creator<SupportDraft> CREATOR = new Creator<SupportDraft>() {
@@ -89,12 +93,39 @@ public class SupportDraft extends DataSupport implements Parcelable{
         }
     };
 
-    public String getScan_code() {
-        return scan_code;
-    }
-
-    public void setScan_code(String scan_code) {
-        this.scan_code = scan_code;
+    @Override
+    public String toString() {
+        return "SupportDraft{" +
+                "current_time='" + current_time + '\'' +
+                ", siteCheck='" + siteCheck + '\'' +
+                ", siteLogin='" + siteLogin + '\'' +
+                ", station='" + station + '\'' +
+                ", lane='" + lane + '\'' +
+                ", road='" + road + '\'' +
+                ", scan_code='" + scan_code + '\'' +
+                ", scan_01Q='" + scan_01Q + '\'' +
+                ", scan_02Q='" + scan_02Q + '\'' +
+                ", scan_03Q='" + scan_03Q + '\'' +
+                ", scan_04Q='" + scan_04Q + '\'' +
+                ", scan_05Q='" + scan_05Q + '\'' +
+                ", scan_06Q='" + scan_06Q + '\'' +
+                ", scan_07Q='" + scan_07Q + '\'' +
+                ", scan_08Q='" + scan_08Q + '\'' +
+                ", scan_09Q='" + scan_09Q + '\'' +
+                ", scan_10Q='" + scan_10Q + '\'' +
+                ", scan_11Q='" + scan_11Q + '\'' +
+                ", scan_12Q='" + scan_12Q + '\'' +
+                ", color='" + color + '\'' +
+                ", number='" + number + '\'' +
+                ", goods='" + goods + '\'' +
+                ", isRoom=" + isRoom +
+                ", isFree=" + isFree +
+                ", conclusion='" + conclusion + '\'' +
+                ", description='" + description + '\'' +
+                ", mPath_sanzheng=" + mPath_sanzheng +
+                ", mPath_cheshen=" + mPath_cheshen +
+                ", mPath_huowu=" + mPath_huowu +
+                '}';
     }
 
     public String getCurrent_time() {
@@ -143,6 +174,14 @@ public class SupportDraft extends DataSupport implements Parcelable{
 
     public void setRoad(String road) {
         this.road = road;
+    }
+
+    public String getScan_code() {
+        return scan_code;
+    }
+
+    public void setScan_code(String scan_code) {
+        this.scan_code = scan_code;
     }
 
     public String getScan_01Q() {
@@ -297,44 +336,28 @@ public class SupportDraft extends DataSupport implements Parcelable{
         this.description = description;
     }
 
-    public List<String> getBitmapPaths() {
-        return bitmapPaths;
+    public List<PathTitleBean> getPath_sanzheng() {
+        return mPath_sanzheng;
     }
 
-    public void setBitmapPaths(List<String> bitmapPaths) {
-        this.bitmapPaths = bitmapPaths;
+    public void setPath_sanzheng(List<PathTitleBean> path_sanzheng) {
+        mPath_sanzheng = path_sanzheng;
     }
 
-    @Override
-    public String toString() {
-        return "SupportDraft{" +
-                "current_time='" + current_time + '\'' +
-                ", checkOperator='" + siteCheck + '\'' +
-                ", loginOperator='" + siteLogin + '\'' +
-                ", station='" + station + '\'' +
-                ", lane='" + lane + '\'' +
-                ", road='" + road + '\'' +
-                ", scan_01Q='" + scan_01Q + '\'' +
-                ", scan_02Q='" + scan_02Q + '\'' +
-                ", scan_03Q='" + scan_03Q + '\'' +
-                ", scan_04Q='" + scan_04Q + '\'' +
-                ", scan_05Q='" + scan_05Q + '\'' +
-                ", scan_06Q='" + scan_06Q + '\'' +
-                ", scan_07Q='" + scan_07Q + '\'' +
-                ", scan_08Q='" + scan_08Q + '\'' +
-                ", scan_09Q='" + scan_09Q + '\'' +
-                ", scan_10Q='" + scan_10Q + '\'' +
-                ", scan_11Q='" + scan_11Q + '\'' +
-                ", scan_12Q='" + scan_12Q + '\'' +
-                ", color='" + color + '\'' +
-                ", number='" + number + '\'' +
-                ", goods='" + goods + '\'' +
-                ", isRoom=" + isRoom +
-                ", isFree=" + isFree +
-                ", conclusion='" + conclusion + '\'' +
-                ", description='" + description + '\'' +
-                ", bitmapPaths=" + bitmapPaths +
-                '}';
+    public List<PathTitleBean> getPath_cheshen() {
+        return mPath_cheshen;
+    }
+
+    public void setPath_cheshen(List<PathTitleBean> path_cheshen) {
+        mPath_cheshen = path_cheshen;
+    }
+
+    public List<PathTitleBean> getPath_huowu() {
+        return mPath_huowu;
+    }
+
+    public void setPath_huowu(List<PathTitleBean> path_huowu) {
+        mPath_huowu = path_huowu;
     }
 
     @Override
@@ -370,6 +393,5 @@ public class SupportDraft extends DataSupport implements Parcelable{
         dest.writeInt(isFree);
         dest.writeString(conclusion);
         dest.writeString(description);
-        dest.writeStringList(bitmapPaths);
     }
 }
