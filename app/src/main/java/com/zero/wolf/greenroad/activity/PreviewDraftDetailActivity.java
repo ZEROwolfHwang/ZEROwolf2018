@@ -111,6 +111,7 @@ public class PreviewDraftDetailActivity extends BaseActivity {
 
     private void initView() {
 
+
         mDraftSaveTime.setText(mCurrentSupport.getCurrent_time());
 
         //采集信息的条目
