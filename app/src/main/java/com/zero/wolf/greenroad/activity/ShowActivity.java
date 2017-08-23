@@ -9,16 +9,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.ShowViewPagerAdapter;
@@ -35,7 +31,6 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
 import com.zero.wolf.greenroad.https.HttpUtilsApi;
 import com.zero.wolf.greenroad.https.PostInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
-import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.litepalbean.SupportSubmit;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
@@ -128,6 +123,7 @@ public class ShowActivity extends BaseActivity {
         intent.setType(TYPE_DRAFT_ENTER_SHOW);
         context.startActivity(intent);
     }
+
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, ShowActivity.class);
         intent.setAction(ACTION_MAIN_ENTER_SHOW);
@@ -161,15 +157,15 @@ public class ShowActivity extends BaseActivity {
         Intent intent = getIntent();
         if (ACTION_DRAFT_ENTER_SHOW.equals(intent.getAction())) {
             ScanInfoBean scanInfoBean = (ScanInfoBean) intent.getSerializableExtra(ARG_SCANINFOBEAN);
-            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,scanInfoBean,intent.getType());
+            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this, scanInfoBean, intent.getType());
             Logger.i(scanInfoBean.toString());
         } else if (ACTION_MAIN_ENTER_SHOW.equals(intent.getAction())) {
-            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,intent.getType());
+            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this, intent.getType());
         }
-            mViewPagerShow.setOffscreenPageLimit(3);//设置viewpager预加载页面数
-            mViewPagerShow.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
+        mViewPagerShow.setOffscreenPageLimit(3);//设置viewpager预加载页面数
+        mViewPagerShow.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
 //        mViewpager.setCurrentItem(1); // 设置当前显示在哪个页面
-            mTabShow.setupWithViewPager(mViewPagerShow);
+        mTabShow.setupWithViewPager(mViewPagerShow);
     }
 
     private void initFab() {
@@ -181,7 +177,17 @@ public class ShowActivity extends BaseActivity {
                     mMenuFab.showMenuButton(true);
                 }
                 , delay);
+        mMenuFab.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mMenuFab.isOpened()) {
+                    mFabDraft.showButtonInMenu(true);
+                    mFabSubmit.showButtonInMenu(true);
+                }
 
+                mMenuFab.toggle(true);
+            }
+        });
     }
 
     @Override
@@ -211,7 +217,7 @@ public class ShowActivity extends BaseActivity {
 
         setSupportActionBar(mToolbarShow);
 
-        TextView title_text_view = ActionBarTool.getInstance(mActivity, 990).getTitle_text_view();
+        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText("车辆采集");
 
         mToolbarShow.setNavigationIcon(R.drawable.back_up_logo);
@@ -221,7 +227,7 @@ public class ShowActivity extends BaseActivity {
 
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.show, menu);
         return true;
@@ -244,24 +250,12 @@ public class ShowActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
-    @OnClick({R.id.menu_fab, R.id.fab_submit, R.id.fab_draft})
+    @OnClick({R.id.fab_submit, R.id.fab_draft})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.menu_fab:
-                if (mMenuFab.isOpened()) {
-                    Logger.i("打开fab menu");
-                    mFabDraft.showButtonInMenu(true);
-                    mFabSubmit.showButtonInMenu(true);
-                    mMenuFab.toggle(false);
-                } else {
-                    mFabDraft.showButtonInMenu(false);
-                    mFabSubmit.showButtonInMenu(false);
 
-                    mMenuFab.toggle(true);
-                }
-                break;
             case R.id.fab_submit:
                 ToastUtils.singleToast("向服务端提交采集的数据");
                 mFabDraft.hideButtonInMenu(true);
@@ -414,7 +408,7 @@ public class ShowActivity extends BaseActivity {
         for (int i = 0; i < draftList.size(); i++) {
             Logger.i(draftList.get(i).toString());
         }
-            Logger.i(draftList.get(0).toString());
+        Logger.i(draftList.get(0).toString());
     }
 
     /**
@@ -423,9 +417,9 @@ public class ShowActivity extends BaseActivity {
     private void save2Litepal(int type) {
         if (type == SAVE_TO_DRAFT) {
 
-            PhotoFragment.setSelectedListListener(data -> {
+           /* PhotoFragment.setSelectedListListener(data -> {
                 mData = data;
-                Logger.i("data-------"+data);
+                Logger.i("data-------" + data);
                 List<LocalMedia> localMedias = PictureSelector.obtainMultipleResult(mData);
                 SupportMedia supportMedia = new SupportMedia();
                 supportMedia.setChecked(localMedias.get(0).isChecked());
@@ -435,7 +429,7 @@ public class ShowActivity extends BaseActivity {
                 supportMedia.save();
                 Logger.i(supportMedia.toString());
 
-            });
+            });*/
 
             SupportDraft support = new SupportDraft();
 
@@ -508,6 +502,11 @@ public class ShowActivity extends BaseActivity {
             support.setSiteLogin(mCheckedBean_Q.getSiteLogin());
 
             support.save();
+
+        }
+        List<SupportSubmit> submits = DataSupport.findAll(SupportSubmit.class);
+        for (int i = 0; i < submits.size(); i++) {
+            Logger.i(submits.get(i).getScanbean().toString());
         }
     }
 

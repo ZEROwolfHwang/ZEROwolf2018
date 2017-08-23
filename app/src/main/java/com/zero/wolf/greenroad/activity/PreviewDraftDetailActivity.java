@@ -13,10 +13,12 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
+import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
-import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +84,7 @@ public class PreviewDraftDetailActivity extends BaseActivity {
     private SupportDraft mCurrentSupport;
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
+    private List<PathTitleBean> mPath_cheshen;
 
 
     @Override
@@ -95,19 +98,19 @@ public class PreviewDraftDetailActivity extends BaseActivity {
         getIntentData();
 
         initView();
-        initRecyclerView();
+        //initRecyclerView();
     }
 
-    private void initRecyclerView() {
+    /*private void initRecyclerView() {
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mDetailActivityRecyclerPhoto.setLayoutManager(mLayoutManager);
-        mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps_recycler_all, () -> {
+        mAdapter = new DetailsRecyclerAdapter(getContext(), mPath_cheshen, () -> {
 
         });
 //        mRecyclerViewShootPhoto.scrollToPosition(3);
         // scrollToPosition(mLayoutManager,3);
-        mRecyclerViewShootPhoto.setAdapter(mAdapter);
-    }
+        mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
+    }*/
 
     private void initView() {
 
@@ -158,7 +161,7 @@ public class PreviewDraftDetailActivity extends BaseActivity {
         mCurrentSupport = getIntent().getParcelableExtra(SUPPORTDRAFT_ITEM);
         //   ToastUtils.singleToast(mCurrentSupport.toString());
 
-        mCurrentSupport.getBitmapPaths();
+        mPath_cheshen = mCurrentSupport.getPath_cheshen();
 
         Logger.i(mCurrentSupport.toString());
     }

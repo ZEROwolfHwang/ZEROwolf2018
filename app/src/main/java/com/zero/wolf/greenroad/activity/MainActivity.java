@@ -80,10 +80,10 @@ public class MainActivity extends BaseActivity implements
     TextView mTvOperatorLoginMain;
     @BindView(R.id.rl_main_draft)
     RelativeLayout mRlMainDraft;
-    @BindView(R.id.tv_math_number_submit)
-    TextView mTvMathNumberSubmit;
     @BindView(R.id.rl_main_submit)
     RelativeLayout mRlMainSubmit;
+    @BindView(R.id.tv_math_number_submit)
+    TextView mTvMathNumberSubmit;
     @BindView(R.id.tv_math_number_draft)
     TextView mTvMathNumberDraft;
     private long firstClick;

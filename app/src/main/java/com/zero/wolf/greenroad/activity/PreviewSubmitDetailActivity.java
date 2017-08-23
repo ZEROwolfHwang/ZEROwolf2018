@@ -101,19 +101,19 @@ public class PreviewSubmitDetailActivity extends BaseActivity {
         mPick006.setText(mCurrentSupport.getGoods());
 
         //扫描的条目
-        mExportNumber.setText(mCurrentSupport.getScan_code());
-        mTextTable1.setText(mCurrentSupport.getScan_01Q());
-        mTextTable2.setText(mCurrentSupport.getScan_02Q());
-        mTextTable3.setText(mCurrentSupport.getScan_03Q());
-        mTextTable4.setText(mCurrentSupport.getScan_04Q());
-        mTextTable5.setText(mCurrentSupport.getScan_05Q());
-        mTextTable6.setText(mCurrentSupport.getScan_06Q());
-        mTextTable7.setText(mCurrentSupport.getScan_07Q());
-        mTextTable8.setText(mCurrentSupport.getScan_08Q());
-        mTextTable9.setText(mCurrentSupport.getScan_09Q());
-        mTextTable10.setText(mCurrentSupport.getScan_10Q());
-        mTextTable11.setText(mCurrentSupport.getScan_11Q());
-        mTextTable12.setText(mCurrentSupport.getScan_12Q());
+        mExportNumber.setText(mCurrentSupport.getScanbean().getScan_code());
+        mTextTable1.setText(mCurrentSupport.getScanbean().getScan_01Q());
+        mTextTable2.setText(mCurrentSupport.getScanbean().getScan_02Q());
+        mTextTable3.setText(mCurrentSupport.getScanbean().getScan_03Q());
+        mTextTable4.setText(mCurrentSupport.getScanbean().getScan_04Q());
+        mTextTable5.setText(mCurrentSupport.getScanbean().getScan_05Q());
+        mTextTable6.setText(mCurrentSupport.getScanbean().getScan_06Q());
+        mTextTable7.setText(mCurrentSupport.getScanbean().getScan_07Q());
+        mTextTable8.setText(mCurrentSupport.getScanbean().getScan_08Q());
+        mTextTable9.setText(mCurrentSupport.getScanbean().getScan_09Q());
+        mTextTable10.setText(mCurrentSupport.getScanbean().getScan_10Q());
+        mTextTable11.setText(mCurrentSupport.getScanbean().getScan_11Q());
+        mTextTable12.setText(mCurrentSupport.getScanbean().getScan_12Q());
 
         //检查结论的条目
         mCheck001.setText(mCurrentSupport.getIsRoom() == 0 ? "否" : "是");
