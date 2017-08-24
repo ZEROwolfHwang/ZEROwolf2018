@@ -6,10 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.zero.wolf.greenroad.activity.ShowActivity;
-import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.fragment.CheckedFragment;
 import com.zero.wolf.greenroad.fragment.DetailsFragment;
 import com.zero.wolf.greenroad.fragment.ScanFragment;
+import com.zero.wolf.greenroad.litepalbean.SupportChecked;
+import com.zero.wolf.greenroad.litepalbean.SupportDetail;
+import com.zero.wolf.greenroad.litepalbean.SupportScan;
 
 /**
  * Created by Administrator on 2017/7/17.
@@ -18,8 +20,10 @@ import com.zero.wolf.greenroad.fragment.ScanFragment;
 public class ShowViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private ScanInfoBean mScanInfoBean;
+    private SupportScan mSupportScan;
     private String enterType;
+    private SupportDetail mSupportDetail;
+    private SupportChecked mSupportChecked;
 
 
     public ShowViewPagerAdapter(FragmentManager fm, Context context, String type) {
@@ -28,10 +32,13 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
         enterType = type;
     }
 
-    public ShowViewPagerAdapter(FragmentManager fm, Context context, ScanInfoBean bean, String type) {
+    public ShowViewPagerAdapter(FragmentManager fm, Context context, SupportDetail supportDetail,
+                                SupportScan supportScan, SupportChecked supportChecked,String type) {
         super(fm);
         this.context = context;
-        mScanInfoBean = bean;
+        mSupportDetail = supportDetail;
+        mSupportScan = supportScan;
+        mSupportChecked = supportChecked;
         enterType = type;
     }
 
@@ -42,33 +49,33 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
 
             switch (position) {
                 case 0:
-                    fragment = DetailsFragment.newInstance();
+                    fragment = DetailsFragment.newInstance(enterType);
                     break;
                 case 1:
                     fragment = ScanFragment.newInstance(enterType);
                     break;
                 case 2:
-                    fragment = CheckedFragment.newInstance();
+                    fragment = CheckedFragment.newInstance(enterType);
                     break;
 
                 default:
-                    fragment = DetailsFragment.newInstance();
+                    fragment = DetailsFragment.newInstance(enterType);
                     break;
             }
         } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
             switch (position) {
                 case 0:
-                    fragment = DetailsFragment.newInstance();
+                    fragment = DetailsFragment.newInstance(enterType,mSupportDetail);
                     break;
                 case 1:
-                    fragment = ScanFragment.newInstance(enterType,mScanInfoBean);
+                    fragment = ScanFragment.newInstance(enterType,mSupportScan);
                     break;
                 case 2:
-                    fragment = CheckedFragment.newInstance();
+                    fragment = CheckedFragment.newInstance(enterType,mSupportChecked);
                     break;
 
                 default:
-                    fragment = DetailsFragment.newInstance();
+                    fragment = DetailsFragment.newInstance(enterType);
                     break;
             }
 

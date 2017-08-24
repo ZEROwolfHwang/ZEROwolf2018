@@ -1,6 +1,6 @@
 package com.zero.wolf.greenroad.helper;
 
-import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 
 import java.util.Comparator;
 
@@ -8,14 +8,14 @@ import java.util.Comparator;
  * Created by Administrator on 2017/7/28.
  */
 
-public class SortDraftTime implements Comparator{
+public class SortTime implements Comparator{
     @Override
     public int compare(Object o1, Object o2) {
 
         int flag2=0;
 
-        SupportDraft preview1 = (SupportDraft) o1;
-        SupportDraft preview2 = (SupportDraft) o2;
+        SupportDraftOrSubmit preview1 = (SupportDraftOrSubmit) o1;
+        SupportDraftOrSubmit preview2 = (SupportDraftOrSubmit) o2;
 
         int flag = preview1.getCurrent_time().compareTo(preview2.getCurrent_time());
 

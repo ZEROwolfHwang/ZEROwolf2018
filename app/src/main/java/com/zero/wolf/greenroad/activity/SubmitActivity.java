@@ -1,7 +1,6 @@
 package com.zero.wolf.greenroad.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,14 +16,14 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.PreviewDraftAdapter;
+import com.zero.wolf.greenroad.adapter.PreviewItemAdapter;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
-import com.zero.wolf.greenroad.helper.SortSubmitTime;
-import com.zero.wolf.greenroad.litepalbean.SupportDraft;
-import com.zero.wolf.greenroad.litepalbean.SupportSubmit;
+import com.zero.wolf.greenroad.helper.DeleteHelper;
+import com.zero.wolf.greenroad.helper.SortTime;
+import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
-import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -38,6 +37,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static org.litepal.crud.DataSupport.findAll;
+
 public class SubmitActivity extends BaseActivity implements View.OnClickListener {
 
 
@@ -48,9 +49,9 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
     private SubmitActivity mActivity;
     private Context mContext;
-    private List<SupportSubmit> mSubmitList;
+    private List<SupportDraftOrSubmit> mSubmitList;
 
-    private PreviewDraftAdapter mAdapter;
+    private PreviewItemAdapter mAdapter;
     private File mGoodsFile;
     private String mGoodsFilePath;
     private String mFilePath;
@@ -65,8 +66,6 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
         mActivity = this;
         mContext = this;
-
-        getIntentData();
 
         initToolbar();
         initData();
@@ -83,10 +82,11 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        mAdapter = new PreviewDraftAdapter(mContext, mActivity,
-                (ArrayList<SupportSubmit>) mSubmitList, (supportDraft) -> {
+        mAdapter = new PreviewItemAdapter(mContext, mActivity,
+                (ArrayList<SupportDraftOrSubmit>) mSubmitList, (support) -> {
             ToastUtils.singleToast("点击了条目");
-            PreviewSubmitDetailActivity.actionStart(mContext, (SupportSubmit) supportDraft);
+            PreviewDetailActivity.actionStart(mContext, support,
+                    PreviewDetailActivity.ACTION_SUBMIT_ITEM);
         });
 
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -94,41 +94,19 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
 
     private void initData() {
-        mSubmitList = DataSupport.findAll(SupportSubmit.class);
+        mSubmitList = DataSupport.
+                where(GlobalManager.LITE_CONDITION,GlobalManager.TYPE_SUBMIT_LITE).find(SupportDraftOrSubmit.class);
 
         for (int i = 0; i < mSubmitList.size(); i++) {
             Logger.i("------------" + mSubmitList.get(i).toString());
 
         }
-        SortSubmitTime sortDraftTime = new SortSubmitTime();
+        SortTime sortDraftTime = new SortTime();
 
         Collections.sort(mSubmitList, sortDraftTime);
         for (int i = 0; i < mSubmitList.size(); i++) {
             Logger.i("++++++++++++" + mSubmitList.get(i).toString());
         }
-
-       /* mPreviewList = new ArrayList<>();
-        for (int i = 0; i < mSubmitList.size(); i++) {
-            SupportDraft photoLite = mSubmitList.get(i);
-
-            for (int j = 0; j < 5; j++) {
-
-                SerializablePreview preview = new SerializablePreview();
-                preview.setCar_number(photoLite.getLicense_plate());
-                preview.setCar_goods(photoLite.getGoods());
-                preview.setIsPost(photoLite.getIsPost());
-                preview.setShutTime(photoLite.getShutTime());
-                preview.setStation(photoLite.getStation());
-                preview.setOperator(photoLite.getOperator());
-                preview.setColor(photoLite.getLicense_color());
-                preview.setPhotoPath1(photoLite.getPhotoPath1());
-                preview.setPhotoPath2(photoLite.getPhotoPath2());
-                preview.setPhotoPath3(photoLite.getPhotoPath3());
-
-                mPreviewList.add(preview);
-            }
-            Logger.i(mPreviewList.get(i).getShutTime());
-        }*/
 
 
     }
@@ -137,40 +115,11 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
         setSupportActionBar(mToolbarPreview);
 
-
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 992).getTitle_text_view();
-        title_text_view.setText("草稿列表");
+        title_text_view.setText("提交列表");
 
         mToolbarPreview.setNavigationIcon(R.drawable.back_up_logo);
         mToolbarPreview.setNavigationOnClickListener(v -> finish());
-    }
-
-    /**
-     * 创建并传递数据
-     */
-    public static void actionStart(Context context) {
-        Intent intent = new Intent(context, SubmitActivity.class);
-       /* Bundle bundle = new Bundle();
-        bundle.putParcelable(MDRAFT_CONFIG, configInfoBean);
-        bundle.putParcelable(MAIN2DRAFT_DETAIL, detailInfoBean);*/
-
-        //bundle.putParcelableArrayList("myBitmapList", (ArrayList<? extends Parcelable>) myBitmaps);
-        // intent.putExtras(bundle);
-        //      intent.setType(type);
-        context.startActivity(intent);
-    }
-
-    /**
-     * 得到从上一个activity中拿到的数据
-     */
-    private void getIntentData() {
-        Intent intent = getIntent();
-      /*  Bundle bundle = intent.getExtras();
-        mConfigInfoBean = bundle.getParcelable(MAIN2DRAFT_CONFIG);
-        mDetailInfoBean = bundle.getParcelable(MAIN2DRAFT_DETAIL);
-        Logger.i(mDetailInfoBean.toString());
-        Logger.i(mConfigInfoBean.toString());*/
-
     }
 
     /**
@@ -208,47 +157,13 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.delete_preview_all:
                 ToastUtils.singleToast("清空所有记录");
-                deleteAllInfos();
+                DeleteHelper.deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE,mAdapter);
                 break;
-
 
             default:
                 break;
         }
         return true;
-    }
-
-    /**
-     * 清除所有的记录
-     */
-    private void deleteAllInfos() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle("清空本地保存的拍摄数据");
-        dialog.setMessage("点击“确定”将删除所有拍摄记录" + "\"" +
-                "点击“取消”将取消删除操作");
-        dialog.setCancelable(false);
-        dialog.setPositiveButton(getString(R.string.dialog_messge_OK), (dialog1, which) -> {
-
-            DataSupport.deleteAll(SupportDraft.class);
-          /*  if (mGoodsFile == null) {
-                mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                mGoodsFile = new File(mFilePath, "GreenShoot");
-                mGoodsFile.mkdirs();
-            }
-            mGoodsFilePath = mGoodsFile.getPath();
-
-            FileUtils.deleteJpg(new File(mGoodsFilePath));*/
-            //顺便将计数清空，进行重新计数
-            SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
-            SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
-
-            List<SupportDraft> supportDraftList = DataSupport.findAll(SupportDraft.class);
-            mAdapter.updateListView(supportDraftList);
-        });
-        dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
-            dialog1.dismiss();
-        });
-        dialog.show();
     }
 
 
@@ -264,13 +179,13 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         dialog.setCancelable(false);
         dialog.setPositiveButton(getString(R.string.dialog_messge_OK), (dialog1, which) -> {
             String currentTimeToDate = TimeUtil.getCurrentTimeToDate();
-            List<SupportDraft> photoLiteList = DataSupport.findAll(SupportDraft.class);
+            List<SupportDraftOrSubmit> photoLiteList = findAll(SupportDraftOrSubmit.class);
 
             for (int i = 0; i < photoLiteList.size(); i++) {
                 String shutTime = photoLiteList.get(i).getCurrent_time();
                 int dayGap = TimeUtil.differentDaysByMillisecond(shutTime, currentTimeToDate);
                 if (dayGap > day) {
-                    DataSupport.deleteAll(SupportDraft.class, "shutTime = ?", shutTime);
+                    DataSupport.deleteAll(SupportDraftOrSubmit.class, "shutTime = ?", shutTime);
                     //删除三张本地照片
                     /*FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
                     FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath2());
@@ -278,7 +193,9 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
                     */
                 }
             }
-            List<SupportDraft> supportDraftList = DataSupport.findAll(SupportDraft.class);
+            List<SupportDraftOrSubmit> supportDraftList = DataSupport.
+                    where("lite_type=?", GlobalManager.TYPE_SUBMIT_LITE).find(SupportDraftOrSubmit.class);
+
             mAdapter.updateListView(supportDraftList);
 
         });

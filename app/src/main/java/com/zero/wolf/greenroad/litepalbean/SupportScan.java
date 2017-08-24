@@ -1,27 +1,18 @@
-package com.zero.wolf.greenroad.https;
+package com.zero.wolf.greenroad.litepalbean;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.litepal.crud.DataSupport;
 
 /**
- * Created by Administrator on 2017/8/14.
+ * Created by Administrator on 2017/8/24.
  */
 
-public class PostInfo {
+public class SupportScan extends DataSupport implements Parcelable{
 
+    private int lite_ID;
 
-    private String siteCheck;
-    private String siteLogin;
-    private String station;
-    private String lane;
-    private String road;
-
-    private String color;
-    private String number;
-    private String goods;
-    private int isRoom;
-    private int isFree;
-    private String conclusion;
-    private String description;
-
-    private String current_time;
     private String scan_code;
     private String scan_01Q;
     private String scan_02Q;
@@ -36,22 +27,65 @@ public class PostInfo {
     private String scan_11Q;
     private String scan_12Q;
 
+    public SupportScan() {
+    }
+
+    protected SupportScan(Parcel in) {
+        lite_ID = in.readInt();
+        scan_code = in.readString();
+        scan_01Q = in.readString();
+        scan_02Q = in.readString();
+        scan_03Q = in.readString();
+        scan_04Q = in.readString();
+        scan_05Q = in.readString();
+        scan_06Q = in.readString();
+        scan_07Q = in.readString();
+        scan_08Q = in.readString();
+        scan_09Q = in.readString();
+        scan_10Q = in.readString();
+        scan_11Q = in.readString();
+        scan_12Q = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(lite_ID);
+        dest.writeString(scan_code);
+        dest.writeString(scan_01Q);
+        dest.writeString(scan_02Q);
+        dest.writeString(scan_03Q);
+        dest.writeString(scan_04Q);
+        dest.writeString(scan_05Q);
+        dest.writeString(scan_06Q);
+        dest.writeString(scan_07Q);
+        dest.writeString(scan_08Q);
+        dest.writeString(scan_09Q);
+        dest.writeString(scan_10Q);
+        dest.writeString(scan_11Q);
+        dest.writeString(scan_12Q);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<SupportScan> CREATOR = new Creator<SupportScan>() {
+        @Override
+        public SupportScan createFromParcel(Parcel in) {
+            return new SupportScan(in);
+        }
+
+        @Override
+        public SupportScan[] newArray(int size) {
+            return new SupportScan[size];
+        }
+    };
+
     @Override
     public String toString() {
-        return "PostInfo{" +
-                "siteCheck='" + siteCheck + '\'' +
-                ", siteLogin='" + siteLogin + '\'' +
-                ", station='" + station + '\'' +
-                ", lane='" + lane + '\'' +
-                ", road='" + road + '\'' +
-                ", color='" + color + '\'' +
-                ", number='" + number + '\'' +
-                ", goods='" + goods + '\'' +
-                ", isRoom=" + isRoom +
-                ", isFree=" + isFree +
-                ", conclusion='" + conclusion + '\'' +
-                ", description='" + description + '\'' +
-                ", current_time='" + current_time + '\'' +
+        return "SupportScan{" +
+                "lite_ID=" + lite_ID +
                 ", scan_code='" + scan_code + '\'' +
                 ", scan_01Q='" + scan_01Q + '\'' +
                 ", scan_02Q='" + scan_02Q + '\'' +
@@ -68,12 +102,12 @@ public class PostInfo {
                 '}';
     }
 
-    public String getCurrent_time() {
-        return current_time;
+    public int getLite_ID() {
+        return lite_ID;
     }
 
-    public void setCurrent_time(String current_time) {
-        this.current_time = current_time;
+    public void setLite_ID(int lite_ID) {
+        this.lite_ID = lite_ID;
     }
 
     public String getScan_code() {
@@ -178,101 +212,5 @@ public class PostInfo {
 
     public void setScan_12Q(String scan_12Q) {
         this.scan_12Q = scan_12Q;
-    }
-
-    public String getSiteCheck() {
-        return siteCheck;
-    }
-
-    public void setSiteCheck(String siteCheck) {
-        this.siteCheck = siteCheck;
-    }
-
-    public String getSiteLogin() {
-        return siteLogin;
-    }
-
-    public void setSiteLogin(String siteLogin) {
-        this.siteLogin = siteLogin;
-    }
-
-    public String getStation() {
-        return station;
-    }
-
-    public void setStation(String station) {
-        this.station = station;
-    }
-
-    public String getLane() {
-        return lane;
-    }
-
-    public void setLane(String lane) {
-        this.lane = lane;
-    }
-
-    public String getRoad() {
-        return road;
-    }
-
-    public void setRoad(String road) {
-        this.road = road;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getGoods() {
-        return goods;
-    }
-
-    public void setGoods(String goods) {
-        this.goods = goods;
-    }
-
-    public int getIsRoom() {
-        return isRoom;
-    }
-
-    public void setIsRoom(int isRoom) {
-        this.isRoom = isRoom;
-    }
-
-    public int getIsFree() {
-        return isFree;
-    }
-
-    public void setIsFree(int isFree) {
-        this.isFree = isFree;
-    }
-
-    public String getConclusion() {
-        return conclusion;
-    }
-
-    public void setConclusion(String conclusion) {
-        this.conclusion = conclusion;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

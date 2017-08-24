@@ -15,7 +15,9 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.ConclusionActivity;
 import com.zero.wolf.greenroad.activity.SettingActivity;
+import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.CheckedBean;
+import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 
 import org.litepal.crud.DataSupport;
@@ -52,6 +54,8 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static String mCheckOperator;
     private static String sConclusionQ;
     private static String sDescriptionQ;
+    private static String sEnterType;
+    private static SupportChecked sSupportChecked;
 
 
     public CheckedFragment() {
@@ -59,11 +63,20 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public static CheckedFragment newInstance() {
+    public static CheckedFragment newInstance(String enterType) {
         if (sFragment == null) {
             sFragment = new CheckedFragment();
         }
+        sEnterType = enterType;
         return sFragment;
+    }
+  public static CheckedFragment newInstance(String enterType, SupportChecked supportChecked) {
+        if (sFragment == null) {
+            sFragment = new CheckedFragment();
+        }
+      sEnterType = enterType;
+      sSupportChecked = supportChecked;
+      return sFragment;
     }
 
     @Override
@@ -78,6 +91,15 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_checked, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        initView(view);
+
+        //初始化各个checkbox的状态
+
+
+        return view;
+    }
+
+    private void initView(View view) {
         mTextConclusionView = (TextView) view.findViewById(R.id.checked_conclusion_text);
         mEditDescriptionView = (EditText) view.findViewById(R.id.checked_description_text);
         mToggleIsRoom = (ToggleButton) view.findViewById(R.id.toggle_is_room);
@@ -90,10 +112,9 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mSiteCheck.setOnClickListener(this);
         mSiteLogin.setOnClickListener(this);
 
-        //初始化各个checkbox的状态
+        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
 
-
-        return view;
+        }
     }
 
 

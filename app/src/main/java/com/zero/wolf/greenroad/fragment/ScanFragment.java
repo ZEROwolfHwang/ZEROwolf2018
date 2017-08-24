@@ -14,6 +14,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.ScanInfoBean;
+import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import butterknife.BindView;
@@ -55,7 +56,7 @@ public class ScanFragment extends Fragment {
     private static TextView mText_table_12;
 
     private static ScanFragment sFragment;
-    private static ScanInfoBean sScanInfoBean_D;
+    private static SupportScan sSupportScan;
     private static String enterType;
 
     public ScanFragment() {
@@ -70,11 +71,11 @@ public class ScanFragment extends Fragment {
         return sFragment;
     }
 
-    public static ScanFragment newInstance(String type,ScanInfoBean scanInfoBean) {
+    public static ScanFragment newInstance(String type,SupportScan scanInfoBean) {
         if (sFragment == null) {
             sFragment = new ScanFragment();
         }
-        sScanInfoBean_D = scanInfoBean;
+        sSupportScan = scanInfoBean;
         enterType = type;
         return sFragment;
     }
@@ -115,19 +116,19 @@ public class ScanFragment extends Fragment {
 
         //从草稿的详情页进入采集界面进行修改,会初始化扫描的内容
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
-            mTextExportNumber.setText(sScanInfoBean_D.getScan_code());
-            mText_table_1.setText(sScanInfoBean_D.getScan_01Q());
-            mText_table_2.setText(sScanInfoBean_D.getScan_02Q());
-            mText_table_3.setText(sScanInfoBean_D.getScan_03Q());
-            mText_table_4.setText(sScanInfoBean_D.getScan_04Q());
-            mText_table_5.setText(sScanInfoBean_D.getScan_05Q());
-            mText_table_6.setText(sScanInfoBean_D.getScan_06Q());
-            mText_table_7.setText(sScanInfoBean_D.getScan_07Q());
-            mText_table_8.setText(sScanInfoBean_D.getScan_08Q());
-            mText_table_9.setText(sScanInfoBean_D.getScan_09Q());
-            mText_table_10.setText(sScanInfoBean_D.getScan_10Q());
-            mText_table_11.setText(sScanInfoBean_D.getScan_11Q());
-            mText_table_12.setText(sScanInfoBean_D.getScan_12Q());
+            mTextExportNumber.setText(sSupportScan.getScan_code());
+            mText_table_1.setText(sSupportScan.getScan_01Q());
+            mText_table_2.setText(sSupportScan.getScan_02Q());
+            mText_table_3.setText(sSupportScan.getScan_03Q());
+            mText_table_4.setText(sSupportScan.getScan_04Q());
+            mText_table_5.setText(sSupportScan.getScan_05Q());
+            mText_table_6.setText(sSupportScan.getScan_06Q());
+            mText_table_7.setText(sSupportScan.getScan_07Q());
+            mText_table_8.setText(sSupportScan.getScan_08Q());
+            mText_table_9.setText(sSupportScan.getScan_09Q());
+            mText_table_10.setText(sSupportScan.getScan_10Q());
+            mText_table_11.setText(sSupportScan.getScan_11Q());
+            mText_table_12.setText(sSupportScan.getScan_12Q());
         }
     }
 

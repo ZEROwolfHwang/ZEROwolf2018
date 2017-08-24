@@ -17,13 +17,15 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.PreviewDraftAdapter;
+import com.zero.wolf.greenroad.adapter.PreviewItemAdapter;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
-import com.zero.wolf.greenroad.helper.SortDraftTime;
+import com.zero.wolf.greenroad.helper.DeleteHelper;
+import com.zero.wolf.greenroad.helper.SortTime;
 import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
-import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -37,6 +39,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static org.litepal.crud.DataSupport.deleteAll;
+
 public class DraftActivity extends BaseActivity implements View.OnClickListener {
 
 
@@ -47,12 +51,13 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
     private DraftActivity mActivity;
     private Context mContext;
-    private List<SupportDraft> mDraftList;
 
-    private PreviewDraftAdapter mAdapter;
+
+    private PreviewItemAdapter mAdapter;
     private File mGoodsFile;
     private String mGoodsFilePath;
     private String mFilePath;
+    private List<SupportDraftOrSubmit> mDraftList;
 
 
     @Override
@@ -81,9 +86,9 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        mAdapter = new PreviewDraftAdapter(mContext, mActivity, (ArrayList) mDraftList, support -> {
-            ToastUtils.singleToast("点击了条目");
-            PreviewDraftDetailActivity.actionStart(mContext, (SupportDraft) support);
+        mAdapter = new PreviewItemAdapter(mContext, mActivity, (ArrayList) mDraftList, support -> {
+            ToastUtils.singleToast("点击了draft条目");
+            PreviewDetailActivity.actionStart(mContext,  support,PreviewDetailActivity.ACTION_DRAFT_ITEM);
         });
 
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -91,41 +96,20 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void initData() {
-        mDraftList = DataSupport.findAll(SupportDraft.class);
+
+        mDraftList = DataSupport.where("lite_type=?", GlobalManager.TYPE_DRAFT_LITE).find(SupportDraftOrSubmit.class);
+
 
         for (int i = 0; i < mDraftList.size(); i++) {
             Logger.i("------------" + mDraftList.get(i).toString());
 
         }
-        SortDraftTime sortDraftTime = new SortDraftTime();
+        SortTime sortDraftTime = new SortTime();
 
         Collections.sort(mDraftList, sortDraftTime);
         for (int i = 0; i < mDraftList.size(); i++) {
             Logger.i("++++++++++++" + mDraftList.get(i).toString());
         }
-
-       /* mPreviewList = new ArrayList<>();
-        for (int i = 0; i < mDraftList.size(); i++) {
-            SupportDraft photoLite = mDraftList.get(i);
-
-            for (int j = 0; j < 5; j++) {
-
-                SerializablePreview preview = new SerializablePreview();
-                preview.setCar_number(photoLite.getLicense_plate());
-                preview.setCar_goods(photoLite.getGoods());
-                preview.setIsPost(photoLite.getIsPost());
-                preview.setShutTime(photoLite.getShutTime());
-                preview.setStation(photoLite.getStation());
-                preview.setOperator(photoLite.getOperator());
-                preview.setColor(photoLite.getLicense_color());
-                preview.setPhotoPath1(photoLite.getPhotoPath1());
-                preview.setPhotoPath2(photoLite.getPhotoPath2());
-                preview.setPhotoPath3(photoLite.getPhotoPath3());
-
-                mPreviewList.add(preview);
-            }
-            Logger.i(mPreviewList.get(i).getShutTime());
-        }*/
 
 
     }
@@ -205,49 +189,14 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.delete_preview_all:
                 ToastUtils.singleToast("清空所有记录");
-                deleteAllInfos();
+                DeleteHelper.deleteAllInfos(mContext, GlobalManager.TYPE_DRAFT_LITE, mAdapter);
+
                 break;
-
-
             default:
                 break;
         }
         return true;
     }
-
-    /**
-     * 清除所有的记录
-     */
-    private void deleteAllInfos() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle("清空本地保存的拍摄数据");
-        dialog.setMessage("点击“确定”将删除所有拍摄记录" + "\"" +
-                "点击“取消”将取消删除操作");
-        dialog.setCancelable(false);
-        dialog.setPositiveButton(getString(R.string.dialog_messge_OK), (dialog1, which) -> {
-
-            DataSupport.deleteAll(SupportDraft.class);
-          /*  if (mGoodsFile == null) {
-                mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                mGoodsFile = new File(mFilePath, "GreenShoot");
-                mGoodsFile.mkdirs();
-            }
-            mGoodsFilePath = mGoodsFile.getPath();
-
-            FileUtils.deleteJpg(new File(mGoodsFilePath));*/
-            //顺便将计数清空，进行重新计数
-            SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
-            SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
-
-            List<SupportDraft> supportDraftList = DataSupport.findAll(SupportDraft.class);
-            mAdapter.updateListView(supportDraftList);
-        });
-        dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
-            dialog1.dismiss();
-        });
-        dialog.show();
-    }
-
 
     /**
      * 清除几天之前的记录
@@ -267,7 +216,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 String shutTime = photoLiteList.get(i).getCurrent_time();
                 int dayGap = TimeUtil.differentDaysByMillisecond(shutTime, currentTimeToDate);
                 if (dayGap > day) {
-                    DataSupport.deleteAll(SupportDraft.class, "shutTime = ?", shutTime);
+                    deleteAll(SupportDraft.class, "shutTime = ?", shutTime);
                     //删除三张本地照片
                     /*FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
                     FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath2());

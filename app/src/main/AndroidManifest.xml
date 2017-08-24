@@ -82,11 +82,6 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <service
-            android:name=".servicy.PostIntentService"
-            android:exported="false">
-        </service>
-
         <receiver
             android:name=".NetWorkStateReceiver"
             android:enabled="true"
@@ -98,10 +93,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.PreviewDraftDetailActivity">
-        </activity>
-        <activity android:name=".activity.PreviewSubmitDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activity.PreviewDetailActivity">
         </activity>
 
         <!--

@@ -33,8 +33,6 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
-import com.zero.wolf.greenroad.litepalbean.SupportPhotoLite;
-import com.zero.wolf.greenroad.servicy.PostIntentService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
@@ -255,7 +253,7 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.nav_backup) {
             buckUpApp();
         } else if (id == R.id.nav_post) {
-            post_not_upload();
+            //post_not_upload();
             refresh();
             Logger.i("点击了未上传按钮");
         }
@@ -304,7 +302,7 @@ public class MainActivity extends BaseActivity implements
     }
 
 
-    private void post_not_upload() {
+  /*  private void post_not_upload() {
 
 
         //initBroadCast();
@@ -319,7 +317,7 @@ public class MainActivity extends BaseActivity implements
         );
         mNotPostDialog.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
         mNotPostDialog.show();
-    }
+    }*/
 
     /**
      * 退出程序
@@ -350,7 +348,6 @@ public class MainActivity extends BaseActivity implements
         dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface di, int which) {
-                DataSupport.deleteAll(SupportPhotoLite.class);
                 SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
                 SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
                 refresh();

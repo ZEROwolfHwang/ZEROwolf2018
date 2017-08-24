@@ -10,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.litepalbean.SupportDraft;
-import com.zero.wolf.greenroad.litepalbean.SupportSubmit;
+import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +22,21 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/7/28.
  */
 
-public  class PreviewDraftAdapter<T> extends RecyclerView.Adapter<PreviewDraftAdapter<T>.PreviewPhotoHolder>  {
+public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.PreviewPhotoHolder> {
 
 
     private final Context mContext;
 
 
-    private ArrayList<T> mPreviewList;
     private final AppCompatActivity mActivity;
     private final onPreviewItemClick mItemClick;
+    private ArrayList<SupportDraftOrSubmit> mPreviewList;
     // private final onItemClick mItemClick;
 
 
-    public PreviewDraftAdapter(Context context, AppCompatActivity activity,
-                               ArrayList<T> previewList,
-                               onPreviewItemClick onPreviewItemClick) {
+    public PreviewItemAdapter(Context context, AppCompatActivity activity,
+                              ArrayList<SupportDraftOrSubmit> previewList,
+                              onPreviewItemClick onPreviewItemClick) {
         mContext = context;
         mPreviewList = previewList;
         mActivity = activity;
@@ -51,11 +50,11 @@ public  class PreviewDraftAdapter<T> extends RecyclerView.Adapter<PreviewDraftAd
      *
      * @param list
      */
-    public void updateListView(List<T> list) {
+    public void updateListView(List list) {
         if (list == null) {
             this.mPreviewList = new ArrayList();
         } else {
-            this.mPreviewList = (ArrayList<T>) list;
+            this.mPreviewList = (ArrayList<SupportDraftOrSubmit>) list;
         }
         notifyDataSetChanged();
     }
@@ -101,27 +100,13 @@ public  class PreviewDraftAdapter<T> extends RecyclerView.Adapter<PreviewDraftAd
 
         }
 
-        public void bindHolder(T support, int position) {
-            String check = null;
-            String login = null;
-            String car_number = null;
-            String shutTime= null;
-            int isFree = 0;
-            if (support instanceof SupportDraft) {
+        public void bindHolder(SupportDraftOrSubmit support, int position) {
 
-                check = ((SupportDraft) support).getSiteCheck();
-                login = ((SupportDraft) support).getSiteLogin();
-                car_number = ((SupportDraft) support).getNumber();
-                shutTime = ((SupportDraft) support).getCurrent_time();
-                isFree = ((SupportDraft) support).getIsFree();
-            } else if (support instanceof SupportSubmit) {
-                check = ((SupportSubmit) support).getSiteCheck();
-                login = ((SupportSubmit) support).getSiteLogin();
-                car_number = ((SupportSubmit) support).getNumber();
-                shutTime = ((SupportSubmit) support).getCurrent_time();
-                isFree = ((SupportSubmit) support).getIsFree();
-
-            }
+            String check = support.getSupportChecked().getSiteCheck();
+            String login = support.getSupportChecked().getSiteLogin();
+            String car_number = support.getSupportDetail().getNumber();
+            String shutTime = support.getCurrent_time();
+            int isFree = support.getSupportChecked().getIsFree();
 
             if (position % 2 == 0) {
                 itemView.setBackgroundColor(Color.WHITE);
@@ -143,8 +128,9 @@ public  class PreviewDraftAdapter<T> extends RecyclerView.Adapter<PreviewDraftAd
             });
         }
     }
-    public interface onPreviewItemClick<T> {
-        void itemClick(T support);
+
+    public interface onPreviewItemClick {
+        void itemClick(SupportDraftOrSubmit support);
     }
 }
 

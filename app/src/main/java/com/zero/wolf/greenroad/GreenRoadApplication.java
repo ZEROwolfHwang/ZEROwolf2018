@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
-import com.orhanobut.logger.Logger;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import com.zero.wolf.greenroad.interfacy.ThemeChangeObserver;
 import com.zero.wolf.greenroad.polling.LoopService;
@@ -46,7 +45,7 @@ public class GreenRoadApplication extends Application {
             Logger.i("用户已登录，开启长连接...");
             startLongConn();
         }*/
-        startLongConn();
+        //startLongConn();
     }
 /*
 
@@ -58,7 +57,7 @@ public class GreenRoadApplication extends Application {
     private void startLongConn() {
 
         //quitLongConn();
-        Logger.i("长连接服务已开启");
+
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, LoopService.class);
         intent.setAction(LoopService.ACTION);

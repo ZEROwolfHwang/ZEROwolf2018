@@ -14,8 +14,10 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
-import com.zero.wolf.greenroad.bean.ScanInfoBean;
-import com.zero.wolf.greenroad.litepalbean.SupportDraft;
+import com.zero.wolf.greenroad.litepalbean.SupportChecked;
+import com.zero.wolf.greenroad.litepalbean.SupportDetail;
+import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 
 import java.util.List;
@@ -24,9 +26,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PreviewDraftDetailActivity extends BaseActivity {
+public class PreviewDetailActivity extends BaseActivity {
 
+    public static String ACTION_DRAFT_ITEM = "action_draft_item";
+    public static String ACTION_SUBMIT_ITEM = "action_submit_item";
     private static String SUPPORTDRAFT_ITEM = "supportdraft_item";
+    private static String SUPPORTSUBMIT_ITEM = "supportsubmit_item";
     @BindView(R.id.toolbar_preview_detail)
     Toolbar mToolbarPreviewDetail;
     @BindView(R.id.detail_activity_recycler_photo)
@@ -81,7 +86,7 @@ public class PreviewDraftDetailActivity extends BaseActivity {
     TextView mDraftSaveTime;
     @BindView(R.id.draft_save_edit)
     TextView mDraftSaveEdit;
-    private SupportDraft mCurrentSupport;
+    private SupportDraftOrSubmit mCurrentSupport;
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
     private List<PathTitleBean> mPath_cheshen;
@@ -113,38 +118,40 @@ public class PreviewDraftDetailActivity extends BaseActivity {
     }*/
 
     private void initView() {
-
+        SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
+        SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
+        SupportScan supportScan = mCurrentSupport.getSupportScan();
 
         mDraftSaveTime.setText(mCurrentSupport.getCurrent_time());
 
         //采集信息的条目
-        mPick001.setText(mCurrentSupport.getLane());
-        mPick002.setText(mCurrentSupport.getSiteCheck());
-        mPick003.setText(mCurrentSupport.getSiteLogin());
-        mPick004.setText(mCurrentSupport.getNumber());
-        mPick005.setText(mCurrentSupport.getColor());
-        mPick006.setText(mCurrentSupport.getGoods());
+        mPick001.setText(supportDetail.getLane());
+        mPick002.setText(supportChecked.getSiteCheck());
+        mPick003.setText(supportChecked.getSiteLogin());
+        mPick004.setText(supportDetail.getNumber());
+        mPick005.setText(supportDetail.getColor());
+        mPick006.setText(supportDetail.getGoods());
 
         //扫描的条目
-        mExportNumber.setText(mCurrentSupport.getScan_code());
-        mTextTable1.setText(mCurrentSupport.getScan_01Q());
-        mTextTable2.setText(mCurrentSupport.getScan_02Q());
-        mTextTable3.setText(mCurrentSupport.getScan_03Q());
-        mTextTable4.setText(mCurrentSupport.getScan_04Q());
-        mTextTable5.setText(mCurrentSupport.getScan_05Q());
-        mTextTable6.setText(mCurrentSupport.getScan_06Q());
-        mTextTable7.setText(mCurrentSupport.getScan_07Q());
-        mTextTable8.setText(mCurrentSupport.getScan_08Q());
-        mTextTable9.setText(mCurrentSupport.getScan_09Q());
-        mTextTable10.setText(mCurrentSupport.getScan_10Q());
-        mTextTable11.setText(mCurrentSupport.getScan_11Q());
-        mTextTable12.setText(mCurrentSupport.getScan_12Q());
+        mExportNumber.setText(supportScan.getScan_code());
+        mTextTable1.setText(supportScan.getScan_01Q());
+        mTextTable2.setText(supportScan.getScan_02Q());
+        mTextTable3.setText(supportScan.getScan_03Q());
+        mTextTable4.setText(supportScan.getScan_04Q());
+        mTextTable5.setText(supportScan.getScan_05Q());
+        mTextTable6.setText(supportScan.getScan_06Q());
+        mTextTable7.setText(supportScan.getScan_07Q());
+        mTextTable8.setText(supportScan.getScan_08Q());
+        mTextTable9.setText(supportScan.getScan_09Q());
+        mTextTable10.setText(supportScan.getScan_10Q());
+        mTextTable11.setText(supportScan.getScan_11Q());
+        mTextTable12.setText(supportScan.getScan_12Q());
 
         //检查结论的条目
-        mCheck001.setText(mCurrentSupport.getIsRoom() == 0 ? "否" : "是");
-        mCheck002.setText(mCurrentSupport.getIsFree() == 0 ? "否" : "是");
-        mCheckedConclusionText.setText(mCurrentSupport.getConclusion());
-        mCheckedDescriptionText.setText(mCurrentSupport.getDescription());
+        mCheck001.setText(supportChecked.getIsRoom() == 0 ? "否" : "是");
+        mCheck002.setText(supportChecked.getIsFree() == 0 ? "否" : "是");
+        mCheckedConclusionText.setText(supportChecked.getConclusion());
+        mCheckedDescriptionText.setText(supportChecked.getDescription());
     }
 
     private void initToolbar() {
@@ -158,22 +165,30 @@ public class PreviewDraftDetailActivity extends BaseActivity {
 
 
     private void getIntentData() {
-        mCurrentSupport = getIntent().getParcelableExtra(SUPPORTDRAFT_ITEM);
+        Intent intent = getIntent();
+        if (ACTION_DRAFT_ITEM.equals(intent.getAction())) {
+                mDraftSaveEdit.setVisibility(View.VISIBLE);
+        } else {
+            if (ACTION_SUBMIT_ITEM.equals(intent.getAction())) {
+                mDraftSaveEdit.setVisibility(View.GONE);
+            }
+        }
         //   ToastUtils.singleToast(mCurrentSupport.toString());
+        mCurrentSupport = intent.getParcelableExtra(SUPPORTDRAFT_ITEM);
 
-        mPath_cheshen = mCurrentSupport.getPath_cheshen();
 
         Logger.i(mCurrentSupport.toString());
     }
 
-    public static void actionStart(Context context, SupportDraft supportDraft) {
-        Intent intent = new Intent(context, PreviewDraftDetailActivity.class);
-        intent.putExtra(SUPPORTDRAFT_ITEM, supportDraft);
+    public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
+        Intent intent = new Intent(context, PreviewDetailActivity.class);
+        intent.setAction(action);
+        intent.putExtra(SUPPORTDRAFT_ITEM, support);
         context.startActivity(intent);
     }
 
     @OnClick(R.id.draft_save_edit)
-    public void onClick(View view) {
+    public void onClick(View view) {/*
         ScanInfoBean scanInfoBean = new ScanInfoBean();
         scanInfoBean.setScan_code(mCurrentSupport.getScan_code());
         scanInfoBean.setScan_01Q(mCurrentSupport.getScan_01Q());
@@ -188,7 +203,10 @@ public class PreviewDraftDetailActivity extends BaseActivity {
         scanInfoBean.setScan_10Q(mCurrentSupport.getScan_10Q());
         scanInfoBean.setScan_11Q(mCurrentSupport.getScan_11Q());
         scanInfoBean.setScan_12Q(mCurrentSupport.getScan_12Q());
-
-        ShowActivity.actionStart(PreviewDraftDetailActivity.this, scanInfoBean);
+*/
+        SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
+        SupportScan supportScan = mCurrentSupport.getSupportScan();
+        SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
+        ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail,supportScan,supportChecked);
     }
 }

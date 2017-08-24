@@ -15,6 +15,9 @@ public class GlobalManager {
 
     //public static int REQUEST_IV_CAMERA = 1 * 998;
 
+    public static String LITE_CONDITION = "lite_type=?";
+    public static String TYPE_DRAFT_LITE = "type_draft_lite";
+    public static String TYPE_SUBMIT_LITE = "type_submit_lite";
     public static String ENTERTYPE_NUMBER = "entertype_number";
     public static String ENTERTYPE_GOODS = "entertype_goods";
     public static String ENTERTYPE_PHOTO = "entertype_photo";

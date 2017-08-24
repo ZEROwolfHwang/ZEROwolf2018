@@ -15,11 +15,13 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
+import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ToastUtils;
@@ -55,23 +57,32 @@ public class DetailsFragment extends Fragment {
     private static Bitmap mBitmap_add;
     private RadioGroup mRadioGroup_top;
     private RadioGroup mRadioGroup_bottom;
-    private RadioButton mLicense_yellow;
-    private RadioButton mLicense_blue;
-    private RadioButton mLicense_black;
-    private RadioButton mLicense_white;
-    private RadioButton mLicense_green;
+    private static RadioButton mLicense_yellow;
+    private static RadioButton mLicense_blue;
+    private static RadioButton mLicense_black;
+    private static RadioButton mLicense_white;
+    private static RadioButton mLicense_green;
     private LinearLayoutManager mLayoutManager;
 
     private static RadioGroup mRadioGroupColor;
+    private static String sEnterType;
+    private static SupportDetail sSupportDetail;
+
     public DetailsFragment() {
         // Required empty public constructor
     }
 
 
-    public static DetailsFragment newInstance() {
+    public static DetailsFragment newInstance(String enterType) {
         DetailsFragment fragment = new DetailsFragment();
-
+        sEnterType = enterType;
         return fragment;
+    }
+  public static DetailsFragment newInstance(String enterType , SupportDetail supportDetail) {
+        DetailsFragment fragment = new DetailsFragment();
+      sEnterType = enterType;
+      sSupportDetail = supportDetail;
+      return fragment;
     }
 
     @Override
@@ -89,10 +100,13 @@ public class DetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
         unbinder = ButterKnife.bind(this, view);
         initView(view);
+
         initRadioColor();
         initRecyclerView();
         return view;
     }
+
+
 
     @Override
     public void onResume() {
@@ -205,6 +219,43 @@ public class DetailsFragment extends Fragment {
         mTvChangeGoodsDetail = (TextView) view.findViewById(R.id.tv_change_goods_detail);
         mRadioGroupColor = (RadioGroup) view.findViewById(R.id.radio_group_color);
 
+
+        mLicense_yellow = (RadioButton) view.findViewById(R.id.license_yellow);
+        mLicense_blue = (RadioButton) view.findViewById(R.id.license_blue);
+        mLicense_black = (RadioButton) view.findViewById(R.id.license_black);
+        mLicense_white = (RadioButton) view.findViewById(R.id.license_green);
+        mLicense_green = (RadioButton) view.findViewById(R.id.license_white);
+
+        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
+            Logger.i(sSupportDetail.toString());
+
+            mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
+            mTvChangeGoodsDetail.setText(sSupportDetail.getGoods());
+
+            String color = sSupportDetail.getColor();
+            if (CarColorManager.COLOR_YELLOW.equals(color)) {
+                mLicense_yellow.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_YELLOW;
+            }
+            else if (CarColorManager.COLOR_BLUE.equals(color)) {
+                mLicense_blue.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_BLUE;
+            }
+            else if (CarColorManager.COLOR_BLACK.equals(color)) {
+                mLicense_black.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_BLACK;
+            }
+            else if (CarColorManager.COLOR_GREEN.equals(color)) {
+                mLicense_green.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_GREEN;
+            }
+            else if (CarColorManager.COLOR_WHITE.equals(color)) {
+                mLicense_white.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_WHITE;
+            }
+
+        }
+
     }
 
     private void initRadioColor() {
@@ -302,7 +353,7 @@ public class DetailsFragment extends Fragment {
                 pathTitleList_sanzheng.add(titleBean);
             }
         }
-        if (mMyBitmaps_cheshen != null) {
+       /* if (mMyBitmaps_cheshen != null) {
             for (int i = 0; i < mMyBitmaps_cheshen.size(); i++) {
                 MyBitmap myBitmap = mMyBitmaps_cheshen.get(i);
                 PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
@@ -315,7 +366,7 @@ public class DetailsFragment extends Fragment {
                 PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
                 pathTitleList_huowu.add(titleBean);
             }
-        }
+        }*/
 
 
 
