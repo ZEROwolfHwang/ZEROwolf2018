@@ -179,21 +179,7 @@ public class CarNumberFragment extends Fragment {
 
         mEditTextViews = new EditText[]{mEtInputBox1, mEtInputBox2,
                 mEtInputBox3, mEtInputBox4, mEtInputBox5, mEtInputBox6, mEtInputBox7};
-        if (mNumber_I.length() == 7) {
-
-            String edit_1_I = mNumber_I.substring(0, 1);
-            String edit_2_I = mNumber_I.substring(1, 2);
-            String edit_3_I = mNumber_I.substring(2, 3);
-            String edit_4_I = mNumber_I.substring(3, 4);
-            String edit_5_I = mNumber_I.substring(4, 5);
-            String edit_6_I = mNumber_I.substring(5, 6);
-            String edit_7_I = mNumber_I.substring(6, 7);
-
-            String[] edit_texts = {edit_1_I, edit_2_I, edit_3_I, edit_4_I, edit_5_I, edit_6_I, edit_7_I};
-            for (int i = 0; i < edit_texts.length; i++) {
-                mEditTextViews[i].setText(edit_texts[i]);
-            }
-        }
+        inflateNumber(mNumber_I);
     }
 
 
@@ -249,6 +235,32 @@ public class CarNumberFragment extends Fragment {
         if (mEditTextViews != null) {
             for (int i = 0; i < mEditTextViews.length; i++) {
                 mEditTextViews[i].setText("");
+            }
+        }
+    }
+
+    /**
+     * 当采集界面退出时,初始化numberfragment的数据
+     */
+    public static void notifyDataChangeFromDraft(String number) {
+
+        if (mEditTextViews != null) {
+            inflateNumber(number);
+        }
+    }
+    private static void inflateNumber(String carNumber) {
+        if (carNumber.length() == 7) {
+            String edit_1_I = carNumber.substring(0, 1);
+            String edit_2_I = carNumber.substring(1, 2);
+            String edit_3_I = carNumber.substring(2, 3);
+            String edit_4_I = carNumber.substring(3, 4);
+            String edit_5_I = carNumber.substring(4, 5);
+            String edit_6_I = carNumber.substring(5, 6);
+            String edit_7_I = carNumber.substring(6, 7);
+
+            String[] edit_texts = {edit_1_I, edit_2_I, edit_3_I, edit_4_I, edit_5_I, edit_6_I, edit_7_I};
+            for (int i = 0; i < edit_texts.length; i++) {
+                mEditTextViews[i].setText(edit_texts[i]);
             }
         }
     }

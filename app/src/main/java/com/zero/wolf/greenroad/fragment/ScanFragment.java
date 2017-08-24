@@ -212,11 +212,7 @@ public class ScanFragment extends Fragment {
 
         String scanCode = mTextExportNumber.getText().toString().trim();
 
-        if (scanCode != null && !"".equals(scanCode)) {
-//            String checkOperator_Q = mTvOperatorCheckConfig.getText().toString().trim();
-//            String loginOperator_Q = mTvOperatorLoginConfig.getText().toString().trim();
-      //      String lane_Q = mTvChangeLaneConfig.getText().toString().trim();
-
+        if (scanCode != null) {
             String scan_01Q = mText_table_1.getText().toString().trim();
             String scan_02Q = mText_table_2.getText().toString().trim();
             String scan_03Q = mText_table_3.getText().toString().trim();
@@ -231,11 +227,7 @@ public class ScanFragment extends Fragment {
             String scan_12Q = mText_table_12.getText().toString().trim();
 
             ScanInfoBean bean = new ScanInfoBean();
-//            bean.setRoad(mRoad_Q);
-//            bean.setStation(mStation_Q);
-        //    bean.setLane(lane_Q);
-//            bean.setCheckOperator(checkOperator_Q);
-//            bean.setLoginOperator(loginOperator_Q);
+
             bean.setScan_code(scanCode);
             bean.setScan_01Q(scan_01Q);
             bean.setScan_02Q(scan_02Q);
@@ -249,9 +241,7 @@ public class ScanFragment extends Fragment {
             bean.setScan_10Q(scan_10Q);
             bean.setScan_11Q(scan_11Q);
             bean.setScan_12Q(scan_12Q);
-
             Logger.i("!!!!!!!!!!!!!!!!!"+bean.toString());
-
             listener.beanConnect(bean);
         } else {
             ToastUtils.singleToast("请扫描二维码");

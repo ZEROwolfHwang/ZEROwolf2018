@@ -159,14 +159,10 @@ public class ConclusionActivity extends BaseActivity {
         Intent intent = getIntent();
         if (ACTION_CONCLUSION.equals(intent.getAction())) {
             mConclusions = intent.getStringExtra(CONCLUSIONS);
-            if (mBuilder == null) {
-                mBuilder = new StringBuilder();
-            } else if (mBuilder.length() > 0) {
-                mBuilder.delete(0, mBuilder.length());
-            }
-            mBuilder.append(mConclusions);
+            inflateConclusion(mConclusions);
         }
     }
+
 
     private void initToolbar() {
         setSupportActionBar(mToolbar);
@@ -235,5 +231,19 @@ public class ConclusionActivity extends BaseActivity {
         if (mBuilder != null) {
             mBuilder.delete(0,mBuilder.length());
         }
+    }
+    /**
+     * 当采集界面退出时,初始化numberfragment的数据
+     */
+    public static void notifyDataChangeFromDraft(String conclusions) {
+        inflateConclusion(conclusions);
+    }
+    private static void inflateConclusion(String conclusions) {
+        if (mBuilder == null) {
+            mBuilder = new StringBuilder();
+        } else if (mBuilder.length() > 0) {
+            mBuilder.delete(0, mBuilder.length());
+        }
+        mBuilder.append(conclusions);
     }
 }

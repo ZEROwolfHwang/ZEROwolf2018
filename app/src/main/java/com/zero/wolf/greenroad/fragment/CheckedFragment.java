@@ -70,13 +70,14 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         sEnterType = enterType;
         return sFragment;
     }
-  public static CheckedFragment newInstance(String enterType, SupportChecked supportChecked) {
+
+    public static CheckedFragment newInstance(String enterType, SupportChecked supportChecked) {
         if (sFragment == null) {
             sFragment = new CheckedFragment();
         }
-      sEnterType = enterType;
-      sSupportChecked = supportChecked;
-      return sFragment;
+        sEnterType = enterType;
+        sSupportChecked = supportChecked;
+        return sFragment;
     }
 
     @Override
@@ -113,7 +114,13 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mSiteLogin.setOnClickListener(this);
 
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
-
+            ConclusionActivity.notifyDataChangeFromDraft(sSupportChecked.getConclusion());
+            mEditDescriptionView.setText(sSupportChecked.getDescription());
+            //默认是是   是为1   点击是否 否为0（有点绕）
+            mToggleIsRoom.setChecked(sSupportChecked.getIsRoom() == 0 ? true : false);
+            mToggleIsFree.setChecked(sSupportChecked.getIsFree() == 0 ? true : false);
+            mSiteCheck.setText(sSupportChecked.getSiteCheck());
+            mSiteLogin.setText(sSupportChecked.getSiteLogin());
         }
     }
 

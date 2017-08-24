@@ -2,15 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="100dp"
-             android:layout_marginRight="@dimen/layout_margin10dp"
-              android:layout_height="50dp">
+             android:layout_gravity="center_horizontal"
+              android:layout_height="40dp">
 
     <TextView
         android:id="@+id/text_goods"
         android:layout_margin="3dp"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:gravity="center"
-        android:textColor="@color/day_color_green"
+        android:textColor="@color/color333333"
         android:background="@drawable/goods_fragment_text_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

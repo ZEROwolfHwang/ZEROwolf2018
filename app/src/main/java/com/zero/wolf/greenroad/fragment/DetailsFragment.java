@@ -78,11 +78,12 @@ public class DetailsFragment extends Fragment {
         sEnterType = enterType;
         return fragment;
     }
-  public static DetailsFragment newInstance(String enterType , SupportDetail supportDetail) {
+
+    public static DetailsFragment newInstance(String enterType, SupportDetail supportDetail) {
         DetailsFragment fragment = new DetailsFragment();
-      sEnterType = enterType;
-      sSupportDetail = supportDetail;
-      return fragment;
+        sEnterType = enterType;
+        sSupportDetail = supportDetail;
+        return fragment;
     }
 
     @Override
@@ -107,10 +108,10 @@ public class DetailsFragment extends Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
+
         CarNumberFragment.setTextChangedFragment((edittext -> {
             if (edittext.length() == 7) {
                 mCarNumber = edittext;
@@ -223,33 +224,35 @@ public class DetailsFragment extends Fragment {
         mLicense_yellow = (RadioButton) view.findViewById(R.id.license_yellow);
         mLicense_blue = (RadioButton) view.findViewById(R.id.license_blue);
         mLicense_black = (RadioButton) view.findViewById(R.id.license_black);
-        mLicense_white = (RadioButton) view.findViewById(R.id.license_green);
-        mLicense_green = (RadioButton) view.findViewById(R.id.license_white);
+        mLicense_green = (RadioButton) view.findViewById(R.id.license_green);
+        mLicense_white = (RadioButton) view.findViewById(R.id.license_white);
 
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
             Logger.i(sSupportDetail.toString());
 
-            mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
-            mTvChangeGoodsDetail.setText(sSupportDetail.getGoods());
+            // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
+            String number = sSupportDetail.getNumber();
+            if (number != null && number.length() == 7) {
+                CarNumberFragment.notifyDataChangeFromDraft(number);
+            }
+            String goodsFromDraft = sSupportDetail.getGoods();
+            mTvChangeGoodsDetail.setText(goodsFromDraft);
+            GoodsFragment.notifyDataChangeFromDraft(goodsFromDraft);
 
             String color = sSupportDetail.getColor();
             if (CarColorManager.COLOR_YELLOW.equals(color)) {
                 mLicense_yellow.setChecked(true);
                 mCurrent_color = CarColorManager.COLOR_YELLOW;
-            }
-            else if (CarColorManager.COLOR_BLUE.equals(color)) {
+            } else if (CarColorManager.COLOR_BLUE.equals(color)) {
                 mLicense_blue.setChecked(true);
                 mCurrent_color = CarColorManager.COLOR_BLUE;
-            }
-            else if (CarColorManager.COLOR_BLACK.equals(color)) {
+            } else if (CarColorManager.COLOR_BLACK.equals(color)) {
                 mLicense_black.setChecked(true);
                 mCurrent_color = CarColorManager.COLOR_BLACK;
-            }
-            else if (CarColorManager.COLOR_GREEN.equals(color)) {
+            } else if (CarColorManager.COLOR_GREEN.equals(color)) {
                 mLicense_green.setChecked(true);
                 mCurrent_color = CarColorManager.COLOR_GREEN;
-            }
-            else if (CarColorManager.COLOR_WHITE.equals(color)) {
+            } else if (CarColorManager.COLOR_WHITE.equals(color)) {
                 mLicense_white.setChecked(true);
                 mCurrent_color = CarColorManager.COLOR_WHITE;
             }
@@ -288,6 +291,7 @@ public class DetailsFragment extends Fragment {
             }
         });
     }
+
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -367,7 +371,6 @@ public class DetailsFragment extends Fragment {
                 pathTitleList_huowu.add(titleBean);
             }
         }*/
-
 
 
         String number = mTvChangeNumberDetail.getText().toString().trim();

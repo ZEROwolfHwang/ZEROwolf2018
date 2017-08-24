@@ -104,7 +104,6 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
             for (int i = 0; i < goodsName.length; i++) {
                 mTextList.add(goodsName[i]);
-
             }
         }
 
@@ -218,7 +217,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
      */
     private void initGoodsTextRecycler() {
         mLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager.VERTICAL, false);
         mGoodTextRecycler.setLayoutManager(mLayoutManager);
 
         mTextAdapter = new GoodsTextAdapter(getContext(), mTextList, pos -> {
@@ -235,10 +234,11 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             PinyinComparator pinyinComparator = new PinyinComparator();
             Collections.sort(mGoodsArrayList, pinyinComparator);// 根据a-z进行排序源数据
         }
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
-        manager.setOrientation(GridLayoutManager.VERTICAL);
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 3,LinearLayoutManager.VERTICAL,false);
+//        manager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
 
+        //货物text的recyclerView
         mGoodsAdapter = new SureGoodsAdapter(getContext(), mGoodsArrayList, new SureGoodsAdapter.onItemClick() {
             @Override
             public void itemClick(SerializableGoods serializableGoods, int position) {
@@ -347,6 +347,24 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     public static void notifyDataChange() {
         if (mTextList != null) {
             mTextList.clear();
+        }
+    }
+    /**
+     * 当采集界面退出时,初始化numberfragment的数据
+     */
+    public static void notifyDataChangeFromDraft(String goods) {
+        if (mTextList == null) {
+            mTextList = new ArrayList<>();
+        } else {
+            mTextList.clear();
+        }
+        if (goods != null && goods.length() != 0) {
+
+            String[] goodsName = goods.split(";");
+
+            for (int i = 0; i < goodsName.length; i++) {
+                mTextList.add(goodsName[i]);
+            }
         }
     }
 }

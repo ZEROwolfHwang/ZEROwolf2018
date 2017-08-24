@@ -5,20 +5,17 @@
               android:orientation="vertical"
               android:padding="@dimen/layout_margin10dp">
 
-    <ScrollView
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="120dp"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_gravity="center_vertical"
                 android:layout_height="60dp"
                 android:layout_marginBottom="@dimen/layout_margin10dp"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
@@ -54,26 +51,21 @@
 
                 </LinearLayout>
             </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/goods_text_recycler"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
 
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/goods_text_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view_goods_sure"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/layout_margin10dp"/>
-            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_goods_sure"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/layout_margin10dp"/>
+
 
 </LinearLayout>

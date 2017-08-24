@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="90dp"
-              android:background="@drawable/goods_item_image_bg"
-                android:layout_height="120dp"
-                android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:background="@drawable/goods_item_image_bg"
+                android:padding="1dp">
 
     <ImageView
-        android:layout_margin="1dp"
         android:id="@+id/iv_recycler_goods"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:layout_height="90dp"
-        android:background="@color/white"/>
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/tv_sure_recycler_scientific_name"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top"
+        android:background="#81ffffff"
+        android:ems="1"
         android:gravity="center"
         android:text="白刺"
-        android:textColor="?attr/custom_item_text_color_goods"
-        android:textSize="@dimen/text24"/>
+        android:textColor="@color/color333333"
+        android:textSize="@dimen/text16"/>
 
-
-</LinearLayout>
+</RelativeLayout>

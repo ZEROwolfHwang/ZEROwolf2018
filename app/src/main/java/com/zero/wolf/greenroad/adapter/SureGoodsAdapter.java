@@ -91,6 +91,7 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
             Bitmap bitmap = getImageFromAssetsFile(bitmapUrl);
 
             mImageView.setImageBitmap(bitmap);
+         //   mImageView.setBackground(mContext.getResources().getDrawable(R.drawable.demo));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

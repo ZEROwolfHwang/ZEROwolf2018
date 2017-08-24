@@ -276,13 +276,14 @@ public class ShowActivity extends BaseActivity {
 
     private void submit2Service() {
         getListenerData();
-
+/*
         if (mScanInfoBean_Q != null) {
 
             save2Litepal(GlobalManager.TYPE_SUBMIT_LITE);
         } else {
             ToastUtils.singleToast("请扫描二维码");
-        }
+        }*/
+            save2Litepal(GlobalManager.TYPE_SUBMIT_LITE);
 
         List<PathTitleBean> path_sanzheng = mDetailInfoBean_Q.getPath_sanzheng();
 
@@ -350,7 +351,7 @@ public class ShowActivity extends BaseActivity {
 
 
         HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), route);
+        RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"), route);
 
         Logger.i("json  string" + route);
 
@@ -419,10 +420,6 @@ public class ShowActivity extends BaseActivity {
     private void saveDraft() {
         getListenerData();
 
-        if (mScanInfoBean_Q == null || "".equals(mScanInfoBean_Q.getScan_code())) {
-            ToastUtils.singleToast("请扫描二维码得到更多详细信息后保存");
-            return;
-        }
         //如果数据库中的数据已经存在了一条与当前流水号相同的则视为已经保存过的
 
 
@@ -483,8 +480,8 @@ public class ShowActivity extends BaseActivity {
         //保存数据到表SupportChecked
         SupportChecked supportChecked = new SupportChecked();
         supportChecked.setLite_ID(count + 1);
+        supportChecked.setIsRoom(mCheckedBean_Q.getIsRoom());
         supportChecked.setIsFree(mCheckedBean_Q.getIsFree());
-        supportChecked.setIsFree(mCheckedBean_Q.getIsRoom());
         supportChecked.setConclusion(mCheckedBean_Q.getConclusion());
         supportChecked.setDescription(mCheckedBean_Q.getDescription());
         supportChecked.setSiteCheck(mCheckedBean_Q.getSiteCheck());

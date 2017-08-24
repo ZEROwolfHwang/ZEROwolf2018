@@ -51,8 +51,8 @@ public class PathUtil {
 
         for (int i = 0; i < bitmapList.size()-1; i++) {
             File file = new File(bitmapList.get(i));//filePath 图片地址
-            //RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
-            RequestBody imageBody = RequestBody.create(MediaType.parse("image/jpg"), file);//image/png
+            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
+            //RequestBody imageBody = RequestBody.create(MediaType.parse("image/jpg"), file);//image/png
             builder.addFormDataPart("image" + i, file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
         }
         List<MultipartBody.Part> parts = builder.build().parts();
