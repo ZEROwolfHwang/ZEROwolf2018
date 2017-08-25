@@ -63,7 +63,20 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
     private static String[] alias = {"给骄傲;的行情;无限", "说;的侮辱大;家才能", "都无二;的勘测;机",
             "卖家说的法第五", ",设计费都;是对你是;否及时打开",
-            "戛洒瓦斯鉴定表", "奥斯卡单位澳大马上", "网上订餐爱打架"};
+            "戛洒瓦斯鉴定表", "奥斯卡单位澳大马上", "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+            , "网上订餐爱打架"
+    };
     private ArrayList<SerializableGoods> mGoodsArrayList;
     private String[] scientific_names;
     private ArrayList<SerializableGoods> mAsObject;
@@ -114,8 +127,6 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
         mGoodsArrayList = new ArrayList<>();
 
-        Logger.i(mGoodsArrayList.size() + "");
-
         if (mAsObject != null && mAsObject.size() != 0) {
             if (mAsObject.size() == scientific_names.length) {
                 Logger.i("goods走的缓存");
@@ -145,26 +156,30 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 mGoodsArrayList.clear();
             }
             for (int i = 0; i < mGoodsNames.length; i++) {
-                Logger.i(mGoodsNames.length + "");
+
+                Logger.i(mGoodsNames[i] + "");
                 //Bitmap bitmap = getImageFromAssetsFile();
 
                 String scientific_name = scientific_names[i];
-                String alia = alias[i];
                 String bitmap_url = GOODS_DIR + "/" + mGoodsNames[i];
 
                 SerializableGoods goods = new SerializableGoods();
 
-                goods.setAlias(alia);
+//                if (alias.length < i) {
+//                    alia = alias[i];
+//                }
+//                goods.setAlias(alia);
                 goods.setScientific_name(scientific_name);
                 goods.setBitmapUrl(bitmap_url);
 
                 String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientific_name);
-                if (sortLetters == null) {
-                    sortLetters = PingYinUtil.getInstance().getSortLetter(alia);
-                }
+//                if (sortLetters == null) {
+//                    sortLetters = PingYinUtil.getInstance().getSortLetter(alia);
+//                }
                 goods.setSortLetters(sortLetters);
 
-                String sortKey = PingYinUtil.format(scientific_name + alia);
+//                String sortKey = PingYinUtil.format(scientific_name + alia);
+                String sortKey = PingYinUtil.format(scientific_name);
                 goods.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
                 goods.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
 
@@ -234,7 +249,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             PinyinComparator pinyinComparator = new PinyinComparator();
             Collections.sort(mGoodsArrayList, pinyinComparator);// 根据a-z进行排序源数据
         }
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 3,LinearLayoutManager.VERTICAL,false);
+        GridLayoutManager manager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
 //        manager.setOrientation(GridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
 
@@ -255,7 +270,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 mEditText.setText("");
                 mTextAdapter.updateListView(mTextList);
                 if (mTextList.size() > 3) {
-                    scrollToPosition(mLayoutManager,mTextList.size()-3);
+                    scrollToPosition(mLayoutManager, mTextList.size() - 3);
                 }
                 //进行置顶操作
                 serializableGoods.setTop(1);
@@ -265,7 +280,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         });
 //        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),
 //                3));
-        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),3));
+        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(), 3));
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
     }
@@ -341,6 +356,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         unbinder.unbind();
 
     }
+
     /**
      * 当采集界面退出时,初始化numberfragment的数据
      */
@@ -349,6 +365,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             mTextList.clear();
         }
     }
+
     /**
      * 当采集界面退出时,初始化numberfragment的数据
      */

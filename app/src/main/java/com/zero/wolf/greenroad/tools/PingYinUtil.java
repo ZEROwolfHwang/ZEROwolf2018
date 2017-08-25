@@ -109,21 +109,22 @@ public class PingYinUtil {
             }
         } else {
             for (SerializableGoods contact : mAllContactsList) {
-                if (contact.getAlias() != null && contact.getScientific_name() != null) {
+              //  if (contact.getAlias() != null && contact.getScientific_name() != null) {
+                if (contact.getScientific_name() != null) {
                     //姓名全匹配,姓名首字母简拼匹配,姓名全字母匹配
                     boolean isNameContains = contact.getScientific_name().toLowerCase(Locale.CHINESE)
                             .contains(str.toLowerCase(Locale.CHINESE));
 
-                    boolean isAliasContains = contact.getAlias().toLowerCase(Locale.CHINESE)
+               /*     boolean isAliasContains = contact.getAlias().toLowerCase(Locale.CHINESE)
                             .contains(str.toLowerCase(Locale.CHINESE));
-
+*/
                     boolean isSimpleSpellContains = contact.simpleSpell.toLowerCase(Locale.CHINESE)
                             .contains(str.toLowerCase(Locale.CHINESE));
 
                     boolean isWholeSpellContains = contact.wholeSpell.toLowerCase(Locale.CHINESE)
                             .contains(str.toLowerCase(Locale.CHINESE));
 
-                    if (isNameContains || isAliasContains || isSimpleSpellContains || isWholeSpellContains) {
+                    if (isNameContains || isSimpleSpellContains || isWholeSpellContains) {
                         if (!filterList.contains(contact)) {
                             filterList.add(contact);
                         }

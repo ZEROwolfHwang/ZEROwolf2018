@@ -37,7 +37,6 @@ import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
-import com.zero.wolf.greenroad.tools.PathUtil;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -46,8 +45,11 @@ import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +108,7 @@ public class ShowActivity extends BaseActivity {
     private Handler mUiHandler = new Handler();
 
 
-    public static void actionStart(Context context, SupportDetail supportDetail,SupportScan supportScan,SupportChecked supportChecked) {
+    public static void actionStart(Context context, SupportDetail supportDetail, SupportScan supportScan, SupportChecked supportChecked) {
         Intent intent = new Intent(context, ShowActivity.class);
         intent.setAction(ACTION_DRAFT_ENTER_SHOW);
 
@@ -155,7 +157,7 @@ public class ShowActivity extends BaseActivity {
             SupportChecked supportChecked = intent.getParcelableExtra(ARG_SUPPORT_CHECKED);
 
             mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,
-                    supportDetail, supportScan,supportChecked, intent.getType());
+                    supportDetail, supportScan, supportChecked, intent.getType());
             Logger.i(supportScan.toString());
         } else if (ACTION_MAIN_ENTER_SHOW.equals(intent.getAction())) {
             mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this, intent.getType());
@@ -283,11 +285,12 @@ public class ShowActivity extends BaseActivity {
         } else {
             ToastUtils.singleToast("请扫描二维码");
         }*/
-            save2Litepal(GlobalManager.TYPE_SUBMIT_LITE);
+        save2Litepal(GlobalManager.TYPE_SUBMIT_LITE);
 
         List<PathTitleBean> path_sanzheng = mDetailInfoBean_Q.getPath_sanzheng();
 
         PostInfo info = new PostInfo();
+
         //从扫描中拿到的数据
         if (mScanInfoBean_Q != null) {
             info.setNumber(mDetailInfoBean_Q.getNumber());
@@ -324,8 +327,7 @@ public class ShowActivity extends BaseActivity {
             info.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
             info.setScan_code(mScanInfoBean_Q.getScan_code());
             info.setCurrent_time(TimeUtil.getCurrentTimeTos());
-            
-            
+
 
         } else {
             ToastUtils.singleToast("请扫描二维码");
@@ -334,13 +336,16 @@ public class ShowActivity extends BaseActivity {
         Gson gson = new Gson();
         String route = gson.toJson(info);
 
+        Map<String, String> partMap = new HashMap<>();
+
         ArrayList<String> pathList = new ArrayList();
         for (int i = 0; i < mDetailInfoBean_Q.getPath_sanzheng().size(); i++) {
             pathList.add(mDetailInfoBean_Q.getPath_sanzheng().get(i).getPath());
         }
 
-        List<MultipartBody.Part> parts = PathUtil
-                .getBodyPart(pathList);
+        List<MultipartBody.Part> sanzheng = getBodyPart1(mDetailInfoBean_Q.getPath_sanzheng(), "sanzheng");
+        List<MultipartBody.Part> cheshen = getBodyPart1(mDetailInfoBean_Q.getPath_cheshen(), "cheshen");
+        List<MultipartBody.Part> huozhao = getBodyPart1(mDetailInfoBean_Q.getPath_huowu(), "huozhao");
 
         Retrofit retrofit = new Retrofit.Builder()
                 //.baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
@@ -351,12 +356,10 @@ public class ShowActivity extends BaseActivity {
 
 
         HttpUtilsApi api = retrofit.create(HttpUtilsApi.class);
-        RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"), route);
-
+        RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), route);
         Logger.i("json  string" + route);
 
-
-        Observable<HttpResultPolling> observable = api.task(body,parts);
+        Observable<HttpResultPolling> observable = api.postPicture(mScanInfoBean_Q.getScan_code(),sanzheng, cheshen, huozhao);
         observable.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -379,6 +382,54 @@ public class ShowActivity extends BaseActivity {
                         ToastUtils.singleToast(code + "");
                     }
                 });
+        Observable<HttpResultPolling> observable1 = api.postJson(body);
+        observable1.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<HttpResultPolling>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Logger.i(e.getMessage());
+                        ToastUtils.singleToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(HttpResultPolling httpResultPolling) {
+                        int code = httpResultPolling.getCode();
+                        Logger.i(code + "");
+                        ToastUtils.singleToast(code + "");
+                    }
+                });
+    }
+
+    public static List<MultipartBody.Part> getBodyPart1(List<PathTitleBean> bitmapList, String type) {
+/*
+
+        ArrayList<String> list = new ArrayList<>();
+
+        for (int i = 0; i < bitmapList.size(); i++) {
+            list.add(bitmapList.get(i).getPath());
+        }
+*/
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+
+        for (int i = 0; i < bitmapList.size(); i++) {
+            String path = bitmapList.get(i).getPath();
+            if (path != null) {
+                Logger.i(bitmapList.get(i).toString());
+                File file = new File(path);//filePath 图片地址
+                RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);//image/png
+                //RequestBody imageBody = RequestBody.create(MediaType.parse("image/jpg"), file);//image/png
+                builder.addFormDataPart(type + (i + 1), file.getName(), imageBody);//"imgfile"+i 后台接收图片流的参数名
+            }
+        }
+        List<MultipartBody.Part> parts = builder.build().parts();
+        return parts;
     }
 
     /**
@@ -429,7 +480,7 @@ public class ShowActivity extends BaseActivity {
         //保存至本地数据库
         save2Litepal(GlobalManager.TYPE_DRAFT_LITE);
         List<SupportDraftOrSubmit> draftList = DataSupport.
-                where(GlobalManager.LITE_CONDITION,GlobalManager.TYPE_DRAFT_LITE).
+                where(GlobalManager.LITE_CONDITION, GlobalManager.TYPE_DRAFT_LITE).
                 find(SupportDraftOrSubmit.class);
         for (int i = 0; i < draftList.size(); i++) {
             Logger.i(draftList.get(i).toString());
@@ -444,7 +495,7 @@ public class ShowActivity extends BaseActivity {
 
         SupportDraftOrSubmit support = new SupportDraftOrSubmit();
         int count = DataSupport.count(SupportDraftOrSubmit.class);
-        support.setLite_ID(count+1);
+        support.setLite_ID(count + 1);
         support.setLite_type(lite_type);
         support.setCurrent_time(TimeUtil.getCurrentTimeTos());
         //保存数据到表SupportScan
@@ -475,6 +526,34 @@ public class ShowActivity extends BaseActivity {
         supportDetail.setStation(mStation_Q);
         supportDetail.setRoad(mRoad_Q);
         supportDetail.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+
+        ArrayList<String> picturePath = new ArrayList<>();
+        ArrayList<String> pictureTitle = new ArrayList<>();
+        List<PathTitleBean> path_sanzheng = mDetailInfoBean_Q.getPath_sanzheng();
+        List<PathTitleBean> path_cheshen = mDetailInfoBean_Q.getPath_cheshen();
+        List<PathTitleBean> path_huowu = mDetailInfoBean_Q.getPath_huowu();
+        if (path_sanzheng!= null) {
+            for (int i = 0; i < path_sanzheng.size(); i++) {
+                picturePath.add(path_sanzheng.get(i).getPath());
+                pictureTitle.add(path_sanzheng.get(i).getTitle());
+            }
+        }
+        if (path_cheshen!= null) {
+            for (int i = 0; i < path_cheshen.size(); i++) {
+                picturePath.add(path_cheshen.get(i).getPath());
+                pictureTitle.add(path_cheshen.get(i).getTitle());
+            }
+        }
+        if (path_huowu!= null) {
+            for (int i = 0; i < path_huowu.size(); i++) {
+                picturePath.add(path_huowu.get(i).getPath());
+                pictureTitle.add(path_huowu.get(i).getTitle());
+            }
+        }
+
+        supportDetail.setPicturePath(picturePath);
+        supportDetail.setPictureTitle(pictureTitle);
+
         supportDetail.save();
 
         //保存数据到表SupportChecked

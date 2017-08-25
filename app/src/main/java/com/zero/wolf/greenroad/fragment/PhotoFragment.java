@@ -26,6 +26,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
 import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
+import com.zero.wolf.greenroad.tools.BitmapUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -333,20 +334,20 @@ public class PhotoFragment extends Fragment {
                         LocalMedia localMedia = mSelectList_sanzheng.get(i);
                         String photo_path = localMedia.getPath();
                         //Logger.i(photo_path);
-                        Logger.i(localMedia.getPath()+"---"+
-                                    localMedia.getCompressPath()+"---"+
-                                    localMedia.getCutPath()+"---"+
-                                    localMedia.getDuration()+"---"+
-                                    localMedia.getHeight()+"---"+
-                                    localMedia.getMimeType()+"---"+
-                                    localMedia.getNum()+"---"+
-                                    localMedia.getPictureType()+"---"+
-                                    localMedia.getPosition()+"---"+
-                                    localMedia.isChecked()+"---"+
-                                    localMedia.isCompressed()+"---"+
-                                    localMedia.isCut()+"---"+
-                                    localMedia.getWidth());
-                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        Logger.i(localMedia.getPath() + "---" +
+                                localMedia.getCompressPath() + "---" +
+                                localMedia.getCutPath() + "---" +
+                                localMedia.getDuration() + "---" +
+                                localMedia.getHeight() + "---" +
+                                localMedia.getMimeType() + "---" +
+                                localMedia.getNum() + "---" +
+                                localMedia.getPictureType() + "---" +
+                                localMedia.getPosition() + "---" +
+                                localMedia.isChecked() + "---" +
+                                localMedia.isCompressed() + "---" +
+                                localMedia.isCut() + "---" +
+                                localMedia.getWidth());
+                        Bitmap bitmap = BitmapUtil.convertToBitmap(photo_path, 800, 800);
                         String title = "三证-" + (i + 1);
                         MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
                         mSanZhengBitmaps.add(myBitmap);
@@ -371,7 +372,7 @@ public class PhotoFragment extends Fragment {
                     for (int i = 0; i < mSelectList_cheshen.size(); i++) {
                         String photo_path = mSelectList_cheshen.get(i).getPath();
                         Logger.i(photo_path);
-                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        Bitmap bitmap = BitmapUtil.convertToBitmap(photo_path, 800, 800);
                         String title = "车辆-" + (i + 1);
                         MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
                         mCheShenBitmaps.add(myBitmap);
@@ -396,7 +397,7 @@ public class PhotoFragment extends Fragment {
                     for (int i = 0; i < mSelectList_huowu.size(); i++) {
                         String photo_path = mSelectList_huowu.get(i).getPath();
                         Logger.i(photo_path);
-                        Bitmap bitmap = convertToBitmap(photo_path, 800, 800);
+                        Bitmap bitmap = BitmapUtil.convertToBitmap(photo_path, 800, 800);
                         String title = "货照-" + (i + 1);
                         MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
                         mHuoWuBitmaps.add(myBitmap);
@@ -442,36 +443,25 @@ public class PhotoFragment extends Fragment {
         return timeint;
     }
 
-    /**
-     * 根据路径，二次采样并且压缩
-     *
-     * @param filePath   路径
-     * @param destWidth  压缩到的宽度
-     * @param destHeight 压缩到的高度
-     * @return
-     */
-    public Bitmap convertToBitmap(String filePath, int destWidth, int destHeight) {
-        //第一采样
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, options);
-        int outWidth = options.outWidth;
-        int outHeight = options.outHeight;
-        int sampleSize = 1;
-        while ((outWidth / sampleSize > destWidth) || (outHeight / sampleSize > destHeight)) {
-
-            sampleSize *= 2;
-        }
-        //第二次采样
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = sampleSize;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        return BitmapFactory.decodeFile(filePath, options);
-    }
 
     public static void setBitmapListListener(BitmapListListener listener) {
         if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
-            listener.BitmapListener(mSanZhengBitmaps, mCheShenBitmaps, mHuoWuBitmaps);
+            ArrayList<MyBitmap> myBitmaps_sanzheng = new ArrayList<>();
+            ArrayList<MyBitmap> myBitmaps_cheshen = new ArrayList<>();
+            ArrayList<MyBitmap> myBitmaps_huozhao = new ArrayList<>();
+
+            for (int i = 0; i < mSanZhengBitmaps.size() - 1; i++) {
+                myBitmaps_sanzheng.add(mSanZhengBitmaps.get(i));
+            }
+            for (int i = 0; i < mCheShenBitmaps.size() - 1; i++) {
+                myBitmaps_cheshen.add(mCheShenBitmaps.get(i));
+            }
+            for (int i = 0; i < mHuoWuBitmaps.size() - 1; i++) {
+                myBitmaps_huozhao.add(mHuoWuBitmaps.get(i));
+            }
+            if (myBitmaps_sanzheng != null && myBitmaps_cheshen != null && myBitmaps_huozhao != null) {
+                listener.BitmapListener(myBitmaps_sanzheng, myBitmaps_cheshen, myBitmaps_huozhao);
+            }
         }
 
     }
@@ -518,8 +508,8 @@ public class PhotoFragment extends Fragment {
 
     public interface SelectedListListener {
         void Selected(Intent data
-          //            List<LocalMedia> mSelectList_cheshen,
-        //              List<LocalMedia> mSelectList_huowu
+                      //            List<LocalMedia> mSelectList_cheshen,
+                      //              List<LocalMedia> mSelectList_huowu
         );
     }
 }

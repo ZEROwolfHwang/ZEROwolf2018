@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/8/24.
  */
@@ -20,19 +22,22 @@ public class SupportDetail extends DataSupport implements Parcelable{
     private String color;
     private String number;
     private String goods;
+    private List<String> picturePath;
+    private List<String> pictureTitle;
 
     public SupportDetail() {
     }
 
     protected SupportDetail(Parcel in) {
         lite_ID = in.readInt();
-
         station = in.readString();
         lane = in.readString();
         road = in.readString();
         color = in.readString();
         number = in.readString();
         goods = in.readString();
+        picturePath = in.createStringArrayList();
+        pictureTitle = in.createStringArrayList();
     }
 
     @Override
@@ -44,6 +49,8 @@ public class SupportDetail extends DataSupport implements Parcelable{
         dest.writeString(color);
         dest.writeString(number);
         dest.writeString(goods);
+        dest.writeStringList(picturePath);
+        dest.writeStringList(pictureTitle);
     }
 
     @Override
@@ -63,6 +70,21 @@ public class SupportDetail extends DataSupport implements Parcelable{
         }
     };
 
+    @Override
+    public String toString() {
+        return "SupportDetail{" +
+                "lite_ID=" + lite_ID +
+                ", station='" + station + '\'' +
+                ", lane='" + lane + '\'' +
+                ", road='" + road + '\'' +
+                ", color='" + color + '\'' +
+                ", number='" + number + '\'' +
+                ", goods='" + goods + '\'' +
+                ", picturePath=" + picturePath +
+                ", pictureTitle=" + pictureTitle +
+                '}';
+    }
+
     public int getLite_ID() {
         return lite_ID;
     }
@@ -70,8 +92,6 @@ public class SupportDetail extends DataSupport implements Parcelable{
     public void setLite_ID(int lite_ID) {
         this.lite_ID = lite_ID;
     }
-
-
 
     public String getStation() {
         return station;
@@ -121,16 +141,19 @@ public class SupportDetail extends DataSupport implements Parcelable{
         this.goods = goods;
     }
 
-    @Override
-    public String toString() {
-        return "SupportDetail{" +
-                "lite_ID=" + lite_ID +
-                ", station='" + station + '\'' +
-                ", lane='" + lane + '\'' +
-                ", road='" + road + '\'' +
-                ", color='" + color + '\'' +
-                ", number='" + number + '\'' +
-                ", goods='" + goods + '\'' +
-                '}';
+    public List<String> getPicturePath() {
+        return picturePath;
+    }
+
+    public void setPicturePath(List<String> picturePath) {
+        this.picturePath = picturePath;
+    }
+
+    public List<String> getPictureTitle() {
+        return pictureTitle;
+    }
+
+    public void setPictureTitle(List<String> pictureTitle) {
+        this.pictureTitle = pictureTitle;
     }
 }

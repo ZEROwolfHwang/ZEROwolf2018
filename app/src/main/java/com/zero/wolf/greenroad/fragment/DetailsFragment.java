@@ -55,8 +55,6 @@ public class DetailsFragment extends Fragment {
     private DetailsRecyclerAdapter mAdapter;
     private ArrayList<MyBitmap> mMyBitmaps_recycler_all;
     private static Bitmap mBitmap_add;
-    private RadioGroup mRadioGroup_top;
-    private RadioGroup mRadioGroup_bottom;
     private static RadioButton mLicense_yellow;
     private static RadioButton mLicense_blue;
     private static RadioButton mLicense_black;
@@ -130,11 +128,36 @@ public class DetailsFragment extends Fragment {
             mMyBitmaps_huowu = mHuowuBitmaps;
         });
         if (mMyBitmaps_recycler_all == null) {
-            initRecyclerAdd();
-        } else {
-            mMyBitmaps_recycler_all.clear();
-            initRecyclerAdd();
+            mMyBitmaps_recycler_all = new ArrayList<>();
         }
+        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() == 0) {
+            mMyBitmaps_recycler_all.clear();
+        }
+        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
+        String title;
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                title = "三证";
+            } else if (i == 1) {
+                title = "车身车型";
+            } else {
+                title = "货照";
+            }
+            MyBitmap myBitmap = new MyBitmap(mBitmap_add, title);
+            mMyBitmaps_recycler_all.add(myBitmap);
+        }
+
+
+        if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
+            mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
+        }
+        if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
+            mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
+        }
+        if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
+            mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
+        }
+       /* //已经减去了最后的一个添加图片,刚好为上传或者保存的大小
         if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
             for (int i = 0; i < mMyBitmaps_sanzheng.size() - 1; i++) {
                 mMyBitmaps_recycler_all.add(mMyBitmaps_sanzheng.get(i));
@@ -149,7 +172,7 @@ public class DetailsFragment extends Fragment {
             for (int i = 0; i < mMyBitmaps_huowu.size() - 1; i++) {
                 mMyBitmaps_recycler_all.add(mMyBitmaps_huowu.get(i));
             }
-        }
+        }*/
 
         Logger.i(mCarNumber + "]]]]]]]]]");
         mTvChangeNumberDetail.setText(mCarNumber);
@@ -157,7 +180,6 @@ public class DetailsFragment extends Fragment {
 
         if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
             mAdapter.updateListView(mMyBitmaps_recycler_all);
-
             if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
                 scrollToPosition(mLayoutManager, 3);
             }
@@ -178,7 +200,7 @@ public class DetailsFragment extends Fragment {
 
 
     private void initRecyclerView() {
-        initRecyclerAdd();
+
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(mLayoutManager);
         mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps_recycler_all, () -> {
@@ -191,26 +213,6 @@ public class DetailsFragment extends Fragment {
         llm.scrollToPositionWithOffset(3, 0);
         llm.setStackFromEnd(false);*/
 
-    }
-
-    private void initRecyclerAdd() {
-        if (mMyBitmaps_recycler_all == null) {
-            mMyBitmaps_recycler_all = new ArrayList<>();
-        }
-        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
-        MyBitmap bitmap = null;
-        for (int i = 0; i < 3; i++) {
-            if (i == 0) {
-                bitmap = new MyBitmap(mBitmap_add, "三证");
-            }
-            if (i == 1) {
-                bitmap = new MyBitmap(mBitmap_add, "车身车型");
-            }
-            if (i == 2) {
-                bitmap = new MyBitmap(mBitmap_add, "货照");
-            }
-            mMyBitmaps_recycler_all.add(bitmap);
-        }
     }
 
 
@@ -357,7 +359,7 @@ public class DetailsFragment extends Fragment {
                 pathTitleList_sanzheng.add(titleBean);
             }
         }
-       /* if (mMyBitmaps_cheshen != null) {
+        if (mMyBitmaps_cheshen != null) {
             for (int i = 0; i < mMyBitmaps_cheshen.size(); i++) {
                 MyBitmap myBitmap = mMyBitmaps_cheshen.get(i);
                 PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
@@ -370,7 +372,7 @@ public class DetailsFragment extends Fragment {
                 PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
                 pathTitleList_huowu.add(titleBean);
             }
-        }*/
+        }
 
 
         String number = mTvChangeNumberDetail.getText().toString().trim();

@@ -2,12 +2,45 @@
 <resources>
     <array name="science_name">
         <item>苹果</item>
-        <item>香蕉</item>
-        <item>茄子</item>
-        <item>西瓜</item>
-        <item>水蜜桃</item>
-        <item>西蓝花</item>
-        <item>白刺</item>
+        <item>梨子</item>
+        <item>海棠</item>
+        <item>山楂</item>
+        <item>桃子</item>
+        <item>李子</item>
+        <item>杏子</item>
+        <item>杨梅</item>
+        <item>樱桃</item>
+        <item>葡萄</item>
+        <item>提子</item>
+        <item>草莓</item>
+        <item>猕猴桃</item>
+        <item>石榴</item>
+        <item>桑葚</item>
+        <item>橙子</item>
         <item>橘子</item>
+        <item>柑橘</item>
+        <item>柚子</item>
+        <item>柠檬</item>
+        <item>香蕉</item>
+        <item>菠萝</item>
+        <item>龙眼</item>
+        <item>荔枝</item>
+        <item>橄榄</item>
+        <item>枇杷</item>
+        <item>椰子</item>
+        <item>芒果</item>
+        <item>杨桃</item>
+        <item>木瓜</item>
+        <item>火龙果</item>
+        <item>番石榴</item>
+        <item>枣子</item>
+        <item>柿子</item>
+        <item>无花果</item>
+        <item>西瓜</item>
+        <item>甜瓜</item>
+        <item>哈密瓜</item>
+        <item>香瓜</item>
+        <item>伊丽莎白瓜</item>
+        <item>华莱士瓜</item>
     </array>
 </resources>

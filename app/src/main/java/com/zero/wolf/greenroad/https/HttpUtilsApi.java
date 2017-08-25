@@ -11,16 +11,19 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultStation;
 import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -108,7 +111,18 @@ public interface HttpUtilsApi {
     //@Headers({"Content-type:application/json;charset=UTF-8"})
     @Multipart
     @POST("task")
-    Observable<HttpResultPolling> task(@Part("json") RequestBody info,
-       @Part List<MultipartBody.Part> file);
+    Observable<HttpResultPolling> task(@PartMap Map<String, RequestBody> partMap,
+                                       @Part List<MultipartBody.Part> file);
 
+    @Multipart
+    @POST("picture")
+    Observable<HttpResultPolling> postPicture(
+            @Part("scan_code") String scan_code,
+            @Part List<MultipartBody.Part> sanzheng,
+            @Part List<MultipartBody.Part> cheshen,
+            @Part List<MultipartBody.Part> huozhao);
+
+
+    @POST("json")
+    Observable<HttpResultPolling> postJson(@Body RequestBody info);
 }
