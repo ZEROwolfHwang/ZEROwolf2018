@@ -18,11 +18,11 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
     private SupportDetail mSupportDetail;
     private SupportScan mSupportScan;
     private SupportChecked mSupportChecked;
+    private SupportMedia mSupportMedia;
 
 
     public SupportDraftOrSubmit() {
     }
-
 
     protected SupportDraftOrSubmit(Parcel in) {
         lite_type = in.readString();
@@ -31,6 +31,7 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
         mSupportDetail = in.readParcelable(SupportDetail.class.getClassLoader());
         mSupportScan = in.readParcelable(SupportScan.class.getClassLoader());
         mSupportChecked = in.readParcelable(SupportChecked.class.getClassLoader());
+        mSupportMedia = in.readParcelable(SupportMedia.class.getClassLoader());
     }
 
     @Override
@@ -41,6 +42,7 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
         dest.writeParcelable(mSupportDetail, flags);
         dest.writeParcelable(mSupportScan, flags);
         dest.writeParcelable(mSupportChecked, flags);
+        dest.writeParcelable(mSupportMedia, flags);
     }
 
     @Override
@@ -103,6 +105,14 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
         return DataSupport.where("lite_ID = ?", String.valueOf(lite_ID)).findFirst(SupportChecked.class);
     }
 
+    public SupportMedia getSupportMedia() {
+        return DataSupport.where("lite_ID = ?", String.valueOf(lite_ID)).findFirst(SupportMedia.class);
+    }
+
+    public void setSupportMedia(SupportMedia supportMedia) {
+        mSupportMedia = supportMedia;
+    }
+
     public void setSupportChecked(SupportChecked supportChecked) {
         mSupportChecked = supportChecked;
     }
@@ -116,6 +126,7 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
                 ", mSupportDetail=" + mSupportDetail +
                 ", mSupportScan=" + mSupportScan +
                 ", mSupportChecked=" + mSupportChecked +
+                ", mSupportMedia=" + mSupportMedia +
                 '}';
     }
 }

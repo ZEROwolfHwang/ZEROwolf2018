@@ -19,6 +19,7 @@ import com.zero.wolf.greenroad.fragment.MyBitmap;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.BitmapUtil;
@@ -94,7 +95,7 @@ public class PreviewDetailActivity extends BaseActivity {
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
     private List<PathTitleBean> mPath_cheshen;
-    private ArrayList<MyBitmap> mBitmapArrayList;
+    private static ArrayList<MyBitmap> mBitmapArrayList;
 
 
     @Override
@@ -114,14 +115,28 @@ public class PreviewDetailActivity extends BaseActivity {
     private void initRecyclerView() {
         if (mBitmapArrayList == null) {
             mBitmapArrayList = new ArrayList<>();
+        } else {
+            mBitmapArrayList.clear();
         }
-        List<String> picturePaths = mCurrentSupport.getSupportDetail().getPicturePath();
-        List<String> pictureTitles = mCurrentSupport.getSupportDetail().getPictureTitle();
+        List<String> picturePaths = null;
+        if (picturePaths == null) {
+            picturePaths=mCurrentSupport.getSupportDetail().getPicturePath();
+        } else {
+            picturePaths.clear();
+            picturePaths=mCurrentSupport.getSupportDetail().getPicturePath();
+        }
+        List<String> pictureTitles = null;
+        if (pictureTitles == null) {
+            pictureTitles=mCurrentSupport.getSupportDetail().getPictureTitle();
+        } else {
+            pictureTitles.clear();
+            pictureTitles=mCurrentSupport.getSupportDetail().getPictureTitle();
+        }
         if (picturePaths != null && picturePaths.size() != 0) {
             for (int i = 0; i < picturePaths.size(); i++) {
                 Bitmap bitmap = BitmapUtil.convertToBitmap(picturePaths.get(i), 800, 800);
                 String title = pictureTitles.get(i);
-                MyBitmap myBitmap = new MyBitmap(bitmap, title);
+                MyBitmap myBitmap = new MyBitmap(picturePaths.get(i),bitmap, title);
                 mBitmapArrayList.add(myBitmap);
             }
         }
@@ -195,7 +210,9 @@ public class PreviewDetailActivity extends BaseActivity {
         //   ToastUtils.singleToast(mCurrentSupport.toString());
         mCurrentSupport = intent.getParcelableExtra(SUPPORTDRAFT_ITEM);
 
-
+        Logger.i(mCurrentSupport.getSupportMedia().getPaths().get(0));
+        Logger.i(mCurrentSupport.getSupportMedia().getPaths().get(1));
+        Logger.i(mCurrentSupport.getSupportMedia().getPaths().get(2));
         Logger.i(mCurrentSupport.toString());
     }
 
@@ -226,6 +243,29 @@ public class PreviewDetailActivity extends BaseActivity {
         SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
         SupportScan supportScan = mCurrentSupport.getSupportScan();
         SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
-        ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked);
+        SupportMedia supportMedia = mCurrentSupport.getSupportMedia();
+
+        Logger.i(supportMedia.getPaths().get(0));
+        Logger.i(supportMedia.getPaths().get(1));
+        Logger.i(supportMedia.getPaths().get(2));
+        for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+        Logger.i(supportMedia.getPaths().get(i) + "---" +
+                supportMedia.getDurations().get(i) + "---" +
+                supportMedia.getHeights().get(i) + "---" +
+                supportMedia.getMimeTypes().get(i) + "---" +
+                supportMedia.getNums().get(i) + "---" +
+                supportMedia.getPictureTypes().get(i) + "---" +
+                supportMedia.getPositions().get(i) + "---" +
+                supportMedia.getWidths().get(i));
+        }
+        ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked,mCurrentSupport.getLite_ID());
+    }
+
+    public static void setPictureLisener(PictureListener listener) {
+        listener.onPicture(mBitmapArrayList);
+    }
+
+    public interface PictureListener {
+        void onPicture(List<MyBitmap> myBitmapList);
     }
 }

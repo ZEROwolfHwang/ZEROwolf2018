@@ -26,6 +26,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
 import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
+import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.tools.BitmapUtil;
 
 import java.io.File;
@@ -93,7 +94,7 @@ public class PhotoFragment extends Fragment {
     private static ArrayList<MyBitmap> sBitmaps_sanzheng;
     private static ArrayList<MyBitmap> sBitmaps_cheshen;
     private static ArrayList<MyBitmap> sBitmaps_huowu;
-    private static Intent mData;
+    private static SupportMedia sSupportMedia_sanzheng;
 
 
     public PhotoFragment() {
@@ -110,6 +111,54 @@ public class PhotoFragment extends Fragment {
             sBitmaps_sanzheng = mMyBitmaps_sanzheng;
             sBitmaps_cheshen = mMyBitmaps_cheshen;
             sBitmaps_huowu = mMyBitmaps_huowu;
+            if (sBitmaps_sanzheng != null && sBitmaps_cheshen != null && sBitmaps_huowu != null) {
+                Logger.i(sBitmaps_sanzheng.size() + "---" + sBitmaps_cheshen.size() + "---" + sBitmaps_huowu.size());
+            }
+
+        });
+        DetailsFragment.setSelectListListener(supportMedia -> {
+            sSupportMedia_sanzheng = supportMedia;
+            Logger.i(sSupportMedia_sanzheng.getPaths().get(0));
+            Logger.i(sSupportMedia_sanzheng.getPaths().get(1));
+            Logger.i(sSupportMedia_sanzheng.getPaths().get(2));
+            Logger.i(sSupportMedia_sanzheng.getPaths().get(3));
+            Logger.i(sSupportMedia_sanzheng.getPaths().get(4));
+            Logger.i(sSupportMedia_sanzheng.getDurations().get(0)+"llllll");
+            Logger.i(sSupportMedia_sanzheng.getDurations().get(1)+"llllll");
+            Logger.i(sSupportMedia_sanzheng.getDurations().get(2)+"llllll");
+            Logger.i(sSupportMedia_sanzheng.getDurations().get(3)+"llllll");
+            Logger.i(sSupportMedia_sanzheng.getDurations().get(4)+"llllll");
+            if (sSupportMedia_sanzheng != null) {
+                if (mSelectList_sanzheng == null) {
+                    mSelectList_sanzheng = new ArrayList<>();
+                } else {
+                    mSelectList_sanzheng.clear();
+                }
+                int size = sSupportMedia_sanzheng.getPaths().size();
+                for (int i = 0; i < size; i++) {
+
+                    String path = sSupportMedia_sanzheng.getPaths().get(i);
+                    String pictureType = sSupportMedia_sanzheng.getPictureTypes().get(i);
+                    long duration = sSupportMedia_sanzheng.getDurations().get(i);
+                    int mimeType = sSupportMedia_sanzheng.getMimeTypes().get(i);
+                    int height = sSupportMedia_sanzheng.getHeights().get(i);
+                    int width = sSupportMedia_sanzheng.getWidths().get(i);
+                    int num = sSupportMedia_sanzheng.getNums().get(i);
+                    int position = sSupportMedia_sanzheng.getPositions().get(i);
+                    LocalMedia localMedia = new LocalMedia(path, duration, mimeType, pictureType, width, height);
+                    localMedia.setNum(num);
+                    localMedia.setPosition(position);
+                    localMedia.setChecked(false);
+                    localMedia.setCompressed(false);
+                    localMedia.setCut(false);
+                    mSelectList_sanzheng.add(localMedia);
+                }
+            }
+            if (mSelectList_sanzheng != null) {
+                for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
+                    Logger.i(mSelectList_sanzheng.get(i).toString());
+                }
+            }
         });
 
         return sPhotoFragment;
@@ -136,9 +185,14 @@ public class PhotoFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
         mMyBitmapAdd = new MyBitmap(mBitmap_add);
+        initSelected();
         initRecycler();
 
         return view;
+    }
+
+    private void initSelected() {
+
     }
 
     /**
@@ -153,19 +207,13 @@ public class PhotoFragment extends Fragment {
 
 
         if (sBitmaps_sanzheng != null && sBitmaps_sanzheng.size() != 0) {
-            for (int i = 0; i < sBitmaps_sanzheng.size() - 1; i++) {
-                mSanZhengBitmaps.add(sBitmaps_sanzheng.get(i));
-            }
+            mSanZhengBitmaps.addAll(sBitmaps_sanzheng);
         }
         if (sBitmaps_cheshen != null && sBitmaps_cheshen.size() != 0) {
-            for (int i = 0; i < sBitmaps_cheshen.size() - 1; i++) {
-                mCheShenBitmaps.add(sBitmaps_cheshen.get(i));
-            }
+            mCheShenBitmaps.addAll(sBitmaps_cheshen);
         }
         if (sBitmaps_huowu != null && sBitmaps_huowu.size() != 0) {
-            for (int i = 0; i < sBitmaps_huowu.size() - 1; i++) {
-                mHuoWuBitmaps.add(sBitmaps_huowu.get(i));
-            }
+            mHuoWuBitmaps.addAll(sBitmaps_huowu);
         }
         mSanZhengBitmaps.add(mMyBitmapAdd);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -327,8 +375,21 @@ public class PhotoFragment extends Fragment {
                     }
                 }
                 Logger.i("回调成功goods");
-                mData = data;
                 mSelectList_sanzheng = PictureSelector.obtainMultipleResult(data);
+                for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
+                    Logger.i(mSelectList_sanzheng.get(i).toString());
+                }
+                //   String s1 = mSelectList_sanzheng.get(0).getCompressPath().toString();
+
+               /* String s3 = mSelectList_sanzheng.get(0).getPath().toString();
+                String s4 = mSelectList_sanzheng.get(0).getPictureType().toString();
+                long l1 = mSelectList_sanzheng.get(0).getDuration();
+                int i1 = mSelectList_sanzheng.get(0).getHeight();
+                int i2 = mSelectList_sanzheng.get(0).getMimeType();
+                int i3 = mSelectList_sanzheng.get(0).getPosition();
+                int i4 = mSelectList_sanzheng.get(0).getNum();
+                int i5 = mSelectList_sanzheng.get(0).getWidth();
+                Logger.i(s3+"--"+s4+"--"+l1+"--"+i1+"--"+i2+"--"+i3+"--"+i4+"--"+i5);*/
                 new Thread(() -> {
                     for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
                         LocalMedia localMedia = mSelectList_sanzheng.get(i);
@@ -373,7 +434,7 @@ public class PhotoFragment extends Fragment {
                         String photo_path = mSelectList_cheshen.get(i).getPath();
                         Logger.i(photo_path);
                         Bitmap bitmap = BitmapUtil.convertToBitmap(photo_path, 800, 800);
-                        String title = "车辆-" + (i + 1);
+                        String title = "车身车型-" + (i + 1);
                         MyBitmap myBitmap = new MyBitmap(photo_path, bitmap, title);
                         mCheShenBitmaps.add(myBitmap);
                     }
@@ -445,11 +506,26 @@ public class PhotoFragment extends Fragment {
 
 
     public static void setBitmapListListener(BitmapListListener listener) {
-        if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
-            ArrayList<MyBitmap> myBitmaps_sanzheng = new ArrayList<>();
-            ArrayList<MyBitmap> myBitmaps_cheshen = new ArrayList<>();
-            ArrayList<MyBitmap> myBitmaps_huozhao = new ArrayList<>();
+        ArrayList<MyBitmap> myBitmaps_sanzheng = null;
+        ArrayList<MyBitmap> myBitmaps_cheshen = null;
+        ArrayList<MyBitmap> myBitmaps_huozhao = null;
+        if (myBitmaps_sanzheng == null) {
+            myBitmaps_sanzheng = new ArrayList<>();
+        } else {
+            myBitmaps_sanzheng.clear();
+        }
+        if (myBitmaps_cheshen == null) {
+            myBitmaps_cheshen = new ArrayList<>();
+        } else {
+            myBitmaps_cheshen.clear();
+        }
+        if (myBitmaps_huozhao == null) {
+            myBitmaps_huozhao = new ArrayList<>();
+        } else {
+            myBitmaps_huozhao.clear();
+        }
 
+        if (mSanZhengBitmaps != null && mCheShenBitmaps != null && mHuoWuBitmaps != null) {
             for (int i = 0; i < mSanZhengBitmaps.size() - 1; i++) {
                 myBitmaps_sanzheng.add(mSanZhengBitmaps.get(i));
             }
@@ -463,13 +539,12 @@ public class PhotoFragment extends Fragment {
                 listener.BitmapListener(myBitmaps_sanzheng, myBitmaps_cheshen, myBitmaps_huozhao);
             }
         }
-
     }
 
     public static void setSelectedListListener(SelectedListListener listener) {
-        if (mData != null) {
-            listener.Selected(mData);
-        }
+        /*if (mSelectList_sanzheng != null && mSelectList_cheshen != null && mSelectList_huowu != null) {
+        }*/
+        listener.Selected(mSelectList_sanzheng, mSelectList_cheshen, mSelectList_huowu);
 
     }
 
@@ -500,16 +575,12 @@ public class PhotoFragment extends Fragment {
 
     }
 
-
     public interface BitmapListListener {
         void BitmapListener(ArrayList<MyBitmap> mSanZhengBitmaps,
                             ArrayList<MyBitmap> mCheShenBitmaps, ArrayList<MyBitmap> mHuowuBitmaps);
     }
 
     public interface SelectedListListener {
-        void Selected(Intent data
-                      //            List<LocalMedia> mSelectList_cheshen,
-                      //              List<LocalMedia> mSelectList_huowu
-        );
+        void Selected(List<LocalMedia> medias_sanzheng, List<LocalMedia> medias_cheshen, List<LocalMedia> medias_huozhao);
     }
 }

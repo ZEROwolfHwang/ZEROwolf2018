@@ -107,9 +107,9 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         SortTime sortDraftTime = new SortTime();
 
         Collections.sort(mDraftList, sortDraftTime);
-        for (int i = 0; i < mDraftList.size(); i++) {
+       /* for (int i = 0; i < mDraftList.size(); i++) {
             Logger.i("++++++++++++" + mDraftList.get(i).toString());
-        }
+        }*/
 
 
     }

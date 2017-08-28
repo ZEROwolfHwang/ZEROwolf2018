@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.activity.PreviewDetailActivity;
 import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.activity.SureGoodsActivity;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
@@ -22,6 +23,7 @@ import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
+import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ToastUtils;
@@ -53,7 +55,7 @@ public class DetailsFragment extends Fragment {
     private static ArrayList<MyBitmap> mMyBitmaps_cheshen;
     private static ArrayList<MyBitmap> mMyBitmaps_huowu;
     private DetailsRecyclerAdapter mAdapter;
-    private ArrayList<MyBitmap> mMyBitmaps_recycler_all;
+    private static ArrayList<MyBitmap> mMyBitmaps_recycler_all;
     private static Bitmap mBitmap_add;
     private static RadioButton mLicense_yellow;
     private static RadioButton mLicense_blue;
@@ -65,6 +67,7 @@ public class DetailsFragment extends Fragment {
     private static RadioGroup mRadioGroupColor;
     private static String sEnterType;
     private static SupportDetail sSupportDetail;
+    private static SupportMedia sSupportMedia;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -77,10 +80,16 @@ public class DetailsFragment extends Fragment {
         return fragment;
     }
 
-    public static DetailsFragment newInstance(String enterType, SupportDetail supportDetail) {
+    public static DetailsFragment newInstance(String enterType, SupportDetail supportDetail,
+                                              SupportMedia supportMedia) {
         DetailsFragment fragment = new DetailsFragment();
         sEnterType = enterType;
         sSupportDetail = supportDetail;
+        sSupportMedia = supportMedia;
+        for (int i = 0; i < sSupportMedia.getPaths().size(); i++) {
+            Logger.i(sSupportMedia.getPaths().get(i));
+            Logger.i(sSupportMedia.getHeights().get(i)+"-----");
+        }
         return fragment;
     }
 
@@ -126,11 +135,15 @@ public class DetailsFragment extends Fragment {
             mMyBitmaps_sanzheng = mSanZhengBitmaps;
             mMyBitmaps_cheshen = mCheShenBitmaps;
             mMyBitmaps_huowu = mHuowuBitmaps;
+            if (mMyBitmaps_sanzheng != null && mMyBitmaps_cheshen != null && mMyBitmaps_huowu != null) {
+                Logger.i(mMyBitmaps_sanzheng.size() + "---" + mMyBitmaps_cheshen.size() + "---" + mMyBitmaps_huowu.size());
+            }
         });
+
         if (mMyBitmaps_recycler_all == null) {
             mMyBitmaps_recycler_all = new ArrayList<>();
         }
-        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() == 0) {
+        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
             mMyBitmaps_recycler_all.clear();
         }
         mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
@@ -146,44 +159,39 @@ public class DetailsFragment extends Fragment {
             MyBitmap myBitmap = new MyBitmap(mBitmap_add, title);
             mMyBitmaps_recycler_all.add(myBitmap);
         }
-
-
-        if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
-            mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
-        }
-        if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
-            mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
-        }
-        if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
-            mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
-        }
-       /* //已经减去了最后的一个添加图片,刚好为上传或者保存的大小
-        if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
-            for (int i = 0; i < mMyBitmaps_sanzheng.size() - 1; i++) {
-                mMyBitmaps_recycler_all.add(mMyBitmaps_sanzheng.get(i));
+        if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+            if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
+                mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
+            }
+            if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
+                mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
+            }
+            if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
+                mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
+            }
+            if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
+                mAdapter.updateListView(mMyBitmaps_recycler_all);
+                if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
+                    scrollToPosition(mLayoutManager, 3);
+                }
+            }
+        } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
+            PreviewDetailActivity.setPictureLisener(myBitmapList -> {
+                mMyBitmaps_recycler_all.addAll(myBitmapList);
+            });
+            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
+            if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
+                mAdapter.updateListView(mMyBitmaps_recycler_all);
+                if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
+                    scrollToPosition(mLayoutManager, 3);
+                }
             }
         }
-        if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
-            for (int i = 0; i < mMyBitmaps_cheshen.size() - 1; i++) {
-                mMyBitmaps_recycler_all.add(mMyBitmaps_cheshen.get(i));
-            }
-        }
-        if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
-            for (int i = 0; i < mMyBitmaps_huowu.size() - 1; i++) {
-                mMyBitmaps_recycler_all.add(mMyBitmaps_huowu.get(i));
-            }
-        }*/
-
         Logger.i(mCarNumber + "]]]]]]]]]");
         mTvChangeNumberDetail.setText(mCarNumber);
         mTvChangeGoodsDetail.setText(mCarGoods);
 
-        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
-            mAdapter.updateListView(mMyBitmaps_recycler_all);
-            if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
-                scrollToPosition(mLayoutManager, 3);
-            }
-        }
+
     }
 
     private void scrollToPosition(LinearLayoutManager manager, int index) {
@@ -200,19 +208,24 @@ public class DetailsFragment extends Fragment {
 
 
     private void initRecyclerView() {
-
+        if (mMyBitmaps_recycler_all == null) {
+            mMyBitmaps_recycler_all = new ArrayList<>();
+        }
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewShootPhoto.setLayoutManager(mLayoutManager);
         mAdapter = new DetailsRecyclerAdapter(getContext(), mMyBitmaps_recycler_all, () -> {
             enterSureActivity(GlobalManager.ENTERTYPE_PHOTO);
         });
-//        mRecyclerViewShootPhoto.scrollToPosition(3);
-        // scrollToPosition(mLayoutManager,3);
+//
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
+        if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
+            scrollToPosition(mLayoutManager, 3);
+            mAdapter.updateListView(mMyBitmaps_recycler_all);
+        }
+
         /*LinearLayoutManager llm = (LinearLayoutManager) mRecyclerViewShootPhoto.getLayoutManager();
         llm.scrollToPositionWithOffset(3, 0);
         llm.setStackFromEnd(false);*/
-
     }
 
 
@@ -337,9 +350,25 @@ public class DetailsFragment extends Fragment {
      */
     public static void setBitmapListListener(BitmapListListener listener) {
         if (mMyBitmaps_sanzheng != null && mMyBitmaps_cheshen != null && mMyBitmaps_huowu != null) {
-
             listener.BitmapListener(mMyBitmaps_sanzheng, mMyBitmaps_cheshen, mMyBitmaps_huowu);
         }
+        ArrayList<MyBitmap> myBitmaps_sanzheng_Y = new ArrayList<>();
+        ArrayList<MyBitmap> myBitmaps_cheshen_Y = new ArrayList<>();
+        ArrayList<MyBitmap> myBitmaps_huozhao_Y = new ArrayList<>();
+        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() > 3) {
+            for (int i = 3; i < mMyBitmaps_recycler_all.size(); i++) {
+                String title = mMyBitmaps_recycler_all.get(i).getTitle();
+                if (title.contains("三证")) {
+                    myBitmaps_sanzheng_Y.add(mMyBitmaps_recycler_all.get(i));
+                } else if (title.contains("车身车型")) {
+                    myBitmaps_cheshen_Y.add(mMyBitmaps_recycler_all.get(i));
+                } else if (title.contains("货照")) {
+                    myBitmaps_huozhao_Y.add(mMyBitmaps_recycler_all.get(i));
+
+                }
+            }
+        }
+        listener.BitmapListener(myBitmaps_sanzheng_Y, myBitmaps_cheshen_Y, myBitmaps_huozhao_Y);
     }
 
     public interface BitmapListListener {
@@ -349,31 +378,36 @@ public class DetailsFragment extends Fragment {
 
     public static void setDetailsConnectListener(DetailsBeanConnectListener listener) {
 
-        ArrayList<PathTitleBean> pathTitleList_sanzheng = new ArrayList<>();
-        ArrayList<PathTitleBean> pathTitleList_cheshen = new ArrayList<>();
-        ArrayList<PathTitleBean> pathTitleList_huowu = new ArrayList<>();
-        if (mMyBitmaps_sanzheng != null) {
-            for (int i = 0; i < mMyBitmaps_sanzheng.size(); i++) {
-                MyBitmap myBitmap = mMyBitmaps_sanzheng.get(i);
-                PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
-                pathTitleList_sanzheng.add(titleBean);
-            }
-        }
-        if (mMyBitmaps_cheshen != null) {
-            for (int i = 0; i < mMyBitmaps_cheshen.size(); i++) {
-                MyBitmap myBitmap = mMyBitmaps_cheshen.get(i);
-                PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
-                pathTitleList_cheshen.add(titleBean);
-            }
-        }
-        if (mMyBitmaps_huowu != null) {
-            for (int i = 0; i < mMyBitmaps_huowu.size(); i++) {
-                MyBitmap myBitmap = mMyBitmaps_huowu.get(i);
-                PathTitleBean titleBean = new PathTitleBean(myBitmap.getPath(), myBitmap.getTitle());
-                pathTitleList_huowu.add(titleBean);
-            }
+        ArrayList<PathTitleBean> pathTitleList = null;
+        if (pathTitleList == null) {
+            pathTitleList = new ArrayList<>();
+        } else {
+            pathTitleList.clear();
         }
 
+        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() > 3) {
+            for (int i = 3; i < mMyBitmaps_recycler_all.size(); i++) {
+                String title = mMyBitmaps_recycler_all.get(i).getTitle();
+                PathTitleBean titleBean = null;
+                if (title.contains("三证")) {
+                    MyBitmap myBitmap = mMyBitmaps_recycler_all.get(i);
+                    titleBean = new PathTitleBean(GlobalManager.PHOTO_TYPE_SANZHENG,
+                            myBitmap.getPath(), myBitmap.getTitle());
+                } else if (title.contains("车身车型")) {
+                    MyBitmap myBitmap = mMyBitmaps_recycler_all.get(i);
+                    titleBean = new PathTitleBean(GlobalManager.PHOTO_TYPE_CHESHEN,
+                            myBitmap.getPath(), myBitmap.getTitle());
+                } else if (title.contains("货照")) {
+                    MyBitmap myBitmap = mMyBitmaps_recycler_all.get(i);
+                    titleBean = new PathTitleBean(GlobalManager.PHOTO_TYPE_HUOZHAO,
+                            myBitmap.getPath(), myBitmap.getTitle());
+                }
+                pathTitleList.add(titleBean);
+            }
+            if (pathTitleList != null ) {
+                Logger.i(pathTitleList.size() + "---" + "---"  );
+            }
+        }
 
         String number = mTvChangeNumberDetail.getText().toString().trim();
         String goods = mTvChangeGoodsDetail.getText().toString().trim();
@@ -382,9 +416,7 @@ public class DetailsFragment extends Fragment {
         bean.setColor(mCurrent_color);
         bean.setNumber(number);
         bean.setGoods(goods);
-        bean.setPath_sanzheng(pathTitleList_sanzheng);
-        bean.setPath_cheshen(pathTitleList_cheshen);
-        bean.setPath_huowu(pathTitleList_huowu);
+        bean.setPath_and_title(pathTitleList);
         listener.beanConnect(bean);
     }
 
@@ -397,6 +429,18 @@ public class DetailsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mMyBitmaps_recycler_all.clear();
-
     }
+    public static void setSelectListListener(SelectListListener listener) {
+        if (sSupportMedia!=null) {
+            listener.SelectListener(sSupportMedia);
+            Logger.i(sSupportMedia.getPaths().get(0));
+            Logger.i(sSupportMedia.getPaths().get(1));
+            Logger.i(sSupportMedia.getPaths().get(2));
+        }
+    }
+
+    public interface SelectListListener {
+        void SelectListener(SupportMedia supportMedia);
+    }
+
 }

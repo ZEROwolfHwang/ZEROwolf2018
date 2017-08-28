@@ -93,7 +93,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.PreviewDetailActivity">
+        <activity android:name=".activity.PreviewDetailActivity"
+                  android:launchMode="singleTask"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <!--

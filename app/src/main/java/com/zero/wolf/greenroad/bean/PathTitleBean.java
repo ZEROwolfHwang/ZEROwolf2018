@@ -5,12 +5,31 @@ package com.zero.wolf.greenroad.bean;
  */
 
 public class PathTitleBean {
+    String photo_type;
     String path;
     String title;
 
-    public PathTitleBean(String path, String title) {
+    public PathTitleBean(String photo_type, String path, String title) {
+        this.photo_type = photo_type;
         this.path = path;
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "PathTitleBean{" +
+                "photo_type='" + photo_type + '\'' +
+                ", path='" + path + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
+    public String getPhoto_type() {
+        return photo_type;
+    }
+
+    public void setPhoto_type(String photo_type) {
+        this.photo_type = photo_type;
     }
 
     public String getPath() {
@@ -27,13 +46,5 @@ public class PathTitleBean {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    @Override
-    public String toString() {
-        return "PathTitleBean{" +
-                "path='" + path + '\'' +
-                ", title='" + title + '\'' +
-                '}';
     }
 }

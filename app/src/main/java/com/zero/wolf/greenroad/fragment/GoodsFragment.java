@@ -157,7 +157,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             }
             for (int i = 0; i < mGoodsNames.length; i++) {
 
-                Logger.i(mGoodsNames[i] + "");
+//                Logger.i(mGoodsNames[i] + "");
                 //Bitmap bitmap = getImageFromAssetsFile();
 
                 String scientific_name = scientific_names[i];

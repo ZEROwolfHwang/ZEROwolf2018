@@ -1,148 +1,157 @@
 package com.zero.wolf.greenroad.litepalbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.crud.DataSupport;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/8/23.
  */
 
-public class SupportMedia extends DataSupport implements Serializable {
-    private String path;
-    private String compressPath;
-    private String cutPath;
-    private long duration;
-    private boolean isChecked;
-    private boolean isCut;
-    public int position;
-    private int num;
-    private int mimeType;
-    private String pictureType;
-    private boolean compressed;
-    private int width;
-    private int height;
+public class SupportMedia extends DataSupport implements Parcelable {
+    private int lite_ID;
+    private String photoType;
+    private List<String> pictureTypes;
+    private List<String> paths;
 
-    public String getPath() {
-        return path;
+    private  List<Long> mDurations;
+    private  List<Integer> nums;
+    private  List<Integer> mimeTypes;
+    private  List<Integer> widths;
+    private  List<Integer> heights;
+    private  List<Integer> positions;
+
+    public SupportMedia() {
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    protected SupportMedia(Parcel in) {
+        lite_ID = in.readInt();
+        photoType = in.readString();
+        pictureTypes = in.createStringArrayList();
+        paths = in.createStringArrayList();
     }
 
-    public String getCompressPath() {
-        return compressPath;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(lite_ID);
+        dest.writeString(photoType);
+        dest.writeStringList(pictureTypes);
+        dest.writeStringList(paths);
     }
 
-    public void setCompressPath(String compressPath) {
-        this.compressPath = compressPath;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getCutPath() {
-        return cutPath;
-    }
+    public static final Creator<SupportMedia> CREATOR = new Creator<SupportMedia>() {
+        @Override
+        public SupportMedia createFromParcel(Parcel in) {
+            return new SupportMedia(in);
+        }
 
-    public void setCutPath(String cutPath) {
-        this.cutPath = cutPath;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
-
-    public boolean isCut() {
-        return isCut;
-    }
-
-    public void setCut(boolean cut) {
-        isCut = cut;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public int getMimeType() {
-        return mimeType;
-    }
-
-    public void setMimeType(int mimeType) {
-        this.mimeType = mimeType;
-    }
-
-    public String getPictureType() {
-        return pictureType;
-    }
-
-    public void setPictureType(String pictureType) {
-        this.pictureType = pictureType;
-    }
-
-    public boolean isCompressed() {
-        return compressed;
-    }
-
-    public void setCompressed(boolean compressed) {
-        this.compressed = compressed;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
+        @Override
+        public SupportMedia[] newArray(int size) {
+            return new SupportMedia[size];
+        }
+    };
 
     @Override
     public String toString() {
         return "SupportMedia{" +
-                "path='" + path + '\'' +
-                ", compressPath='" + compressPath + '\'' +
-                ", cutPath='" + cutPath + '\'' +
-                ", duration=" + duration +
-                ", isChecked=" + isChecked +
-                ", isCut=" + isCut +
-                ", position=" + position +
-                ", num=" + num +
-                ", mimeType=" + mimeType +
-                ", pictureType='" + pictureType + '\'' +
-                ", compressed=" + compressed +
-                ", width=" + width +
-                ", height=" + height +
+                "lite_ID=" + lite_ID +
+                ", photoType='" + photoType + '\'' +
+                ", pictureTypes=" + pictureTypes +
+                ", paths=" + paths +
+                ", mDurations=" + mDurations +
+                ", nums=" + nums +
+                ", mimeTypes=" + mimeTypes +
+                ", widths=" + widths +
+                ", heights=" + heights +
+                ", positions=" + positions +
                 '}';
+    }
+
+    public int getLite_ID() {
+        return lite_ID;
+    }
+
+    public void setLite_ID(int lite_ID) {
+        this.lite_ID = lite_ID;
+    }
+
+    public String getPhotoType() {
+        return photoType;
+    }
+
+    public void setPhotoType(String photoType) {
+        this.photoType = photoType;
+    }
+
+    public List<String> getPictureTypes() {
+        return pictureTypes;
+    }
+
+    public void setPictureTypes(List<String> pictureTypes) {
+        this.pictureTypes = pictureTypes;
+    }
+
+    public List<String> getPaths() {
+        return paths;
+    }
+
+    public void setPaths(List<String> paths) {
+        this.paths = paths;
+    }
+
+    public List<Long> getDurations() {
+        return mDurations;
+    }
+
+    public void setDurations(List<Long> durations) {
+        mDurations = durations;
+    }
+
+    public List<Integer> getNums() {
+        return nums;
+    }
+
+    public void setNums(List<Integer> nums) {
+        this.nums = nums;
+    }
+
+    public List<Integer> getMimeTypes() {
+        return mimeTypes;
+    }
+
+    public void setMimeTypes(List<Integer> mimeTypes) {
+        this.mimeTypes = mimeTypes;
+    }
+
+    public List<Integer> getWidths() {
+        return widths;
+    }
+
+    public void setWidths(List<Integer> widths) {
+        this.widths = widths;
+    }
+
+    public List<Integer> getHeights() {
+        return heights;
+    }
+
+    public void setHeights(List<Integer> heights) {
+        this.heights = heights;
+    }
+
+    public List<Integer> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Integer> positions) {
+        this.positions = positions;
     }
 }

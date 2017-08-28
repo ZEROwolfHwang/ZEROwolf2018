@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.ShowViewPagerAdapter;
@@ -34,6 +35,7 @@ import com.zero.wolf.greenroad.https.PostInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -74,6 +76,7 @@ public class ShowActivity extends BaseActivity {
     private static String ARG_SUPPORT_SCAN = "arg_support_scan";
     private static String ARG_SUPPORT_DETAIL = "arg_support_detail";
     private static String ARG_SUPPORT_CHECKED = "arg_support_checked";
+    private static String ARG_SUPPORT_MEDIA = "arg_support_media";
     private static String ARG_STATION = "arg_station";
 
     private static String ACTION_MAIN_ENTER_SHOW = "action_main_enter_show";
@@ -106,15 +109,20 @@ public class ShowActivity extends BaseActivity {
     private static String mStation_Q;
     private static String mRoad_Q;
     private Handler mUiHandler = new Handler();
+    private static List<LocalMedia> mLocalMedias_sanzheng_Q;
+    private static List<LocalMedia> mLocalMedias_cheshen_Q;
+    private static List<LocalMedia> mMediasHuozhao_huowu_Q;
 
 
-    public static void actionStart(Context context, SupportDetail supportDetail, SupportScan supportScan, SupportChecked supportChecked) {
+    public static void actionStart(Context context, SupportDetail supportDetail, SupportScan supportScan,
+                                   SupportChecked supportChecked, int lite_ID) {
         Intent intent = new Intent(context, ShowActivity.class);
         intent.setAction(ACTION_DRAFT_ENTER_SHOW);
 
         intent.putExtra(ARG_SUPPORT_DETAIL, supportDetail);
         intent.putExtra(ARG_SUPPORT_SCAN, supportScan);
         intent.putExtra(ARG_SUPPORT_CHECKED, supportChecked);
+        intent.putExtra(ARG_SUPPORT_MEDIA, lite_ID);
 
         intent.setType(TYPE_DRAFT_ENTER_SHOW);
         context.startActivity(intent);
@@ -155,9 +163,16 @@ public class ShowActivity extends BaseActivity {
             SupportDetail supportDetail = intent.getParcelableExtra(ARG_SUPPORT_DETAIL);
             SupportScan supportScan = intent.getParcelableExtra(ARG_SUPPORT_SCAN);
             SupportChecked supportChecked = intent.getParcelableExtra(ARG_SUPPORT_CHECKED);
-
+            int lite_ID = intent.getIntExtra(ARG_SUPPORT_MEDIA,1);
+            Logger.i(lite_ID+"qqq");
+            List<SupportDraftOrSubmit> supportDraftOrSubmits = DataSupport.where("lite_ID = ?", String.valueOf(lite_ID)).find(SupportDraftOrSubmit.class);
+            SupportMedia supportMedia = supportDraftOrSubmits.get(0).getSupportMedia();
+            for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+                Logger.i(supportMedia.getPaths().get(i));
+                Logger.i(supportMedia.getHeights().get(i)+"-----");
+            }
             mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,
-                    supportDetail, supportScan, supportChecked, intent.getType());
+                    supportDetail, supportScan, supportChecked, supportMedia, intent.getType());
             Logger.i(supportScan.toString());
         } else if (ACTION_MAIN_ENTER_SHOW.equals(intent.getAction())) {
             mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this, intent.getType());
@@ -287,8 +302,6 @@ public class ShowActivity extends BaseActivity {
         }*/
         save2Litepal(GlobalManager.TYPE_SUBMIT_LITE);
 
-        List<PathTitleBean> path_sanzheng = mDetailInfoBean_Q.getPath_sanzheng();
-
         PostInfo info = new PostInfo();
 
         //从扫描中拿到的数据
@@ -339,13 +352,23 @@ public class ShowActivity extends BaseActivity {
         Map<String, String> partMap = new HashMap<>();
 
         ArrayList<String> pathList = new ArrayList();
-        for (int i = 0; i < mDetailInfoBean_Q.getPath_sanzheng().size(); i++) {
-            pathList.add(mDetailInfoBean_Q.getPath_sanzheng().get(i).getPath());
+        ArrayList<PathTitleBean> pathTitle_sanzheng = new ArrayList<>();
+        ArrayList<PathTitleBean> pathTitle_cheshen = new ArrayList<>();
+        ArrayList<PathTitleBean> pathTitle_huozhao = new ArrayList<>();
+        for (int i = 0; i < mDetailInfoBean_Q.getPath_and_title().size(); i++) {
+            String photo_type = mDetailInfoBean_Q.getPath_and_title().get(i).getPhoto_type();
+            if (GlobalManager.PHOTO_TYPE_SANZHENG.equals(photo_type)) {
+                pathTitle_sanzheng.add(mDetailInfoBean_Q.getPath_and_title().get(i));
+            } else if (GlobalManager.PHOTO_TYPE_CHESHEN.equals(photo_type)) {
+                pathTitle_cheshen.add(mDetailInfoBean_Q.getPath_and_title().get(i));
+            } else if (GlobalManager.PHOTO_TYPE_HUOZHAO.equals(photo_type)) {
+                pathTitle_huozhao.add(mDetailInfoBean_Q.getPath_and_title().get(i));
+            }
         }
 
-        List<MultipartBody.Part> sanzheng = getBodyPart1(mDetailInfoBean_Q.getPath_sanzheng(), "sanzheng");
-        List<MultipartBody.Part> cheshen = getBodyPart1(mDetailInfoBean_Q.getPath_cheshen(), "cheshen");
-        List<MultipartBody.Part> huozhao = getBodyPart1(mDetailInfoBean_Q.getPath_huowu(), "huozhao");
+        List<MultipartBody.Part> sanzheng = getBodyPart1(pathTitle_sanzheng, "sanzheng");
+        List<MultipartBody.Part> cheshen = getBodyPart1(pathTitle_cheshen, "cheshen");
+        List<MultipartBody.Part> huozhao = getBodyPart1(pathTitle_huozhao, "huozhao");
 
         Retrofit retrofit = new Retrofit.Builder()
                 //.baseUrl("http://192.168.2.122/lvsetondao/index.php/Interfacy/Api/")
@@ -359,7 +382,7 @@ public class ShowActivity extends BaseActivity {
         RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), route);
         Logger.i("json  string" + route);
 
-        Observable<HttpResultPolling> observable = api.postPicture(mScanInfoBean_Q.getScan_code(),sanzheng, cheshen, huozhao);
+        Observable<HttpResultPolling> observable = api.postPicture(mScanInfoBean_Q.getScan_code(), sanzheng, cheshen, huozhao);
         observable.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -441,7 +464,6 @@ public class ShowActivity extends BaseActivity {
         DetailsFragment.setDetailsConnectListener((bean) -> {
             mDetailInfoBean_Q = bean;
 
-
             //拿到图片的体进行网络传递
            /* if (mBitmapList != null && mBitmapList.size() != 0) {
                 List<MultipartBody.Part> parts = PathUtil
@@ -450,6 +472,17 @@ public class ShowActivity extends BaseActivity {
                 Logger.i(parts.toString());
             }*/
         });
+        PhotoFragment.setSelectedListListener((medias_sanzheng, medias_cheshen, medias_huozhao) -> {
+            mLocalMedias_sanzheng_Q = medias_sanzheng;
+            if (mLocalMedias_sanzheng_Q != null && mLocalMedias_sanzheng_Q.size() != 0) {
+                for (int i = 0; i < mLocalMedias_sanzheng_Q.size(); i++) {
+                    Logger.i(mLocalMedias_sanzheng_Q.get(i).getPath().toString());
+                }
+            }
+            mLocalMedias_cheshen_Q = medias_cheshen;
+            mMediasHuozhao_huowu_Q = medias_huozhao;
+        });
+
         //拿到checkFragment的数据
         CheckedFragment.setCheckedBeanConnectListener(bean -> {
             mCheckedBean_Q = bean;
@@ -479,13 +512,36 @@ public class ShowActivity extends BaseActivity {
 
         //保存至本地数据库
         save2Litepal(GlobalManager.TYPE_DRAFT_LITE);
-        List<SupportDraftOrSubmit> draftList = DataSupport.
+      /*  List<SupportDraftOrSubmit> draftList = DataSupport.
                 where(GlobalManager.LITE_CONDITION, GlobalManager.TYPE_DRAFT_LITE).
                 find(SupportDraftOrSubmit.class);
         for (int i = 0; i < draftList.size(); i++) {
-            Logger.i(draftList.get(i).toString());
+            for (int j = 0; j < draftList.get(i).getSupportMedia().getPaths().size(); j++) {
+                Logger.i(draftList.get(i).getSupportMedia().getPaths().get(j).toString());
+            }
         }
-        Logger.i(draftList.get(0).toString());
+        Logger.i(draftList.get(0).toString());*/
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        List<SupportDraftOrSubmit> all = DataSupport.findAll(SupportDraftOrSubmit.class);
+        SupportMedia supportMedia = all.get(0).getSupportMedia();
+        for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+        Logger.i(supportMedia.getPaths().get(i));
+        Logger.i(supportMedia.getPictureTypes().get(i));
+        Logger.i(supportMedia.getWidths().get(i)+"yyyyyyy");
+        Logger.i(supportMedia.getHeights().get(i)+"yyyyyyy");
+        Logger.i(supportMedia.getNums().get(i)+"yyyyyyy");
+        Logger.i(supportMedia.getPositions().get(i)+"yyyyyyy");
+        Logger.i(supportMedia.getDurations().get(i)+"yyyyyyy");
+        Logger.i(supportMedia.getMimeTypes().get(i)+"yyyyyyy");
+
+        }
+
     }
 
     /**
@@ -529,25 +585,12 @@ public class ShowActivity extends BaseActivity {
 
         ArrayList<String> picturePath = new ArrayList<>();
         ArrayList<String> pictureTitle = new ArrayList<>();
-        List<PathTitleBean> path_sanzheng = mDetailInfoBean_Q.getPath_sanzheng();
-        List<PathTitleBean> path_cheshen = mDetailInfoBean_Q.getPath_cheshen();
-        List<PathTitleBean> path_huowu = mDetailInfoBean_Q.getPath_huowu();
-        if (path_sanzheng!= null) {
-            for (int i = 0; i < path_sanzheng.size(); i++) {
-                picturePath.add(path_sanzheng.get(i).getPath());
-                pictureTitle.add(path_sanzheng.get(i).getTitle());
-            }
-        }
-        if (path_cheshen!= null) {
-            for (int i = 0; i < path_cheshen.size(); i++) {
-                picturePath.add(path_cheshen.get(i).getPath());
-                pictureTitle.add(path_cheshen.get(i).getTitle());
-            }
-        }
-        if (path_huowu!= null) {
-            for (int i = 0; i < path_huowu.size(); i++) {
-                picturePath.add(path_huowu.get(i).getPath());
-                pictureTitle.add(path_huowu.get(i).getTitle());
+        List<PathTitleBean> path_all = mDetailInfoBean_Q.getPath_and_title();
+
+        if (path_all != null) {
+            for (int i = 0; i < path_all.size(); i++) {
+                picturePath.add(path_all.get(i).getPath());
+                pictureTitle.add(path_all.get(i).getTitle());
             }
         }
 
@@ -567,12 +610,90 @@ public class ShowActivity extends BaseActivity {
         supportChecked.setSiteLogin(mCheckedBean_Q.getSiteLogin());
         supportChecked.save();
 
+        SupportMedia supportMedia = new SupportMedia();
+        if (mLocalMedias_sanzheng_Q != null && mLocalMedias_sanzheng_Q.size() != 0) {
+            ArrayList<String> paths = new ArrayList<>();
+            ArrayList<String> pictureTypes = new ArrayList<>();
+            ArrayList<Long> mDurations = new ArrayList<>();
+            ArrayList<Integer> nums = new ArrayList<>();
+            ArrayList<Integer> mimeTypes = new ArrayList<>();
+            ArrayList<Integer> widths = new ArrayList<>();
+            ArrayList<Integer> heights = new ArrayList<>();
+            ArrayList<Integer> positions = new ArrayList<>();
+            for (int i = 0; i < mLocalMedias_sanzheng_Q.size(); i++) {
+                LocalMedia media = mLocalMedias_sanzheng_Q.get(i);
+                paths.add(media.getPath());
+                pictureTypes.add(media.getPictureType());
+                mDurations.add(media.getDuration());
+                nums.add(media.getNum());
+                heights.add(media.getHeight());
+                widths.add(media.getWidth());
+                positions.add(media.getPosition());
+                mimeTypes.add(media.getMimeType());
+                Logger.i(media.getPath() + "---" +
+                        media.getCompressPath() + "---" +
+                        media.getCutPath() + "---" +
+                        media.getDuration() + "---" +
+                        media.getHeight() + "---" +
+                        media.getMimeType() + "---" +
+                        media.getNum() + "---" +
+                        media.getPictureType() + "---" +
+                        media.getPosition() + "---" +
+                        media.isChecked() + "---" +
+                        media.isCompressed() + "---" +
+                        media.isCut() + "---" +
+                        media.getWidth());
+            }
+            supportMedia.setPaths(paths);
+            supportMedia.setPictureTypes(pictureTypes);
+            supportMedia.setDurations(mDurations);
+            supportMedia.setNums(nums);
+            supportMedia.setHeights(heights);
+            supportMedia.setWidths(widths);
+            supportMedia.setMimeTypes(mimeTypes);
+            supportMedia.setPositions(positions);
+            supportMedia.setLite_ID(count + 1);
+            supportMedia.setPhotoType(GlobalManager.PHOTO_TYPE_SANZHENG);
+            supportMedia.save();
+
+        }
+
+      /*  saveSupportMedia(supportMedias,mLocalMedias_sanzheng_Q,count,GlobalManager.PHOTO_TYPE_SANZHENG);
+        saveSupportMedia(supportMedias,mLocalMedias_cheshen_Q,count,GlobalManager.PHOTO_TYPE_CHESHEN);
+        saveSupportMedia(supportMedias,mMediasHuozhao_huowu_Q,count,GlobalManager.PHOTO_TYPE_HUOZHAO);
+*/
+
         support.setSupportScan(supportScan);
         support.setSupportDetail(supportDetail);
         support.setSupportChecked(supportChecked);
+        support.setSupportMedia(supportMedia);
 
         support.save();
     }
+
+   /* private void saveSupportMedia(ArrayList<SupportMedia> supportMedias,List<LocalMedia> medias,int count,String photo_type) {
+        for (int i = 0; i < medias.size(); i++) {
+            LocalMedia localMedia = medias.get(i);
+            SupportMedia supportMedia = new SupportMedia();
+            supportMedia.setChecked(localMedia.isChecked());
+            supportMedia.setCompressed(localMedia.isCompressed());
+            supportMedia.setCut(localMedia.isCut());
+            supportMedia.setCompressPath(localMedia.getCompressPath());
+            supportMedia.setPath(localMedia.getPath());
+            supportMedia.setCutPath(localMedia.getCutPath());
+            supportMedia.setDuration(localMedia.getDuration());
+            supportMedia.setHeight(localMedia.getHeight());
+            supportMedia.setPosition(localMedia.getPosition());
+            supportMedia.setMimeType(localMedia.getMimeType());
+            supportMedia.setNum(localMedia.getNum());
+            supportMedia.setPictureType(localMedia.getPictureType());
+            supportMedia.setWidth(localMedia.getWidth());
+            supportMedia.setLite_ID(count+1);
+            supportMedia.setPhoto_type(photo_type);
+            supportMedia.save();
+            supportMedias.add(supportMedia);
+        }
+    }*/
 
     @Override
     public void onBackPressed() {

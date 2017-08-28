@@ -24,5 +24,10 @@ public class GlobalManager {
     public static String ENTERTYPE_CHECK = "entertype_check";
 
 
+    public static String PHOTO_TYPE_SANZHENG = "photo_type_sanzheng";
+    public static String PHOTO_TYPE_CHESHEN = "photo_type_cheshen";
+    public static String PHOTO_TYPE_HUOZHAO = "photo_type_huozhao";
+
+
 
 }

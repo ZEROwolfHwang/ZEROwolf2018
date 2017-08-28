@@ -10,36 +10,20 @@ public class DetailInfoBean{
     private String color;
     private String number;
     private String goods;
-    private List<PathTitleBean> mPath_sanzheng;
-    private List<PathTitleBean> mPath_cheshen;
-    private List<PathTitleBean> mPath_huowu;
+    private List<PathTitleBean> mPath_and_title;
+
 
     public DetailInfoBean() {
     }
 
-
-    public List<PathTitleBean> getPath_sanzheng() {
-        return mPath_sanzheng;
-    }
-
-    public void setPath_sanzheng(List<PathTitleBean> path_sanzheng) {
-        mPath_sanzheng = path_sanzheng;
-    }
-
-    public List<PathTitleBean> getPath_cheshen() {
-        return mPath_cheshen;
-    }
-
-    public void setPath_cheshen(List<PathTitleBean> path_cheshen) {
-        mPath_cheshen = path_cheshen;
-    }
-
-    public List<PathTitleBean> getPath_huowu() {
-        return mPath_huowu;
-    }
-
-    public void setPath_huowu(List<PathTitleBean> path_huowu) {
-        mPath_huowu = path_huowu;
+    @Override
+    public String toString() {
+        return "DetailInfoBean{" +
+                "color='" + color + '\'' +
+                ", number='" + number + '\'' +
+                ", goods='" + goods + '\'' +
+                ", mPath_and_title=" + mPath_and_title +
+                '}';
     }
 
     public String getColor() {
@@ -66,15 +50,11 @@ public class DetailInfoBean{
         this.goods = goods;
     }
 
-    @Override
-    public String toString() {
-        return "DetailInfoBean{" +
-                "color='" + color + '\'' +
-                ", number='" + number + '\'' +
-                ", goods='" + goods + '\'' +
-                ", mPath_sanzheng=" + mPath_sanzheng +
-                ", mPath_cheshen=" + mPath_cheshen +
-                ", mPath_huowu=" + mPath_huowu +
-                '}';
+    public List<PathTitleBean> getPath_and_title() {
+        return mPath_and_title;
+    }
+
+    public void setPath_and_title(List<PathTitleBean> path_and_title) {
+        mPath_and_title = path_and_title;
     }
 }
