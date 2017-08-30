@@ -12,10 +12,6 @@ public class SerializableMain2Sure implements Serializable {
 
     private String goods_I;
 
-
-
-
-
     public String getCarNumber_I() {
         return carNumber_I;
     }

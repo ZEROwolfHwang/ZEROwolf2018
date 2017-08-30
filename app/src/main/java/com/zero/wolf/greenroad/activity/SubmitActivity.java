@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +23,7 @@ import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ImageProcessor;
-import com.zero.wolf.greenroad.tools.TimeUtil;
+import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
@@ -36,8 +35,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static org.litepal.crud.DataSupport.findAll;
 
 public class SubmitActivity extends BaseActivity implements View.OnClickListener {
 
@@ -144,20 +141,19 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
                 ToastUtils.singleToast("清除七天前记录");
-                deleteInfos(7);
+                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,mAdapter);
                 break;
             case R.id.delete_preview_15:
                 ToastUtils.singleToast("清除15天前记录");
-                deleteInfos(15);
-
+                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,mAdapter);
                 break;
             case R.id.delete_preview_30:
                 ToastUtils.singleToast("清除30天前记录");
-                deleteInfos(30);
+                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,mAdapter);
                 break;
             case R.id.delete_preview_all:
                 ToastUtils.singleToast("清空所有记录");
-                DeleteHelper.deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE,mAdapter);
+                DeleteHelper.deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,mAdapter);
                 break;
 
             default:
@@ -166,46 +162,6 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         return true;
     }
 
-
-    /**
-     * 清除几天之前的记录
-     */
-    private void deleteInfos(int day) {
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle("清除" + day + "天之前本地保存的拍摄数据");
-        dialog.setMessage("点击“确定”将删除" + day + "天以前的拍摄记录" + "\"" +
-                "点击“取消”将取消删除操作");
-        dialog.setCancelable(false);
-        dialog.setPositiveButton(getString(R.string.dialog_messge_OK), (dialog1, which) -> {
-            String currentTimeToDate = TimeUtil.getCurrentTimeToDate();
-            List<SupportDraftOrSubmit> photoLiteList = findAll(SupportDraftOrSubmit.class);
-
-            for (int i = 0; i < photoLiteList.size(); i++) {
-                String shutTime = photoLiteList.get(i).getCurrent_time();
-                int dayGap = TimeUtil.differentDaysByMillisecond(shutTime, currentTimeToDate);
-                if (dayGap > day) {
-                    DataSupport.deleteAll(SupportDraftOrSubmit.class, "shutTime = ?", shutTime);
-                    //删除三张本地照片
-                    /*FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
-                    FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath2());
-                    FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath3());
-                    */
-                }
-            }
-            List<SupportDraftOrSubmit> supportDraftList = DataSupport.
-                    where("lite_type=?", GlobalManager.TYPE_SUBMIT_LITE).find(SupportDraftOrSubmit.class);
-
-            mAdapter.updateListView(supportDraftList);
-
-        });
-        dialog.setNegativeButton(getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
-            dialog1.dismiss();
-        });
-        dialog.show();
-
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

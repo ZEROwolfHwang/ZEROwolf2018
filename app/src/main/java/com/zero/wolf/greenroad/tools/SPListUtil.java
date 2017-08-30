@@ -22,6 +22,8 @@ public class SPListUtil {
 
     /** 数据存储的XML名称 **/
     public final static String APPCONFIGINFO = "appconfiginfo";
+  /** 数据存储的XML名称 **/
+    public final static String LOGINNFO = "loginnfo";
 
     /**
      * 存储数据(Int)

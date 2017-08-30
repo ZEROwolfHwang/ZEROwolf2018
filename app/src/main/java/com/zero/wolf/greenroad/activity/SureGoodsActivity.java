@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 
 public class SureGoodsActivity extends BaseActivity {
 
+    private static String ARG_LITE_ID = "arg_lite_id";
+    private static String ARG_ENTER_TYPE = "arg_enter_type";
 
     private List<SortModel> mGoodsList = new ArrayList<>();
     private SureViewPagerAdapter mPagerAdapter;
@@ -42,6 +44,8 @@ public class SureGoodsActivity extends BaseActivity {
     private String mType;
     private SerializableMain2Sure mMain2Sure;
     private ArrayList<MyBitmap> mMyBitmaps;
+    private int mLite_ID;
+    private String mEnterType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +68,12 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
 
-
     private void initViewPagerAndTabs() {
-        mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),mMain2Sure);
+        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(mEnterType)) {
+            mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(), mMain2Sure,mEnterType,mLite_ID);
+        } else {
+            mPagerAdapter = new SureViewPagerAdapter(getSupportFragmentManager(),mMain2Sure,mEnterType);
+        }
         mViewPagerSure.setOffscreenPageLimit(3);//设置viewpager预加载页面数
 
         mViewPagerSure.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
@@ -84,14 +91,26 @@ public class SureGoodsActivity extends BaseActivity {
     }
 
 
-    public static void actionStart(Context context, SerializableMain2Sure main2Sure, String type) {
+    public static void actionStart(Context context, SerializableMain2Sure main2Sure, String type, String enterType) {
         Intent intent = new Intent(context, SureGoodsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("main2Sure", main2Sure);
+        //bundle.putParcelableArrayList("myBitmapList", (ArrayList<? extends Parcelable>) myBitmaps);
+        intent.putExtras(bundle);
+        intent.putExtra(ARG_ENTER_TYPE, enterType);
+        intent.setType(type);
+        context.startActivity(intent);
+    }
 
+    public static void actionStart(Context context, SerializableMain2Sure main2Sure, String type, String enterType, int lite_ID) {
+        Intent intent = new Intent(context, SureGoodsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("main2Sure", main2Sure);
         //bundle.putParcelableArrayList("myBitmapList", (ArrayList<? extends Parcelable>) myBitmaps);
         intent.putExtras(bundle);
         intent.setType(type);
+        intent.putExtra(ARG_LITE_ID, lite_ID);
+        intent.putExtra(ARG_ENTER_TYPE, enterType);
         context.startActivity(intent);
     }
 
@@ -102,8 +121,11 @@ public class SureGoodsActivity extends BaseActivity {
         Intent intent = getIntent();
         mType = intent.getType();
         Bundle bundle = intent.getExtras();
-        mMain2Sure= (SerializableMain2Sure) bundle.getSerializable("main2Sure");
-
+        mMain2Sure = (SerializableMain2Sure) bundle.getSerializable("main2Sure");
+        mEnterType = intent.getStringExtra(ARG_ENTER_TYPE);
+        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(mEnterType)) {
+            mLite_ID = intent.getIntExtra(ARG_LITE_ID, 0);
+        }
     }
 
 

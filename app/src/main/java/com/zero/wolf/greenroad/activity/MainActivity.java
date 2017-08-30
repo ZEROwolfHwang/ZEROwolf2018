@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
@@ -37,6 +36,7 @@ import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
+import com.zero.wolf.greenroad.tools.SDcardSpace;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
@@ -80,10 +80,14 @@ public class MainActivity extends BaseActivity implements
     RelativeLayout mRlMainDraft;
     @BindView(R.id.rl_main_submit)
     RelativeLayout mRlMainSubmit;
-    @BindView(R.id.tv_math_number_submit)
-    TextView mTvMathNumberSubmit;
     @BindView(R.id.tv_math_number_draft)
     TextView mTvMathNumberDraft;
+    @BindView(R.id.tv_math_number_submit)
+    TextView mTvMathNumberSubmit;
+    @BindView(R.id.tv_avail_space)
+    TextView mTvAvailSpace;
+    @BindView(R.id.tv_all_space)
+    TextView mTvAllSpace;
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -110,6 +114,8 @@ public class MainActivity extends BaseActivity implements
 
     private String mRoad_Q;
     private String mStation_Q;
+    private String mAvailSpace;
+    private String mAllSpace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +127,7 @@ public class MainActivity extends BaseActivity implements
         ButterKnife.bind(this);
         mActivity = this;
 
+
         List app_config_info = new ArrayList<String>();
 
         app_config_info.add("163127841234");
@@ -129,7 +136,6 @@ public class MainActivity extends BaseActivity implements
 
         Logger.i(app_config_info.toString());
         SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
-
 
 
         List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
@@ -163,11 +169,24 @@ public class MainActivity extends BaseActivity implements
             startActivity(intent);
         });
 
+        initSpace();
 
         initData();
         //initSp();
         initView();
 
+
+    }
+
+    private void initSpace() {
+        SDcardSpace sDcardSpace = new SDcardSpace(mActivity);
+        mAvailSpace = sDcardSpace.getAvailSpace();
+       // mAllSpace = sDcardSpace.getAllSpace();
+        mAllSpace = sDcardSpace.getSDTotalSize(mActivity);
+
+
+        mTvAllSpace.setText(" / "+mAllSpace);
+        mTvAvailSpace.setText(mAvailSpace+"");
 
     }
 
@@ -247,9 +266,6 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.nav_update) {
             Logger.i("点击了更新按钮");
             updateApp();
-
-        } else if (id == R.id.nav_cancer) {
-            cancelCount();
         } else if (id == R.id.nav_backup) {
             buckUpApp();
         } else if (id == R.id.nav_post) {
@@ -301,24 +317,6 @@ public class MainActivity extends BaseActivity implements
         return animator;
     }
 
-
-  /*  private void post_not_upload() {
-
-
-        //initBroadCast();
-
-        mNotPostDialog = new AlertDialog.Builder(mActivity);
-        mNotPostDialog.setTitle("是否提交本地保存的车辆信息");
-        mNotPostDialog.setMessage("本地保存的未上传成功的车辆个数为:" +
-                SPUtils.get(mActivity, SPUtils.CAR_NOT_COUNT, 0));
-        mNotPostDialog.setCancelable(false);
-        mNotPostDialog.setPositiveButton("提交", ((dialog, which) ->
-                PostIntentService.startActionNotPost(this))
-        );
-        mNotPostDialog.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
-        mNotPostDialog.show();
-    }*/
-
     /**
      * 退出程序
      */
@@ -337,33 +335,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     /**
-     * 将拍照车辆的计数以及上传车辆的计数归零
-     */
-    private void cancelCount() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle("将已拍摄车辆及未上传车辆清零重新计数");
-        dialog.setMessage("点击“确定”将清空计数" + "\"" +
-                "点击“取消”将取消该操作");
-        dialog.setCancelable(false);
-        dialog.setPositiveButton(getString(R.string.dialog_messge_OK), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface di, int which) {
-                SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_COUNT);
-                SPUtils.cancel_count(getApplicationContext(), SPUtils.CAR_NOT_COUNT);
-                refresh();
-            }
-        });
-        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-
-    }
-
-    /**
      * 刷新当前页面的数据
      */
     private void refresh() {
@@ -379,7 +350,12 @@ public class MainActivity extends BaseActivity implements
         setOperatorInfo("login_select = ?", mTvOperatorLoginMain);
         mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
 
+        mTvMathNumberDraft.setText(SPUtils.get(this, SPUtils.MATH_DRAFT_LITE, 0) + "");
+        mTvMathNumberSubmit.setText(SPUtils.get(this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
+
+
     }
+
     private void setOperatorInfo(String condition, TextView textView) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
         if (operatorList.size() != 0) {
@@ -576,6 +552,7 @@ public class MainActivity extends BaseActivity implements
         Logger.i("mainactivity被销毁");
         //  PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
     }
+
     private void openSettingActivity() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);

@@ -10,11 +10,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-
-    <ImageButton
-        android:id="@+id/img_clear_login"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="right|center_vertical"
-        android:background="@drawable/delete_login_info"/>
 </FrameLayout>

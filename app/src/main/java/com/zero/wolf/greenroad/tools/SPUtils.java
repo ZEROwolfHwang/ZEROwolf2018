@@ -12,10 +12,15 @@ import java.util.Map;
  */
 
 public class SPUtils {
+    //存储的是草稿以及提交的数量
+    public static final String lOGIN_USERNAME = "login_username";
+
+    public static final String MATH_DRAFT_LITE = "math_draft_lite";
+    public static final String MATH_SUBMIT_LITE = "math_submit_lite";
 
     public static final String TEXTLANE= "textlane";
     public static final String CHECKOPERATOR = "checkoperator";
-    public static final String LOGINOPERATOR = "loginoperator";
+
     public static final String KEY_THEME_TAG = "GreenRoad_ThemeTag";
 
     //拍摄的模式,1表示拍摄图片,-1表示摄影
@@ -24,9 +29,6 @@ public class SPUtils {
     public static final String ISACTIVATIONSUCCESS= "isactivationsuccess";
 
     public static final String SHAREDPRENAME = "activation";
-    public static String CODE = "ActivationCode";
-    public static String CAR_COUNT = "car_count";
-    public static String CAR_NOT_COUNT = "car_not_count";
 
     /**
      * SharedPreferences存储在sd卡中的文件名字

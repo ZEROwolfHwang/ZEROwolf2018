@@ -4,7 +4,7 @@
         <dbname value="green" />
 
 
-        <version value="54" />
+        <version value="58" />
 
         <list>
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportStation" />

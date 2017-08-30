@@ -5,14 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.fragment.CheckedFragment;
 import com.zero.wolf.greenroad.fragment.DetailsFragment;
 import com.zero.wolf.greenroad.fragment.ScanFragment;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
-import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
 
 /**
@@ -26,7 +24,7 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
     private String enterType;
     private SupportDetail mSupportDetail;
     private SupportChecked mSupportChecked;
-    private SupportMedia mSupportMedia;
+    private int mLite_ID;
 
 
     public ShowViewPagerAdapter(FragmentManager fm, Context context, String type) {
@@ -37,17 +35,13 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
 
     public ShowViewPagerAdapter(FragmentManager fm, Context context, SupportDetail supportDetail,
                                 SupportScan supportScan, SupportChecked supportChecked,
-                                SupportMedia supportMedia,String type) {
+                                int lite_ID,String type) {
         super(fm);
         this.context = context;
         mSupportDetail = supportDetail;
         mSupportScan = supportScan;
         mSupportChecked = supportChecked;
-        mSupportMedia = supportMedia;
-        for (int i = 0; i < mSupportMedia.getPaths().size(); i++) {
-            Logger.i(mSupportMedia.getPaths().get(i));
-            Logger.i(mSupportMedia.getHeights().get(i)+"-----");
-        }
+        mLite_ID = lite_ID;
         enterType = type;
     }
 
@@ -74,7 +68,7 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
         } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
             switch (position) {
                 case 0:
-                    fragment = DetailsFragment.newInstance(enterType,mSupportDetail,mSupportMedia);
+                    fragment = DetailsFragment.newInstance(enterType,mSupportDetail,mLite_ID);
                     break;
                 case 1:
                     fragment = ScanFragment.newInstance(enterType,mSupportScan);

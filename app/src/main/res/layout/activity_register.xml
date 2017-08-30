@@ -24,17 +24,19 @@
             >
 
             <TextView
+                android:id="@+id/text_road_register"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:textColor="@color/color333333"
                 android:gravity="center_vertical|left"
                 android:maxLines="1"
                 android:textSize="@dimen/text18"/>
 
             <ImageButton
                 android:id="@+id/register_road"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="@dimen/layout_margin10dp"
                 android:background="@drawable/pop_drop_down"/>
@@ -60,17 +62,19 @@
             >
 
             <TextView
+                android:id="@+id/text_station_register"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="center_vertical|left"
                 android:maxLines="1"
+                android:textColor="@color/color333333"
                 android:textSize="@dimen/text18"/>
 
             <ImageButton
                 android:id="@+id/register_station"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="@dimen/layout_margin10dp"
                 android:background="@drawable/pop_drop_down"/>
@@ -185,7 +189,9 @@
     <!--注册用户-->
 
 
-    <TextView
+    <Button
+        android:elevation="@dimen/layout_margin5dp"
+        android:id="@+id/btn_sure_register"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/register_bg_green"

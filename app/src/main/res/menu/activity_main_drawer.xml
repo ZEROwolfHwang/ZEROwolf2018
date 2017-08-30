@@ -5,30 +5,23 @@
     <group>
 
         <item
-            android:id="@+id/nav_cancer"
-            android:icon="@drawable/cancel_count"
-            android:title="@string/cancel_count">
-        </item>
-        <item
             android:id="@+id/nav_post"
             android:icon="@drawable/post_not_send"
             android:title="@string/post_upload_not">
         </item>
 
         <item
-
-            android:id="@+id/nav_about"
-            android:icon="@drawable/about_app"
-            android:title="@string/about_app"/>
-        <item
             android:id="@+id/nav_update"
             android:icon="@drawable/update_app"
             android:title="@string/update_app"/>
         <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/about_app"
+            android:title="@string/about_app"/>
+        <item
             android:id="@+id/nav_backup"
             android:icon="@drawable/footer_item_location"
             android:title="@string/back_up_app"/>
-
     </group>
 
 

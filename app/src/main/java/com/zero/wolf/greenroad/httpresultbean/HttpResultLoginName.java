@@ -13,24 +13,6 @@ public class HttpResultLoginName {
 
     private int code;
     private String msg;
-    private String operator;
-    private String stationName;
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getStationName() {
-        return stationName;
-    }
-
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
-    }
 
     public int getCode() {
         return code;

@@ -5,7 +5,7 @@ package com.zero.wolf.greenroad.httpresultbean;
  * 轮询的回调
  */
 
-public class HttpResultPolling {
+public class HttpResultCode {
 
     /**
      * code : 301

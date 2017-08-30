@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.LoginActivity;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.ActivationRequestBody;
 import com.zero.wolf.greenroad.bean.ActivationResult;
@@ -135,8 +134,6 @@ public class ActivationCodeActivity extends AppCompatActivity {
                         Logger.i(requestResult.getCode());
 
                         if (ActivationResult.SUCCESS_CODE.equals(requestResult.getCode())) {
-                            SPUtils.putAndApply(getApplicationContext(), SPUtils.CODE, firstCode + secondCode
-                                    + threeCode + fourCode + fiveCode);
                             SPUtils.putAndApply(getApplicationContext(), SPUtils.ISACTIVATIONSUCCESS, macID);
                             Logger.i("激活完成");
                             ToastUtils.singleToast("激活成功");

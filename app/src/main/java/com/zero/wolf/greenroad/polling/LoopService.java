@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultCode;
 import com.zero.wolf.greenroad.https.RequestPolling;
 
 import java.util.Timer;
@@ -156,7 +156,7 @@ public class LoopService extends Service {
                     Logger.i("长连接未恢复连接，执行轮询操作... \n 轮询服务中请求getInstance接口...");
                    // LoopRequest.getInstance(context).sendLoopRequest();
 
-                    RequestPolling.getInstance().postPolling(new Subscriber<HttpResultPolling>() {
+                    RequestPolling.getInstance().postPolling(new Subscriber<HttpResultCode>() {
                         @Override
                         public void onCompleted() {
 
@@ -167,8 +167,8 @@ public class LoopService extends Service {
                         }
 
                         @Override
-                        public void onNext(HttpResultPolling httpResultPolling) {
-                            Logger.i(httpResultPolling.getCode() + "432343");
+                        public void onNext(HttpResultCode httpResultCode) {
+                            Logger.i(httpResultCode.getCode() + "432343");
                             Logger.i("与服务器连接正常");
                         }
                     },mUsername);

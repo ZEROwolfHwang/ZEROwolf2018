@@ -33,7 +33,7 @@
     <string name="update_app">更新</string>
     <string name="cancel_count">清除</string>
     <string name="activity_about_version">版本号:</string>
-    <string name="activity_about_Activation_code">认证ID：</string>
+    <string name="activity_about_Activation_code">终端ID：</string>
     <string name="prompt_activation_code">终端ID</string>
     <string name="activation_tips">勾选即同意用户协议内容</string>
     <string name="activation_network_info">注意：激活时请确保网络已正常连接。</string>

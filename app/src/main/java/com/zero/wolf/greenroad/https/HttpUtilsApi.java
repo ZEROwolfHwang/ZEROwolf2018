@@ -3,12 +3,9 @@ package com.zero.wolf.greenroad.https;
 import com.zero.wolf.greenroad.bean.ActivationResult;
 import com.zero.wolf.greenroad.bean.HttpResultNumber;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultGoods;
+import com.zero.wolf.greenroad.httpresultbean.HttpResult;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPolling;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultPostImg;
-import com.zero.wolf.greenroad.httpresultbean.HttpResultStation;
-import com.zero.wolf.greenroad.httpresultbean.StationDataBean;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultCode;
 
 import java.util.List;
 import java.util.Map;
@@ -68,14 +65,9 @@ public interface HttpUtilsApi {
     @POST("Login/listapi")
     Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
 
-    @GET("Api/site")
-    Observable<HttpResultStation<List<StationDataBean>>> getStationInfo();
-
     @GET("Api/number")
     Observable<HttpResultNumber<List<HttpResultNumber.DataBean>>> getNumberInfo();
 
-    @GET("Api/goods")
-    Observable<HttpResultGoods<List<HttpResultGoods.DataBean>>> getGoodsInfo();
 
     @GET("Apiversion/update")
     Observable<UpdateAppInfo> update(@Query("appname") String appname,
@@ -93,7 +85,7 @@ public interface HttpUtilsApi {
     @POST("image")
     Observable<AcceptResult> postThreeImg(@PartMap Map<String, RequestBody> params);
 */
-    @Multipart
+  /*  @Multipart
     @POST("Api/image")
     Observable<HttpResultPostImg> postThreeImg(@Part("car_type") String car_type,
                                                @Part("license_color") String licence_color,
@@ -103,26 +95,43 @@ public interface HttpUtilsApi {
                                                @Part("license_plate") String license_plate,
                                                @Part("goods") String goods,
                                                @Part List<MultipartBody.Part> file);
-
+*/
     @FormUrlEncoded
     @POST("Apionline/online")
-    Observable<HttpResultPolling> polling(@Field("polling") String polling);
+    Observable<HttpResultCode> polling(@Field("polling") String polling);
 
     //@Headers({"Content-type:application/json;charset=UTF-8"})
     @Multipart
     @POST("task")
-    Observable<HttpResultPolling> task(@PartMap Map<String, RequestBody> partMap,
-                                       @Part List<MultipartBody.Part> file);
+    Observable<HttpResultCode> task(@PartMap Map<String, RequestBody> partMap,
+                                    @Part List<MultipartBody.Part> file);
 
     @Multipart
-    @POST("picture")
-    Observable<HttpResultPolling> postPicture(
-            @Part("scan_code") String scan_code,
+    @POST("Api/picture")
+    Observable<HttpResultCode> postPicture(
+            @Part("post_time") String postTime,
             @Part List<MultipartBody.Part> sanzheng,
             @Part List<MultipartBody.Part> cheshen,
             @Part List<MultipartBody.Part> huozhao);
 
+    @POST("Api/json")
+    Observable<HttpResultCode> postJson(@Body RequestBody info);
 
-    @POST("json")
-    Observable<HttpResultPolling> postJson(@Body RequestBody info);
+    @FormUrlEncoded
+    @POST("Login/register")
+    Observable<HttpResult> postRegistered(
+            @Field("register_road") String road,
+            @Field("register_station") String station,
+            @Field("register_code") String code,
+            @Field("register_name") String name,
+            @Field("register_psw") String psw,
+            @Field("register_mac") String macId
+    );
+    @FormUrlEncoded
+    @POST("Login/login")
+    Observable<HttpResult> postLogin(
+            @Field("login_name") String name,
+            @Field("login_psw") String psw,
+            @Field("login_mac") String macId
+    );
 }

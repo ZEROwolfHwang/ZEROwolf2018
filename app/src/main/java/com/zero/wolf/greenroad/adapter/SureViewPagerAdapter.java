@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.fragment.CarNumberFragment;
 import com.zero.wolf.greenroad.fragment.GoodsFragment;
@@ -18,13 +19,20 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
     private final SerializableMain2Sure mMain2Sure;
+    private int mLite_ID;
+    private String mEnterType;
 
 
-
-    public SureViewPagerAdapter(FragmentManager manager, SerializableMain2Sure main2Sure) {
+    public SureViewPagerAdapter(FragmentManager manager, SerializableMain2Sure main2Sure,String enterType) {
         super(manager);
         mMain2Sure = main2Sure;
-
+        mEnterType = enterType;
+    }
+    public SureViewPagerAdapter(FragmentManager manager, SerializableMain2Sure main2Sure,String enterType,int lite_ID) {
+        super(manager);
+        mMain2Sure = main2Sure;
+        mEnterType = enterType;
+        mLite_ID = lite_ID;
     }
 
     @Override
@@ -38,7 +46,11 @@ public class SureViewPagerAdapter extends FragmentPagerAdapter {
                 fragment =  GoodsFragment.newInstance(mMain2Sure.getGoods_I());
                 break;
             case 2:
-                fragment = PhotoFragment.newInstance();
+                if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(mEnterType)) {
+                fragment = PhotoFragment.newInstance(mEnterType,mLite_ID);
+                } else {
+                fragment = PhotoFragment.newInstance(mEnterType);
+                }
                 break;
 
             default:

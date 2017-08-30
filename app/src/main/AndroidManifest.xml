@@ -29,8 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
             android:name=".activity.MainActivity"
@@ -93,9 +95,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.PreviewDetailActivity"
-                  android:launchMode="singleTask"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activity.PreviewDetailActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <!--
@@ -140,6 +143,11 @@
         </activity>
         <activity android:name=".activity.RegisterActivity">
         </activity>
+
+        <service
+            android:name=".servicy.SubmitService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

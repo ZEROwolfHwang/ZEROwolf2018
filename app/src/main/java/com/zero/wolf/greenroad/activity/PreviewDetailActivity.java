@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
@@ -19,7 +18,6 @@ import com.zero.wolf.greenroad.fragment.MyBitmap;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
-import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.BitmapUtil;
@@ -207,13 +205,7 @@ public class PreviewDetailActivity extends BaseActivity {
                 mDraftSaveEdit.setVisibility(View.GONE);
             }
         }
-        //   ToastUtils.singleToast(mCurrentSupport.toString());
         mCurrentSupport = intent.getParcelableExtra(SUPPORTDRAFT_ITEM);
-
-        Logger.i(mCurrentSupport.getSupportMedia().getPaths().get(0));
-        Logger.i(mCurrentSupport.getSupportMedia().getPaths().get(1));
-        Logger.i(mCurrentSupport.getSupportMedia().getPaths().get(2));
-        Logger.i(mCurrentSupport.toString());
     }
 
     public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
@@ -243,12 +235,8 @@ public class PreviewDetailActivity extends BaseActivity {
         SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
         SupportScan supportScan = mCurrentSupport.getSupportScan();
         SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
-        SupportMedia supportMedia = mCurrentSupport.getSupportMedia();
 
-        Logger.i(supportMedia.getPaths().get(0));
-        Logger.i(supportMedia.getPaths().get(1));
-        Logger.i(supportMedia.getPaths().get(2));
-        for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+     /*   for (int i = 0; i < supportMedia.getPaths().size(); i++) {
         Logger.i(supportMedia.getPaths().get(i) + "---" +
                 supportMedia.getDurations().get(i) + "---" +
                 supportMedia.getHeights().get(i) + "---" +
@@ -257,7 +245,7 @@ public class PreviewDetailActivity extends BaseActivity {
                 supportMedia.getPictureTypes().get(i) + "---" +
                 supportMedia.getPositions().get(i) + "---" +
                 supportMedia.getWidths().get(i));
-        }
+        }*/
         ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked,mCurrentSupport.getLite_ID());
     }
 

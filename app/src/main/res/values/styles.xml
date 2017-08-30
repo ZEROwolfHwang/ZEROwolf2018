@@ -400,10 +400,10 @@
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:imeActionId">@+id/login</item>
         <item name="android:imeOptions">actionUnspecified</item>
-        <item name="android:inputType">number</item>
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColor">@color/color333333</item>
         <item name="android:textSize">@dimen/text18</item>
     </style>
 </resources>

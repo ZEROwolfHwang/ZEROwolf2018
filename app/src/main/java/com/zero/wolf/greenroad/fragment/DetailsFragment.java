@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -47,6 +48,10 @@ public class DetailsFragment extends Fragment {
     private static TextView mTvChangeGoodsDetail;
 
     private static String mCurrent_color;
+    @BindView(R.id.activity_recycler_left)
+    ImageView mRecyclerLeft;
+    @BindView(R.id.activity_recycler_right)
+    ImageView mRecyclerRight;
 
     private String mCarNumber;
     private String mCarGoods;
@@ -68,6 +73,7 @@ public class DetailsFragment extends Fragment {
     private static String sEnterType;
     private static SupportDetail sSupportDetail;
     private static SupportMedia sSupportMedia;
+    private static int sLite_ID;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -81,15 +87,12 @@ public class DetailsFragment extends Fragment {
     }
 
     public static DetailsFragment newInstance(String enterType, SupportDetail supportDetail,
-                                              SupportMedia supportMedia) {
+                                              int lite_ID) {
         DetailsFragment fragment = new DetailsFragment();
         sEnterType = enterType;
         sSupportDetail = supportDetail;
-        sSupportMedia = supportMedia;
-        for (int i = 0; i < sSupportMedia.getPaths().size(); i++) {
-            Logger.i(sSupportMedia.getPaths().get(i));
-            Logger.i(sSupportMedia.getHeights().get(i)+"-----");
-        }
+        sLite_ID = lite_ID;
+
         return fragment;
     }
 
@@ -171,19 +174,19 @@ public class DetailsFragment extends Fragment {
             }
             if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
                 mAdapter.updateListView(mMyBitmaps_recycler_all);
-                if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
-                    scrollToPosition(mLayoutManager, 3);
+                if (mMyBitmaps_recycler_all.size() > 3) {
+                    mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
                 }
             }
         } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
             PreviewDetailActivity.setPictureLisener(myBitmapList -> {
                 mMyBitmaps_recycler_all.addAll(myBitmapList);
             });
-            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
+//            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
             if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
                 mAdapter.updateListView(mMyBitmaps_recycler_all);
-                if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
-                    scrollToPosition(mLayoutManager, 3);
+                if (mMyBitmaps_recycler_all.size() > 3) {
+                    mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
                 }
             }
         }
@@ -191,18 +194,6 @@ public class DetailsFragment extends Fragment {
         mTvChangeNumberDetail.setText(mCarNumber);
         mTvChangeGoodsDetail.setText(mCarGoods);
 
-
-    }
-
-    private void scrollToPosition(LinearLayoutManager manager, int index) {
-
-        try {
-            manager.scrollToPositionWithOffset(index,
-                    (int) manager.computeScrollVectorForPosition(index).y);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.i("重新进入照片数据异常");
-        }
 
     }
 
@@ -218,11 +209,38 @@ public class DetailsFragment extends Fragment {
         });
 //
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
-        if (mMyBitmaps_recycler_all.size() > 3 && mLayoutManager != null) {
-            scrollToPosition(mLayoutManager, 3);
+        if (mMyBitmaps_recycler_all.size() > 3) {
+            mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
             mAdapter.updateListView(mMyBitmaps_recycler_all);
         }
+        mRecyclerViewShootPhoto.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (mLayoutManager.findFirstVisibleItemPosition() == 0 &&
+                            mLayoutManager.findLastVisibleItemPosition() == mMyBitmaps_recycler_all.size() - 1) {
+                        mRecyclerRight.setVisibility(View.INVISIBLE);
+                        mRecyclerLeft.setVisibility(View.INVISIBLE);
+                    } else if (mLayoutManager.findLastVisibleItemPosition() == mMyBitmaps_recycler_all.size() - 1) {
+                        mRecyclerLeft.setVisibility(View.VISIBLE);
+                        mRecyclerRight.setVisibility(View.INVISIBLE);
+                    } else if (mLayoutManager.findFirstVisibleItemPosition() == 0) {
+                        mRecyclerRight.setVisibility(View.VISIBLE);
+                        mRecyclerLeft.setVisibility(View.INVISIBLE);
+                    } else {
+                        mRecyclerRight.setVisibility(View.VISIBLE);
+                        mRecyclerLeft.setVisibility(View.VISIBLE);
+                    }
 
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         /*LinearLayoutManager llm = (LinearLayoutManager) mRecyclerViewShootPhoto.getLayoutManager();
         llm.scrollToPositionWithOffset(3, 0);
         llm.setStackFromEnd(false);*/
@@ -307,7 +325,8 @@ public class DetailsFragment extends Fragment {
         });
     }
 
-    @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail})
+    @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
+            R.id.activity_recycler_left, R.id.activity_recycler_right})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_change_number_detail:
@@ -317,6 +336,18 @@ public class DetailsFragment extends Fragment {
             case R.id.tv_change_goods_detail:
                 enterSureActivity(GlobalManager.ENTERTYPE_GOODS);
                 ToastUtils.singleToast("进入货物的选择业");
+                break;
+            //预览跳转到最左边
+            case R.id.activity_recycler_left:
+                mRecyclerViewShootPhoto.scrollToPosition(0);
+                mRecyclerLeft.setVisibility(View.INVISIBLE);
+                mRecyclerRight.setVisibility(View.VISIBLE);
+                break;
+            //预览跳转到最右边
+            case R.id.activity_recycler_right:
+                mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
+                mRecyclerLeft.setVisibility(View.VISIBLE);
+                mRecyclerRight.setVisibility(View.INVISIBLE);
                 break;
             default:
                 break;
@@ -330,8 +361,12 @@ public class DetailsFragment extends Fragment {
         SerializableMain2Sure main2Sure = new SerializableMain2Sure();
         main2Sure.setCarNumber_I(carNumber);
         main2Sure.setGoods_I(goods);
-
-        SureGoodsActivity.actionStart(getActivity(), main2Sure, type);
+        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
+            SureGoodsActivity.actionStart(getActivity(), main2Sure, type, sEnterType, sLite_ID);
+            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
+        } else {
+            SureGoodsActivity.actionStart(getActivity(), main2Sure, type, sEnterType);
+        }
 
     }
 
@@ -371,6 +406,7 @@ public class DetailsFragment extends Fragment {
         listener.BitmapListener(myBitmaps_sanzheng_Y, myBitmaps_cheshen_Y, myBitmaps_huozhao_Y);
     }
 
+
     public interface BitmapListListener {
         void BitmapListener(ArrayList<MyBitmap> mMyBitmaps_sanzheng,
                             ArrayList<MyBitmap> mMyBitmaps_cheshen, ArrayList<MyBitmap> mMyBitmaps_huowu);
@@ -404,8 +440,8 @@ public class DetailsFragment extends Fragment {
                 }
                 pathTitleList.add(titleBean);
             }
-            if (pathTitleList != null ) {
-                Logger.i(pathTitleList.size() + "---" + "---"  );
+            if (pathTitleList != null) {
+                Logger.i(pathTitleList.size() + "---" + "---");
             }
         }
 
@@ -430,17 +466,23 @@ public class DetailsFragment extends Fragment {
         super.onDestroy();
         mMyBitmaps_recycler_all.clear();
     }
-    public static void setSelectListListener(SelectListListener listener) {
-        if (sSupportMedia!=null) {
-            listener.SelectListener(sSupportMedia);
-            Logger.i(sSupportMedia.getPaths().get(0));
-            Logger.i(sSupportMedia.getPaths().get(1));
-            Logger.i(sSupportMedia.getPaths().get(2));
+
+    /*
+
+        public static void setSelectListListener(SelectListListener listener) {
+            if (sSupportMedia != null) {
+                listener.SelectListener(sSupportMedia);
+                Logger.i(sSupportMedia.getPaths().get(0));
+                Logger.i(sSupportMedia.getPaths().get(1));
+                Logger.i(sSupportMedia.getPaths().get(2));
+            }
         }
-    }
 
-    public interface SelectListListener {
-        void SelectListener(SupportMedia supportMedia);
+        public interface SelectListListener {
+            void SelectListener(SupportMedia supportMedia);
+        }
+    */
+    public static void notifyDataChange() {
+        mCurrent_color = "";
     }
-
 }

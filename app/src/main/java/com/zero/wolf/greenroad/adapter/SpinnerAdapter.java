@@ -5,15 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.interfacy.onItemClick;
-import com.zero.wolf.greenroad.litepalbean.SupportLoginUser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -22,12 +17,10 @@ import java.util.List;
 public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHolder> {
     private final AppCompatActivity mActivity;
     private final onItemClick mItemClick;
-    private List<SupportLoginUser> mList;
-    private final onItemClick mClearItemClick;
+    private String[] mList;
 
-    public SpinnerAdapter(AppCompatActivity activity, List<SupportLoginUser> list, onItemClick click, onItemClick itemClick) {
-        mClearItemClick = click;
-        mItemClick = itemClick;
+    public SpinnerAdapter(AppCompatActivity activity, String[] list, onItemClick click) {
+        mItemClick = click;
         mActivity = activity;
         mList = list;
     }
@@ -37,9 +30,9 @@ public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHo
      *
      * @param list
      */
-    public void updateListView(List<SupportLoginUser> list) {
+    public void updateListView(String[] list) {
         if (list == null) {
-            this.mList = new ArrayList<SupportLoginUser>();
+            this.mList = new String[]{};
         } else {
             this.mList = list;
         }
@@ -56,33 +49,25 @@ public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        holder.tv.setText(mList.get(position).getUsername());
-        holder.clearImg.setOnClickListener(v -> mClearItemClick.itemClick(position));
-        holder.tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //  int layoutPosition = holder.getLayoutPosition();
-                notifyDataSetChanged();
-                mItemClick.itemClick(position);
-            }
+        holder.tv.setText(mList[position]);
+        holder.tv.setOnClickListener(v -> {
+            notifyDataSetChanged();
+            mItemClick.itemClick(position);
         });
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList.length;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv;
-        ImageButton clearImg;
 
         public MyViewHolder(View view) {
             super(view);
             tv = (TextView) view.findViewById(R.id.text_login);
-            clearImg = (ImageButton) view.findViewById(R.id.img_clear_login);
-
             //     mPopupWindow.dismissPopWindow();
 
         }

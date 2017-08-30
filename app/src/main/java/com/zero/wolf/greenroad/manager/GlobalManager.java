@@ -11,7 +11,6 @@ package com.zero.wolf.greenroad.manager;
  */
 
 public class GlobalManager {
-    public static int REQUEST_ACTIVATION = 1 * 111;
 
     //public static int REQUEST_IV_CAMERA = 1 * 998;
 

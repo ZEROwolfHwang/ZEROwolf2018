@@ -109,7 +109,7 @@
                 android:elevation="3dp">
 
                 <TextView
-                    android:id="@+id/tv_math_number_submit"
+                    android:id="@+id/tv_math_number_draft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -139,11 +139,11 @@
                 android:elevation="3dp">
 
                 <TextView
-                    android:id="@+id/tv_math_number_draft"
+                    android:id="@+id/tv_math_number_submit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="100"
+                    android:text="0"
                     android:textColor="#f64545"
                     android:textSize="@dimen/text24"/>
                 <TextView
@@ -202,6 +202,7 @@
             android:background="#b3b3b3">
 
             <TextView
+                android:id="@+id/tv_avail_space"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
@@ -209,15 +210,16 @@
                 android:gravity="center_vertical"
                 android:text="16G"
                 android:textColor="#4d4d4d"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <TextView
+                android:id="@+id/tv_all_space"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="/24G"
                 android:textColor="#4d4d4d"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
