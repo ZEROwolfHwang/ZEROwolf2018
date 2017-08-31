@@ -1,10 +1,10 @@
-package com.zero.wolf.greenroad.bean;
+package com.zero.wolf.greenroad.httpresultbean;
 
 /**
  * Created by Administrator on 2017/7/5.
  */
 
-public class HttpResultNumber<T> {
+public class HttpResultBlack<T> {
 
     /**
      * code : 300
@@ -15,6 +15,7 @@ public class HttpResultNumber<T> {
     private int code;
     private String msg;
     private T data;
+
 
     public int getCode() {
         return code;
@@ -42,18 +43,22 @@ public class HttpResultNumber<T> {
     }
 
     public static class DataBean {
-        /**
-         * pac : 京A
-         */
 
-        private String pac;
+        private String plate_number;
 
-        public String getPac() {
-            return pac;
+        public String getPlate_number() {
+            return plate_number;
         }
 
-        public void setPac(String pac) {
-            this.pac = pac;
+        public void setPlate_number(String plate_number) {
+            this.plate_number = plate_number;
+        }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "plate_number='" + plate_number + '\'' +
+                    '}';
         }
     }
 }

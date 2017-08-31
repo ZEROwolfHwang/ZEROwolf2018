@@ -112,7 +112,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
             Logger.i("++++++++++++" + mDraftList.get(i).toString());
         }*/
 
-
     }
 
     private void initToolbar() {

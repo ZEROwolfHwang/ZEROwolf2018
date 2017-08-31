@@ -4,18 +4,16 @@
         <dbname value="green" />
 
 
-        <version value="58" />
+        <version value="3" />
 
         <list>
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportStation" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportLoginUser" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportOperator" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportDraft" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportMedia" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportScan" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportDetail" />
             <mapping class="com.zero.wolf.greenroad.litepalbean.SupportChecked" />
+            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportBlack" />
 
         </list>
 

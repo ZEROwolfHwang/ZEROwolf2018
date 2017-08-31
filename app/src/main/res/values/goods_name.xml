@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="science_name">
-        <item>苹果</item>
-        <item>梨子</item>
-        <item>海棠</item>
-        <item>山楂</item>
-        <item>桃子</item>
-        <item>李子</item>
-        <item>杏子</item>
-        <item>杨梅</item>
-        <item>樱桃</item>
-        <item>葡萄</item>
-        <item>提子</item>
-        <item>草莓</item>
-        <item>猕猴桃</item>
-        <item>石榴</item>
-        <item>桑葚</item>
-        <item>橙子</item>
-        <item>橘子</item>
-        <item>柑橘</item>
-        <item>柚子</item>
-        <item>柠檬</item>
-        <item>香蕉</item>
+        <item>001苹果</item>
+        <item>002梨子</item>
+        <item>003海棠</item>
+        <item>004山楂</item>
+        <item>005桃子</item>
+        <item>006李子</item>
+        <item>007杏子</item>
+        <item>008杨梅</item>
+        <item>009樱桃</item>
+        <item>010葡萄</item>
+        <item>011提子</item>
+        <item>012草莓</item>
+        <item>013猕猴桃</item>
+        <item>014石榴</item>
+        <item>015桑葚</item>
+        <item>016橙子</item>
+        <item>017橘子</item>
+        <item>018柑橘</item>
+        <item>019柚子</item>
+        <item>020柠檬</item>
+       <!-- <item>香蕉</item>
         <item>菠萝</item>
         <item>龙眼</item>
         <item>荔枝</item>
@@ -154,7 +154,7 @@
         <item>竹笋</item>
         <item>莴笋</item>
         <item>金针菜(黄花菜)</item>
-        <item>香椿</item>
+        <item>香椿</item>-->
 
     </array>
 </resources>

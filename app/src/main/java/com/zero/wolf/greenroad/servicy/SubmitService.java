@@ -66,11 +66,10 @@ public class SubmitService extends IntentService {
     private File mFile;
     private static String mFilePath_str;
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_SUBMIT = "com.zero.wolf.greenroad.servicy.action.FOO";
-    private static final String ACTION_SAVE = "com.zero.wolf.greenroad.servicy.action.BAZ";
+    private static final String ACTION_SUBMIT = "com.zero.wolf.greenroad.submitservice.action.FOO";
+    private static final String ACTION_SAVE = "com.zero.wolf.greenroad.submitservice.action.BAZ";
 
-    private static final String EXTRA_ROAD = "com.zero.wolf.greenroad.servicy.extra.PARAM1";
-    private static final String EXTRA_STATION = "com.zero.wolf.greenroad.servicy.extra.PARAM2";
+
     private String mSubmitTime;
     private boolean isPictureSubmit;
     private boolean isJsonSubmit;

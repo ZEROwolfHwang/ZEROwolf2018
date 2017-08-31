@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -95,6 +96,7 @@ public class PreviewDetailActivity extends BaseActivity {
     private List<PathTitleBean> mPath_cheshen;
     private static ArrayList<MyBitmap> mBitmapArrayList;
 
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,35 +120,43 @@ public class PreviewDetailActivity extends BaseActivity {
         }
         List<String> picturePaths = null;
         if (picturePaths == null) {
-            picturePaths=mCurrentSupport.getSupportDetail().getPicturePath();
+            picturePaths = mCurrentSupport.getSupportDetail().getPicturePath();
         } else {
             picturePaths.clear();
-            picturePaths=mCurrentSupport.getSupportDetail().getPicturePath();
+            picturePaths = mCurrentSupport.getSupportDetail().getPicturePath();
         }
         List<String> pictureTitles = null;
         if (pictureTitles == null) {
-            pictureTitles=mCurrentSupport.getSupportDetail().getPictureTitle();
+            pictureTitles = mCurrentSupport.getSupportDetail().getPictureTitle();
         } else {
             pictureTitles.clear();
-            pictureTitles=mCurrentSupport.getSupportDetail().getPictureTitle();
+            pictureTitles = mCurrentSupport.getSupportDetail().getPictureTitle();
         }
-        if (picturePaths != null && picturePaths.size() != 0) {
-            for (int i = 0; i < picturePaths.size(); i++) {
-                Bitmap bitmap = BitmapUtil.convertToBitmap(picturePaths.get(i), 800, 800);
-                String title = pictureTitles.get(i);
-                MyBitmap myBitmap = new MyBitmap(picturePaths.get(i),bitmap, title);
-                mBitmapArrayList.add(myBitmap);
-            }
-        }
-
+        List<String> finalPicturePaths = picturePaths;
+        List<String> finalPictureTitles = pictureTitles;
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mDetailActivityRecyclerPhoto.setLayoutManager(mLayoutManager);
         mAdapter = new DetailsRecyclerAdapter(getContext(), mBitmapArrayList, () -> {
 
         });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (finalPicturePaths != null && finalPicturePaths.size() != 0) {
+                    for (int i = 0; i < finalPicturePaths.size(); i++) {
+                        Bitmap bitmap = BitmapUtil.convertToBitmap(finalPicturePaths.get(i), 800, 800);
+                        String title = finalPictureTitles.get(i);
+                        MyBitmap myBitmap = new MyBitmap(finalPicturePaths.get(i), bitmap, title);
+                        mBitmapArrayList.add(myBitmap);
+                    }
+                }
+                mDetailActivityRecyclerPhoto.post(() -> {
+                    mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
+                });
+            }
+        }).start();
 //        mRecyclerViewShootPhoto.scrollToPosition(3);
         // scrollToPosition(mLayoutManager,3);
-        mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
     }
 
     private void initView() {
@@ -216,22 +226,7 @@ public class PreviewDetailActivity extends BaseActivity {
     }
 
     @OnClick(R.id.draft_save_edit)
-    public void onClick(View view) {/*
-        ScanInfoBean scanInfoBean = new ScanInfoBean();
-        scanInfoBean.setScan_code(mCurrentSupport.getScan_code());
-        scanInfoBean.setScan_01Q(mCurrentSupport.getScan_01Q());
-        scanInfoBean.setScan_02Q(mCurrentSupport.getScan_02Q());
-        scanInfoBean.setScan_03Q(mCurrentSupport.getScan_03Q());
-        scanInfoBean.setScan_04Q(mCurrentSupport.getScan_04Q());
-        scanInfoBean.setScan_05Q(mCurrentSupport.getScan_05Q());
-        scanInfoBean.setScan_06Q(mCurrentSupport.getScan_06Q());
-        scanInfoBean.setScan_07Q(mCurrentSupport.getScan_07Q());
-        scanInfoBean.setScan_08Q(mCurrentSupport.getScan_08Q());
-        scanInfoBean.setScan_09Q(mCurrentSupport.getScan_09Q());
-        scanInfoBean.setScan_10Q(mCurrentSupport.getScan_10Q());
-        scanInfoBean.setScan_11Q(mCurrentSupport.getScan_11Q());
-        scanInfoBean.setScan_12Q(mCurrentSupport.getScan_12Q());
-*/
+    public void onClick(View view) {
         SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
         SupportScan supportScan = mCurrentSupport.getSupportScan();
         SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
@@ -246,7 +241,7 @@ public class PreviewDetailActivity extends BaseActivity {
                 supportMedia.getPositions().get(i) + "---" +
                 supportMedia.getWidths().get(i));
         }*/
-        ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked,mCurrentSupport.getLite_ID());
+        ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked, mCurrentSupport.getLite_ID());
     }
 
     public static void setPictureLisener(PictureListener listener) {

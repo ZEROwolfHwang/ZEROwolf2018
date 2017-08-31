@@ -1,7 +1,6 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -141,10 +140,10 @@ public class CarNumberFragment extends Fragment {
         keyboardUtil = new LicenseKeyboardUtil(getContext(), view, mEditTextViews, mNumber_I.length() == 7 ? 7 : 0);
         keyboardUtil.showKeyboard();
 
-        //输入车牌完成后的intent过滤器
+     /*     //输入车牌完成后的intent过滤器
         IntentFilter finishFilter = new IntentFilter(INPUT_LICENSE_COMPLETE);
 
-     /*   final BroadcastReceiver receiver = new BroadcastReceiver() {
+      final BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String license = intent.getStringExtra(INPUT_LICENSE_KEY);

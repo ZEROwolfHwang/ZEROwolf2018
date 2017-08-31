@@ -13,6 +13,8 @@ import java.util.Map;
 
 public class SPUtils {
     //存储的是草稿以及提交的数量
+    public static final String LINE_CONFIG= "line_config";
+
     public static final String lOGIN_USERNAME = "login_username";
 
     public static final String MATH_DRAFT_LITE = "math_draft_lite";

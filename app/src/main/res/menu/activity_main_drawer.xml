@@ -9,6 +9,11 @@
             android:icon="@drawable/post_not_send"
             android:title="@string/post_upload_not">
         </item>
+ <item
+            android:id="@+id/nav_config"
+            android:icon="@drawable/post_not_send"
+            android:title="配置">
+        </item>
 
         <item
             android:id="@+id/nav_update"

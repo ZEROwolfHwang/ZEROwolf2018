@@ -1,7 +1,7 @@
 package com.zero.wolf.greenroad.https;
 
 import com.zero.wolf.greenroad.bean.ActivationResult;
-import com.zero.wolf.greenroad.bean.HttpResultNumber;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultBlack;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.httpresultbean.HttpResult;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
@@ -66,7 +66,7 @@ public interface HttpUtilsApi {
     Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
 
     @GET("Api/number")
-    Observable<HttpResultNumber<List<HttpResultNumber.DataBean>>> getNumberInfo();
+    Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getNumberInfo();
 
 
     @GET("Apiversion/update")
@@ -134,4 +134,9 @@ public interface HttpUtilsApi {
             @Field("login_psw") String psw,
             @Field("login_mac") String macId
     );
+
+
+    @GET("Api/black")
+    Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getBlack();
+
 }

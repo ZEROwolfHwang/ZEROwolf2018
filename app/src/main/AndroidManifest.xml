@@ -32,7 +32,6 @@
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity
             android:name=".activity.MainActivity"
@@ -146,6 +145,22 @@
 
         <service
             android:name=".servicy.SubmitService"
+            android:exported="false">
+        </service>
+
+        <activity
+            android:name=".activity.LineConfigActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activity.BlackListActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <service
+            android:name=".servicy.BlackListService"
             android:exported="false">
         </service>
     </application>

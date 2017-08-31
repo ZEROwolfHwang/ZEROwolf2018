@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,13 +24,17 @@ import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
+import com.zero.wolf.greenroad.litepalbean.SupportBlack;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,6 +130,18 @@ public class DetailsFragment extends Fragment {
         CarNumberFragment.setTextChangedFragment((edittext -> {
             if (edittext.length() == 7) {
                 mCarNumber = edittext;
+                List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+                for (int i = 0; i < blackList.size(); i++) {
+                    if (mCarNumber.equals(blackList.get(i).getLicense())) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("该车牌号已被加入黑名单");
+                        builder.setPositiveButton("了解", (dialog, which) -> {
+                            dialog.dismiss();
+                        });
+                        builder.show();
+                        return;
+                    }
+                }
             } else {
                 mCarNumber = "";
             }

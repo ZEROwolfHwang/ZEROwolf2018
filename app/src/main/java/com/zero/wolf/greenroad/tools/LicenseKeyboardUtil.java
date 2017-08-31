@@ -41,15 +41,17 @@ public class LicenseKeyboardUtil {
         keyboardView.setPreviewEnabled(true);
         //设置键盘按键监听器
         keyboardView.setOnKeyboardActionListener(listener);
-        provinceShort = new String[]{"京", "津", "冀", "鲁", "晋", "蒙", "辽", "吉", "黑"
-                , "沪", "苏", "浙", "皖", "闽", "赣", "豫", "鄂", "湘"
-                , "粤", "桂", "渝", "川", "贵", "云", "藏", "陕", "甘"
-                , "青", "琼", "新", "港", "澳", "台", "宁"};
+        keyboardView.setLongClickable(false);
+        provinceShort = new String[]{
+                "粤", "闽", "赣", "鲁湘", "琼", "京", "津",
+                "冀", "晋", "蒙", "辽","吉","黑", "沪", "苏", "浙", "皖", "豫", "鄂", ""
+                ,  "桂", "渝", "川", "贵", "云", "藏", "陕", "甘"
+                , "青",  "新", "港", "澳", "台", "宁"};
 
         letterAndDigit = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
-                , "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"
-                , "A", "S", "D", "F", "G", "H", "J", "K", "L"
-                , "Z", "X", "C", "V", "B", "N", "M"};
+                , "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
+                , "K", "L", "M", "N", "O", "P", "Q", "R", "S"
+                , "T", "U", "V", "W", "X", "Y", "Z"};
 
     }
 
@@ -86,8 +88,8 @@ public class LicenseKeyboardUtil {
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
             if (primaryCode == 112) { //xml中定义的删除键值为112
-                    currentEditText--;
-                    edits[currentEditText].setText("");//将当前EditText置为""并currentEditText-1
+                currentEditText--;
+                edits[currentEditText].setText("");//将当前EditText置为""并currentEditText-1
                 /*if (currentEditText >= 1 && currentEditText < 6) {
                 }
                 else {
@@ -98,9 +100,8 @@ public class LicenseKeyboardUtil {
                     //切换为省份简称键盘
                     keyboardView.setKeyboard(k1);
                 }
-                if (currentEditText < 0) {
+                if (currentEditText < 1) {
                     currentEditText = 0;
-
                 }
             } else { //其它字符按键
                 if (currentEditText == 0) {
@@ -127,7 +128,7 @@ public class LicenseKeyboardUtil {
                     edits[currentEditText].setFocusable(true);
                     edits[currentEditText].setSelection(1);
                     currentEditText++;
-                    if (currentEditText >7) {
+                    if (currentEditText > 7) {
                         currentEditText = 7;
                     }
                 }

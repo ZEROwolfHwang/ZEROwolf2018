@@ -1,5 +1,7 @@
 package com.zero.wolf.greenroad.https;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -17,7 +19,7 @@ import rx.schedulers.Schedulers;
 public class HttpMethods {
 
     //public static final String BASE_URL = "http://192.168.2.122/lvsetondao/index.php/Interfacy/";
-    public static final String BASE_URL = "http://greenft.githubshop.com/index.php/Interfacy/";
+   public static final String BASE_URL = "http://greenft.githubshop.com/index.php/Interfacy/";
 
     private static final int DEFAULT_TIMEOUT = 5;
 
@@ -34,6 +36,7 @@ public class HttpMethods {
         if (sMethods == null) {
             sMethods = new HttpMethods();
         }
+
         return sMethods;
     }
 
@@ -41,6 +44,11 @@ public class HttpMethods {
         //手动创建一个OkHttpClient并设置超时时间
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+/*
+        String url_header= (String) SPUtils.get(GreenRoadApplication.sApplication, SPUtils.LINE_CONFIG, "http://greenft.githubshop.com");
+
+        final String BASE_URL = url_header+"/index.php/Interfacy/";*/
+        Logger.i(BASE_URL);
 
         retrofit = new Retrofit.Builder()
                 .client(builder.build())

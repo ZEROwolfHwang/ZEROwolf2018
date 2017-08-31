@@ -22,7 +22,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +31,7 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
+import com.zero.wolf.greenroad.servicy.BlackListService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
@@ -88,6 +88,10 @@ public class MainActivity extends BaseActivity implements
     TextView mTvAvailSpace;
     @BindView(R.id.tv_all_space)
     TextView mTvAllSpace;
+    @BindView(R.id.tv_math_number_blacklist)
+    TextView mTvMathNumberBlacklist;
+    @BindView(R.id.rl_main_blacklist)
+    RelativeLayout mRlMainBlacklist;
     private long firstClick;
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
@@ -155,19 +159,6 @@ public class MainActivity extends BaseActivity implements
 
         mTvChangeStationMain.setText(mStation_Q);
 
-        Button button = (Button) findViewById(R.id.btn_enter_show);
-        button.setOnClickListener(v -> {
-            ShowActivity.actionStart(MainActivity.this);
-        });
-
-        mRlMainSubmit.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SubmitActivity.class);
-            startActivity(intent);
-        });
-        mRlMainDraft.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, DraftActivity.class);
-            startActivity(intent);
-        });
 
         initSpace();
 
@@ -178,21 +169,48 @@ public class MainActivity extends BaseActivity implements
 
     }
 
+    @OnClick({R.id.rl_main_draft, R.id.rl_main_submit, R.id.rl_main_blacklist, R.id.btn_enter_show})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rl_main_draft:
+                Intent intent = new Intent(MainActivity.this, DraftActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.rl_main_submit:
+                Intent intent1 = new Intent(MainActivity.this, SubmitActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.rl_main_blacklist:
+                Intent intent2 = new Intent(MainActivity.this, BlackListActivity.class);
+                startActivity(intent2);
+
+                break;
+
+            case R.id.btn_enter_show:
+                ShowActivity.actionStart(MainActivity.this);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     private void initSpace() {
+
         SDcardSpace sDcardSpace = new SDcardSpace(mActivity);
         mAvailSpace = sDcardSpace.getAvailSpace();
-       // mAllSpace = sDcardSpace.getAllSpace();
+        // mAllSpace = sDcardSpace.getAllSpace();
         mAllSpace = sDcardSpace.getSDTotalSize(mActivity);
 
 
-        mTvAllSpace.setText(" / "+mAllSpace);
-        mTvAvailSpace.setText(mAvailSpace+"");
+        mTvAllSpace.setText(" / " + mAllSpace);
+        mTvAvailSpace.setText(mAvailSpace + "");
 
     }
 
     private void initData() {
-
         PermissionUtils.verifyStoragePermissions(mActivity);
+        BlackListService.startActionBlack(this);
     }
 
 
@@ -272,11 +290,20 @@ public class MainActivity extends BaseActivity implements
             //post_not_upload();
             refresh();
             Logger.i("点击了未上传按钮");
+        } else if (id == R.id.nav_config) {
+            //post_not_upload();
+            openConfigLine();
+            Logger.i("点击了代开配置路线的按钮");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openConfigLine() {
+        Intent intent = new Intent(MainActivity.this, LineConfigActivity.class);
+        startActivity(intent);
     }
 
 
