@@ -236,6 +236,8 @@
 
     <style name="scan_code_change_info_style">
         <item name="android:maxLines">1</item>
+        <item name="android:enabled">false</item>
+        <item name="android:background">@null</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/color333333</item>
         <item name="android:layout_width">0dp</item>
@@ -405,5 +407,18 @@
         <item name="android:textColorHint">@color/white</item>
         <item name="android:textColor">@color/color333333</item>
         <item name="android:textSize">@dimen/text18</item>
+    </style>
+
+    <style name="RadioButton_goods_style">
+        <item name="android:ems">1</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:textColor">@color/color333333</item>
+        <item name="android:background">@drawable/rb_bg_selector</item>
+        <item name="android:layout_width">@dimen/layout_margin0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text16</item>
+        <item name="android:layout_weight">1</item>
     </style>
 </resources>

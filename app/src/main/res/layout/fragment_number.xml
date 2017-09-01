@@ -107,7 +107,7 @@
         android:keyTextSize="20sp"
         android:labelTextSize="20sp"
         android:paddingTop="5dp"
-        android:shadowColor="#ffffff"
+        android:shadowColor="#ca9d9d"
         android:shadowRadius="1"
         />
 

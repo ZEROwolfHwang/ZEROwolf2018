@@ -1,6 +1,7 @@
 package com.zero.wolf.greenroad.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,7 +89,7 @@ public class RegisterActivity extends BaseActivity {
                 mPopupWindow_road = new SpinnerPopupWindow.Builder(RegisterActivity.this)
                         .setmLayoutManager(null, 0)
                         .setmAdapter(mAdapter_road)
-                        .setmItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL))
+                        .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.CYAN))
                         .setmHeight(600).setmWidth(mWidth)
                         .setOutsideTouchable(true)
                         .setFocusable(true)
@@ -108,7 +109,7 @@ public class RegisterActivity extends BaseActivity {
                 mPopupWindow_station = new SpinnerPopupWindow.Builder(RegisterActivity.this)
                         .setmLayoutManager(null, 0)
                         .setmAdapter(mAdapter_station)
-                        .setmItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL))
+                        .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.CYAN))
                         .setmHeight(800).setmWidth(width)
                         .setOutsideTouchable(true)
                         .setFocusable(true)

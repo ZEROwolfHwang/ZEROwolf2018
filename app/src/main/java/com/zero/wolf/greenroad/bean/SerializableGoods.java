@@ -14,6 +14,7 @@ public class SerializableGoods implements Serializable, Comparable {
      */
     public int top;
 
+    public String kind;
 
     public String scientific_name;
 
@@ -38,6 +39,13 @@ public class SerializableGoods implements Serializable, Comparable {
 
     public long time;
 
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
 
     public long getTime() {
         return time;

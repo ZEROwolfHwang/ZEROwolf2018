@@ -389,9 +389,9 @@ public class MainActivity extends BaseActivity implements
             Logger.i(operatorList.toString());
             String job_number = operatorList.get(0).getJob_number();
             String operator_name = operatorList.get(0).getOperator_name();
-            textView.setText(job_number + "(" + operator_name + ")");
+            textView.setText(job_number + "/" + operator_name );
         } else {
-            textView.setText("500001(苏三)");
+            textView.setText("500001/苏三");
         }
 
     }

@@ -139,6 +139,7 @@ public class PreviewDetailActivity extends BaseActivity {
         mAdapter = new DetailsRecyclerAdapter(getContext(), mBitmapArrayList, () -> {
 
         });
+
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -1,9 +1,11 @@
 package com.zero.wolf.greenroad.fragment;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +15,19 @@ import android.widget.ToggleButton;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.activity.ConclusionActivity;
-import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.activity.ShowActivity;
+import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
+import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
+import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
 import com.zero.wolf.greenroad.bean.CheckedBean;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -56,6 +62,11 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static String sDescriptionQ;
     private static String sEnterType;
     private static SupportChecked sSupportChecked;
+    private List<SupportOperator> mOperatorList;
+    private SpinnerPopupWindow mPopupWindow_check;
+    private SpinnerPopupWindow mPopupWindow_login;
+    private ArrayList<String> mOperators;
+    private int mDimension;
 
 
     public CheckedFragment() {
@@ -92,12 +103,26 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_checked, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        initData();
         initView(view);
 
         //初始化各个checkbox的状态
 
 
         return view;
+    }
+
+    private void initData() {
+        mOperatorList = DataSupport.findAll(SupportOperator.class);
+        mOperators = new ArrayList<>();
+        for (int i = 0; i < mOperatorList.size(); i++) {
+            mOperators.add(mOperatorList.get(i).getJob_number() + "/" +
+                    mOperatorList.get(i).getOperator_name());
+        }
+
+        mDimension = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120,
+                getResources().getDisplayMetrics());
+
     }
 
     private void initView(View view) {
@@ -131,10 +156,10 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             Logger.i(operatorList.toString());
             String mJob_number = operatorList.get(0).getJob_number();
             String mOperator_name = operatorList.get(0).getOperator_name();
-            textView.setText(mJob_number + "(" + mOperator_name + ")");
+            textView.setText(mJob_number + "/" + mOperator_name);
             return mJob_number + "/" + mOperator_name;
         } else {
-            textView.setText("500001(苏三)");
+            textView.setText("500001/苏三");
         }
         return null;
     }
@@ -208,20 +233,58 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                         mTextConclusionView.getText().toString().trim());
                 break;
             case R.id.site_check_operator:
-                openSettingActivity();
+                BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
+                    @Override
+                    public void convert(BasePhotoViewHolder holder, int position, String s) {
+                        TextView textView = holder.getView(R.id.text_item_black);
+                        textView.setText(s);
+                        textView.setOnClickListener(v1 -> {
+                            mSiteCheck.setText(s);
+                            mPopupWindow_check.dismissPopWindow();
+                        });
+                    }
+                };
+
+                mPopupWindow_check = new SpinnerPopupWindow.Builder(getContext())
+                        .setmLayoutManager(null, 0)
+                        .setmAdapter(adapter_check)
+                        .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.DKGRAY))
+                        .setmHeight(800).setmWidth(600)
+                        .setOutsideTouchable(true)
+                        .setFocusable(true)
+                        .build();
+
+                mPopupWindow_check.showPopWindow(v, mDimension);
                 break;
             case R.id.site_login_operator:
-                openSettingActivity();
+                BasePhotoAdapter<String> adapter_login = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
+                    @Override
+                    public void convert(BasePhotoViewHolder holder, int position, String s) {
+                        TextView textView = holder.getView(R.id.text_item_black);
+                        textView.setText(s);
+                        textView.setOnClickListener(v1 -> {
+                            mSiteLogin.setText(s);
+                            mPopupWindow_login.dismissPopWindow();
+                        });
+                    }
+                };
+
+                mPopupWindow_login = new SpinnerPopupWindow.Builder(getContext())
+                        .setmLayoutManager(null, 0)
+                        .setmAdapter(adapter_login)
+                        .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.DKGRAY))
+                        .setmHeight(800).setmWidth(600)
+                        .setOutsideTouchable(true)
+                        .setFocusable(true)
+                        .build();
+
+                mPopupWindow_login.showPopWindow(v, mDimension);
                 break;
+
 
             default:
                 break;
         }
-    }
-
-    private void openSettingActivity() {
-        Intent intent = new Intent(getContext(), SettingActivity.class);
-        startActivity(intent);
     }
 
     public interface CheckedBeanConnectListener {

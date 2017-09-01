@@ -45,7 +45,7 @@ public class BlackListActivity extends BaseActivity {
     private void initRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
-        RecycleViewDivider divider = new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, 5, Color.CYAN);
+        RecycleViewDivider divider = new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL, 5, Color.CYAN);
         mRecyclerBlackList.setLayoutManager(manager);
         mRecyclerBlackList.addItemDecoration(divider);
 

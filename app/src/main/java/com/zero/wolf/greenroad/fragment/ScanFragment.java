@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.orhanobut.logger.Logger;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
@@ -22,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class ScanFragment extends Fragment {
+public class ScanFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,29 +38,33 @@ public class ScanFragment extends Fragment {
 
     @BindView(R.id.scan_qr_code)
     TextView mScanQrCode;
+    @BindView(R.id.btn_edit_able)
+    ToggleButton mBtnEditAble;
 
 
     // TODO: Rename and change types of parameters
 
 
     private ScanBeanConnectListener mListener;
-    private static TextView mTextExportNumber;
-    private static TextView mText_table_1;
-    private static TextView mText_table_2;
-    private static TextView mText_table_3;
-    private static TextView mText_table_4;
-    private static TextView mText_table_5;
-    private static TextView mText_table_6;
-    private static TextView mText_table_7;
-    private static TextView mText_table_8;
-    private static TextView mText_table_9;
-    private static TextView mText_table_10;
-    private static TextView mText_table_11;
-    private static TextView mText_table_12;
+    private static EditText mTextExportNumber;
+    private static EditText mText_table_1;
+    private static EditText mText_table_2;
+    private static EditText mText_table_3;
+    private static EditText mText_table_4;
+    private static EditText mText_table_5;
+    private static EditText mText_table_6;
+    private static EditText mText_table_7;
+    private static EditText mText_table_8;
+    private static EditText mText_table_9;
+    private static EditText mText_table_10;
+    private static EditText mText_table_11;
+    private static EditText mText_table_12;
 
     private static ScanFragment sFragment;
     private static SupportScan sSupportScan;
     private static String enterType;
+    private EditText[] mEditTextsScan;
+    private ToggleButton mToggleEditable;
 
     public ScanFragment() {
         // Required empty public constructor
@@ -71,7 +78,7 @@ public class ScanFragment extends Fragment {
         return sFragment;
     }
 
-    public static ScanFragment newInstance(String type,SupportScan scanInfoBean) {
+    public static ScanFragment newInstance(String type, SupportScan scanInfoBean) {
         if (sFragment == null) {
             sFragment = new ScanFragment();
         }
@@ -100,19 +107,28 @@ public class ScanFragment extends Fragment {
     private void initView(View view) {
 
 //        mTvChangeLaneConfig= (TextView) view.findViewById(R.id.tv_change_lane_config);
-        mTextExportNumber = (TextView) view.findViewById(R.id.export_number);
-        mText_table_1 = (TextView) view.findViewById(R.id.text_table_1);
-        mText_table_2 = (TextView) view.findViewById(R.id.text_table_2);
-        mText_table_3 = (TextView) view.findViewById(R.id.text_table_3);
-        mText_table_4 = (TextView) view.findViewById(R.id.text_table_4);
-        mText_table_5 = (TextView) view.findViewById(R.id.text_table_5);
-        mText_table_6 = (TextView) view.findViewById(R.id.text_table_6);
-        mText_table_7 = (TextView) view.findViewById(R.id.text_table_7);
-        mText_table_8 = (TextView) view.findViewById(R.id.text_table_8);
-        mText_table_9 = (TextView) view.findViewById(R.id.text_table_9);
-        mText_table_10 = (TextView) view.findViewById(R.id.text_table_10);
-        mText_table_11 = (TextView) view.findViewById(R.id.text_table_11);
-        mText_table_12 = (TextView) view.findViewById(R.id.text_table_12);
+        mTextExportNumber = (EditText) view.findViewById(R.id.export_number);
+        mText_table_1 = (EditText) view.findViewById(R.id.text_table_1);
+        mText_table_2 = (EditText) view.findViewById(R.id.text_table_2);
+        mText_table_3 = (EditText) view.findViewById(R.id.text_table_3);
+        mText_table_4 = (EditText) view.findViewById(R.id.text_table_4);
+        mText_table_5 = (EditText) view.findViewById(R.id.text_table_5);
+        mText_table_6 = (EditText) view.findViewById(R.id.text_table_6);
+        mText_table_7 = (EditText) view.findViewById(R.id.text_table_7);
+        mText_table_8 = (EditText) view.findViewById(R.id.text_table_8);
+        mText_table_9 = (EditText) view.findViewById(R.id.text_table_9);
+        mText_table_10 = (EditText) view.findViewById(R.id.text_table_10);
+        mText_table_11 = (EditText) view.findViewById(R.id.text_table_11);
+        mText_table_12 = (EditText) view.findViewById(R.id.text_table_12);
+        mToggleEditable = (ToggleButton) view.findViewById(R.id.btn_edit_able);
+
+        mEditTextsScan = new EditText[]{mTextExportNumber, mText_table_1,
+                mText_table_2, mText_table_3, mText_table_4, mText_table_5,
+                mText_table_6, mText_table_7, mText_table_8, mText_table_9, mText_table_10,
+                mText_table_11, mText_table_12
+        };
+
+        mToggleEditable.setOnCheckedChangeListener(this);
 
         //从草稿的详情页进入采集界面进行修改,会初始化扫描的内容
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
@@ -133,14 +149,24 @@ public class ScanFragment extends Fragment {
     }
 
 
-    @OnClick({R.id.scan_qr_code})
+    @OnClick({R.id.scan_qr_code,R.id.btn_edit_able})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_qr_code:
                 Intent intent = new Intent(getActivity(), CaptureActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SCAN);
                 break;
-
+            case R.id.btn_edit_able:
+                if (mBtnEditAble.isChecked()) {
+                    for (int i = 0; i < mEditTextsScan.length; i++) {
+                        mEditTextsScan[i].setEnabled(true);
+                    }
+                } else {
+                    for (int i = 0; i < mEditTextsScan.length; i++) {
+                        mEditTextsScan[i].setEnabled(false);
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -241,12 +267,17 @@ public class ScanFragment extends Fragment {
             bean.setScan_10Q(scan_10Q);
             bean.setScan_11Q(scan_11Q);
             bean.setScan_12Q(scan_12Q);
-            Logger.i("!!!!!!!!!!!!!!!!!"+bean.toString());
+            Logger.i("!!!!!!!!!!!!!!!!!" + bean.toString());
             listener.beanConnect(bean);
         } else {
             ToastUtils.singleToast("请扫描二维码");
             return;
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
     }
 
     public interface ScanBeanConnectListener {

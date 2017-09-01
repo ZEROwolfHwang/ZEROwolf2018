@@ -6,32 +6,34 @@
               android:padding="@dimen/layout_margin10dp">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_gravity="center_vertical"
-                android:layout_height="60dp"
-                android:layout_marginBottom="@dimen/layout_margin10dp"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginBottom="@dimen/layout_margin5dp"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
-                android:layout_marginTop="@dimen/layout_margin10dp"
                 android:orientation="horizontal">
 
 
                 <ImageView
-                    android:layout_width="@dimen/layout_margin60dp"
-                    android:layout_height="@dimen/layout_margin60dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:background="?attr/custom_car_goods_sure"
                     android:scaleType="fitCenter"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="@dimen/layout_margin10dp"
                     android:background="@drawable/shape_background_main_else_day"
@@ -51,21 +53,66 @@
 
                 </LinearLayout>
             </LinearLayout>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/goods_text_recycler"
-                android:layout_gravity="center"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
 
+            <RadioGroup
+                android:id="@+id/radio_group_goods"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/goods_shucai"
+                    style="@style/RadioButton_goods_style"
+                    android:layout_marginLeft="@dimen/layout_margin5dp"
+                    android:text="蔬菜"/>
+
+                <RadioButton
+                    android:id="@+id/goods_shuiguo"
+                    style="@style/RadioButton_goods_style"
+                    android:text="水果"/>
+
+                <RadioButton
+                    android:id="@+id/goods_shuichanpin"
+                    style="@style/RadioButton_goods_style"
+                    android:text="水产品"/>
+
+                <RadioButton
+                    android:id="@+id/goods_xuqin"
+                    style="@style/RadioButton_goods_style"
+                    android:text="畜禽"/>
+
+                <RadioButton
+                    android:id="@+id/goods_roudannai"
+                    style="@style/RadioButton_goods_style"
+                    android:text="肉蛋奶"/>
+
+                <RadioButton
+                    android:id="@+id/goods_zaliang"
+                    style="@style/RadioButton_goods_style"
+                    android:text="杂粮"/>
+
+                <RadioButton
+                    android:id="@+id/goods_qita"
+                    style="@style/RadioButton_goods_style"
+                    android:text="其他"/>
+            </RadioGroup>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:id="@+id/recycler_view_goods_sure"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/layout_margin10dp"/>
+            android:id="@+id/goods_text_recycler"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_goods_sure"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/layout_margin10dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"/>
 
 
 </LinearLayout>

@@ -43,7 +43,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ACache {
 
-    public static final String GOODSACACHE = "goodsacache";
+    public static final String GOODSACACHE_SHUIGUO = "goodsacache_shuiguo";
+    public static final String GOODSACACHE_ZALIANG = "goodsacache_zaliang";
 
 
     public static String TEXTGOODS = "textgoods";

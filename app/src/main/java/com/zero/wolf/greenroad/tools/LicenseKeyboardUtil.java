@@ -38,15 +38,16 @@ public class LicenseKeyboardUtil {
         }
         keyboardView.setEnabled(true);
         //设置为true时,当按下一个按键时会有一个popup来显示<key>元素设置的android:popupCharacters=""
-        keyboardView.setPreviewEnabled(true);
+        keyboardView.setPreviewEnabled(false);
         //设置键盘按键监听器
         keyboardView.setOnKeyboardActionListener(listener);
         keyboardView.setLongClickable(false);
         provinceShort = new String[]{
-                "粤", "闽", "赣", "鲁湘", "琼", "京", "津",
-                "冀", "晋", "蒙", "辽","吉","黑", "沪", "苏", "浙", "皖", "豫", "鄂", ""
-                ,  "桂", "渝", "川", "贵", "云", "藏", "陕", "甘"
-                , "青",  "新", "港", "澳", "台", "宁"};
+                "粤", "闽", "赣", "湘", "琼", "京", "津",
+                "冀", "晋", "蒙", "辽", "吉", "黑", "沪",
+                "苏", "浙", "皖", "鲁", "豫", "鄂", "桂",
+                "渝", "川", "贵", "云", "藏", "陕", "甘",
+                "青", "宁", "新", "港", "澳", "台"};
 
         letterAndDigit = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
                 , "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
@@ -54,6 +55,7 @@ public class LicenseKeyboardUtil {
                 , "T", "U", "V", "W", "X", "Y", "Z"};
 
     }
+
 
     private KeyboardView.OnKeyboardActionListener listener = new KeyboardView.OnKeyboardActionListener() {
         @Override
@@ -83,26 +85,18 @@ public class LicenseKeyboardUtil {
         @Override
         public void onPress(int primaryCode) {
 
-        }
-
-        @Override
-        public void onKey(int primaryCode, int[] keyCodes) {
             if (primaryCode == 112) { //xml中定义的删除键值为112
+
                 currentEditText--;
                 edits[currentEditText].setText("");//将当前EditText置为""并currentEditText-1
-                /*if (currentEditText >= 1 && currentEditText < 6) {
-                }
-                else {
-                    edits[currentEditText].setText("");//将当前EditText置为""并currentEditText-1
-                    currentEditText--;
-                }*/
+
                 if (currentEditText < 1) {
                     //切换为省份简称键盘
                     keyboardView.setKeyboard(k1);
-                }
-                if (currentEditText < 1) {
                     currentEditText = 0;
                 }
+
+
             } else { //其它字符按键
                 if (currentEditText == 0) {
                     //如果currentEditText==0代表当前为省份键盘,
@@ -117,22 +111,24 @@ public class LicenseKeyboardUtil {
                     keyboardView.setKeyboard(k2);
                 } else {
                     //第二位必须大写字母
-                    if (currentEditText == 1 && !letterAndDigit[primaryCode].matches("[A-Z]{1}")) {
-                        return;
-                    }
+
                     if (currentEditText == 7) {
                         return;
                     }
-
                     edits[currentEditText].setText(letterAndDigit[primaryCode]);
-                    edits[currentEditText].setFocusable(true);
-                    edits[currentEditText].setSelection(1);
+         /*           edits[currentEditText].setFocusable(true);
+                    edits[currentEditText].setSelection(1);*/
                     currentEditText++;
                     if (currentEditText > 7) {
                         currentEditText = 7;
                     }
                 }
             }
+        }
+
+        @Override
+        public void onKey(int primaryCode, int[] keyCodes) {
+
         }
     };
 

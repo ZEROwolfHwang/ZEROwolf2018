@@ -11,7 +11,6 @@ import android.os.Message;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
-import com.zero.wolf.greenroad.activity.MainActivity;
 import com.zero.wolf.greenroad.bean.CheckedBean;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
@@ -446,9 +445,6 @@ public class SubmitService extends IntentService {
             ToastUtils.singleToast("请拍摄或选择两张及以上的货物照片");
             return;
         }
-
-        Intent intent = new Intent(sContext, MainActivity.class);
-        startActivity(intent);
 
         sanzheng = getBodyPart1(pathTitle_sanzheng, "sanzheng");
         cheshen = getBodyPart1(pathTitle_cheshen, "cheshen");

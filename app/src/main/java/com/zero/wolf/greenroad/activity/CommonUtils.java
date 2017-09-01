@@ -18,6 +18,26 @@ public class CommonUtils {
     public final static int SIZE_2 = 480;
 
     /**
+     * convert px to its equivalent sp
+     *
+     * 将px转换为sp
+     */
+    public static int px2sp(Context context, float pxValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+
+    /**
+     * convert sp to its equivalent px
+     *
+     * 将sp转换为px
+     */
+    public static int sp2px(Context context, float spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
+
+    /**
      * dip转为PX
      */
     public static int dp2px(Context context, float dipValue) {

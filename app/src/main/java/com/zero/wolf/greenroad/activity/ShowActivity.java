@@ -256,6 +256,8 @@ public class ShowActivity extends BaseActivity {
                 mMenuFab.toggle(false);
                 //submit2Service();
                 SubmitService.startActionSubmit(this);
+                Intent intent = new Intent(ShowActivity.this, MainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.fab_draft:
                 ToastUtils.singleToast("实现保存草稿");

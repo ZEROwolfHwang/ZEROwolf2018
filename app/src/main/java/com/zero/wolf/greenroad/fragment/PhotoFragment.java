@@ -181,19 +181,22 @@ public class PhotoFragment extends Fragment {
                         for (int i = 0; i < supportMedia.getPaths().size(); i++) {
                             String photoType = supportMedia.getPhotoTypes().get(i);
                             if (GlobalManager.PHOTO_TYPE_SANZHENG.equals(photoType)) {
-
                                 LocalMedia localMedia = initSelected(supportMedia, i);
-                                mSelectList_sanzheng.add(localMedia);
+                                if (localMedia != null) {
+                                    mSelectList_sanzheng.add(localMedia);
+                                }
                             }
                             if (GlobalManager.PHOTO_TYPE_CHESHEN.equals(photoType)) {
-
                                 LocalMedia localMedia = initSelected(supportMedia, i);
-                                mSelectList_cheshen.add(localMedia);
+                                if (localMedia != null) {
+                                    mSelectList_cheshen.add(localMedia);
+                                }
                             }
                             if (GlobalManager.PHOTO_TYPE_HUOZHAO.equals(photoType)) {
-
                                 LocalMedia localMedia = initSelected(supportMedia, i);
-                                mSelectList_huowu.add(localMedia);
+                                if (localMedia != null) {
+                                    mSelectList_huowu.add(localMedia);
+                                }
                             }
                         }
                     }
@@ -229,13 +232,13 @@ public class PhotoFragment extends Fragment {
         mMyBitmapAdd = new MyBitmap(mBitmap_add);
 
         if (sBitmaps_sanzheng != null) {
-            mNumTextSanzheng.setText(" / "+sBitmaps_sanzheng.size());
+            mNumTextSanzheng.setText(" / " + sBitmaps_sanzheng.size());
         }
         if (sBitmaps_cheshen != null) {
-            mNumTextCheshen.setText(" / "+sBitmaps_cheshen.size());
+            mNumTextCheshen.setText(" / " + sBitmaps_cheshen.size());
         }
         if (sBitmaps_huowu != null) {
-            mNumTextHuozhao.setText(" / "+sBitmaps_huowu.size());
+            mNumTextHuozhao.setText(" / " + sBitmaps_huowu.size());
         }
     }
 
@@ -255,7 +258,11 @@ public class PhotoFragment extends Fragment {
             localMedia.setChecked(false);
             localMedia.setCompressed(false);
             localMedia.setCut(false);
-            return localMedia;
+            if (path == null || "".equals(path)) {
+                return null;
+            } else {
+                return localMedia;
+            }
         }
        /* if (mSelectList_sanzheng != null) {
             for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
@@ -456,7 +463,7 @@ public class PhotoFragment extends Fragment {
                 }
                 Logger.i("回调成功goods");
                 mSelectList_sanzheng = PictureSelector.obtainMultipleResult(data);
-                mNumTextSanzheng.setText(" / "+mSelectList_sanzheng.size());
+                mNumTextSanzheng.setText(" / " + mSelectList_sanzheng.size());
                 for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
                     Logger.i(mSelectList_sanzheng.get(i).toString());
                 }
@@ -511,7 +518,7 @@ public class PhotoFragment extends Fragment {
                 }
                 Logger.i("回调成功goods");
                 mSelectList_cheshen = PictureSelector.obtainMultipleResult(data);
-                mNumTextCheshen.setText(" / "+mSelectList_cheshen.size());
+                mNumTextCheshen.setText(" / " + mSelectList_cheshen.size());
                 new Thread(() -> {
                     for (int i = 0; i < mSelectList_cheshen.size(); i++) {
                         String photo_path = mSelectList_cheshen.get(i).getPath();
@@ -538,7 +545,7 @@ public class PhotoFragment extends Fragment {
                 }
                 Logger.i("回调成功goods");
                 mSelectList_huowu = PictureSelector.obtainMultipleResult(data);
-                mNumTextHuozhao.setText(" / "+mSelectList_huowu.size());
+                mNumTextHuozhao.setText(" / " + mSelectList_huowu.size());
                 new Thread(() -> {
                     for (int i = 0; i < mSelectList_huowu.size(); i++) {
                         String photo_path = mSelectList_huowu.get(i).getPath();
