@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="100dp"
+              android:layout_width="80dp"
              android:layout_gravity="center_horizontal"
-              android:layout_height="40dp">
+              android:layout_height="45dp">
 
     <TextView
         android:id="@+id/text_goods"
-        android:layout_margin="3dp"
+        android:layout_marginTop="@dimen/layout_margin10dp"
+        android:layout_marginRight="@dimen/layout_margin10dp"
         android:textSize="18sp"
         android:gravity="center"
         android:textColor="@color/color333333"
@@ -16,8 +17,9 @@
         android:layout_height="match_parent"/>
     <ImageButton
         android:id="@+id/delete_goods"
-        android:background="@drawable/ic_delete_photo"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_delete_photo"
         android:layout_gravity="right|top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="35dp"
+        android:layout_height="35dp"/>
 </FrameLayout>

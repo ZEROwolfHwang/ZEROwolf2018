@@ -191,8 +191,8 @@ public class DetailsFragment extends Fragment {
             }
             if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
                 mAdapter.updateListView(mMyBitmaps_recycler_all);
-                if (mMyBitmaps_recycler_all.size() > 3) {
-                    mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
+                if (mMyBitmaps_recycler_all.size() > 4) {
+                    mRecyclerViewShootPhoto.scrollToPosition(4);
                 }
             }
         } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
@@ -201,10 +201,10 @@ public class DetailsFragment extends Fragment {
             });
 //            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
             if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
-                mAdapter.updateListView(mMyBitmaps_recycler_all);
-                if (mMyBitmaps_recycler_all.size() > 3) {
-                    mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
+                if (mMyBitmaps_recycler_all.size() > 4) {
+                    mRecyclerViewShootPhoto.scrollToPosition(4);
                 }
+                mAdapter.updateListView(mMyBitmaps_recycler_all);
             }
         }
         Logger.i(mCarNumber + "]]]]]]]]]");
@@ -226,8 +226,8 @@ public class DetailsFragment extends Fragment {
         });
 //
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
-        if (mMyBitmaps_recycler_all.size() > 3) {
-            mRecyclerViewShootPhoto.scrollToPosition(mMyBitmaps_recycler_all.size() - 1);
+        if (mMyBitmaps_recycler_all.size() > 4) {
+            mRecyclerViewShootPhoto.scrollToPosition(4);
             mAdapter.updateListView(mMyBitmaps_recycler_all);
         }
         mRecyclerViewShootPhoto.addOnScrollListener(new RecyclerView.OnScrollListener() {

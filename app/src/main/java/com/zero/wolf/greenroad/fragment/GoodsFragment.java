@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.orhanobut.logger.Logger;
@@ -25,6 +26,7 @@ import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.tools.ACache;
+import com.zero.wolf.greenroad.tools.Cn2Spell;
 import com.zero.wolf.greenroad.tools.PingYinUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
@@ -43,7 +45,7 @@ import butterknife.Unbinder;
 
 public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTextListener, RadioGroup.OnCheckedChangeListener {
 
-    private static final String GOODS_DIR_SHUCAI= "goods_shucai";
+    private static final String GOODS_DIR_SHUCAI = "goods_shucai";
     private static final String GOODS_DIR_SHUIGUO = "goods_shuiguo";
     private static final String GOODS_DIR_SHUICHANPIN = "goods_shuiguo";
     private static final String GOODS_DIR_XUQIN = "goods_xuqin";
@@ -74,23 +76,33 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private static SerializableMain2Sure mMain2Sure;
     private static String mGoods_i;
     private AssetManager mAssetManager;
-    private String[] mGoodsNames;
 
+    private String[] mGoodsAsset_shucai;
+    private String[] mGoodsAsset_shuiguo;
+    private String[] mGoodsAsset_zaliang;
+
+    private ArrayList<SerializableGoods> mGoodsAllList;
+    private ArrayList<SerializableGoods> mGoodsShuCais;
     private ArrayList<SerializableGoods> mGoodsShuiGuos;
     private ArrayList<SerializableGoods> mGoodsZaLiangs;
 
+    private ArrayList<SerializableGoods> mAsObject_all;
+    private ArrayList<SerializableGoods> mAsObject_shucai;
     private ArrayList<SerializableGoods> mAsObject_shuiguo;
     private ArrayList<SerializableGoods> mAsObject_zaliang;
 
-    private String[] mName_shuiguos;
+    private String[] mGoodsName_shucai;
+    private String[] mGoodsName_shuiguos;
+    private String[] mGoodsName_zaliangs;
+
+    private String current_kind;
 
     private RecyclerView mGoodTextRecycler;
     private static ArrayList<String> mTextList;
     private GoodsTextAdapter mTextAdapter;
     private static StringBuilder sBuilder;
     private LinearLayoutManager mLayoutManager;
-    private ArrayList<SerializableGoods> mKindGoodses;
-    private String[] mName_zaliangs;
+    private ArrayList<SerializableGoods> mCurrentGoodsList;
 
 
     public static GoodsFragment newInstance(String goods) {
@@ -105,10 +117,12 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mName_shuiguos = getResources().getStringArray(R.array.science_array_shuiguo);
-        mName_zaliangs = getResources().getStringArray(R.array.science_array_zaliang);
+        mGoodsName_shucai = getResources().getStringArray(R.array.science_array_shucai);
+        mGoodsName_shuiguos = getResources().getStringArray(R.array.science_array_shuiguo);
+        mGoodsName_zaliangs = getResources().getStringArray(R.array.science_array_zaliang);
 
     }
+
     private void initGoodsData() {
 
         if (mTextList == null) {
@@ -125,6 +139,12 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
             }
         }
 
+        mAsObject_all = (ArrayList<SerializableGoods>) ACache
+                .get(getActivity()).getAsObject(ACache.GOODSACACHE_All);
+
+        mAsObject_shucai = (ArrayList<SerializableGoods>) ACache
+                .get(getActivity()).getAsObject(ACache.GOODSACACHE_SHUCAI);
+
         mAsObject_shuiguo = (ArrayList<SerializableGoods>) ACache
                 .get(getActivity()).getAsObject(ACache.GOODSACACHE_SHUIGUO);
 
@@ -132,24 +152,46 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 .get(getActivity()).getAsObject(ACache.GOODSACACHE_ZALIANG);
 
 
+        mGoodsAllList = new ArrayList<>();
+        mGoodsShuCais = new ArrayList<>();
         mGoodsShuiGuos = new ArrayList<>();
         mGoodsZaLiangs = new ArrayList<>();
 
-        if (mAsObject_shuiguo != null && mAsObject_shuiguo.size() != 0) {
-            if (mAsObject_shuiguo.size() == mName_shuiguos.length) {
-                Logger.i("goods走的缓存");
-                if (mGoodsShuiGuos.size() == 0) {
-                } else {
+        if (
+                mAsObject_all == null || mAsObject_all.size() == 0 ||
+                        mAsObject_shucai == null || mAsObject_shucai.size() == 0 ||
+                        mAsObject_shuiguo == null || mAsObject_shuiguo.size() == 0 ||
+                        mAsObject_zaliang == null || mAsObject_zaliang.size() == 0
+                ) {
+            Logger.i("goods直接从头加载数据");
+            addGoodsData();
+        } else {
+            if (mAsObject_all.size() == (mGoodsName_shuiguos.length + mGoodsName_zaliangs.length) &&
+                    mAsObject_shuiguo.size() == mGoodsName_shuiguos.length &&
+                    mAsObject_zaliang.size() == mGoodsName_zaliangs.length) {
+
+                if (mGoodsAllList != null && mGoodsAllList.size() != 0) {
+                    mGoodsAllList.clear();
+                }
+                if (mGoodsShuCais != null && mGoodsShuCais.size() != 0) {
+                    mGoodsShuCais.clear();
+                }
+                if (mGoodsShuiGuos != null && mGoodsShuiGuos.size() != 0) {
                     mGoodsShuiGuos.clear();
                 }
+                if (mGoodsZaLiangs != null && mGoodsZaLiangs.size() != 0) {
+                    mGoodsZaLiangs.clear();
+                }
+
+                mGoodsAllList.addAll(mAsObject_all);
+
+                mGoodsShuCais.addAll(mAsObject_shucai);
                 mGoodsShuiGuos.addAll(mAsObject_shuiguo);
+                mGoodsZaLiangs.addAll(mAsObject_zaliang);
             } else {
                 Logger.i("goods未加载完毕未缓存");
                 addGoodsData();
             }
-        } else {
-            Logger.i("goods直接从头加载数据");
-            addGoodsData();
         }
 
 
@@ -158,65 +200,75 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     private void addGoodsData() {
         mAssetManager = getContext().getAssets();
         try {
-            mGoodsNames = mAssetManager.list(GOODS_DIR_SHUIGUO);
-            if (mGoodsShuiGuos.size() == 0) {
-            } else {
-                mGoodsShuiGuos.clear();
-            }
-
-            ArrayList<String> goodsImage_url = new ArrayList<>();
-            ArrayList<String> goods_name = new ArrayList<>();
-            for (int i = 0; i < mGoodsNames.length; i++) {
-                goodsImage_url.add(mGoodsNames[i]);
-            }
-            for (int i = 0; i < mName_shuiguos.length; i++) {
-                goods_name.add(mName_shuiguos[i]);
-            }
-
-            Collections.sort(goodsImage_url);
-            Collections.sort(goods_name);
-            for (int i = 0; i < goodsImage_url.size(); i++) {
-
-//                Logger.i(mGoodsNames[i] + "");
-                //Bitmap bitmap = getImageFromAssetsFile();
-
-                String scientific_name = goods_name.get(i).substring(4);
-                String bitmap_url = GOODS_DIR_SHUIGUO + "/" + goodsImage_url.get(i);
-
-                SerializableGoods goods = new SerializableGoods();
-
-//                if (alias.length < i) {
-//                    alia = alias[i];
-//                }
-//                goods.setAlias(alia);
-                goods.setScientific_name(scientific_name);
-                goods.setBitmapUrl(bitmap_url);
-                goods.setKind(KIND_SHUIGUO);
-
-                String sortLetters = PingYinUtil.getInstance().getSortLetterBySortKey(scientific_name);
-//                if (sortLetters == null) {
-//                    sortLetters = PingYinUtil.getInstance().getSortLetter(alia);
-//                }
-                goods.setSortLetters(sortLetters);
-
-//                String sortKey = PingYinUtil.format(scientific_name + alia);
-                String sortKey = PingYinUtil.format(scientific_name);
-                goods.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
-                goods.setWholeSpell(PingYinUtil.getInstance().parseSortKeyWholeSpell(sortKey));
-
-                mGoodsShuiGuos.add(goods);
-
-            }
-            for (int i = 0; i < mGoodsShuiGuos.size(); i++) {
-                Logger.i(mGoodsShuiGuos.get(i).getSimpleSpell());
-            }
-
+            mGoodsAsset_shucai = mAssetManager.list(GOODS_DIR_SHUCAI);
+            mGoodsAsset_shuiguo = mAssetManager.list(GOODS_DIR_SHUIGUO);
+            mGoodsAsset_zaliang = mAssetManager.list(GOODS_DIR_ZALIANG);
         } catch (IOException e) {
             e.printStackTrace();
             Logger.i(e.getMessage());
             return;
         }
 
+        new Thread(() -> {
+            mGoodsShuCais = getGoodsData(mGoodsShuCais, mGoodsAsset_shucai, mGoodsName_shucai, GOODS_DIR_SHUCAI);
+            mGoodsShuiGuos = getGoodsData(mGoodsShuiGuos, mGoodsAsset_shuiguo, mGoodsName_shuiguos, GOODS_DIR_SHUIGUO);
+            mGoodsZaLiangs = getGoodsData(mGoodsZaLiangs, mGoodsAsset_zaliang, mGoodsName_zaliangs, GOODS_DIR_ZALIANG);
+
+            if (mGoodsAllList.size() != 0) {
+                mGoodsAllList.clear();
+            }
+            mGoodsAllList.addAll(mGoodsShuCais);
+            mGoodsAllList.addAll(mGoodsShuiGuos);
+            mGoodsAllList.addAll(mGoodsZaLiangs);
+
+            getActivity().runOnUiThread(() -> {
+                mGoodsAdapter.updateListView(mGoodsShuCais);
+            });
+        }).start();
+    }
+
+    private ArrayList<SerializableGoods> getGoodsData(ArrayList<SerializableGoods> goodsList,
+                                                      String[] goods_assets, String[] goods_names, String dir) {
+        if (goodsList != null && goodsList.size() != 0) {
+            goodsList.clear();
+        }
+        ArrayList<String> goodsImage_url = new ArrayList<>();
+        ArrayList<String> goods_name = new ArrayList<>();
+        for (int i = 0; i < goods_assets.length; i++) {
+            goodsImage_url.add(goods_assets[i]);
+        }
+        for (int i = 0; i < goods_names.length; i++) {
+            goods_name.add(goods_names[i]);
+        }
+
+        Collections.sort(goodsImage_url);
+        Collections.sort(goods_name);
+        for (int i = 0; i < goodsImage_url.size(); i++) {
+
+            String scientific_name = goods_name.get(i).substring(4);
+            String bitmap_url = dir + "/" + goodsImage_url.get(i);
+
+            SerializableGoods goods = new SerializableGoods();
+
+            String sortLetters = Cn2Spell.getPinYinFirstLetter(scientific_name);
+            //PingYinUtil.getInstance().getSortLetterBySortKey(scientific_name);
+            String sortKey = PingYinUtil.format(scientific_name);
+            String headChar = Cn2Spell.getPinYinHeadChar(sortKey);
+            String pinYin = Cn2Spell.getPinYin(sortKey);
+
+            //goods.setKind(KIND_SHUIGUO);
+//            goods.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+//            goods.setSimpleSpell(PingYinUtil.getInstance().parseSortKeySimpleSpell(sortKey));
+            //
+            goods.setScientific_name(scientific_name);
+            goods.setBitmapUrl(bitmap_url);
+            goods.setSortLetters(sortLetters);
+            goods.setWholeSpell(pinYin);
+            goods.setSimpleSpell(headChar);
+
+            goodsList.add(goods);
+        }
+        return goodsList;
     }
 
 
@@ -231,6 +283,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         if (mTextList == null) {
             mTextList = new ArrayList<>();
         }
+
 
         initGoodsData();
         initView(view);
@@ -247,6 +300,9 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
         RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radio_group_goods);
         radioGroup.setOnCheckedChangeListener(this);
+        RadioButton radio_shucai = (RadioButton) view.findViewById(R.id.goods_shucai);
+        radio_shucai.setChecked(true);
+
     }
 
     /**
@@ -259,33 +315,38 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId) {
             case R.id.goods_shucai:
-                if (mKindGoodses == null) {
-                    mKindGoodses = new ArrayList<>();
-                } else {
-                    mKindGoodses.clear();
+                if (mGoodsShuCais != null && mGoodsShuCais.size() != 0) {
+                    mGoodsAdapter.updateListView(mGoodsShuCais);
                 }
-                for (int i = 0; i < mGoodsShuiGuos.size(); i++) {
-                    if (KIND_SHUCAI.equals(mGoodsShuiGuos.get(i).getKind())) {
-                        mKindGoodses.add(mGoodsShuiGuos.get(i));
-                    }
+                current_kind = KIND_SHUCAI;
+                if (mCurrentGoodsList == null) {
+                    mCurrentGoodsList = new ArrayList<>();
+                }/* else if (mCurrentGoodsList.size() != 0) {
+                    mCurrentGoodsList.clear();
+                    mCurrentGoodsList.addAll(mGoodsShuCais);
+                }*/
+                if (mGoodsShuCais != null) {
+                    mCurrentGoodsList = mGoodsShuCais;
                 }
-                mGoodsAdapter.updateListView(mKindGoodses);
                 break;
             case R.id.goods_shuiguo:
-                if (mKindGoodses == null) {
-                    mKindGoodses = new ArrayList<>();
-                } else {
-                    mKindGoodses.clear();
+                if (mGoodsShuiGuos != null && mGoodsShuiGuos.size() != 0) {
+                    mGoodsAdapter.updateListView(mGoodsShuiGuos);
                 }
-                for (int i = 0; i < mGoodsShuiGuos.size(); i++) {
-                    if (KIND_SHUIGUO.equals(mGoodsShuiGuos.get(i).getKind())) {
-                        mKindGoodses.add(mGoodsShuiGuos.get(i));
-                    }
+                current_kind = KIND_SHUIGUO;
+                if (mGoodsShuiGuos != null) {
+                    mCurrentGoodsList = mGoodsShuiGuos;
                 }
-                mGoodsAdapter.updateListView(mKindGoodses);
                 break;
-
-
+            case R.id.goods_zaliang:
+                if (mGoodsZaLiangs != null && mGoodsZaLiangs.size() != 0) {
+                    mGoodsAdapter.updateListView(mGoodsZaLiangs);
+                }
+                current_kind = KIND_ZALIANG;
+                if (mGoodsZaLiangs != null) {
+                    mCurrentGoodsList = mGoodsZaLiangs;
+                }
+                break;
             default:
                 break;
         }
@@ -318,7 +379,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         mRecyclerView.setLayoutManager(manager);
 
         //货物text的recyclerView
-        mGoodsAdapter = new SureGoodsAdapter(getContext(), mGoodsShuiGuos, new SureGoodsAdapter.onItemClick() {
+        mGoodsAdapter = new SureGoodsAdapter(getContext(), mGoodsShuCais, new SureGoodsAdapter.onItemClick() {
             @Override
             public void itemClick(SerializableGoods serializableGoods, int position) {
 
@@ -334,12 +395,12 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 mEditText.setText("");
                 mTextAdapter.updateListView(mTextList);
                 if (mTextList.size() > 3) {
-                    scrollToPosition(mLayoutManager, mTextList.size() - 3);
+                    mGoodTextRecycler.scrollToPosition(mTextList.size() - 1);
                 }
                 //进行置顶操作
-                serializableGoods.setTop(1);
-                serializableGoods.setTime(System.currentTimeMillis());
-                refreshView();
+              /*  serializableGoods.setTop(1);
+                serializableGoods.setTime(System.currentTimeMillis());*/
+                // refreshView(mCurrentGoodsList);
             }
         });
 //        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(),
@@ -349,9 +410,30 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         mRecyclerView.setAdapter(mGoodsAdapter);
     }
 
-    private void refreshView() {
-        Collections.sort(mGoodsShuiGuos);
-        mGoodsAdapter.updateListView(mGoodsShuiGuos);
+    private void refreshView(ArrayList<SerializableGoods> currentGoodsList) {
+        if (KIND_SHUCAI.equals(current_kind) && mGoodsShuCais.size() != 0) {
+            if (mGoodsShuCais != null) {
+                mGoodsShuCais.clear();
+                mGoodsShuCais.addAll(currentGoodsList);
+            }
+            Collections.sort(mGoodsShuCais);
+            mGoodsAdapter.updateListView(mGoodsShuCais);
+        } else if (KIND_SHUIGUO.equals(current_kind)) {
+            if (mGoodsShuiGuos != null && mGoodsShuiGuos.size() != 0) {
+                mGoodsShuiGuos.clear();
+                mGoodsShuiGuos.addAll(currentGoodsList);
+            }
+            Collections.sort(mGoodsShuiGuos);
+            mGoodsAdapter.updateListView(mGoodsShuiGuos);
+        } else if (KIND_ZALIANG.equals(current_kind)) {
+            if (mGoodsZaLiangs != null && mGoodsZaLiangs.size() != 0) {
+                mGoodsZaLiangs.clear();
+                mGoodsZaLiangs.addAll(currentGoodsList);
+            }
+            Collections.sort(mGoodsZaLiangs);
+            mGoodsAdapter.updateListView(mGoodsZaLiangs);
+        }
+
     }
 
     @Override
@@ -359,11 +441,11 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         String goodString = mEditText.getText().toString().trim();
 
         if ("".equals(goodString)) {
-            mGoodsAdapter.updateListView(mGoodsShuiGuos);
+            mGoodsAdapter.updateListView(mCurrentGoodsList);
         } else {
             Logger.i(goodString);
             List<SerializableGoods> fileterList = PingYinUtil.getInstance()
-                    .search_goods(mGoodsShuiGuos, goodString);
+                    .search_goods(mGoodsAllList, goodString);
             for (int i = 0; i < fileterList.size(); i++) {
                 Logger.i(fileterList.get(i).getScientific_name());
                 Logger.i(fileterList.get(i).getSimpleSpell());
@@ -406,14 +488,12 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     @Override
     public void onPause() {
         super.onPause();
+        ACache.get(getActivity()).put(ACache.GOODSACACHE_All, mGoodsAllList);
+        ACache.get(getActivity()).put(ACache.GOODSACACHE_SHUCAI, mGoodsShuCais);
         ACache.get(getActivity()).put(ACache.GOODSACACHE_SHUIGUO, mGoodsShuiGuos);
         ACache.get(getActivity()).put(ACache.GOODSACACHE_ZALIANG, mGoodsZaLiangs);
     }
 
-    private void scrollToPosition(LinearLayoutManager manager, int index) {
-        manager.scrollToPositionWithOffset(index,
-                (int) manager.computeScrollVectorForPosition(index).y);
-    }
 
     @Override
     public void onDestroyView() {

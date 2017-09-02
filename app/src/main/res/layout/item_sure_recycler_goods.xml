@@ -8,6 +8,7 @@
     <ImageView
         android:id="@+id/iv_recycler_goods"
         android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_height="wrap_content"/>
 
     <TextView

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.interfacy.OnFragmentAttachListener;
@@ -78,8 +77,6 @@ public class CarNumberFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_number, container, false);
         ButterKnife.bind(this, view);
-
-        Logger.i(mNumber_I);
 
         initView(view);
 

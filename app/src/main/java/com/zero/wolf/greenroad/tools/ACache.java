@@ -43,6 +43,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ACache {
 
+    public static final String GOODSACACHE_All = "goodsacache_all";
+    public static final String GOODSACACHE_SHUCAI = "goodsacache_shucai";
     public static final String GOODSACACHE_SHUIGUO = "goodsacache_shuiguo";
     public static final String GOODSACACHE_ZALIANG = "goodsacache_zaliang";
 

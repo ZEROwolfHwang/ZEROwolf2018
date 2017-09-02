@@ -86,9 +86,10 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
 
             String scientificname = model.getScientific_name();
             if (scientificname.length() > 3) {
-                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,12));
+                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,6));
                 scientific_textView.setText(scientificname);
             } else {
+                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,8));
                 scientific_textView.setText(scientificname);
             }
          //   alias.setText(model.getAlias());

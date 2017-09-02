@@ -151,7 +151,7 @@ public class PreviewDetailActivity extends BaseActivity {
                         mBitmapArrayList.add(myBitmap);
                     }
                 }
-                mDetailActivityRecyclerPhoto.post(() -> {
+                runOnUiThread(() -> {
                     mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
                 });
             }
