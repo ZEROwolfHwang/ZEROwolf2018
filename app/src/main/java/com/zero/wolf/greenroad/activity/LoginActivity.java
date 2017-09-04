@@ -17,7 +17,6 @@ import com.zero.wolf.greenroad.SpinnerPopupWindow;
 import com.zero.wolf.greenroad.adapter.SpinnerAdapter;
 import com.zero.wolf.greenroad.httpresultbean.HttpResult;
 import com.zero.wolf.greenroad.https.RequestLogin;
-import com.zero.wolf.greenroad.interfacy.TextChangeWatcher;
 import com.zero.wolf.greenroad.polling.PollingService;
 import com.zero.wolf.greenroad.polling.PollingUtils;
 import com.zero.wolf.greenroad.presenter.NetWorkManager;
@@ -85,10 +84,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             mEt_user_name.setText(userName);
         }
 
-        mEt_user_name.addTextChangedListener(
-                new TextChangeWatcher(editable -> {
-                    mEt_password.setText("");
-                }));
+        mEt_user_name.setText((String)SPUtils.get(this, SPUtils.lOGIN_USERNAME, ""));
     }
 
     @Override

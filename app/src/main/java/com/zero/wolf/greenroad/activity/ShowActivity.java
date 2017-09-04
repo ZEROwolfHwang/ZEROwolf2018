@@ -256,8 +256,9 @@ public class ShowActivity extends BaseActivity {
                 mMenuFab.toggle(false);
                 //submit2Service();
                 SubmitService.startActionSubmit(this);
-                Intent intent = new Intent(ShowActivity.this, MainActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(ShowActivity.this, MainActivity.class);
+                //startActivity(intent);
+
                 break;
             case R.id.fab_draft:
                 ToastUtils.singleToast("实现保存草稿");
@@ -545,8 +546,8 @@ public class ShowActivity extends BaseActivity {
         });
 
         builder.setPositiveButton("保存并退出", (dialog, which) -> {
-            saveDraft();
             //在这里做保存草稿的操作
+            saveDraft();
             notifyDataChangeAndFinish();
             Intent intent = new Intent(ShowActivity.this, MainActivity.class);
             startActivity(intent);
@@ -554,7 +555,7 @@ public class ShowActivity extends BaseActivity {
         builder.show();
     }
 
-    private void notifyDataChangeAndFinish() {
+    public void notifyDataChangeAndFinish() {
         CarNumberFragment.notifyDataChange();
         GoodsFragment.notifyDataChange();
         PhotoFragment.notifyDataChange();

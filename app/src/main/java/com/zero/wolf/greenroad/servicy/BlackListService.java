@@ -3,6 +3,7 @@ package com.zero.wolf.greenroad.servicy;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultBlack;
@@ -20,6 +21,7 @@ public class BlackListService extends IntentService {
     private static final String ACTION_BLACK_LIST = "com.zero.wolf.greenroad.blacklistservice.action.FOO";
     private static final String ACTION_BAZ = "com.zero.wolf.greenroad.blacklistservice.action.BAZ";
     private static Context sContext;
+    private static TextView sNumberBlacklist;
 
 
     public BlackListService() {
@@ -27,8 +29,9 @@ public class BlackListService extends IntentService {
     }
 
 
-    public static void startActionBlack(Context context) {
+    public static void startActionBlack(Context context, TextView tvMathNumberBlacklist) {
         sContext = context;
+        sNumberBlacklist = tvMathNumberBlacklist;
         Intent intent = new Intent(sContext, BlackListService.class);
         intent.setAction(ACTION_BLACK_LIST);
 
@@ -72,6 +75,8 @@ public class BlackListService extends IntentService {
                                 supportBlack.setLicense(dataBeen.get(i).getPlate_number());
                                 supportBlack.save();
                             }
+                            List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+                            sNumberBlacklist.setText(blackList.size()+"");
                         }
                     }
                 });

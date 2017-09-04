@@ -82,8 +82,8 @@ public class MainActivity extends BaseActivity implements
     RelativeLayout mRlMainSubmit;
     @BindView(R.id.tv_math_number_draft)
     TextView mTvMathNumberDraft;
-    @BindView(R.id.tv_math_number_submit)
-    TextView mTvMathNumberSubmit;
+
+    private static TextView mTvMathNumberSubmit;
     @BindView(R.id.tv_avail_space)
     TextView mTvAvailSpace;
     @BindView(R.id.tv_all_space)
@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity implements
     private String mAvailSpace;
     private String mAllSpace;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -152,6 +153,7 @@ public class MainActivity extends BaseActivity implements
 
         mTvOperatorCheckMain = (TextView) findViewById(R.id.tv_operator_check_main);
         mTvOperatorLoginMain = (TextView) findViewById(R.id.tv_operator_login_main);
+        mTvMathNumberSubmit = (TextView) findViewById(R.id.tv_math_number_submit);
 
         mTvChangeLaneMain.setOnClickListener(v -> openSettingActivity());
         mTvOperatorCheckMain.setOnClickListener(v -> openSettingActivity());
@@ -210,7 +212,8 @@ public class MainActivity extends BaseActivity implements
 
     private void initData() {
         PermissionUtils.verifyStoragePermissions(mActivity);
-        BlackListService.startActionBlack(this);
+        BlackListService.startActionBlack(this,mTvMathNumberBlacklist);
+
     }
 
 
@@ -589,6 +592,10 @@ public class MainActivity extends BaseActivity implements
     private void openSettingActivity() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
+    }
+
+    public static void notifyAndRefreshMath() {
+      //  mTvMathNumberSubmit.setText(SPUtils.get(MainActivity.this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
     }
 
 }

@@ -282,6 +282,7 @@ public class DetailsFragment extends Fragment {
 
             // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
             String number = sSupportDetail.getNumber();
+            mTvChangeNumberDetail.setText(number);
             if (number != null && number.length() == 7) {
                 CarNumberFragment.notifyDataChangeFromDraft(number);
             }

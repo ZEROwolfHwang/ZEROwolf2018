@@ -11,6 +11,7 @@ import android.os.Message;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.CheckedBean;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
@@ -70,29 +71,44 @@ public class SubmitService extends IntentService {
 
 
     private String mSubmitTime;
-    private boolean isPictureSubmit;
-    private boolean isJsonSubmit;
+    private int isPictureSubmit;
+    private int isJsonSubmit;
 
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             int message = (int) msg.obj;
-            if (message == 101) {
+           /* if (message == 102) {
                 isPictureSubmit = true;
-            } else if (message == 102) {
+            } else if (message == 101) {
                 isJsonSubmit = true;
-            }
+            }*/
+            switch (message) {
+                case 102:
+                    isPictureSubmit = 1;
+                    break;
+                case 101:
+                    isJsonSubmit = 1;
+                    break;
 
-            if (isPictureSubmit && isJsonSubmit) {
-                save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE);
-                ToastUtils.singleToast("已提交成功");
-            } else {
-                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE);
-                ToastUtils.singleToast("未提交成功,已保存至草稿");
+                default:
+                    break;
             }
+      /*      if (isPictureSubmit != 2 && isJsonSubmit != 2) {
+                if (isPictureSubmit == 1 && isJsonSubmit == 1) {
+                    save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
+                    // MainActivity.notifyAndRefreshMath();
+                    ToastUtils.singleToast("已提交成功");
+                } else {
+                    save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                    ToastUtils.singleToast("未提交成功,已保存至草稿");
+                }
+            }*/
             return false;
         }
     });
+
+    private static ShowActivity sActivity;
     private static Context sContext;
 
     public SubmitService() {
@@ -100,21 +116,22 @@ public class SubmitService extends IntentService {
     }
 
 
-    public static void startActionSubmit(Context context) {
-        sContext = context;
-        Intent intent = new Intent(sContext, SubmitService.class);
+    public static void startActionSubmit(ShowActivity activity) {
+        sActivity = activity;
+        Intent intent = new Intent(sActivity, SubmitService.class);
         intent.setAction(ACTION_SUBMIT);
      /*   intent.putExtra(EXTRA_ROAD, road);
         intent.putExtra(EXTRA_STATION, station);*/
-        sContext.startService(intent);
+        sActivity.startService(intent);
     }
 
     public static void startActionSave(Context context) {
-        Intent intent = new Intent(context, SubmitService.class);
+        sContext = context;
+        Intent intent = new Intent(sContext, SubmitService.class);
         intent.setAction(ACTION_SAVE);
 /*        intent.putExtra(EXTRA_ROAD, param1);
         intent.putExtra(EXTRA_STATION, param2);*/
-        context.startService(intent);
+        sContext.startService(intent);
     }
 
     @Override
@@ -131,6 +148,9 @@ public class SubmitService extends IntentService {
 
             final String action = intent.getAction();
             if (ACTION_SUBMIT.equals(action)) {
+
+                isJsonSubmit = 2;
+                isPictureSubmit = 2;
 
                 if (mFile == null) {
                     mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenPicture");
@@ -150,7 +170,7 @@ public class SubmitService extends IntentService {
                 if (ACTION_SAVE.equals(action)) {
                     String saveTime = TimeUtil.getCurrentTimeToDate();
                     getListenerData();
-                    save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE);
+                    save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE);
                 }
             }
         }
@@ -195,7 +215,7 @@ public class SubmitService extends IntentService {
     /**
      * 将保存草稿数据或者提交网络的数据保存之后本地服务器
      */
-    private void save2Litepal(String current_time, String lite_type) {
+    private void save2Litepal(String current_time, String lite_type, String action) {
 
         SupportDraftOrSubmit support = new SupportDraftOrSubmit();
         int count = DataSupport.count(SupportDraftOrSubmit.class);
@@ -333,10 +353,14 @@ public class SubmitService extends IntentService {
 
         support.save();
 
-        if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
-            SPUtils.add_one(this, SPUtils.MATH_DRAFT_LITE);
-        } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
-            SPUtils.add_one(this, SPUtils.MATH_SUBMIT_LITE);
+        if (action.equals(ACTION_SUBMIT)) {
+            if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
+                SPUtils.add_one(sActivity, SPUtils.MATH_DRAFT_LITE);
+            } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
+                SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
+            }
+        } else if (action.equals(ACTION_SAVE)) {
+            SPUtils.add_one(sContext, SPUtils.MATH_DRAFT_LITE);
         }
     }
 
@@ -446,39 +470,17 @@ public class SubmitService extends IntentService {
             return;
         }
 
+        sActivity.notifyDataChangeAndFinish();
+        Intent intent = new Intent("Green_Road_MainActivity");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
         sanzheng = getBodyPart1(pathTitle_sanzheng, "sanzheng");
         cheshen = getBodyPart1(pathTitle_cheshen, "cheshen");
         huozhao = getBodyPart1(pathTitle_huozhao, "huozhao");
 
 
-        Subscriber<HttpResultCode> subscriber_picture = new Subscriber<HttpResultCode>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Logger.i(e.getMessage());
-                ToastUtils.singleToast("提交失败,请检查网络是否连接");
-            }
-
-            @Override
-            public void onNext(HttpResultCode httpResultCode) {
-                int code = httpResultCode.getCode();
-                Logger.i(code + "");
-
-                if (code == 200) {
-                    Message message = Message.obtain();
-                    message.obj = 102;
-                    mHandler.sendMessage(message);
-                    ToastUtils.singleToast("图片上传成功");
-                } else {
-                    save2Litepal(postTime, GlobalManager.TYPE_DRAFT_LITE);
-                }
-            }
-        };
-        RequestPicture.getInstance().postPicture(subscriber_picture, postTime, sanzheng, cheshen, huozhao);
 
         Gson gson = new Gson();
         String route = gson.toJson(info);
@@ -507,10 +509,44 @@ public class SubmitService extends IntentService {
                     mHandler.sendMessage(message);
                 }
                 Logger.i(code + "");
-                ToastUtils.singleToast("json上传成功");
+                Logger.i("json上传成功");
+                //  ToastUtils.singleToast("json上传成功");
             }
         };
         RequestJson.getInstance().postJson(subscriber_json, body);
+
+        Subscriber<HttpResultCode> subscriber_picture = new Subscriber<HttpResultCode>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Logger.i(e.getMessage());
+                ToastUtils.singleToast("提交失败,请检查网络是否连接");
+            }
+
+            @Override
+            public void onNext(HttpResultCode httpResultCode) {
+                int code = httpResultCode.getCode();
+                Logger.i(code + "");
+
+                if (code == 55555) {
+                    Message message = Message.obtain();
+                    message.obj = 102;
+                    mHandler.sendMessage(message);
+                    // ToastUtils.singleToast("图片上传成功");
+                    Logger.i("图片上传成功");
+
+                    save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
+
+                } else {
+                    save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                }
+            }
+        };
+        RequestPicture.getInstance().postPicture(subscriber_picture, postTime, sanzheng, cheshen, huozhao);
 
     }
 
