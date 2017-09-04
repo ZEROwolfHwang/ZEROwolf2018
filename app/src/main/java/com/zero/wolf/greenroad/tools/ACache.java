@@ -46,6 +46,9 @@ public class ACache {
     public static final String GOODSACACHE_All = "goodsacache_all";
     public static final String GOODSACACHE_SHUCAI = "goodsacache_shucai";
     public static final String GOODSACACHE_SHUIGUO = "goodsacache_shuiguo";
+    public static final String GOODSACACHE_SHUICHANPIN = "goodsacache_shuichanpin";
+    public static final String GOODSACACHE_CHUQIN = "goodsacache_chuqin";
+    public static final String GOODSACACHE_ROUDANNAI = "goodsacache_roudannai";
     public static final String GOODSACACHE_ZALIANG = "goodsacache_zaliang";
 
 

@@ -393,7 +393,6 @@ public class MainActivity extends BaseActivity implements
         } else {
             textView.setText("500001/苏三");
         }
-
     }
 
     //onPause()方法注销
@@ -416,6 +415,13 @@ public class MainActivity extends BaseActivity implements
                 Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
             } else {
                 ActivityCollector.finishAll();
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    Intent i = new Intent(Intent.ACTION_MAIN);
+                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    i.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(i);
+                }
+//                return super.onKeyDown(keyCode, event);
             }
             return true;
         }
@@ -584,4 +590,5 @@ public class MainActivity extends BaseActivity implements
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
+
 }

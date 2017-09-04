@@ -10,6 +10,7 @@
 
     <!--注册路段-->
     <LinearLayout
+        android:layout_marginTop="55dp"
         style="@style/register_activity_ll_style">
 
         <TextView
@@ -87,7 +88,7 @@
     <LinearLayout
 
         style="@style/register_activity_ll_style"
-        android:layout_marginTop="@dimen/layout_margin30dp">
+        >
 
         <TextView
             style="@style/register_activity_tv_title_style"

@@ -9,119 +9,76 @@
         <item>A006芥蓝</item>
         <item>A007西兰花</item>
         <item>A008结球甘蓝</item>
-
-        <!--
-              <item>猪</item>
-              <item>牛</item>
-              <item>羊</item>
-              <item>马</item>
-              <item>驴</item>
-              <item>鸡</item>
-              <item>鸭</item>
-              <item>鹅</item>
-              <item>家兔</item>
-              <item>食用蛙类</item>
+        <item>A009萝卜</item>
 
 
-              <item>新鲜鸡蛋</item>
-              <item>新鲜鸭蛋</item>
-              <item>新鲜鹅蛋</item>
-              <item>新鲜鹌鹑蛋</item>
-              <item>新鲜家畜肉</item>
-              <item>新鲜家禽肉</item>
-              <item>新鲜奶</item>
-
-              <item>马铃薯</item>
-              <item>甘薯(红薯、白薯、芋头、山药)</item>
-              <item>鲜玉米</item>
-              <item>鲜花生</item>
+        <item>A010胡萝卜</item>
+        <item>A011芜菁</item>
+        <item>A012芹菜</item>
+        <item>A013菠菜</item>
+        <item>A014莴笋</item>
+        <item>A015生菜</item>
+        <item>A016空心菜</item>
+        <item>A017香菜</item>
+        <item>A018茼蒿</item>
+        <item>A019茴香</item>
 
 
-              <item>鱼类</item>
-              <item>虾类</item>
-              <item>贝类</item>
-              <item>蟹类</item>
-              <item>海带</item>
-              <item>紫菜</item>
-              <item>海蜇</item>
-              <item>海参</item>
+        <item>A020苋菜</item>
+        <item>A021木耳菜</item>
+        <item>A022洋葱</item>
+        <item>A023大葱</item>
+        <item>A024香葱</item>
+        <item>A025蒜苗</item>
+        <item>A026蒜苔</item>
+        <item>A027韭菜</item>
+        <item>A028大蒜</item>
+        <item>A029生姜</item>
+
+        <item>A030茄子</item>
+        <item>A031青椒</item>
+        <item>A032辣椒</item>
+        <item>A033西红柿</item>
+        <item>A034扁豆</item>
+        <item>A035荚豆</item>
+        <item>A036豇豆</item>
+        <item>A037四季豆</item>
+        <item>A038毛豆</item>
+        <item>A039蚕豆</item>
 
 
-              <item>大白菜</item>
-              <item>普通白菜</item>
-              <item>菜薹</item>
-
-              <item>菜花</item>
-              <item>芥蓝</item>
-              <item>西兰花</item>
-              <item>结球甘蓝</item>
-              <item>萝卜</item>
-              <item>胡萝卜</item>
-              <item>芜菁</item>
-              <item>芹菜</item>
-              <item>菠菜</item>
-              <item>莴笋</item>
-              <item>生菜</item>
-              <item>空心菜</item>
-              <item>香菜</item>
-              <item>茼蒿</item>
-              <item>茴香</item>
-              <item>苋菜</item>
-              <item>木耳菜</item>
-
-              <item>洋葱</item>
-              <item>大葱</item>
-              <item>香葱</item>
-              <item>蒜苗</item>
-              <item>蒜苔</item>
-              <item>韭菜</item>
-              <item>大蒜</item>
-              <item>生姜</item>
-
-              <item>茄子</item>
-              <item>青椒</item>
-              <item>辣椒</item>
-              <item>西红柿</item>
-
-              <item>扁豆</item>
-              <item>荚豆</item>
-              <item>豇豆</item>
-              <item>四季豆</item>
-              <item>毛豆</item>
-              <item>蚕豆</item>
-              <item>豆芽</item>
-              <item>豌豆苗</item>
-              <item>四棱豆</item>
-              <item>豌豆</item>
-
-              <item>黄瓜</item>
-              <item>丝瓜</item>
-              <item>冬瓜</item>
-              <item>西葫芦</item>
-              <item>苦瓜</item>
-              <item>南瓜</item>
-              <item>佛手瓜</item>
-              <item>蛇瓜</item>
-              <item>节瓜</item>
-              <item>瓠瓜</item>
-
-              <item>莲藕</item>
-              <item>水芹</item>
-              <item>茭白</item>
-              <item></item>
+        <item>A040豆芽</item>
+        <item>A041豌豆苗</item>
+        <item>A042四棱豆</item>
+        <item>A043豌豆</item>
+        <item>A044黄瓜</item>
+        <item>A045丝瓜</item>
+        <item>A046冬瓜</item>
+        <item>A047西葫芦</item>
+        <item>A048苦瓜</item>
+        <item>A049南瓜</item>
 
 
-              <item>平菇</item>
-              <item>原菇</item>
-              <item>金针菇</item>
-              <item>滑菇</item>
-              <item>蘑菇</item>
-              <item>木耳(不含干木耳)</item>
+        <item>A050佛手瓜</item>
+        <item>A051蛇瓜</item>
+        <item>A052节瓜</item>
+        <item>A053瓠瓜</item>
+        <item>A054莲藕</item>
+        <item>A055水芹</item>
+        <item>A056茭白</item>
+        <item>A057荸荠</item>
+        <item>A058平菇</item>
+        <item>A059原菇</item>
 
-              <item>竹笋</item>
-              <item>莴笋</item>
-              <item>金针菜(黄花菜)</item>
-              <item>香椿</item>-->
+
+        <item>A060金针菇</item>
+        <item>A061滑菇</item>
+        <item>A062蘑菇</item>
+        <item>A063木耳(不含干木耳)</item>
+        <item>A064竹笋</item>
+        <item>A065莴笋</item>
+        <item>A066金针菜(黄花菜)</item>
+        <item>A067香椿</item>
 
     </array>
 </resources>

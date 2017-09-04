@@ -79,7 +79,7 @@
                     android:text="水产品"/>
 
                 <RadioButton
-                    android:id="@+id/goods_xuqin"
+                    android:id="@+id/goods_chuqin"
                     style="@style/RadioButton_goods_style"
                     android:text="畜禽"/>
 
