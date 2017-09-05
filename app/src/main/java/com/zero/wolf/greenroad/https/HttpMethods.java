@@ -1,7 +1,5 @@
 package com.zero.wolf.greenroad.https;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -48,7 +46,6 @@ public class HttpMethods {
         String url_header= (String) SPUtils.get(GreenRoadApplication.sApplication, SPUtils.LINE_CONFIG, "http://greenft.githubshop.com");
 
         final String BASE_URL = url_header+"/index.php/Interfacy/";*/
-        Logger.i(BASE_URL);
 
         retrofit = new Retrofit.Builder()
                 .client(builder.build())

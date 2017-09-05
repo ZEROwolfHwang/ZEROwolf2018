@@ -6,6 +6,7 @@ import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.httpresultbean.HttpResult;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultLoginName;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultCode;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultMacInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -138,5 +139,9 @@ public interface HttpUtilsApi {
 
     @GET("Api/black")
     Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getBlack();
+
+    @FormUrlEncoded
+    @POST("Api/macInfo")
+    Observable<HttpResultMacInfo> getMacInfo(@Field("macId") String macId);
 
 }

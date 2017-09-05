@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +53,7 @@ public class SettingActivity extends BaseActivity {
     private String mJob_number_login;
     private String mOperator_check_name;
     private String mOperator_login_name;
+    private List<SupportOperator> mSupportOperators;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,17 +83,17 @@ public class SettingActivity extends BaseActivity {
      * 初始化工作人员信息
      */
     private void initData() {
-        List<SupportOperator> operators = DataSupport.findAll(SupportOperator.class);
-        Logger.i(operators.toString());
+        mSupportOperators = DataSupport.findAll(SupportOperator.class);
+        Logger.i(mSupportOperators.toString());
 
         mOperatorList = new ArrayList<>();
 
-        for (int i = 0; i < operators.size(); i++) {
+        for (int i = 0; i < mSupportOperators.size(); i++) {
             SettingOperatorInfo info = new SettingOperatorInfo();
-            info.setOperator_name(operators.get(i).getOperator_name());
-            info.setJob_number(operators.get(i).getJob_number());
-            info.setIsCheckSelected(operators.get(i).getCheck_select());
-            info.setIsLoginSelected(operators.get(i).getLogin_select());
+            info.setOperator_name(mSupportOperators.get(i).getOperator_name());
+            info.setJob_number(mSupportOperators.get(i).getJob_number());
+            info.setIsCheckSelected(mSupportOperators.get(i).getCheck_select());
+            info.setIsLoginSelected(mSupportOperators.get(i).getLogin_select());
             mOperatorList.add(info);
             Logger.i(mOperatorList.get(i).toString());
         }
@@ -128,6 +130,19 @@ public class SettingActivity extends BaseActivity {
             mOperator_login_name = info.getOperator_name();
             Logger.i("login---" + mJob_number_login + "-----" + mOperator_login_name);
 
+        },position -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+            builder.setTitle("是否确定删除该检查人/登记人");
+            builder.setPositiveButton(R.string.dialog_messge_OK, (dialog, which) -> {
+                DataSupport.deleteAll(SupportOperator.class, "job_number = ?",
+                        mOperatorList.get(position).getJob_number());
+                mOperatorList.remove(position);
+                //mAdapter.notifyItemRemoved(position);
+                mAdapter.updateListView(mOperatorList);
+            });
+            builder.setNegativeButton(R.string.dialog_message_Cancel,
+                    (dialog, which) -> dialog.dismiss());
+            builder.show();
         });
         mSettingRecyclerView.setLayoutManager(manager);
         mSettingRecyclerView.setAdapter(mAdapter);
@@ -146,6 +161,8 @@ public class SettingActivity extends BaseActivity {
 
         mToolbarSetting.setNavigationOnClickListener(v -> finish());
     }
+
+
 
     @OnClick({R.id.text_setting_add_selection,
             R.id.text_setting_lane,

@@ -1,14 +1,17 @@
 package com.zero.wolf.greenroad.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -42,6 +45,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     TextView mLoginVersion;
     @BindView(R.id.login_register)
     TextView mLoginRegister;
+    @BindView(R.id.rl_progress_login)
+    RelativeLayout mRlProgressLogin;
     private ArrayList<String> mList;
     private Button mBt_login;
     @BindView(R.id.text_user_name)
@@ -64,34 +69,51 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_login);
         mActivity = this;
         ButterKnife.bind(mActivity);
+        initData();
+        initView();
+
+    }
+
+    private void initData() {
+        Connector.getDatabase();
 
         // TODO: 2017/8/5 客户端的认证信息，移至注册账号是的返回储存
+
         macID = Settings.Secure
                 .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-
-        Connector.getDatabase();
-
         mLoginVersion.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
+
+
+    }
+
+    private void initView() {
 
         mBt_login = (Button) findViewById(R.id.bt_login);
 
         mBt_login.setOnClickListener(mActivity);
         mLoginRegister.setOnClickListener(mActivity);
 
-        if (mCheckBox.isChecked()) {
-            String userName = (String) SPUtils.get(mActivity, SPUtils.lOGIN_USERNAME, "");
-            mEt_user_name.setText(userName);
-        }
 
-        mEt_user_name.setText((String)SPUtils.get(this, SPUtils.lOGIN_USERNAME, ""));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String user = (String) SPUtils.get(this, SPUtils.lOGIN_USERNAME, "");
+        mEt_user_name.setText(user);
+        if (user != null && !"".equals(user)) {
+            mCheckBox.setChecked(true);
+        } else {
+            mCheckBox.setChecked(false);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
-                startMainActivity();
+                startMainActivity(v);
                 break;
             case R.id.login_register:
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -105,7 +127,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void startMainActivity() {
+    private void startMainActivity(View view) {
 
         String username = mEt_user_name.getText().toString().trim();
         String password = mEt_password.getText().toString().trim();
@@ -121,6 +143,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             mEt_password.requestFocus();
             return;
         }
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+
+        // InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        // imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        mRlProgressLogin.setVisibility(View.VISIBLE);
 
         mIsConnected = NetWorkManager.isnetworkConnected(this);
         if (mIsConnected) {
@@ -130,11 +158,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             if (loginList == null || loginList.size() == 0) {
                 ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
             } else if (loginList.size() == 3) {
-                String userName = loginList.get(0);
-                String psw = loginList.get(1);
-                String save_time = loginList.get(2);
                 getTimeGap(loginList, username, password, false);
             }
+            mRlProgressLogin.setVisibility(View.GONE);
         }
 
     }
@@ -151,7 +177,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String userName = loginList.get(0);
         String psw = loginList.get(1);
         String save_time = loginList.get(2);
-
 
         String currentTimeToDate = TimeUtil.getCurrentTimeToDate();
         int timeGap = TimeUtil.differentDaysByMillisecond(save_time, currentTimeToDate);
@@ -212,40 +237,47 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onNext(HttpResult httpResult) {
                 int code = httpResult.getCode();
                 String msg = httpResult.getMsg();
-                Logger.i(code+msg);
+                Logger.i(code + msg);
                 if (code == 200) {
                     if (mCheckBox.isChecked()) {
                         List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
                         if (loginList == null || loginList.size() != 3) {
-                            SPUtils.putAndApply(mActivity, SPUtils.lOGIN_USERNAME, username);
                             ArrayList<String> list = new ArrayList<>();
                             list.add(username);
                             list.add(password);
                             list.add(TimeUtil.getCurrentTimeToDate());
                             SPListUtil.putStrListValue(mActivity, SPListUtil.LOGINNFO, list);
                         }
+                        SPUtils.putAndApply(mActivity, SPUtils.lOGIN_USERNAME, username);
                         // startPollingService(username);
                         Logger.i("登陆成功");
                     } else {
                         SPListUtil.remove(mActivity, SPListUtil.LOGINNFO);
+                        SPUtils.remove(mActivity, SPUtils.lOGIN_USERNAME);
                     }
                     login2MainActivity();
                 } else if (code == 201) {
                     mEt_user_name.setError("账号不存在");
                     mEt_user_name.requestFocus();
+                    mRlProgressLogin.setVisibility(View.GONE);
                 } else if (code == 202) {
                     mEt_password.setError("密码错误");
                     mEt_password.requestFocus();
+                    mRlProgressLogin.setVisibility(View.GONE);
                 } else if (code == 203) {
                     mEt_user_name.setError("此账号已登录,请检查账号安全");
                     mEt_user_name.requestFocus();
+                    mRlProgressLogin.setVisibility(View.GONE);
                 } else if (code == 204) {
                     mEt_user_name.setError("此账号被禁用");
                     mEt_user_name.requestFocus();
+                    mRlProgressLogin.setVisibility(View.GONE);
                 } else if (code == 205) {
                     mEt_user_name.setError("该终端尚未被注册");
                     mEt_user_name.requestFocus();
+                    mRlProgressLogin.setVisibility(View.GONE);
                 }
+                //  mRlProgressLogin.setVisibility(View.GONE);
             }
         };
         RequestLogin.getInstance().
@@ -271,8 +303,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * 登录成功进入mainActivity
      */
     private void login2MainActivity() {
+
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        //  mRlProgressLogin.setVisibility(View.GONE);
     }
 
     private boolean isPasswordValid(String password) {

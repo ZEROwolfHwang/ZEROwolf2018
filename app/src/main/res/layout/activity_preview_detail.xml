@@ -164,7 +164,8 @@
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/detail_activity_recycler_photo"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_marginBottom="@dimen/layout_margin10dp"
+                            android:layout_height="160dp">
 
                         </android.support.v7.widget.RecyclerView>
 
@@ -475,19 +476,21 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:orientation="horizontal"
-    android:layout_height="wrap_content">
+    android:layout_height="50dp">
 
     <TextView
         android:id="@+id/draft_save_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
         android:layout_gravity="right|center_vertical"
-        android:layout_margin="@dimen/layout_margin10dp"
-        android:gravity="center_vertical|right"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="@dimen/layout_margin10dp"
+        android:paddingRight="@dimen/layout_margin10dp"
         android:text="编辑"
         android:visibility="gone"
         android:textColor="@color/color333333"
-        android:textSize="@dimen/text16"/>
+        android:textSize="@dimen/text20"/>
     <TextView
         android:id="@+id/draft_save_time"
         android:layout_width="match_parent"

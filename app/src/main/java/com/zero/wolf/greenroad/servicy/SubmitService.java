@@ -36,8 +36,6 @@ import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.TimeUtil;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -109,14 +107,16 @@ public class SubmitService extends IntentService {
     });
 
     private static ShowActivity sActivity;
-    private static Context sContext;
+    private static Context sContext_draft;
+    private static Context sContext_submit;
 
     public SubmitService() {
         super("SubmitService");
     }
 
 
-    public static void startActionSubmit(ShowActivity activity) {
+    public static void startActionSubmit(ShowActivity activity, Context context) {
+        sContext_submit = context;
         sActivity = activity;
         Intent intent = new Intent(sActivity, SubmitService.class);
         intent.setAction(ACTION_SUBMIT);
@@ -126,25 +126,22 @@ public class SubmitService extends IntentService {
     }
 
     public static void startActionSave(Context context) {
-        sContext = context;
-        Intent intent = new Intent(sContext, SubmitService.class);
+        sContext_draft = context;
+        Intent intent = new Intent(sContext_draft, SubmitService.class);
         intent.setAction(ACTION_SAVE);
 /*        intent.putExtra(EXTRA_ROAD, param1);
         intent.putExtra(EXTRA_STATION, param2);*/
-        sContext.startService(intent);
+        sContext_draft.startService(intent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
-            for (int i = 0; i < strListValue.size(); i++) {
-                String string = strListValue.get(i).toString();
-                Logger.i(string);
+            if (strListValue.size() == 3) {
+                mRoad_Q = strListValue.get(1).toString();
+                mStation_Q = strListValue.get(2).toString();
             }
-            mRoad_Q = strListValue.get(1).toString();
-            mStation_Q = strListValue.get(2).toString();
-
 
             final String action = intent.getAction();
             if (ACTION_SUBMIT.equals(action)) {
@@ -218,13 +215,15 @@ public class SubmitService extends IntentService {
     private void save2Litepal(String current_time, String lite_type, String action) {
 
         SupportDraftOrSubmit support = new SupportDraftOrSubmit();
-        int count = DataSupport.count(SupportDraftOrSubmit.class);
-        support.setLite_ID(count + 1);
+        int count = TimeUtil.getTimeId();
+        //DataSupport.count(SupportDraftOrSubmit.class);
+
+        support.setLite_ID(count);
         support.setLite_type(lite_type);
         support.setCurrent_time(current_time);
         //保存数据到表SupportScan
         SupportScan supportScan = new SupportScan();
-        supportScan.setLite_ID(count + 1);
+        supportScan.setLite_ID(count);
         supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
         supportScan.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
         supportScan.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
@@ -243,7 +242,7 @@ public class SubmitService extends IntentService {
 
         //保存数据到表SupportDetail
         SupportDetail supportDetail = new SupportDetail();
-        supportDetail.setLite_ID(count + 1);
+        supportDetail.setLite_ID(count);
         supportDetail.setNumber(mDetailInfoBean_Q.getNumber());
         supportDetail.setColor(mDetailInfoBean_Q.getColor());
         supportDetail.setGoods(mDetailInfoBean_Q.getGoods());
@@ -269,7 +268,7 @@ public class SubmitService extends IntentService {
 
         //保存数据到表SupportChecked
         SupportChecked supportChecked = new SupportChecked();
-        supportChecked.setLite_ID(count + 1);
+        supportChecked.setLite_ID(count);
         supportChecked.setIsRoom(mCheckedBean_Q.getIsRoom());
         supportChecked.setIsFree(mCheckedBean_Q.getIsFree());
         supportChecked.setConclusion(mCheckedBean_Q.getConclusion());
@@ -341,7 +340,7 @@ public class SubmitService extends IntentService {
             supportMedia.setWidths(widths);
             supportMedia.setMimeTypes(mimeTypes);
             supportMedia.setPositions(positions);
-            supportMedia.setLite_ID(count + 1);
+            supportMedia.setLite_ID(count);
             supportMedia.save();
 
             support.setSupportMedia(supportMedia);
@@ -360,7 +359,7 @@ public class SubmitService extends IntentService {
                 SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
             }
         } else if (action.equals(ACTION_SAVE)) {
-            SPUtils.add_one(sContext, SPUtils.MATH_DRAFT_LITE);
+            SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
         }
     }
 
@@ -481,7 +480,6 @@ public class SubmitService extends IntentService {
         huozhao = getBodyPart1(pathTitle_huozhao, "huozhao");
 
 
-
         Gson gson = new Gson();
         String route = gson.toJson(info);
 
@@ -532,7 +530,7 @@ public class SubmitService extends IntentService {
                 int code = httpResultCode.getCode();
                 Logger.i(code + "");
 
-                if (code == 55555) {
+                if (code == 200) {
                     Message message = Message.obtain();
                     message.obj = 102;
                     mHandler.sendMessage(message);
@@ -540,9 +538,11 @@ public class SubmitService extends IntentService {
                     Logger.i("图片上传成功");
 
                     save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
+                    Logger.i("走了提交保存的方法");
 
                 } else {
                     save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                    Logger.i("走了草稿保存的方法");
                 }
             }
         };

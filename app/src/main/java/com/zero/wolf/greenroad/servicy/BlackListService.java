@@ -66,6 +66,7 @@ public class BlackListService extends IntentService {
                     public void onNext(List<HttpResultBlack.DataBean> dataBeen) {
                         List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
                         if (supportBlacks.size() == dataBeen.size()) {
+                            sNumberBlacklist.setText(supportBlacks.size() + "");
                             return;
                         } else {
                             DataSupport.deleteAll(SupportBlack.class);

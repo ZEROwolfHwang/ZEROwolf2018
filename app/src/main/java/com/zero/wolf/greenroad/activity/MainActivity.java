@@ -30,6 +30,8 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
+import com.zero.wolf.greenroad.httpresultbean.HttpResultMacInfo;
+import com.zero.wolf.greenroad.https.RequestMacInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.servicy.BlackListService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -53,6 +55,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscriber;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -120,6 +123,7 @@ public class MainActivity extends BaseActivity implements
     private String mStation_Q;
     private String mAvailSpace;
     private String mAllSpace;
+    private String macID;
 
 
     @Override
@@ -133,24 +137,6 @@ public class MainActivity extends BaseActivity implements
         mActivity = this;
 
 
-        List app_config_info = new ArrayList<String>();
-
-        app_config_info.add("163127841234");
-        app_config_info.add("西部沿海");
-        app_config_info.add("广海");
-
-        Logger.i(app_config_info.toString());
-        SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
-
-
-        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
-        for (int i = 0; i < strListValue.size(); i++) {
-            String string = strListValue.get(i).toString();
-            Logger.i(string);
-        }
-        mRoad_Q = strListValue.get(1).toString();
-        mStation_Q = strListValue.get(2).toString();
-
         mTvOperatorCheckMain = (TextView) findViewById(R.id.tv_operator_check_main);
         mTvOperatorLoginMain = (TextView) findViewById(R.id.tv_operator_login_main);
         mTvMathNumberSubmit = (TextView) findViewById(R.id.tv_math_number_submit);
@@ -158,8 +144,6 @@ public class MainActivity extends BaseActivity implements
         mTvChangeLaneMain.setOnClickListener(v -> openSettingActivity());
         mTvOperatorCheckMain.setOnClickListener(v -> openSettingActivity());
         mTvOperatorLoginMain.setOnClickListener(v -> openSettingActivity());
-
-        mTvChangeStationMain.setText(mStation_Q);
 
 
         initSpace();
@@ -189,7 +173,28 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case R.id.btn_enter_show:
-                ShowActivity.actionStart(MainActivity.this);
+                List<SupportOperator> check = DataSupport.where("check_select=?", "1").
+                        find(SupportOperator.class);
+                List<SupportOperator> login = DataSupport.where("login_select=?", "1").
+                        find(SupportOperator.class);
+
+                if (check.size() == 1 && login.size() == 1) {
+                    ShowActivity.actionStart(MainActivity.this);
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("确定选择默认检查人/登记人");
+                    builder.setMessage("点击确定进入设置界面添加默认操作员;\n" +
+                            "点击取消则回到界面,不可以采集车辆数据");
+                    builder.setPositiveButton("确定", (dialog, which) -> {
+                        openSettingActivity();
+                    });
+                    builder.setNegativeButton("取消", (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+                    builder.show();
+//                    ToastUtils.singleToast("目前请添加操作员");
+                    break;
+                }
                 break;
 
             default:
@@ -212,27 +217,68 @@ public class MainActivity extends BaseActivity implements
 
     private void initData() {
         PermissionUtils.verifyStoragePermissions(mActivity);
-        BlackListService.startActionBlack(this,mTvMathNumberBlacklist);
+        BlackListService.startActionBlack(this, mTvMathNumberBlacklist);
 
+        macID = Settings.Secure
+                .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
+        List<String> strListValue = SPListUtil.getStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO);
+        if (strListValue == null || strListValue.size() != 3) {
+            RequestMacInfo.getInstance().getMacInfo(new Subscriber<HttpResultMacInfo>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Logger.i(e.getMessage());
+                    SPListUtil.putStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO, null);
+                }
+
+                @Override
+                public void onNext(HttpResultMacInfo httpResultMacInfo) {
+                    int code = httpResultMacInfo.getCode();
+                    Logger.i(code + "");
+                    HttpResultMacInfo.DataBean dataBean = httpResultMacInfo.getData();
+                    Logger.i(dataBean.toString());
+                    if (code == 200) {
+                        List app_config_info = new ArrayList<String>();
+
+                        app_config_info.add(dataBean.getName());
+                        app_config_info.add(dataBean.getTerminal_road());
+                        app_config_info.add(dataBean.getTerminal_site());
+
+                        Logger.i(app_config_info.toString());
+                        mTvChangeStationMain.setText(dataBean.getTerminal_road());
+                        SPListUtil.putStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO, app_config_info);
+                    } else {
+                        SPListUtil.putStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO, null);
+                    }
+                }
+            }, macID);
+        }
+        List<String> new_ListValue = SPListUtil.getStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO);
+        for (int i = 0; i < new_ListValue.size(); i++) {
+            String string = new_ListValue.get(i).toString();
+            Logger.i(string);
+        }
+        if (new_ListValue.size() == 3) {
+            mTvChangeStationMain.setText(new_ListValue.get(2));
+        }
     }
 
 
     private void initView() {
 
         setSupportActionBar(mToolbarMain);
-
-        //得到拍照的按钮
-        //  mIvCamera = (ImageView) findViewById(R.id.iv_camera);
-
-        //mIvCamera.setOnClickListener(this);
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText("绿通车登记");
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbarMain, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -376,6 +422,8 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+
         setOperatorInfo("check_select = ?", mTvOperatorCheckMain);
         setOperatorInfo("login_select = ?", mTvOperatorLoginMain);
         mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
@@ -392,7 +440,7 @@ public class MainActivity extends BaseActivity implements
             Logger.i(operatorList.toString());
             String job_number = operatorList.get(0).getJob_number();
             String operator_name = operatorList.get(0).getOperator_name();
-            textView.setText(job_number + "/" + operator_name );
+            textView.setText(job_number + "/" + operator_name);
         } else {
             textView.setText("500001/苏三");
         }
@@ -595,7 +643,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     public static void notifyAndRefreshMath() {
-      //  mTvMathNumberSubmit.setText(SPUtils.get(MainActivity.this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
+        //  mTvMathNumberSubmit.setText(SPUtils.get(MainActivity.this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
     }
 
 }

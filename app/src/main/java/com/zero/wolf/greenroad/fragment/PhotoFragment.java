@@ -158,60 +158,49 @@ public class PhotoFragment extends Fragment {
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
             List<SupportDraftOrSubmit> supportDraftOrSubmits = DataSupport.where("lite_ID = ?", String.valueOf(sLite_ID)).find(SupportDraftOrSubmit.class);
             SupportMedia supportMedia = supportDraftOrSubmits.get(0).getSupportMedia();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
 
-                    if (supportMedia != null) {
-                        if (mSelectList_sanzheng == null) {
-                            mSelectList_sanzheng = new ArrayList<>();
-                        } else {
-                            mSelectList_sanzheng.clear();
+            if (supportMedia != null && supportMedia.getPaths() != null
+                    && supportMedia.getPaths().size() != 0) {
+
+                if (mSelectList_sanzheng == null) {
+                    mSelectList_sanzheng = new ArrayList<>();
+                } else {
+                    mSelectList_sanzheng.clear();
+                }
+                if (mSelectList_cheshen == null) {
+                    mSelectList_cheshen = new ArrayList<>();
+                } else {
+                    mSelectList_cheshen.clear();
+                }
+                if (mSelectList_huowu == null) {
+                    mSelectList_huowu = new ArrayList<>();
+                } else {
+                    mSelectList_huowu.clear();
+                }
+                for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+                    String photoType = supportMedia.getPhotoTypes().get(i);
+                    if (GlobalManager.PHOTO_TYPE_SANZHENG.equals(photoType)) {
+                        LocalMedia localMedia = initSelected(supportMedia, i);
+                        if (localMedia != null) {
+                            mSelectList_sanzheng.add(localMedia);
                         }
-                        if (mSelectList_cheshen == null) {
-                            mSelectList_cheshen = new ArrayList<>();
-                        } else {
-                            mSelectList_cheshen.clear();
+                    }
+                    if (GlobalManager.PHOTO_TYPE_CHESHEN.equals(photoType)) {
+                        LocalMedia localMedia = initSelected(supportMedia, i);
+                        if (localMedia != null) {
+                            mSelectList_cheshen.add(localMedia);
                         }
-                        if (mSelectList_huowu == null) {
-                            mSelectList_huowu = new ArrayList<>();
-                        } else {
-                            mSelectList_huowu.clear();
-                        }
-                        for (int i = 0; i < supportMedia.getPaths().size(); i++) {
-                            String photoType = supportMedia.getPhotoTypes().get(i);
-                            if (GlobalManager.PHOTO_TYPE_SANZHENG.equals(photoType)) {
-                                LocalMedia localMedia = initSelected(supportMedia, i);
-                                if (localMedia != null) {
-                                    mSelectList_sanzheng.add(localMedia);
-                                }
-                            }
-                            if (GlobalManager.PHOTO_TYPE_CHESHEN.equals(photoType)) {
-                                LocalMedia localMedia = initSelected(supportMedia, i);
-                                if (localMedia != null) {
-                                    mSelectList_cheshen.add(localMedia);
-                                }
-                            }
-                            if (GlobalManager.PHOTO_TYPE_HUOZHAO.equals(photoType)) {
-                                LocalMedia localMedia = initSelected(supportMedia, i);
-                                if (localMedia != null) {
-                                    mSelectList_huowu.add(localMedia);
-                                }
-                            }
+                    }
+                    if (GlobalManager.PHOTO_TYPE_HUOZHAO.equals(photoType)) {
+                        LocalMedia localMedia = initSelected(supportMedia, i);
+                        if (localMedia != null) {
+                            mSelectList_huowu.add(localMedia);
                         }
                     }
                 }
-            }).start();
-            if (mSelectList_sanzheng != null && mSelectList_sanzheng.size() != 0) {
-                mNumTextSanzheng.setText(" / " + mSelectList_sanzheng.size());
-            }
-            if (mSelectList_cheshen != null && mSelectList_cheshen.size() != 0) {
-                mNumTextCheshen.setText(" / " + mSelectList_cheshen.size());
-            }
-            if (mSelectList_huowu != null && mSelectList_huowu.size() != 0) {
-                mNumTextHuozhao.setText(" / " + mSelectList_huowu.size());
             }
         }
+
     }
 
     @Override
@@ -240,6 +229,7 @@ public class PhotoFragment extends Fragment {
         if (sBitmaps_huowu != null) {
             mNumTextHuozhao.setText(" / " + sBitmaps_huowu.size());
         }
+
     }
 
     private LocalMedia initSelected(SupportMedia supportMedia, int i) {

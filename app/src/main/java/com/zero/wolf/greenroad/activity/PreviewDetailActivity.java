@@ -98,6 +98,14 @@ public class PreviewDetailActivity extends BaseActivity {
 
     private Handler mHandler = new Handler();
 
+
+    public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
+        Intent intent = new Intent(context, PreviewDetailActivity.class);
+        intent.setAction(action);
+        intent.putExtra(SUPPORTDRAFT_ITEM, support);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +114,33 @@ public class PreviewDetailActivity extends BaseActivity {
 
         initToolbar();
 
-        getIntentData();
 
         initView();
         initRecyclerView();
+    }
+
+    /**
+     * 初始化草稿或提交详情页的toolbar并且区别一些数据
+     */
+    private void initToolbar() {
+
+        Intent intent = getIntent();
+        mCurrentSupport = intent.getParcelableExtra(SUPPORTDRAFT_ITEM);
+
+        setSupportActionBar(mToolbarPreviewDetail);
+        TextView title_text_view = ActionBarTool.getInstance(this, 991).getTitle_text_view();
+
+        if (ACTION_DRAFT_ITEM.equals(intent.getAction())) {
+            mDraftSaveEdit.setVisibility(View.VISIBLE);
+            title_text_view.setText("草稿详情页");
+        } else if (ACTION_SUBMIT_ITEM.equals(intent.getAction())) {
+            mDraftSaveEdit.setVisibility(View.GONE);
+            title_text_view.setText("提交详情页");
+
+        }
+        mToolbarPreviewDetail.setNavigationIcon(R.drawable.back_up_logo);
+        mToolbarPreviewDetail.setNavigationOnClickListener(v -> finish());
+
     }
 
     private void initRecyclerView() {
@@ -197,50 +228,25 @@ public class PreviewDetailActivity extends BaseActivity {
         mCheckedDescriptionText.setText(supportChecked.getDescription());
     }
 
-    private void initToolbar() {
-        setSupportActionBar(mToolbarPreviewDetail);
-        TextView title_text_view = ActionBarTool.getInstance(this, 991).getTitle_text_view();
-        title_text_view.setText("草稿详情页");
-        mToolbarPreviewDetail.setNavigationIcon(R.drawable.back_up_logo);
-        mToolbarPreviewDetail.setNavigationOnClickListener(v -> finish());
-
-    }
-
-
-    private void getIntentData() {
-        Intent intent = getIntent();
-        if (ACTION_DRAFT_ITEM.equals(intent.getAction())) {
-            mDraftSaveEdit.setVisibility(View.VISIBLE);
-        } else {
-            if (ACTION_SUBMIT_ITEM.equals(intent.getAction())) {
-                mDraftSaveEdit.setVisibility(View.GONE);
-            }
-        }
-        mCurrentSupport = intent.getParcelableExtra(SUPPORTDRAFT_ITEM);
-    }
-
-    public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
-        Intent intent = new Intent(context, PreviewDetailActivity.class);
-        intent.setAction(action);
-        intent.putExtra(SUPPORTDRAFT_ITEM, support);
-        context.startActivity(intent);
-    }
-
     @OnClick(R.id.draft_save_edit)
     public void onClick(View view) {
         SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
         SupportScan supportScan = mCurrentSupport.getSupportScan();
         SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
 
-     /*   for (int i = 0; i < supportMedia.getPaths().size(); i++) {
-        Logger.i(supportMedia.getPaths().get(i) + "---" +
-                supportMedia.getDurations().get(i) + "---" +
-                supportMedia.getHeights().get(i) + "---" +
-                supportMedia.getMimeTypes().get(i) + "---" +
-                supportMedia.getNums().get(i) + "---" +
-                supportMedia.getPictureTypes().get(i) + "---" +
-                supportMedia.getPositions().get(i) + "---" +
-                supportMedia.getWidths().get(i));
+
+
+     /*   SupportMedia supportMedia = mCurrentSupport.getSupportMedia();
+        for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+            Logger.init("media");
+            Logger.i(supportMedia.getPaths().get(i) + "---" +
+                    supportMedia.getDurations().get(i) + "---" +
+                    supportMedia.getHeights().get(i) + "---" +
+                    supportMedia.getMimeTypes().get(i) + "---" +
+                    supportMedia.getNums().get(i) + "---" +
+                    supportMedia.getPictureTypes().get(i) + "---" +
+                    supportMedia.getPositions().get(i) + "---" +
+                    supportMedia.getWidths().get(i));
         }*/
         ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked, mCurrentSupport.getLite_ID());
     }

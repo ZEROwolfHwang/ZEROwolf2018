@@ -42,6 +42,12 @@ public class TimeUtil {
         // String shutTime = formatter.format(curDate);
         return curTime;
     }
+    public static int getTimeId() {
+        SimpleDateFormat formatter = new SimpleDateFormat("MMddmmss");
+        int curTime = Integer.parseInt(formatter.format(new Date(System.currentTimeMillis())));
+        // String shutTime = formatter.format(curDate);
+        return curTime;
+    }
 
     /**
      * 通过时间秒毫秒数判断两个时间的间隔

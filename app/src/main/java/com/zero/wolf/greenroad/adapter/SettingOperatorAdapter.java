@@ -1,7 +1,6 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +12,6 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.bean.SettingOperatorInfo;
-import com.zero.wolf.greenroad.litepalbean.SupportOperator;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +29,18 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     private ArrayList<SettingOperatorInfo> mList;
     private final OnCheckSeleckedListener mCheckListener;
     private final OnLoginSeleckedListener mLoginListener;
+    private final OnItemDeletListener mDeletListener;
 
 
-    public SettingOperatorAdapter(SettingActivity settingActivity, ArrayList<SettingOperatorInfo> list, OnCheckSeleckedListener onCheckSeleckedListener, OnLoginSeleckedListener onLoginSeleckedListener) {
+    public SettingOperatorAdapter(SettingActivity settingActivity, ArrayList<SettingOperatorInfo> list,
+                                  OnCheckSeleckedListener onCheckSeleckedListener,
+                                  OnLoginSeleckedListener onLoginSeleckedListener,
+                                  OnItemDeletListener deletListener) {
         mActivity = settingActivity;
         mList = list;
         mCheckListener = onCheckSeleckedListener;
         mLoginListener = onLoginSeleckedListener;
+        mDeletListener = deletListener;
     }
 
 
@@ -133,16 +134,7 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
             });
             //点击了删除的按钮
             mTextSettingRecyclerDelete.setOnClickListener(v -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setTitle("是否确定删除该检查人/登记人");
-                builder.setPositiveButton(R.string.dialog_messge_OK, (dialog, which) -> {
-                    mList.remove(position);
-                    notifyItemRemoved(position);
-                    DataSupport.deleteAll(SupportOperator.class, "job_number = ?", info.getJob_number());
-                });
-                builder.setNegativeButton(R.string.dialog_message_Cancel,
-                        (dialog, which) -> dialog.dismiss());
-                builder.show();
+               mDeletListener.delete(position);
             });
         }
     }
@@ -152,6 +144,9 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     }
     public interface OnLoginSeleckedListener {
         void loginListener(SettingOperatorInfo info);
+    }
+   public interface OnItemDeletListener {
+        void delete(int position);
     }
 
 }

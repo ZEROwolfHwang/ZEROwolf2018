@@ -3,8 +3,6 @@ package com.zero.wolf.greenroad.tools;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,7 +118,6 @@ public class SPListUtil {
     public static List<String> getStrListValue(Context context, String key) {
         List<String> strList = new ArrayList<String>();
         int size = getIntValue(context, key + "size", 0);
-        Logger.i("getStrListValue"+size);
         for (int i = 0; i < size; i++) {
             strList.add(getStringValue(context, key + i, null));
         }

@@ -81,7 +81,6 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
         mAdapter = new PreviewItemAdapter(mContext, mActivity,
                 (ArrayList<SupportDraftOrSubmit>) mSubmitList, (support) -> {
-            ToastUtils.singleToast("点击了条目");
             PreviewDetailActivity.actionStart(mContext, support,
                     PreviewDetailActivity.ACTION_SUBMIT_ITEM);
         });

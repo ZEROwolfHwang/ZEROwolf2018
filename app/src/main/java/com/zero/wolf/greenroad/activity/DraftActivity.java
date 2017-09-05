@@ -88,7 +88,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
         mAdapter = new PreviewItemAdapter(mContext, mActivity, (ArrayList) mDraftList, support -> {
-            ToastUtils.singleToast("点击了draft条目");
             PreviewDetailActivity.actionStart(mContext,  support,PreviewDetailActivity.ACTION_DRAFT_ITEM);
         });
 

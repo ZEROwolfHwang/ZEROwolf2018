@@ -39,7 +39,7 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="Green_Road_MainActivity"></action>
@@ -50,7 +50,7 @@
             android:name=".activity.ShowActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
         </activity>
@@ -86,11 +86,6 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <receiver
-            android:name=".NetWorkStateReceiver"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
         <receiver android:name=".servicy.NotPostReceiver">
             <intent-filter>
                 <action android:name="com.zero.wolf.greenroad.servicy.action.TYPE_THREAD"/>
@@ -99,7 +94,7 @@
 
         <activity
             android:name=".activity.PreviewDetailActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 

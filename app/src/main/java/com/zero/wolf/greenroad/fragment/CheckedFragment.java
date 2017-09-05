@@ -144,24 +144,36 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             //默认是是   是为1   点击是否 否为0（有点绕）
             mToggleIsRoom.setChecked(sSupportChecked.getIsRoom() == 0 ? true : false);
             mToggleIsFree.setChecked(sSupportChecked.getIsFree() == 0 ? true : false);
-            mSiteCheck.setText(sSupportChecked.getSiteCheck());
-            mSiteLogin.setText(sSupportChecked.getSiteLogin());
+            mCheckOperator = sSupportChecked.getSiteCheck();
+            mLoginOperator = sSupportChecked.getSiteLogin();
+        } else if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+            mCheckOperator = setOperatorInfo("check_select = ?");
+            mLoginOperator = setOperatorInfo("login_select = ?");
         }
+     /*   if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
+            ConclusionActivity.notifyDataChangeFromDraft(sSupportChecked.getConclusion());
+            mEditDescriptionView.setText(sSupportChecked.getDescription());
+            //默认是是   是为1   点击是否 否为0（有点绕）
+            mToggleIsRoom.setChecked(sSupportChecked.getIsRoom() == 0 ? true : false);
+            mToggleIsFree.setChecked(sSupportChecked.getIsFree() == 0 ? true : false);
+        } else if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+            mCheckOperator = setOperatorInfo("check_select = ?", mSiteCheck);
+            mLoginOperator = setOperatorInfo("login_select = ?", mSiteLogin);
+        }*/
+            mSiteCheck.setText(mCheckOperator);
+            mSiteLogin.setText(mLoginOperator);
     }
 
 
-    private String setOperatorInfo(String condition, TextView textView) {
+    private String setOperatorInfo(String condition) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
         if (operatorList.size() != 0) {
             Logger.i(operatorList.toString());
             String mJob_number = operatorList.get(0).getJob_number();
             String mOperator_name = operatorList.get(0).getOperator_name();
-            textView.setText(mJob_number + "/" + mOperator_name);
             return mJob_number + "/" + mOperator_name;
-        } else {
-            textView.setText("500001/苏三");
         }
-        return null;
+        return "500001/苏三";
     }
 
 
@@ -192,10 +204,10 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         bean.setConclusion(sConclusionQ);
         bean.setDescription(sDescriptionQ);
         if (mCheckOperator != null) {
-            bean.setSiteCheck(mCheckOperator);
+            bean.setSiteCheck(mSiteCheck.getText().toString());
         }
         if (mLoginOperator != null) {
-            bean.setSiteLogin(mLoginOperator);
+            bean.setSiteLogin(mSiteLogin.getText().toString());
         }
         //默认是"是"的状态,所以点击后为true,返回0"否"的状态
         bean.setIsRoom(sIsRoom ? 0 : 1);
@@ -213,9 +225,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             mConclusions = conclusions;
         });
         mTextConclusionView.setText(mConclusions);
-
-        mCheckOperator = setOperatorInfo("check_select = ?", mSiteCheck);
-        mLoginOperator = setOperatorInfo("login_select = ?", mSiteLogin);
 
     }
 

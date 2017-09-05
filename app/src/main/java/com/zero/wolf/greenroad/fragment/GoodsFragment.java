@@ -12,9 +12,11 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
@@ -67,6 +69,12 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 
     @BindView(R.id.recycler_view_goods_sure)
     RecyclerView mRecyclerView;
+    @BindView(R.id.edit_text_qita)
+    EditText mEditTextQita;
+    @BindView(R.id.btn_sure_qita)
+    Button mBtnSureQita;
+    @BindView(R.id.rl_edit_qita)
+    RelativeLayout mRlEditQita;
 
     private SureGoodsAdapter mGoodsAdapter;
 
@@ -391,6 +399,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         switch (checkedId) {
             case R.id.goods_shucai:
+                closeQiTa();
                 current_kind = KIND_SHUCAI;
                 if (mCurrentGoodsList == null) {
                     mCurrentGoodsList = new ArrayList<>();
@@ -405,6 +414,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 }
                 break;
             case R.id.goods_shuiguo:
+                closeQiTa();
                 if (mGoodsShuiGuos != null && mGoodsShuiGuos.size() != 0) {
                     mGoodsAdapter.updateListView(mGoodsShuiGuos);
                 }
@@ -414,6 +424,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 }
                 break;
             case R.id.goods_shuichanpin:
+                closeQiTa();
                 if (mGoodsShuiChanPins != null && mGoodsShuiChanPins.size() != 0) {
                     mGoodsAdapter.updateListView(mGoodsShuiChanPins);
                 }
@@ -423,6 +434,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 }
                 break;
             case R.id.goods_chuqin:
+                closeQiTa();
                 if (mGoodsChuQins != null && mGoodsChuQins.size() != 0) {
                     mGoodsAdapter.updateListView(mGoodsChuQins);
                 }
@@ -432,6 +444,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 }
                 break;
             case R.id.goods_roudannai:
+                closeQiTa();
                 if (mGoodsRouDanNais != null && mGoodsRouDanNais.size() != 0) {
                     mGoodsAdapter.updateListView(mGoodsRouDanNais);
                 }
@@ -441,6 +454,8 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                 }
                 break;
             case R.id.goods_zaliang:
+                closeQiTa();
+
                 if (mGoodsZaLiangs != null && mGoodsZaLiangs.size() != 0) {
                     mGoodsAdapter.updateListView(mGoodsZaLiangs);
                 }
@@ -449,9 +464,31 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
                     mCurrentGoodsList = mGoodsZaLiangs;
                 }
                 break;
+            case R.id.goods_qita:
+                if (mRlEditQita.getVisibility() == View.GONE) {
+                    mRlEditQita.setVisibility(View.VISIBLE);
+                }
+                if (mRecyclerView.getVisibility() == View.VISIBLE) {
+                    mRecyclerView.setVisibility(View.GONE);
+                }
+                mBtnSureQita.setOnClickListener(v -> {
+                    String goods_qita = mEditTextQita.getText().toString().trim();
+                    mTextList.add(goods_qita);
+                    updateTextListView(mTextList);
+                    mEditTextQita.setText("");
 
+                });
             default:
                 break;
+        }
+    }
+
+    private void closeQiTa() {
+        if (mRecyclerView.getVisibility() == View.GONE) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+        if (mRlEditQita.getVisibility() == View.VISIBLE) {
+            mRlEditQita.setVisibility(View.GONE);
         }
     }
 
@@ -496,10 +533,7 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
 //                mEditText.setText(mGoodsBuilder.toString());
 //                mEditText.setSelection(mGoodsBuilder.length());
                 mEditText.setText("");
-                mTextAdapter.updateListView(mTextList);
-                if (mTextList.size() > 3) {
-                    mGoodTextRecycler.scrollToPosition(mTextList.size() - 1);
-                }
+                updateTextListView(mTextList);
                 //进行置顶操作
                 serializableGoods.setTop(1);
                 serializableGoods.setTime(System.currentTimeMillis());
@@ -511,6 +545,13 @@ public class GoodsFragment extends Fragment implements TextChangeWatcher.AfterTe
         mRecyclerView.addItemDecoration(new DividerGridItemDecoration(getContext(), 3));
         // mListView.setAdapter(mGoodsAdapter);
         mRecyclerView.setAdapter(mGoodsAdapter);
+    }
+
+    private void updateTextListView(ArrayList<String> mTextList) {
+        mTextAdapter.updateListView(mTextList);
+        if (mTextList.size() > 3) {
+            mGoodTextRecycler.scrollToPosition(mTextList.size() - 1);
+        }
     }
 
     private void refreshView(ArrayList<SerializableGoods> currentGoodsList) {

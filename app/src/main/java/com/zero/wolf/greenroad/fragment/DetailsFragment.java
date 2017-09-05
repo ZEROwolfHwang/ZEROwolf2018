@@ -29,7 +29,6 @@ import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
-import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -127,26 +126,6 @@ public class DetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        CarNumberFragment.setTextChangedFragment((edittext -> {
-            if (edittext.length() == 7) {
-                mCarNumber = edittext;
-                List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
-                for (int i = 0; i < blackList.size(); i++) {
-                    if (mCarNumber.equals(blackList.get(i).getLicense())) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("该车牌号已被加入黑名单");
-                        builder.setPositiveButton("了解", (dialog, which) -> {
-                            dialog.dismiss();
-                        });
-                        builder.show();
-                        return;
-                    }
-                }
-            } else {
-                mCarNumber = "";
-            }
-        }));
-
         GoodsFragment.setTextChangedFragment(edittext -> {
             mCarGoods = edittext;
         });
@@ -179,7 +158,10 @@ public class DetailsFragment extends Fragment {
             MyBitmap myBitmap = new MyBitmap(mBitmap_add, title);
             mMyBitmaps_recycler_all.add(myBitmap);
         }
+
+
         if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+
             if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
                 mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
             }
@@ -195,21 +177,71 @@ public class DetailsFragment extends Fragment {
                     mRecyclerViewShootPhoto.scrollToPosition(4);
                 }
             }
+
+            CarNumberFragment.setTextChangedFragment((edittext -> {
+                if (edittext.length() == 7) {
+                    mCarNumber = edittext;
+                    List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+                    for (int i = 0; i < blackList.size(); i++) {
+                        if (mCarNumber.equals(blackList.get(i).getLicense())) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("该车牌号已被加入黑名单");
+                            builder.setPositiveButton("了解", (dialog, which) -> {
+                                dialog.dismiss();
+                            });
+                            builder.show();
+                        }
+                    }
+                } else {
+                    mCarNumber = "";
+                }
+                Logger.i(mCarNumber + "]]]]]]]]]");
+                mTvChangeNumberDetail.setText(mCarNumber);
+                mTvChangeGoodsDetail.setText(mCarGoods);
+            }));
         } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
             PreviewDetailActivity.setPictureLisener(myBitmapList -> {
                 mMyBitmaps_recycler_all.addAll(myBitmapList);
             });
 //            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
             if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
-                if (mMyBitmaps_recycler_all.size() > 4) {
-                    mRecyclerViewShootPhoto.scrollToPosition(4);
-                }
                 mAdapter.updateListView(mMyBitmaps_recycler_all);
+                if (mMyBitmaps_recycler_all.size() > 2) {
+                    mRecyclerViewShootPhoto.scrollToPosition(2);
+                }
             }
+            Logger.i(sSupportDetail.toString());
+
+            // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
+            String number = sSupportDetail.getNumber();
+            mTvChangeNumberDetail.setText(number);
+            if (number != null && number.length() == 7) {
+                CarNumberFragment.notifyDataChangeFromDraft(number);
+            }
+            String goodsFromDraft = sSupportDetail.getGoods();
+            mTvChangeGoodsDetail.setText(goodsFromDraft);
+            GoodsFragment.notifyDataChangeFromDraft(goodsFromDraft);
+
+            String color = sSupportDetail.getColor();
+            if (CarColorManager.COLOR_YELLOW.equals(color)) {
+                mLicense_yellow.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_YELLOW;
+            } else if (CarColorManager.COLOR_BLUE.equals(color)) {
+                mLicense_blue.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_BLUE;
+            } else if (CarColorManager.COLOR_BLACK.equals(color)) {
+                mLicense_black.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_BLACK;
+            } else if (CarColorManager.COLOR_GREEN.equals(color)) {
+                mLicense_green.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_GREEN;
+            } else if (CarColorManager.COLOR_WHITE.equals(color)) {
+                mLicense_white.setChecked(true);
+                mCurrent_color = CarColorManager.COLOR_WHITE;
+            }
+
+
         }
-        Logger.i(mCarNumber + "]]]]]]]]]");
-        mTvChangeNumberDetail.setText(mCarNumber);
-        mTvChangeGoodsDetail.setText(mCarGoods);
 
 
     }
@@ -226,10 +258,10 @@ public class DetailsFragment extends Fragment {
         });
 //
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
+        /*mAdapter.updateListView(mMyBitmaps_recycler_all);
         if (mMyBitmaps_recycler_all.size() > 4) {
             mRecyclerViewShootPhoto.scrollToPosition(4);
-            mAdapter.updateListView(mMyBitmaps_recycler_all);
-        }
+        }*/
         mRecyclerViewShootPhoto.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -277,39 +309,6 @@ public class DetailsFragment extends Fragment {
         mLicense_green = (RadioButton) view.findViewById(R.id.license_green);
         mLicense_white = (RadioButton) view.findViewById(R.id.license_white);
 
-        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
-            Logger.i(sSupportDetail.toString());
-
-            // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
-            String number = sSupportDetail.getNumber();
-            mTvChangeNumberDetail.setText(number);
-            if (number != null && number.length() == 7) {
-                CarNumberFragment.notifyDataChangeFromDraft(number);
-            }
-            String goodsFromDraft = sSupportDetail.getGoods();
-            mTvChangeGoodsDetail.setText(goodsFromDraft);
-            GoodsFragment.notifyDataChangeFromDraft(goodsFromDraft);
-
-            String color = sSupportDetail.getColor();
-            if (CarColorManager.COLOR_YELLOW.equals(color)) {
-                mLicense_yellow.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_YELLOW;
-            } else if (CarColorManager.COLOR_BLUE.equals(color)) {
-                mLicense_blue.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_BLUE;
-            } else if (CarColorManager.COLOR_BLACK.equals(color)) {
-                mLicense_black.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_BLACK;
-            } else if (CarColorManager.COLOR_GREEN.equals(color)) {
-                mLicense_green.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_GREEN;
-            } else if (CarColorManager.COLOR_WHITE.equals(color)) {
-                mLicense_white.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_WHITE;
-            }
-
-        }
-
     }
 
     private void initRadioColor() {
@@ -349,11 +348,9 @@ public class DetailsFragment extends Fragment {
         switch (view.getId()) {
             case R.id.tv_change_number_detail:
                 enterSureActivity(GlobalManager.ENTERTYPE_NUMBER);
-                ToastUtils.singleToast("进入车牌号的选择业");
                 break;
             case R.id.tv_change_goods_detail:
                 enterSureActivity(GlobalManager.ENTERTYPE_GOODS);
-                ToastUtils.singleToast("进入货物的选择业");
                 break;
             //预览跳转到最左边
             case R.id.activity_recycler_left:
