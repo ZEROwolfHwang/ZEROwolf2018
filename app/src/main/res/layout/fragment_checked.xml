@@ -83,32 +83,12 @@
             <include layout="@layout/device_item_bg_1dp"/>
 
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycle_site_check_operator"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_margin10dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="现场检查人"
-                    android:textColor="@color/color808080"
-                    android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/site_check_operator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/layout_margin10dp"
-                    android:gravity="center"
-                    android:textColor="@color/color333333"
-                    android:textSize="18sp"/>
-
-
-            </LinearLayout>
+            </android.support.v7.widget.RecyclerView>
 
             <include layout="@layout/device_item_bg_1dp"/>
 

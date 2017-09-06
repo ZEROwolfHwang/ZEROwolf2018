@@ -49,7 +49,6 @@ public class SettingActivity extends BaseActivity {
     private SettingActivity mActivity;
     private SettingOperatorAdapter mAdapter;
     private ArrayList<SettingOperatorInfo> mOperatorList;
-    private String mJob_number_check;
     private String mJob_number_login;
     private String mOperator_check_name;
     private String mOperator_login_name;
@@ -63,7 +62,6 @@ public class SettingActivity extends BaseActivity {
         mActivity = this;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
 
 
         initData();
@@ -120,17 +118,19 @@ public class SettingActivity extends BaseActivity {
     private void initRecyclerView() {
 
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        mAdapter = new SettingOperatorAdapter(this, mOperatorList, (SettingOperatorInfo info) -> {
-            mJob_number_check = info.getJob_number();
-            mOperator_check_name = info.getOperator_name();
-            Logger.i("check---" + mJob_number_check + "-----" + mOperator_check_name);
+        mAdapter = new SettingOperatorAdapter(this, mOperatorList, () -> {
+            for (int i = 0; i < mOperatorList.size(); i++) {
+                if (mOperatorList.get(i).getIsCheckSelected() == 1) {
+                    Logger.i(mOperatorList.get(i).getJob_number());
+                }
+            }
 
         }, (SettingOperatorInfo info) -> {
             mJob_number_login = info.getJob_number();
             mOperator_login_name = info.getOperator_name();
             Logger.i("login---" + mJob_number_login + "-----" + mOperator_login_name);
 
-        },position -> {
+        }, position -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
             builder.setTitle("是否确定删除该检查人/登记人");
             builder.setPositiveButton(R.string.dialog_messge_OK, (dialog, which) -> {
@@ -144,6 +144,7 @@ public class SettingActivity extends BaseActivity {
                     (dialog, which) -> dialog.dismiss());
             builder.show();
         });
+
         mSettingRecyclerView.setLayoutManager(manager);
         mSettingRecyclerView.setAdapter(mAdapter);
     }
@@ -153,7 +154,6 @@ public class SettingActivity extends BaseActivity {
 
         setSupportActionBar(mToolbarSetting);
 
-
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText(getString(R.string.setting_default));
 
@@ -161,7 +161,6 @@ public class SettingActivity extends BaseActivity {
 
         mToolbarSetting.setNavigationOnClickListener(v -> finish());
     }
-
 
 
     @OnClick({R.id.text_setting_add_selection,
@@ -187,43 +186,50 @@ public class SettingActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    /**
-     * 更新operator数据库表
-     *
-     * @param job_number
-     * @param type
-     */
-    private void updateOperatorLite(String job_number, int type) {
-
-
-        List<SupportOperator> operatorList = DataSupport.findAll(SupportOperator.class);
-        for (SupportOperator operator : operatorList) {
-            if (job_number != null && job_number.equals(operator.getJob_number())) {
-                if (type == 001) {
-                    operator.setCheck_select(1);
-                } else {
-                    operator.setLogin_select(1);
-                }
-            } else {
-                if (type == 001) {
-                    operator.setCheck_select(0);
-                } else {
-                    operator.setLogin_select(0);
-                }
-            }
-            operator.save();
-        }
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
         Logger.i("onDestroy");
-        if (mJob_number_check != null) {
-            updateOperatorLite(mJob_number_check, 001);
+
+        if (mOperatorList != null) {
+           /* List<SupportOperator> operatorList = DataSupport.findAll(SupportOperator.class);
+            for (int i = 0; i < mOperatorList.size(); i++) {
+                for (int j = 0; j < operatorList.size(); j++) {
+                    SupportOperator operator = operatorList.get(j);
+                    if (mOperatorList.get(i).getJob_number() != null &&
+                            mOperatorList.get(i).getJob_number().equals(operator.getJob_number())) {
+                        operator.setCheck_select(1);
+                    }
+                    operator.setCheck_select(0);
+                    operator.save();
+                }*/
+
+            List<SupportOperator> operatorList = DataSupport.findAll(SupportOperator.class);
+            for (SupportOperator operator : operatorList) {
+                for (int i = 0; i < mOperatorList.size(); i++) {
+                    String job_number = mOperatorList.get(i).getJob_number();
+                    if (job_number.equals(operator.getJob_number())) {
+                        operator.setLogin_select(1);
+                    } else {
+                        operator.setLogin_select(0);
+                    }
+                }
+                operator.save();
+
+            }
+
         }
         if (mJob_number_login != null) {
-            updateOperatorLite(mJob_number_login, 002);
+            List<SupportOperator> operatorList = DataSupport.findAll(SupportOperator.class);
+            for (SupportOperator operator : operatorList) {
+                if (mJob_number_login != null && mJob_number_login.equals(operator.getJob_number())) {
+                    operator.setLogin_select(1);
+                } else {
+                    operator.setLogin_select(0);
+                }
+                operator.save();
+            }
         }
 
     }

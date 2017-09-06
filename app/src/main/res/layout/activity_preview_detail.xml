@@ -70,21 +70,10 @@
 
                         <include layout="@layout/device_item_bg_1dp"/>
 
-                        <LinearLayout
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycler_site_check_preview"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/title_activity_preview_all_detail_style"
-                                android:text="现场检查人"/>
-
-                            <TextView
-
-                                android:id="@+id/pick_002"
-                                style="@style/content_activity_preview_all_detail_style"/>
-
-                        </LinearLayout>
+                            android:layout_height="wrap_content"/>
 
                         <include layout="@layout/device_item_bg_1dp"/>
 

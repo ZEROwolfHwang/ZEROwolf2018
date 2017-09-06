@@ -102,7 +102,8 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
 
         public void bindHolder(SupportDraftOrSubmit support, int position) {
 
-            String check = support.getSupportChecked().getSiteCheck();
+            String sub_check = support.getSupportChecked().getSiteChecks().get(0).substring(0, 6);
+            String check = sub_check;
             String login = support.getSupportChecked().getSiteLogin();
             String car_number = support.getSupportDetail().getNumber();
             String shutTime = support.getCurrent_time();

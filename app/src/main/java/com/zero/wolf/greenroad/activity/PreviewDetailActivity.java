@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
+import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
+import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
 import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
@@ -72,8 +74,7 @@ public class PreviewDetailActivity extends BaseActivity {
     EditText mCheckedDescriptionText;
     @BindView(R.id.pick_001)
     TextView mPick001;
-    @BindView(R.id.pick_002)
-    TextView mPick002;
+
     @BindView(R.id.pick_003)
     TextView mPick003;
     @BindView(R.id.pick_004)
@@ -90,6 +91,8 @@ public class PreviewDetailActivity extends BaseActivity {
     TextView mDraftSaveTime;
     @BindView(R.id.draft_save_edit)
     TextView mDraftSaveEdit;
+    @BindView(R.id.recycler_site_check_preview)
+    RecyclerView mRecyclerSiteCheckPreview;
     private SupportDraftOrSubmit mCurrentSupport;
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
@@ -97,6 +100,8 @@ public class PreviewDetailActivity extends BaseActivity {
     private static ArrayList<MyBitmap> mBitmapArrayList;
 
     private Handler mHandler = new Handler();
+    private SupportChecked mSupportChecked;
+    private BasePhotoAdapter<String> mCheckAdapter;
 
 
     public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
@@ -116,7 +121,27 @@ public class PreviewDetailActivity extends BaseActivity {
 
 
         initView();
-        initRecyclerView();
+        initCheckRecyclerView();
+        initPhotoRecyclerView();
+    }
+
+    private void initCheckRecyclerView() {
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        List<String> siteCheckList = mSupportChecked.getSiteChecks();
+        mCheckAdapter = new BasePhotoAdapter<String>(this, R.layout.layout_site_check_preview, (ArrayList<String>) siteCheckList) {
+            @Override
+            public void convert(BasePhotoViewHolder holder, int position, String s) {
+                TextView header = holder.getView(R.id.pick_002_header);
+                TextView operator = holder.getView(R.id.pick_002_operator);
+                if (siteCheckList.size() != 1) {
+                    header.setText("现场检查人" + (position + 1));
+                }
+                operator.setText(s);
+            }
+        };
+        mRecyclerSiteCheckPreview.setLayoutManager(manager);
+        mRecyclerSiteCheckPreview.setAdapter(mCheckAdapter);
     }
 
     /**
@@ -143,7 +168,7 @@ public class PreviewDetailActivity extends BaseActivity {
 
     }
 
-    private void initRecyclerView() {
+    private void initPhotoRecyclerView() {
         if (mBitmapArrayList == null) {
             mBitmapArrayList = new ArrayList<>();
         } else {
@@ -193,15 +218,15 @@ public class PreviewDetailActivity extends BaseActivity {
 
     private void initView() {
         SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
-        SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
+        mSupportChecked = mCurrentSupport.getSupportChecked();
         SupportScan supportScan = mCurrentSupport.getSupportScan();
 
         mDraftSaveTime.setText(mCurrentSupport.getCurrent_time());
 
         //采集信息的条目
         mPick001.setText(supportDetail.getLane());
-        mPick002.setText(supportChecked.getSiteCheck());
-        mPick003.setText(supportChecked.getSiteLogin());
+        //  mPick002.setText(supportChecked.getSiteChecks().toString());
+        mPick003.setText(mSupportChecked.getSiteLogin());
         mPick004.setText(supportDetail.getNumber());
         mPick005.setText(supportDetail.getColor());
         mPick006.setText(supportDetail.getGoods());
@@ -222,10 +247,10 @@ public class PreviewDetailActivity extends BaseActivity {
         mTextTable12.setText(supportScan.getScan_12Q());
 
         //检查结论的条目
-        mCheck001.setText(supportChecked.getIsRoom() == 0 ? "否" : "是");
-        mCheck002.setText(supportChecked.getIsFree() == 0 ? "否" : "是");
-        mCheckedConclusionText.setText(supportChecked.getConclusion());
-        mCheckedDescriptionText.setText(supportChecked.getDescription());
+        mCheck001.setText(mSupportChecked.getIsRoom() == 0 ? "否" : "是");
+        mCheck002.setText(mSupportChecked.getIsFree() == 0 ? "否" : "是");
+        mCheckedConclusionText.setText(mSupportChecked.getConclusion());
+        mCheckedDescriptionText.setText(mSupportChecked.getDescription());
     }
 
     @OnClick(R.id.draft_save_edit)

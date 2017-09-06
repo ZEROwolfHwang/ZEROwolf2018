@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/8/24.
  */
@@ -14,7 +16,7 @@ public class SupportChecked extends DataSupport implements Parcelable{
     private int lite_ID;
 
 
-    private String siteCheck;
+    private List<String> siteChecks;
     private String siteLogin;
 
     private int isRoom;
@@ -27,7 +29,7 @@ public class SupportChecked extends DataSupport implements Parcelable{
 
     protected SupportChecked(Parcel in) {
         lite_ID = in.readInt();
-        siteCheck = in.readString();
+        siteChecks = in.createStringArrayList();
         siteLogin = in.readString();
         isRoom = in.readInt();
         isFree = in.readInt();
@@ -38,7 +40,7 @@ public class SupportChecked extends DataSupport implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(lite_ID);
-        dest.writeString(siteCheck);
+        dest.writeStringList(siteChecks);
         dest.writeString(siteLogin);
         dest.writeInt(isRoom);
         dest.writeInt(isFree);
@@ -67,7 +69,7 @@ public class SupportChecked extends DataSupport implements Parcelable{
     public String toString() {
         return "SupportChecked{" +
                 "lite_ID=" + lite_ID +
-                ", siteCheck='" + siteCheck + '\'' +
+                ", siteChecks=" + siteChecks +
                 ", siteLogin='" + siteLogin + '\'' +
                 ", isRoom=" + isRoom +
                 ", isFree=" + isFree +
@@ -84,12 +86,12 @@ public class SupportChecked extends DataSupport implements Parcelable{
         this.lite_ID = lite_ID;
     }
 
-    public String getSiteCheck() {
-        return siteCheck;
+    public List<String> getSiteChecks() {
+        return siteChecks;
     }
 
-    public void setSiteCheck(String siteCheck) {
-        this.siteCheck = siteCheck;
+    public void setSiteChecks(List<String> siteChecks) {
+        this.siteChecks = siteChecks;
     }
 
     public String getSiteLogin() {

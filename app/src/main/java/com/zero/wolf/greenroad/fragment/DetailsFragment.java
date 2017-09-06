@@ -2,6 +2,9 @@ package com.zero.wolf.greenroad.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -184,11 +187,16 @@ public class DetailsFragment extends Fragment {
                     List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
                     for (int i = 0; i < blackList.size(); i++) {
                         if (mCarNumber.equals(blackList.get(i).getLicense())) {
+                            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+                            r.play();
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("该车牌号已被加入黑名单");
                             builder.setPositiveButton("了解", (dialog, which) -> {
                                 dialog.dismiss();
                             });
+                            builder.setCancelable(false);
                             builder.show();
                         }
                     }

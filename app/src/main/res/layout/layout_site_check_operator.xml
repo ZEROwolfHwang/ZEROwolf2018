@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:orientation="horizontal"
+    tools:showIn="@layout/fragment_checked">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/site_check_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="现场检查人"
+            android:textColor="@color/color808080"
+            android:textSize="18sp"/>
+
+        <ImageButton
+            android:id="@+id/add_check_item"
+            android:layout_width="20dp"
+            android:visibility="gone"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/layout_margin5dp"
+            android:background="@color/transparent"
+            android:src="@drawable/add_check_item"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/site_check_operator"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:gravity="center"
+        android:textColor="@color/color333333"
+        android:textSize="18sp"/>
+<!--
+
+    <TextView
+        android:id="@+id/site_check_delete"
+        android:layout_marginRight="@dimen/layout_margin10dp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/red"
+        android:textSize="18sp"
+        android:text="删除"/>
+-->
+
+    <ImageButton
+        android:id="@+id/site_check_delete"
+        android:layout_width="20dp"
+        android:visibility="gone"
+        android:layout_height="20dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/layout_margin5dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_delete_photo"/>
+
+
+</LinearLayout>

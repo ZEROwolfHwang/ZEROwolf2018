@@ -178,7 +178,7 @@ public class MainActivity extends BaseActivity implements
                 List<SupportOperator> login = DataSupport.where("login_select=?", "1").
                         find(SupportOperator.class);
 
-                if (check.size() == 1 && login.size() == 1) {
+                if (check.size() >= 1 && login.size() == 1) {
                     ShowActivity.actionStart(MainActivity.this);
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -335,10 +335,6 @@ public class MainActivity extends BaseActivity implements
             updateApp();
         } else if (id == R.id.nav_backup) {
             buckUpApp();
-        } else if (id == R.id.nav_post) {
-            //post_not_upload();
-            refresh();
-            Logger.i("点击了未上传按钮");
         } else if (id == R.id.nav_config) {
             //post_not_upload();
             openConfigLine();
@@ -436,14 +432,24 @@ public class MainActivity extends BaseActivity implements
 
     private void setOperatorInfo(String condition, TextView textView) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
+        //ArrayList<String> checkOperatorList = new ArrayList<>();
+        String operator = "";
         if (operatorList.size() != 0) {
-            Logger.i(operatorList.toString());
-            String job_number = operatorList.get(0).getJob_number();
-            String operator_name = operatorList.get(0).getOperator_name();
-            textView.setText(job_number + "/" + operator_name);
+            for (int i = 0; i < operatorList.size(); i++) {
+                String job_number = operatorList.get(i).getJob_number();
+                String operator_name = operatorList.get(i).getOperator_name();
+                if (i == 0) {
+                    operator = job_number + "/" + operator_name;
+                } else {
+                    operator=operator+"\n"+job_number + "/" + operator_name;
+                }
+            }
         } else {
-            textView.setText("500001/苏三");
+            operator = "500001/苏三";
         }
+        Logger.i(operator);
+        textView.setText(operator);
+
     }
 
     //onPause()方法注销

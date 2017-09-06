@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.SettingActivity;
 import com.zero.wolf.greenroad.bean.SettingOperatorInfo;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     @Override
     public void onBindViewHolder(SettingOperatorHolder holder, int position) {
         SettingOperatorInfo info = mList.get(position);
-        holder.bindHolder(info,position);
+        holder.bindHolder(info, position);
 
     }
 
@@ -109,23 +110,40 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
             mTextSettingRecyclerJobNumber.setText(job_number);
             mTextSettingRecyclerName.setText(info.getOperator_name());
 
-            mOperatorCheckSelect.setChecked(info.getIsCheckSelected()== 0?false:true);
-            mOperatorLoginSelect.setChecked(info.getIsLoginSelected()==0?false:true);
+            mOperatorCheckSelect.setChecked(info.getIsCheckSelected() == 0 ? false : true);
+            mOperatorLoginSelect.setChecked(info.getIsLoginSelected() == 0 ? false : true);
             mOperatorCheckSelect.setOnClickListener(v -> {
-                for (SettingOperatorInfo operatorInfo : mList) {
+               /* for (SettingOperatorInfo operatorInfo : mList) {
                     if (operatorInfo.getIsCheckSelected()==1) {
                         operatorInfo.setIsCheckSelected(0);
                     }
+                }*/
+                if (mOperatorCheckSelect.isChecked()) {
+                    int length = 0;
+                    for (int i = 0; i < mList.size(); i++) {
+                        if (mList.get(i).getIsCheckSelected() == 1) {
+                            length += 1;
+                        }
+                    }
+                    if (length == 3) {
+                        mOperatorCheckSelect.setChecked(false);
+                        ToastUtils.singleToast("最多只能添加三个默认检查人");
+                        return;
+                    } else {
+                        info.setIsCheckSelected(1);
+                    }
+
+                } else {
+                    info.setIsCheckSelected(0);
                 }
-                info.setIsCheckSelected(1);
                 notifyDataSetChanged();
 
-                mCheckListener.checkListener(info);
+                mCheckListener.checkListener();
             });
             mOperatorLoginSelect.setOnClickListener(v -> {
                 for (SettingOperatorInfo operatorInfo : mList) {
-                    if (operatorInfo.getIsLoginSelected()==1)
-                    operatorInfo.setIsLoginSelected(0);
+                    if (operatorInfo.getIsLoginSelected() == 1)
+                        operatorInfo.setIsLoginSelected(0);
                 }
                 info.setIsLoginSelected(1);
                 notifyDataSetChanged();
@@ -134,18 +152,20 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
             });
             //点击了删除的按钮
             mTextSettingRecyclerDelete.setOnClickListener(v -> {
-               mDeletListener.delete(position);
+                mDeletListener.delete(position);
             });
         }
     }
 
     public interface OnCheckSeleckedListener {
-        void checkListener(SettingOperatorInfo info);
+        void checkListener();
     }
+
     public interface OnLoginSeleckedListener {
         void loginListener(SettingOperatorInfo info);
     }
-   public interface OnItemDeletListener {
+
+    public interface OnItemDeletListener {
         void delete(int position);
     }
 

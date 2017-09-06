@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
 import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
 import com.zero.wolf.greenroad.adapter.RecycleViewDivider;
+import com.zero.wolf.greenroad.adapter.SiteChecksAdapter;
 import com.zero.wolf.greenroad.bean.CheckedBean;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
@@ -30,6 +32,7 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -52,12 +55,14 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
 
     private static boolean sIsFree;
     private static boolean sIsRoom;
-    private static TextView mSiteCheck;
+
     private static TextView mSiteLogin;
+    @BindView(R.id.recycle_site_check_operator)
+    RecyclerView mRecycleCheck;
     private String mConclusions;
 
     private static String mLoginOperator;
-    private static String mCheckOperator;
+    private static List<String> mCheckOperators;
     private static String sConclusionQ;
     private static String sDescriptionQ;
     private static String sEnterType;
@@ -67,6 +72,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private SpinnerPopupWindow mPopupWindow_login;
     private ArrayList<String> mOperators;
     private int mDimension;
+    private SiteChecksAdapter mChecksAdapter;
 
 
     public CheckedFragment() {
@@ -107,9 +113,19 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         initView(view);
 
         //初始化各个checkbox的状态
-
+        initRecycler();
 
         return view;
+    }
+
+    private void initRecycler() {
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
+        mChecksAdapter = new SiteChecksAdapter(getContext(), (ArrayList<String>) mCheckOperators,mDimension,mOperators);
+
+        mRecycleCheck.setLayoutManager(manager);
+        mRecycleCheck.setAdapter(mChecksAdapter);
+
     }
 
     private void initData() {
@@ -130,12 +146,11 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mEditDescriptionView = (EditText) view.findViewById(R.id.checked_description_text);
         mToggleIsRoom = (ToggleButton) view.findViewById(R.id.toggle_is_room);
         mToggleIsFree = (ToggleButton) view.findViewById(R.id.toggle_is_free);
-        mSiteCheck = (TextView) view.findViewById(R.id.site_check_operator);
+
         mSiteLogin = (TextView) view.findViewById(R.id.site_login_operator);
 
 
         mTextConclusionView.setOnClickListener(this);
-        mSiteCheck.setOnClickListener(this);
         mSiteLogin.setOnClickListener(this);
 
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
@@ -144,11 +159,11 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             //默认是是   是为1   点击是否 否为0（有点绕）
             mToggleIsRoom.setChecked(sSupportChecked.getIsRoom() == 0 ? true : false);
             mToggleIsFree.setChecked(sSupportChecked.getIsFree() == 0 ? true : false);
-            mCheckOperator = sSupportChecked.getSiteCheck();
+            mCheckOperators = sSupportChecked.getSiteChecks();
             mLoginOperator = sSupportChecked.getSiteLogin();
         } else if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
-            mCheckOperator = setOperatorInfo("check_select = ?");
-            mLoginOperator = setOperatorInfo("login_select = ?");
+            mCheckOperators = setCheckOperatorInfo("check_select = ?");
+            mLoginOperator = setLoginOperatorInfo("login_select = ?");
         }
      /*   if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
             ConclusionActivity.notifyDataChangeFromDraft(sSupportChecked.getConclusion());
@@ -160,12 +175,11 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             mCheckOperator = setOperatorInfo("check_select = ?", mSiteCheck);
             mLoginOperator = setOperatorInfo("login_select = ?", mSiteLogin);
         }*/
-            mSiteCheck.setText(mCheckOperator);
-            mSiteLogin.setText(mLoginOperator);
+        mSiteLogin.setText(mLoginOperator);
     }
 
 
-    private String setOperatorInfo(String condition) {
+    private String setLoginOperatorInfo(String condition) {
         List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
         if (operatorList.size() != 0) {
             Logger.i(operatorList.toString());
@@ -174,6 +188,23 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             return mJob_number + "/" + mOperator_name;
         }
         return "500001/苏三";
+    }
+
+    private List<String> setCheckOperatorInfo(String condition) {
+        List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
+        List<String> checkList = null;
+        if (checkList == null) {
+            checkList = new ArrayList<>();
+        } else {
+            checkList.clear();
+        }
+        for (int i = 0; i < operatorList.size(); i++) {
+            String mJob_number = operatorList.get(i).getJob_number();
+            String mOperator_name = operatorList.get(i).getOperator_name();
+            checkList.add(mJob_number + "/" + mOperator_name);
+        }
+
+        return checkList;
     }
 
 
@@ -203,8 +234,8 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
 
         bean.setConclusion(sConclusionQ);
         bean.setDescription(sDescriptionQ);
-        if (mCheckOperator != null) {
-            bean.setSiteCheck(mSiteCheck.getText().toString());
+        if (mCheckOperators != null) {
+            bean.setSiteChecks(mCheckOperators);
         }
         if (mLoginOperator != null) {
             bean.setSiteLogin(mSiteLogin.getText().toString());
@@ -241,7 +272,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                 ConclusionActivity.actionStart(getContext(),
                         mTextConclusionView.getText().toString().trim());
                 break;
-            case R.id.site_check_operator:
+            /*case R.id.site_check_operator:
                 BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
                     @Override
                     public void convert(BasePhotoViewHolder holder, int position, String s) {
@@ -264,7 +295,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                         .build();
 
                 mPopupWindow_check.showPopWindow(v, mDimension);
-                break;
+                break;*/
             case R.id.site_login_operator:
                 BasePhotoAdapter<String> adapter_login = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
                     @Override

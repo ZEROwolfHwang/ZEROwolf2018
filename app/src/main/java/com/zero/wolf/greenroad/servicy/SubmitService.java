@@ -11,6 +11,7 @@ import android.os.Message;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.activity.MainActivity;
 import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.CheckedBean;
 import com.zero.wolf.greenroad.bean.DetailInfoBean;
@@ -273,7 +274,7 @@ public class SubmitService extends IntentService {
         supportChecked.setIsFree(mCheckedBean_Q.getIsFree());
         supportChecked.setConclusion(mCheckedBean_Q.getConclusion());
         supportChecked.setDescription(mCheckedBean_Q.getDescription());
-        supportChecked.setSiteCheck(mCheckedBean_Q.getSiteCheck());
+        supportChecked.setSiteChecks(mCheckedBean_Q.getSiteChecks());
         supportChecked.setSiteLogin(mCheckedBean_Q.getSiteLogin());
         supportChecked.save();
 
@@ -380,11 +381,16 @@ public class SubmitService extends IntentService {
             info.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
 
             //从checkedFragment中拿到的数据
+            List<String> siteChecks = mCheckedBean_Q.getSiteChecks();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < siteChecks.size(); i++) {
+                builder.append("-" + siteChecks.get(i));
+            }
             info.setIsFree(mCheckedBean_Q.getIsFree());
             info.setIsRoom(mCheckedBean_Q.getIsRoom());
             info.setConclusion(mCheckedBean_Q.getConclusion());
             info.setDescription(mCheckedBean_Q.getDescription());
-            info.setSiteCheck(mCheckedBean_Q.getSiteCheck());
+            info.setSiteCheck(builder.toString());
             info.setSiteLogin(mCheckedBean_Q.getSiteLogin());
 
 
@@ -470,8 +476,7 @@ public class SubmitService extends IntentService {
         }
 
         sActivity.notifyDataChangeAndFinish();
-        Intent intent = new Intent("Green_Road_MainActivity");
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        Intent intent = new Intent(sActivity, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 

@@ -1,5 +1,7 @@
 package com.zero.wolf.greenroad.bean;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/8/18.
  */
@@ -8,7 +10,7 @@ public class CheckedBean {
 
     private String conclusion;
     private String description;
-    private String siteCheck;
+    private List<String> siteChecks;
     private String siteLogin;
     private int isRoom;
     private int isFree;
@@ -29,13 +31,6 @@ public class CheckedBean {
         this.description = description;
     }
 
-    public String getSiteCheck() {
-        return siteCheck;
-    }
-
-    public void setSiteCheck(String siteCheck) {
-        this.siteCheck = siteCheck;
-    }
 
     public String getSiteLogin() {
         return siteLogin;
@@ -61,12 +56,20 @@ public class CheckedBean {
         this.isFree = isFree;
     }
 
+    public List<String> getSiteChecks() {
+        return siteChecks;
+    }
+
+    public void setSiteChecks(List<String> siteChecks) {
+        this.siteChecks = siteChecks;
+    }
+
     @Override
     public String toString() {
         return "CheckedBean{" +
                 "conclusion='" + conclusion + '\'' +
                 ", description='" + description + '\'' +
-                ", siteCheck='" + siteCheck + '\'' +
+                ", siteChecks=" + siteChecks +
                 ", siteLogin='" + siteLogin + '\'' +
                 ", isRoom=" + isRoom +
                 ", isFree=" + isFree +

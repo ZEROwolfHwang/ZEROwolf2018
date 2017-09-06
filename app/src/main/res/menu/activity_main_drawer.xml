@@ -4,11 +4,6 @@
     android:checkableBehavior="single">
     <group>
 
-        <item
-            android:id="@+id/nav_post"
-            android:icon="@drawable/post_not_send"
-            android:title="@string/post_upload_not">
-        </item>
  <item
             android:id="@+id/nav_config"
             android:icon="@drawable/post_not_send"
@@ -25,7 +20,7 @@
             android:title="@string/about_app"/>
         <item
             android:id="@+id/nav_backup"
-            android:icon="@drawable/footer_item_location"
+            android:icon="@drawable/back_up_logo"
             android:title="@string/back_up_app"/>
     </group>
 
