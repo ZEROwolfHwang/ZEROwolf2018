@@ -103,8 +103,6 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         for (int i = 0; i < mSubmitList.size(); i++) {
             Logger.i("++++++++++++" + mSubmitList.get(i).toString());
         }
-
-
     }
 
     private void initToolbar() {

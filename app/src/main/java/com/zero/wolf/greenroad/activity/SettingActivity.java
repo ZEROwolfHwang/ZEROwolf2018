@@ -206,18 +206,26 @@ public class SettingActivity extends BaseActivity {
                 }*/
 
             List<SupportOperator> operatorList = DataSupport.findAll(SupportOperator.class);
-            for (SupportOperator operator : operatorList) {
-                for (int i = 0; i < mOperatorList.size(); i++) {
+//            for (SupportOperator operator : operatorList) {
+            for (int i = 0; i < mOperatorList.size(); i++) {
+                //for (int j = 0; j < operatorList.size(); j++) {
+                SupportOperator operator = operatorList.get(i);
+                if (mOperatorList.get(i).getIsCheckSelected()==1) {
+                    operator.setCheck_select(1);
+                } else {
+                    operator.setCheck_select(0);
+                }
+                operator.save();
+            }
+                /*for (int i = 0; i < mOperatorList.size(); i++) {
                     String job_number = mOperatorList.get(i).getJob_number();
                     if (job_number.equals(operator.getJob_number())) {
                         operator.setLogin_select(1);
                     } else {
                         operator.setLogin_select(0);
                     }
-                }
-                operator.save();
-
-            }
+                    operator.save();
+                }*/
 
         }
         if (mJob_number_login != null) {

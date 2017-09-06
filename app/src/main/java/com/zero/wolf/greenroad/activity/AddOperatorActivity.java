@@ -11,6 +11,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
+import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -52,6 +53,21 @@ public class AddOperatorActivity extends BaseActivity {
 
     private void initView() {
 
+        mAddOperatorCheckPerson.setOnClickListener(v -> {
+            if (mAddOperatorCheckPerson.isChecked()) {
+                List<SupportOperator> operatorList = DataSupport.
+                        where("check_select = ?", "1").find(SupportOperator.class);
+                if (operatorList.size() > 2) {
+                    mAddOperatorCheckPerson.setChecked(false);
+                    ToastUtils.singleToast("最多只能添加三个默认检查人");
+                } else {
+                    mAddOperatorCheckPerson.setChecked(true);
+                }
+            } else {
+                mAddOperatorCheckPerson.setChecked(false);
+            }
+        });
+
         mSaveOperatorInfoBtn.setOnClickListener(v -> {
             mJob_number = mAddOperatorJobNumber.getText().toString().trim();
             Logger.i(mJob_number.length() + "");
@@ -79,11 +95,7 @@ public class AddOperatorActivity extends BaseActivity {
                 mAddOperatorName.requestFocus();
                 return;
             }
-            if (mIsChecked) {
-                SupportOperator operator = new SupportOperator();
-                operator.setToDefault("check_select");
-                operator.updateAll();
-            }
+
             if (mIsLogined) {
                 SupportOperator operator = new SupportOperator();
                 operator.setToDefault("login_select");
@@ -93,7 +105,7 @@ public class AddOperatorActivity extends BaseActivity {
             SupportOperator operator = new SupportOperator();
             operator.setJob_number(mJob_number);
             operator.setOperator_name(mOperator_name);
-            if (mIsChecked) {
+            if (mAddOperatorCheckPerson.isChecked()) {
                 operator.setCheck_select(1);
             } else {
                 operator.setCheck_select(0);
