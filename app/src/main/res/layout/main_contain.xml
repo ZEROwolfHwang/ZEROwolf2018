@@ -67,7 +67,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/layout_check_operator"/>
+        <include layout="@layout/layout_check_operator_main"/>
 
         <include layout="@layout/layout_login_operator"/>
 

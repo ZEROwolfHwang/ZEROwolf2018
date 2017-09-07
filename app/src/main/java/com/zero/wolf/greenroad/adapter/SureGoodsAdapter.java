@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.activity.CommonUtils;
+import com.zero.wolf.greenroad.tools.CommonUtils;
 import com.zero.wolf.greenroad.bean.SerializableGoods;
 
 import java.io.IOException;

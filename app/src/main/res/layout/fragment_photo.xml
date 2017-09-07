@@ -37,11 +37,19 @@
                 android:textSize="18sp"/>
 
         </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/image_sanzheng_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/image_sanzheng_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ProgressBar
+                android:id="@+id/image_sanzheng_recycler_progress"
+                style="@style/fhoto_fragment_progress_style"/>
+        </FrameLayout>
     </LinearLayout>
 
     <TextView
@@ -80,12 +88,18 @@
                 android:textSize="18sp"/>
 
         </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/image_cheshen_recycler"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/image_cheshen_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ProgressBar
+                android:id="@+id/image_cheshen_recycler_progress"
+                style="@style/fhoto_fragment_progress_style"/>
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -126,14 +140,18 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-
-            android:id="@+id/image_huozhao_recycler"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
-
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/image_huozhao_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ProgressBar
+                android:id="@+id/image_huozhao_recycler_progress"
+                style="@style/fhoto_fragment_progress_style"/>
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

@@ -39,6 +39,7 @@ import com.zero.wolf.greenroad.servicy.BlackListService;
 import com.zero.wolf.greenroad.servicy.SubmitService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
+import com.zero.wolf.greenroad.tools.CommonUtils;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
 import com.zero.wolf.greenroad.tools.PermissionUtils;
 import com.zero.wolf.greenroad.tools.SDcardSpace;
@@ -456,6 +457,11 @@ public class MainActivity extends BaseActivity implements
             operator = "500001/苏三";
         }
         Logger.i(operator);
+        if (operatorList.size() == 3) {
+            textView.setTextSize(CommonUtils.sp2px(this, 7));
+        } else {
+            textView.setTextSize(CommonUtils.sp2px(this, 9));
+        }
         textView.setText(operator);
 
     }

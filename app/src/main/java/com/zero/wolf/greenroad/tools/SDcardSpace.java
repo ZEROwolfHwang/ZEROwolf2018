@@ -23,12 +23,6 @@ public class SDcardSpace {
         mContext = context;
     }
 
- /*   public  SDcardSpace getInstance() {
-        if (mSDcardSpace == null) {
-            mSDcardSpace = new SDcardSpace();
-        }
-        return mSDcardSpace;
-    }*/
 
     public String getAvailSpace() {
         StatFs statFs = new StatFs(path);

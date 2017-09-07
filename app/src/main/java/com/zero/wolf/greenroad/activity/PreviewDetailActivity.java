@@ -9,7 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
@@ -93,6 +95,8 @@ public class PreviewDetailActivity extends BaseActivity {
     TextView mDraftSaveEdit;
     @BindView(R.id.recycler_site_check_preview)
     RecyclerView mRecyclerSiteCheckPreview;
+    @BindView(R.id.detail_activity_recycler_progress)
+    ProgressBar mDetailActivityRecyclerProgress;
     private SupportDraftOrSubmit mCurrentSupport;
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
@@ -102,6 +106,7 @@ public class PreviewDetailActivity extends BaseActivity {
     private Handler mHandler = new Handler();
     private SupportChecked mSupportChecked;
     private BasePhotoAdapter<String> mCheckAdapter;
+    private Intent mIntent;
 
 
     public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
@@ -149,17 +154,15 @@ public class PreviewDetailActivity extends BaseActivity {
      */
     private void initToolbar() {
 
-        Intent intent = getIntent();
-        mCurrentSupport = intent.getParcelableExtra(SUPPORTDRAFT_ITEM);
+        mIntent = getIntent();
+        mCurrentSupport = mIntent.getParcelableExtra(SUPPORTDRAFT_ITEM);
 
         setSupportActionBar(mToolbarPreviewDetail);
         TextView title_text_view = ActionBarTool.getInstance(this, 991).getTitle_text_view();
 
-        if (ACTION_DRAFT_ITEM.equals(intent.getAction())) {
-            mDraftSaveEdit.setVisibility(View.VISIBLE);
+        if (ACTION_DRAFT_ITEM.equals(mIntent.getAction())) {
             title_text_view.setText("草稿详情页");
-        } else if (ACTION_SUBMIT_ITEM.equals(intent.getAction())) {
-            mDraftSaveEdit.setVisibility(View.GONE);
+        } else if (ACTION_SUBMIT_ITEM.equals(mIntent.getAction())) {
             title_text_view.setText("提交详情页");
 
         }
@@ -208,7 +211,14 @@ public class PreviewDetailActivity extends BaseActivity {
                     }
                 }
                 runOnUiThread(() -> {
+                    mDetailActivityRecyclerProgress.setVisibility(View.GONE);
                     mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
+                    if (ACTION_DRAFT_ITEM.equals(mIntent.getAction())) {
+                        mDraftSaveEdit.setAnimation(new AlphaAnimation(0, 1));
+                        mDraftSaveEdit.setVisibility(View.VISIBLE);
+                    } else if (ACTION_SUBMIT_ITEM.equals(mIntent.getAction())) {
+                        mDraftSaveEdit.setVisibility(View.GONE);
+                    }
                 });
             }
         }).start();

@@ -1,4 +1,4 @@
-package com.zero.wolf.greenroad.activity;
+package com.zero.wolf.greenroad.tools;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

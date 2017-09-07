@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.PreviewDetailActivity;
@@ -29,6 +30,7 @@ import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.litepalbean.SupportBlack;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
+import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
@@ -77,10 +79,14 @@ public class DetailsFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
 
     private static RadioGroup mRadioGroupColor;
-    private static String sEnterType;
+    public static String sEnterType;
     private static SupportDetail sSupportDetail;
     private static SupportMedia sSupportMedia;
     private static int sLite_ID;
+
+    private static List<LocalMedia> mSelectList_sanzheng;
+    private static List<LocalMedia> mSelectList_cheshen;
+    private static List<LocalMedia> mSelectList_huowu;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -220,6 +226,8 @@ public class DetailsFragment extends Fragment {
             }
             Logger.i(sSupportDetail.toString());
 
+            inflateSelected();
+
             // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
             String number = sSupportDetail.getNumber();
             mTvChangeNumberDetail.setText(number);
@@ -254,6 +262,87 @@ public class DetailsFragment extends Fragment {
 
     }
 
+    /**
+     * 加载选中标记的图片信息,提交以及进入photoFragment中都需要
+     * 因为从草稿详情页进入编辑修改若没有进入photoFragment直接再存储会丢失selected的数据
+     * 所以提前加载
+     */
+    private void inflateSelected() {
+        List<SupportDraftOrSubmit> supportDraftOrSubmits = DataSupport.where("lite_ID = ?", String.valueOf(sLite_ID)).find(SupportDraftOrSubmit.class);
+        SupportMedia supportMedia = supportDraftOrSubmits.get(0).getSupportMedia();
+
+        if (supportMedia != null && supportMedia.getPaths() != null
+                && supportMedia.getPaths().size() != 0) {
+
+            if (mSelectList_sanzheng == null) {
+                mSelectList_sanzheng = new ArrayList<>();
+            } else {
+                mSelectList_sanzheng.clear();
+            }
+            if (mSelectList_cheshen == null) {
+                mSelectList_cheshen = new ArrayList<>();
+            } else {
+                mSelectList_cheshen.clear();
+            }
+            if (mSelectList_huowu == null) {
+                mSelectList_huowu = new ArrayList<>();
+            } else {
+                mSelectList_huowu.clear();
+            }
+            for (int i = 0; i < supportMedia.getPaths().size(); i++) {
+                String photoType = supportMedia.getPhotoTypes().get(i);
+                if (GlobalManager.PHOTO_TYPE_SANZHENG.equals(photoType)) {
+                    LocalMedia localMedia = initSelected(supportMedia, i);
+                    if (localMedia != null) {
+                        mSelectList_sanzheng.add(localMedia);
+                    }
+                }
+                if (GlobalManager.PHOTO_TYPE_CHESHEN.equals(photoType)) {
+                    LocalMedia localMedia = initSelected(supportMedia, i);
+                    if (localMedia != null) {
+                        mSelectList_cheshen.add(localMedia);
+                    }
+                }
+                if (GlobalManager.PHOTO_TYPE_HUOZHAO.equals(photoType)) {
+                    LocalMedia localMedia = initSelected(supportMedia, i);
+                    if (localMedia != null) {
+                        mSelectList_huowu.add(localMedia);
+                    }
+                }
+            }
+
+        }
+    }
+
+    private LocalMedia initSelected(SupportMedia supportMedia, int i) {
+        if (supportMedia != null) {
+            String path = supportMedia.getPaths().get(i);
+            String pictureType = supportMedia.getPictureTypes().get(i);
+            long duration = supportMedia.getDurations().get(i);
+            int mimeType = supportMedia.getMimeTypes().get(i);
+            int height = supportMedia.getHeights().get(i);
+            int width = supportMedia.getWidths().get(i);
+            int num = supportMedia.getNums().get(i);
+            int position = supportMedia.getPositions().get(i);
+            LocalMedia localMedia = new LocalMedia(path, duration, mimeType, pictureType, width, height);
+            localMedia.setNum(num);
+            localMedia.setPosition(position);
+            localMedia.setChecked(false);
+            localMedia.setCompressed(false);
+            localMedia.setCut(false);
+            if (path == null || "".equals(path)) {
+                return null;
+            } else {
+                return localMedia;
+            }
+        }
+       /* if (mSelectList_sanzheng != null) {
+            for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
+                Logger.i(mSelectList_sanzheng.get(i).toString());
+            }
+        }*/
+        return null;
+    }
 
     private void initRecyclerView() {
         if (mMyBitmaps_recycler_all == null) {
@@ -507,5 +596,15 @@ public class DetailsFragment extends Fragment {
     */
     public static void notifyDataChange() {
         mCurrent_color = "";
+    }
+
+    public static void setSelectedListListener(SelectedListListener listener) {
+        /*if (mSelectList_sanzheng != null && mSelectList_cheshen != null && mSelectList_huowu != null) {
+        }*/
+        listener.Selected(mSelectList_sanzheng, mSelectList_cheshen, mSelectList_huowu);
+
+    }
+    public interface SelectedListListener {
+        void Selected(List<LocalMedia> medias_sanzheng, List<LocalMedia> medias_cheshen, List<LocalMedia> medias_huozhao);
     }
 }

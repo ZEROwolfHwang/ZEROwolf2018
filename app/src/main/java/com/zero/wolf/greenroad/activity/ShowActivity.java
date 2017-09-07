@@ -239,21 +239,18 @@ public class ShowActivity extends BaseActivity {
         switch (view.getId()) {
 
             case R.id.fab_submit:
-                ToastUtils.singleToast("向服务端提交采集的数据");
                 mFabDraft.hideButtonInMenu(true);
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
-                //submit2Service();
-                SubmitService.startActionSubmit(this,this);
-                //Intent intent = new Intent(ShowActivity.this, MainActivity.class);
-                //startActivity(intent);
-
+                Logger.i(DetailsFragment.sEnterType);
+                SubmitService.startActionSubmit(this,this,DetailsFragment.sEnterType);
                 break;
             case R.id.fab_draft:
                 ToastUtils.singleToast("实现保存草稿");
                 mFabDraft.hideButtonInMenu(true);
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
+                Logger.i(DetailsFragment.sEnterType);
                 saveDraft();
                 break;
 
@@ -268,7 +265,7 @@ public class ShowActivity extends BaseActivity {
      * 2.将数据保存到数据库
      */
     private void saveDraft() {
-       SubmitService.startActionSave(this);
+       SubmitService.startActionSave(this,DetailsFragment.sEnterType);
     }
 
     @Override

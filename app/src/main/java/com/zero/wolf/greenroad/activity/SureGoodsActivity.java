@@ -13,6 +13,7 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
+import com.zero.wolf.greenroad.fragment.PhotoFragment;
 import com.zero.wolf.greenroad.manager.GlobalManager;
 import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
@@ -137,8 +138,20 @@ public class SureGoodsActivity extends BaseActivity {
         title_text_view.setText(getString(R.string.sure_goods_type));
 
         mToolbarSure.setNavigationIcon(R.drawable.back_up_logo);
-        mToolbarSure.setNavigationOnClickListener((v -> finish()));
+        mToolbarSure.setNavigationOnClickListener((v -> onBackPressed()));
 
+    }
+
+    /**
+     * 按返回键时需要图片都加载完毕
+     */
+    @Override
+    public void onBackPressed() {
+        if (PhotoFragment.isOk_sanzheng&&PhotoFragment.isOk_cheshen&&PhotoFragment.isOk_huozhao) {
+            finish();
+        } else {
+            return;
+        }
     }
 
     @Override

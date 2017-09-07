@@ -144,7 +144,6 @@
     <style name="main_text_layout_bg_else_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:paddingTop">5dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/shape_background_main_else_day</item>
         <item name="android:gravity">center</item>
@@ -152,6 +151,7 @@
     </style>
 
     <style name="main_text_static_tv_style">
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
@@ -162,12 +162,14 @@
     </style>
 
     <style name="main_text_static_iv_style">
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:background">?attr/custom_shape_static</item>
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">30dp</item>
     </style>
 
     <style name="main_text_change_tv_style">
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center</item>
@@ -420,5 +422,13 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text16</item>
         <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="fhoto_fragment_progress_style">
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 </resources>

@@ -192,8 +192,7 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    ToastUtils.singleToast("解析结果:" + result);
-
+                    Logger.i("解析结果:" + result);
 
                     String[] result_QrCode = result.split(";");
                    /* for (int i = 0; i < result_QrCode.length; i++) {

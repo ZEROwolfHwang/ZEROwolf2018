@@ -45,7 +45,7 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
 
     @Override
     public SiteCheckHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_site_check_operator, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_site_check_operator_checked, parent, false);
         return new SiteCheckHolder(view);
     }
 

@@ -150,13 +150,22 @@
 
                         <include layout="@layout/device_item_bg_1dp"/>
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/detail_activity_recycler_photo"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_marginBottom="@dimen/layout_margin10dp"
                             android:layout_height="160dp">
 
-                        </android.support.v7.widget.RecyclerView>
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/detail_activity_recycler_photo"
+                                android:layout_width="match_parent"
+                                android:layout_marginBottom="@dimen/layout_margin10dp"
+                                android:layout_height="match_parent"/>
+                            <ProgressBar
+                                android:id="@+id/detail_activity_recycler_progress"
+                                android:layout_width="80dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_height="80dp"/>
+                        </RelativeLayout>
 
                     </LinearLayout>
 

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
@@ -60,7 +58,7 @@ public class SubmitService extends IntentService {
 
     private static List<LocalMedia> mLocalMedias_sanzheng_Q;
     private static List<LocalMedia> mLocalMedias_cheshen_Q;
-    private static List<LocalMedia> mLocalMedias_huozhao_Q;
+    private static List<LocalMedia> mSelectList_huowu;
 
     private static String mStation_Q;
     private static String mRoad_Q;
@@ -69,47 +67,14 @@ public class SubmitService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_SUBMIT = "com.zero.wolf.greenroad.submitservice.action.FOO";
     private static final String ACTION_SAVE = "com.zero.wolf.greenroad.submitservice.action.BAZ";
-    public static final String ARG_BROADCAST_DRAFT= "arg_broadcast_draft";
-    public static final String ARG_BROADCAST_SUBMIT= "arg_broadcast_submit";
+    public static final String ARG_BROADCAST_DRAFT = "arg_broadcast_draft";
+    public static final String ARG_BROADCAST_SUBMIT = "arg_broadcast_submit";
+
+    public static final String ARG_TYPE_SAVE = "arg_type_save";
+    public static final String ARG_TYPE_SUBMIT = "arg_type_submit";
 
 
     private String mSubmitTime;
-    private int isPictureSubmit;
-    private int isJsonSubmit;
-
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            int message = (int) msg.obj;
-           /* if (message == 102) {
-                isPictureSubmit = true;
-            } else if (message == 101) {
-                isJsonSubmit = true;
-            }*/
-            switch (message) {
-                case 102:
-                    isPictureSubmit = 1;
-                    break;
-                case 101:
-                    isJsonSubmit = 1;
-                    break;
-
-                default:
-                    break;
-            }
-      /*      if (isPictureSubmit != 2 && isJsonSubmit != 2) {
-                if (isPictureSubmit == 1 && isJsonSubmit == 1) {
-                    save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
-                    // MainActivity.notifyAndRefreshMath();
-                    ToastUtils.singleToast("已提交成功");
-                } else {
-                    save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
-                    ToastUtils.singleToast("未提交成功,已保存至草稿");
-                }
-            }*/
-            return false;
-        }
-    });
 
     private static ShowActivity sActivity;
     private static Context sContext_draft;
@@ -120,20 +85,20 @@ public class SubmitService extends IntentService {
     }
 
 
-    public static void startActionSubmit(ShowActivity activity, Context context) {
+    public static void startActionSubmit(ShowActivity activity, Context context, String enterType) {
         sContext_submit = context;
         sActivity = activity;
         Intent intent = new Intent(sActivity, SubmitService.class);
         intent.setAction(ACTION_SUBMIT);
-     /*   intent.putExtra(EXTRA_ROAD, road);
-        intent.putExtra(EXTRA_STATION, station);*/
+        intent.putExtra(ARG_TYPE_SUBMIT, enterType);
         sActivity.startService(intent);
     }
 
-    public static void startActionSave(Context context) {
+    public static void startActionSave(Context context, String enterType) {
         sContext_draft = context;
         Intent intent = new Intent(sContext_draft, SubmitService.class);
         intent.setAction(ACTION_SAVE);
+        intent.putExtra(ARG_TYPE_SAVE, enterType);
         sContext_draft.startService(intent);
     }
 
@@ -149,8 +114,7 @@ public class SubmitService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_SUBMIT.equals(action)) {
 
-                isJsonSubmit = 2;
-                isPictureSubmit = 2;
+                String enterType = intent.getStringExtra(ARG_TYPE_SUBMIT);
 
                 if (mFile == null) {
                     mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenPicture");
@@ -161,7 +125,7 @@ public class SubmitService extends IntentService {
 
                 mSubmitTime = TimeUtil.getCurrentTimeToDate();
 
-                getListenerData();
+                getListenerData(enterType);
 
                 if (NetWorkManager.isnetworkConnected(sActivity)) {
                     postPictureAndJson(mSubmitTime);
@@ -182,8 +146,10 @@ public class SubmitService extends IntentService {
 
             } else {
                 if (ACTION_SAVE.equals(action)) {
+                    String enterType = intent.getStringExtra(ARG_TYPE_SAVE);
+
                     String saveTime = TimeUtil.getCurrentTimeToDate();
-                    getListenerData();
+                    getListenerData(enterType);
                     save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE);
                 }
             }
@@ -194,24 +160,29 @@ public class SubmitService extends IntentService {
      * 拿到两个fragment中被监听的数据
      * 在提交至服务器以及保存草稿中都要用到
      */
-    private void getListenerData() {
+    private void getListenerData(String enterType) {
+        Logger.i("---------------" + enterType);
 
         DetailsFragment.setDetailsConnectListener((bean) -> {
             mDetailInfoBean_Q = bean;
+        });
 
-            //拿到图片的体进行网络传递
-           /* if (mBitmapList != null && mBitmapList.size() != 0) {
-                List<MultipartBody.Part> parts = PathUtil
-                        .getBodyPart(mBitmapList);
-                Logger.i(mDetailInfoBean_Q.toString());
-                Logger.i(parts.toString());
-            }*/
-        });
-        PhotoFragment.setSelectedListListener((medias_sanzheng, medias_cheshen, medias_huozhao) -> {
-            mLocalMedias_sanzheng_Q = medias_sanzheng;
-            mLocalMedias_cheshen_Q = medias_cheshen;
-            mLocalMedias_huozhao_Q = medias_huozhao;
-        });
+        if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(enterType)) {
+
+            PhotoFragment.setSelectedListListener((medias_sanzheng, medias_cheshen, medias_huozhao) -> {
+                mLocalMedias_sanzheng_Q = medias_sanzheng;
+                mLocalMedias_cheshen_Q = medias_cheshen;
+                mSelectList_huowu = medias_huozhao;
+            });
+        } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
+
+            DetailsFragment.setSelectedListListener((medias_sanzheng, medias_cheshen, medias_huozhao) -> {
+                mLocalMedias_sanzheng_Q = medias_sanzheng;
+                mLocalMedias_cheshen_Q = medias_cheshen;
+                mSelectList_huowu = medias_huozhao;
+            });
+        }
+
 
         //拿到checkFragment的数据
         CheckedFragment.setCheckedBeanConnectListener(bean -> {
@@ -333,9 +304,9 @@ public class SubmitService extends IntentService {
                     photoTypes.add(GlobalManager.PHOTO_TYPE_CHESHEN);
                 }
             }
-            if (mLocalMedias_huozhao_Q != null && mLocalMedias_huozhao_Q.size() != 0) {
-                for (int i = 0; i < mLocalMedias_huozhao_Q.size(); i++) {
-                    LocalMedia media = mLocalMedias_huozhao_Q.get(i);
+            if (mSelectList_huowu != null && mSelectList_huowu.size() != 0) {
+                for (int i = 0; i < mSelectList_huowu.size(); i++) {
+                    LocalMedia media = mSelectList_huowu.get(i);
                     paths.add(media.getPath());
                     pictureTypes.add(media.getPictureType());
                     mDurations.add(media.getDuration());
@@ -372,8 +343,10 @@ public class SubmitService extends IntentService {
         if (action.equals(ACTION_SUBMIT)) {
             if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
                 SPUtils.add_one(sActivity, SPUtils.MATH_DRAFT_LITE);
+                ToastUtils.singleToast("提交失败并保存至草稿列表");
             } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
                 SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
+                ToastUtils.singleToast("提交成功并保存至提交列表");
             }
 
             Intent intent = new Intent("com.example.updateUI");
@@ -382,6 +355,7 @@ public class SubmitService extends IntentService {
             sendBroadcast(intent);
 
         } else if (action.equals(ACTION_SAVE)) {
+            ToastUtils.singleToast("已保存至草稿列表");
             SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
         }
     }
@@ -513,6 +487,11 @@ public class SubmitService extends IntentService {
         RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), route);
         Logger.i("json  string" + route);
 
+        List<MultipartBody.Part> finalSanzheng = sanzheng;
+        List<MultipartBody.Part> finalCheshen = cheshen;
+        List<MultipartBody.Part> finalHuozhao = huozhao;
+
+
         Subscriber<HttpResultCode> subscriber_json = new Subscriber<HttpResultCode>() {
             @Override
             public void onCompleted() {
@@ -522,60 +501,58 @@ public class SubmitService extends IntentService {
             @Override
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
-                ToastUtils.singleToast(e.getMessage());
-            }
-
-            @Override
-            public void onNext(HttpResultCode httpResultCode) {
-                int code = httpResultCode.getCode();
-                if (code == 200) {
-                    Message message = Message.obtain();
-                    message.obj = 101;
-                    mHandler.sendMessage(message);
-                }
-                Logger.i(code + "");
-                Logger.i("json上传成功");
-                //  ToastUtils.singleToast("json上传成功");
-            }
-        };
-        RequestJson.getInstance().postJson(subscriber_json, body);
-
-        Subscriber<HttpResultCode> subscriber_picture = new Subscriber<HttpResultCode>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Logger.i(e.getMessage());
                 save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
-                Logger.i("走了草稿保存的方法");
+                Logger.i("json未上传成功走了草稿保存的方法");
                 ToastUtils.singleToast("提交失败,已保存至草稿");
             }
 
             @Override
             public void onNext(HttpResultCode httpResultCode) {
                 int code = httpResultCode.getCode();
-                Logger.i(code + "");
-
+                Logger.i(code + "----json");
                 if (code == 200) {
-                    Message message = Message.obtain();
-                    message.obj = 102;
-                    mHandler.sendMessage(message);
-                    // ToastUtils.singleToast("图片上传成功");
-                    Logger.i("图片上传成功");
+                    Logger.i("json上传成功");
 
-                    save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
-                    Logger.i("走了提交保存的方法");
+                    RequestPicture.getInstance().postPicture(new Subscriber<HttpResultCode>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Logger.i(e.getMessage());
+                            save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                            Logger.i("json上传成功图片未上传成功走了草稿保存的方法");
+                            ToastUtils.singleToast("提交失败,已保存至草稿");
+                        }
+
+                        @Override
+                        public void onNext(HttpResultCode httpResultCode) {
+                            int code = httpResultCode.getCode();
+                            Logger.i(code + "----photo");
+
+                            if (code == 200) {
+                                // ToastUtils.singleToast("图片上传成功");
+                                Logger.i("图片上传成功");
+                                save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
+                                Logger.i("走了提交保存的方法");
+                            } else {
+                                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                                Logger.i("图片上传返回错误走了草稿保存的方法");
+                            }
+                        }
+                    }, postTime, finalSanzheng, finalCheshen, finalHuozhao);
 
                 } else {
+                    Logger.i("json上传返回错误走了草稿保存的方法");
                     save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
-                    Logger.i("走了草稿保存的方法");
                 }
+                //  ToastUtils.singleToast("json上传成功");
             }
         };
-        RequestPicture.getInstance().postPicture(subscriber_picture, postTime, sanzheng, cheshen, huozhao);
+        RequestJson.getInstance().postJson(subscriber_json, body);
+
 
     }
 
@@ -587,7 +564,7 @@ public class SubmitService extends IntentService {
 
             String mFilePath_str_new = null;
             try {
-                Bitmap bitmap = BitmapUtil.convertToBitmap(bitmapList.get(i).getPath(), 800, 1080);
+                Bitmap bitmap = BitmapUtil.convertToBitmap(bitmapList.get(i).getPath(), 600, 960);
 
                 mFilePath_str_new = mFilePath_str + "/" + System.currentTimeMillis()
                         + type + (i + 1) + ".jpg";
