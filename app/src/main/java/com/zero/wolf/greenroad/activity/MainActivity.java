@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ import com.zero.wolf.greenroad.httpresultbean.HttpResultMacInfo;
 import com.zero.wolf.greenroad.https.RequestMacInfo;
 import com.zero.wolf.greenroad.litepalbean.SupportOperator;
 import com.zero.wolf.greenroad.servicy.BlackListService;
+import com.zero.wolf.greenroad.servicy.SubmitService;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
 import com.zero.wolf.greenroad.tools.ActivityCollector;
 import com.zero.wolf.greenroad.tools.DevicesInfoUtils;
@@ -124,6 +127,7 @@ public class MainActivity extends BaseActivity implements
     private String mAvailSpace;
     private String mAllSpace;
     private String macID;
+    private MyBroadCaseReceiver mBroadCaseReceiver;
 
 
     @Override
@@ -217,6 +221,7 @@ public class MainActivity extends BaseActivity implements
 
     private void initData() {
         PermissionUtils.verifyStoragePermissions(mActivity);
+
         BlackListService.startActionBlack(this, mTvMathNumberBlacklist);
 
         macID = Settings.Secure
@@ -427,7 +432,10 @@ public class MainActivity extends BaseActivity implements
         mTvMathNumberDraft.setText(SPUtils.get(this, SPUtils.MATH_DRAFT_LITE, 0) + "");
         mTvMathNumberSubmit.setText(SPUtils.get(this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
 
-
+        //注册广播，接收service中启动的线程发送过来的信息，同时更新UI
+        IntentFilter filter = new IntentFilter("com.example.updateUI");
+        mBroadCaseReceiver = new MyBroadCaseReceiver();
+        registerReceiver(mBroadCaseReceiver, filter);
     }
 
     private void setOperatorInfo(String condition, TextView textView) {
@@ -641,6 +649,7 @@ public class MainActivity extends BaseActivity implements
         //  mLocalBroadcastManager.unregisterReceiver(mPostReceiver);
         Logger.i("mainactivity被销毁");
         //  PollingUtils.stopPollingService(this, PollingService.class, PollingService.ACTION);
+        unregisterReceiver(mBroadCaseReceiver);
     }
 
     private void openSettingActivity() {
@@ -650,6 +659,15 @@ public class MainActivity extends BaseActivity implements
 
     public static void notifyAndRefreshMath() {
         //  mTvMathNumberSubmit.setText(SPUtils.get(MainActivity.this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
+    }
+    class MyBroadCaseReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            int draft = intent.getIntExtra(SubmitService.ARG_BROADCAST_DRAFT, 0);
+            int submit = intent.getIntExtra(SubmitService.ARG_BROADCAST_SUBMIT, 0);
+            mTvMathNumberDraft.setText(draft+"");
+            mTvMathNumberSubmit.setText(submit+"");
+        }
     }
 
 }

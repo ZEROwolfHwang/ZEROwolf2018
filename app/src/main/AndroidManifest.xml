@@ -32,28 +32,28 @@
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity
             android:name=".activity.ShowActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name=".activity.SureGoodsActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
         </activity>

@@ -9,6 +9,7 @@ import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultBlack;
 import com.zero.wolf.greenroad.https.RequestBlackList;
 import com.zero.wolf.greenroad.litepalbean.SupportBlack;
+import com.zero.wolf.greenroad.presenter.NetWorkManager;
 
 import org.litepal.crud.DataSupport;
 
@@ -50,37 +51,47 @@ public class BlackListService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_BLACK_LIST.equals(action)) {
-                Logger.i("走了加载黑名单数据的服务");
-                RequestBlackList.getInstance().getBlackList(new Subscriber<List<HttpResultBlack.DataBean>>() {
-                    @Override
-                    public void onCompleted() {
+                if (NetWorkManager.isnetworkConnected(sContext)) {
+                Logger.i("有网加载黑名单数据的服务");
 
-                    }
+                    RequestBlackList.getInstance().getBlackList(new Subscriber<List<HttpResultBlack.DataBean>>() {
+                        @Override
+                        public void onCompleted() {
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Logger.i(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(List<HttpResultBlack.DataBean> dataBeen) {
-                        List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
-                        if (supportBlacks.size() == dataBeen.size()) {
-                            sNumberBlacklist.setText(supportBlacks.size() + "");
-                            return;
-                        } else {
-                            DataSupport.deleteAll(SupportBlack.class);
-                            for (int i = 0; i < dataBeen.size(); i++) {
-                                Logger.i(dataBeen.get(i).getPlate_number());
-                                SupportBlack supportBlack = new SupportBlack();
-                                supportBlack.setLicense(dataBeen.get(i).getPlate_number());
-                                supportBlack.save();
-                            }
-                            List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
-                            sNumberBlacklist.setText(blackList.size()+"");
                         }
-                    }
-                });
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Logger.i(e.getMessage());
+                            List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
+                            sNumberBlacklist.setText(supportBlacks.size() + "");
+                        }
+
+                        @Override
+                        public void onNext(List<HttpResultBlack.DataBean> dataBeen) {
+                            List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
+                            if (supportBlacks.size() == dataBeen.size()) {
+                                sNumberBlacklist.setText(supportBlacks.size() + "");
+                                return;
+                            } else {
+                                DataSupport.deleteAll(SupportBlack.class);
+                                for (int i = 0; i < dataBeen.size(); i++) {
+                                    Logger.i(dataBeen.get(i).getPlate_number());
+                                    SupportBlack supportBlack = new SupportBlack();
+                                    supportBlack.setLicense(dataBeen.get(i).getPlate_number());
+                                    supportBlack.save();
+                                }
+                                List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+                                sNumberBlacklist.setText(blackList.size() + "");
+                            }
+                        }
+
+                    });
+                } else {
+                    Logger.i("无网未加载黑名单数据");
+                    List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
+                    sNumberBlacklist.post(() -> sNumberBlacklist.setText(supportBlacks.size() + ""));
+                }
             }
         }
     }

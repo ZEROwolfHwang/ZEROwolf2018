@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -158,7 +157,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             if (loginList == null || loginList.size() == 0) {
                 ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
             } else if (loginList.size() == 3) {
-                getTimeGap(loginList, username, password, false);
+                getTimeGap(loginList, username, password);
             }
             mRlProgressLogin.setVisibility(View.GONE);
         }
@@ -170,10 +169,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      *
      * @param username
      * @param password
-     * @param isConnected
      */
-    private void getTimeGap(List<String> loginList, String username, String password,
-                            boolean isConnected) {
+    private void getTimeGap(List<String> loginList, String username, String password) {
         String userName = loginList.get(0);
         String psw = loginList.get(1);
         String save_time = loginList.get(2);
@@ -184,32 +181,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         Logger.i("timeGap" + timeGap);
         if (timeGap > TIMEGAP) {
             SPListUtil.remove(mActivity, SPListUtil.LOGINNFO);
-            if (isConnected) {
-                ToastUtils.singleToast("账号已过期，请重新输入密码");
-                mEt_user_name.setText("");
-                mEt_password.setText("");
-                mCheckBox.setChecked(false);
-                return;
-            } else {
-                ToastUtils.singleToast("账号已过期，请在有网状态下重新登录");
-                mEt_user_name.setText("");
-                mEt_password.setText("");
-                mCheckBox.setChecked(false);
-                return;
-            }
+            ToastUtils.singleToast("账号已过期，请在有网状态下重新登录");
+            mEt_user_name.setText("");
+            mEt_password.setText("");
+            mCheckBox.setChecked(false);
+            return;
         } else {
-            // startPollingService(username);
-
             if (username.equals(userName) && password.equals(psw)) {
                 login2MainActivity();
             }
-            if (isConnected) {
-                //ToastUtils.singleToast("登陆成功");
-                //// TODO: 2017/7/28  snakebar
-                Snackbar.make(mBt_login, "登陆成功", Snackbar.LENGTH_SHORT).show();
-            } else {
-                ToastUtils.singleToast("无网络连接状态登陆成功");
-            }
+            ToastUtils.singleToast("无网络连接状态登陆成功");
         }
     }
 
@@ -240,17 +221,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Logger.i(code + msg);
                 if (code == 200) {
                     if (mCheckBox.isChecked()) {
-                        List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
-                        if (loginList == null || loginList.size() != 3) {
-                            ArrayList<String> list = new ArrayList<>();
-                            list.add(username);
-                            list.add(password);
-                            list.add(TimeUtil.getCurrentTimeToDate());
-                            SPListUtil.putStrListValue(mActivity, SPListUtil.LOGINNFO, list);
-                        }
+                       /* List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
+                        if (loginList != null && loginList.size() == 3) {*/
+                        ArrayList<String> list = new ArrayList<>();
+                        list.add(username);
+                        list.add(password);
+                        list.add(TimeUtil.getCurrentTimeToDate());
+                        SPListUtil.putStrListValue(mActivity, SPListUtil.LOGINNFO, list);
+
                         SPUtils.putAndApply(mActivity, SPUtils.lOGIN_USERNAME, username);
                         // startPollingService(username);
-                        Logger.i("登陆成功");
                     } else {
                         SPListUtil.remove(mActivity, SPListUtil.LOGINNFO);
                         SPUtils.remove(mActivity, SPUtils.lOGIN_USERNAME);

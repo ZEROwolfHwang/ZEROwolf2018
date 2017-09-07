@@ -180,10 +180,6 @@ public class ShowActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
-     /*   for (int i = 0; i < strListValue.size(); i++) {
-            String string = strListValue.get(i).toString();
-            Logger.i(string);
-        }*/
         mRoad_Q = strListValue.get(1).toString();
         mStation_Q = strListValue.get(2).toString();
     }

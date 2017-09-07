@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -31,6 +32,7 @@ import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
 import com.zero.wolf.greenroad.manager.GlobalManager;
+import com.zero.wolf.greenroad.presenter.NetWorkManager;
 import com.zero.wolf.greenroad.tools.BitmapUtil;
 import com.zero.wolf.greenroad.tools.SPListUtil;
 import com.zero.wolf.greenroad.tools.SPUtils;
@@ -67,6 +69,8 @@ public class SubmitService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_SUBMIT = "com.zero.wolf.greenroad.submitservice.action.FOO";
     private static final String ACTION_SAVE = "com.zero.wolf.greenroad.submitservice.action.BAZ";
+    public static final String ARG_BROADCAST_DRAFT= "arg_broadcast_draft";
+    public static final String ARG_BROADCAST_SUBMIT= "arg_broadcast_submit";
 
 
     private String mSubmitTime;
@@ -130,8 +134,6 @@ public class SubmitService extends IntentService {
         sContext_draft = context;
         Intent intent = new Intent(sContext_draft, SubmitService.class);
         intent.setAction(ACTION_SAVE);
-/*        intent.putExtra(EXTRA_ROAD, param1);
-        intent.putExtra(EXTRA_STATION, param2);*/
         sContext_draft.startService(intent);
     }
 
@@ -161,7 +163,21 @@ public class SubmitService extends IntentService {
 
                 getListenerData();
 
-                postPictureAndJson(mSubmitTime);
+                if (NetWorkManager.isnetworkConnected(sActivity)) {
+                    postPictureAndJson(mSubmitTime);
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(sActivity);
+                    builder.setTitle("网络无连接");
+                    builder.setMessage("是否保存为草稿");
+                    builder.setPositiveButton("保存草稿", (dialog, which) -> {
+                        save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                    });
+                    builder.setNegativeButton("取消", (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+
+                    ToastUtils.singleToast("网络无连接");
+                }
 
 
             } else {
@@ -359,6 +375,12 @@ public class SubmitService extends IntentService {
             } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
                 SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
             }
+
+            Intent intent = new Intent("com.example.updateUI");
+            intent.putExtra(ARG_BROADCAST_DRAFT, (int) SPUtils.get(sActivity, SPUtils.MATH_DRAFT_LITE, 0));
+            intent.putExtra(ARG_BROADCAST_SUBMIT, (int) SPUtils.get(sActivity, SPUtils.MATH_SUBMIT_LITE, 0));
+            sendBroadcast(intent);
+
         } else if (action.equals(ACTION_SAVE)) {
             SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
         }
@@ -527,7 +549,9 @@ public class SubmitService extends IntentService {
             @Override
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
-                ToastUtils.singleToast("提交失败,请检查网络是否连接");
+                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                Logger.i("走了草稿保存的方法");
+                ToastUtils.singleToast("提交失败,已保存至草稿");
             }
 
             @Override

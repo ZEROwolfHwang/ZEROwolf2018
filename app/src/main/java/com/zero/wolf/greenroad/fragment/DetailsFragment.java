@@ -192,7 +192,7 @@ public class DetailsFragment extends Fragment {
                             r.play();
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("该车牌号已被加入黑名单");
+                            builder.setTitle("该车牌为黑名单车牌");
                             builder.setPositiveButton("了解", (dialog, which) -> {
                                 dialog.dismiss();
                             });
