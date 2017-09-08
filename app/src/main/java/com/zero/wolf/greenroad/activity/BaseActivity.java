@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public  class BaseActivity extends AppCompatActivity implements ThemeChangeObser
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setupActivityBeforeCreate();
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
 
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             // Activity was brought to front and not created,

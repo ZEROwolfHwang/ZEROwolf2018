@@ -73,32 +73,39 @@ public class SubmitService extends IntentService {
     public static final String ARG_TYPE_SAVE = "arg_type_save";
     public static final String ARG_TYPE_SUBMIT = "arg_type_submit";
 
+    public static final String ARG_TYPE_SHOW_SUBMIT = "arg_type_show_submit";
+    public static final String ARG_TYPE_SHOW_SAVE = "arg_type_show_save";
+
 
     private String mSubmitTime;
 
     private static ShowActivity sActivity;
     private static Context sContext_draft;
     private static Context sContext_submit;
+    private String mShowType_submit;
+    private static ArrayList<String> mNew_path_list;
 
     public SubmitService() {
         super("SubmitService");
     }
 
 
-    public static void startActionSubmit(ShowActivity activity, Context context, String enterType) {
+    public static void startActionSubmit(ShowActivity activity, Context context, String enterType, String showType) {
         sContext_submit = context;
         sActivity = activity;
         Intent intent = new Intent(sActivity, SubmitService.class);
         intent.setAction(ACTION_SUBMIT);
         intent.putExtra(ARG_TYPE_SUBMIT, enterType);
+        intent.putExtra(ARG_TYPE_SHOW_SUBMIT, showType);
         sActivity.startService(intent);
     }
 
-    public static void startActionSave(Context context, String enterType) {
+    public static void startActionSave(Context context, String enterType, String showType) {
         sContext_draft = context;
         Intent intent = new Intent(sContext_draft, SubmitService.class);
         intent.setAction(ACTION_SAVE);
         intent.putExtra(ARG_TYPE_SAVE, enterType);
+        intent.putExtra(ARG_TYPE_SHOW_SAVE, showType);
         sContext_draft.startService(intent);
     }
 
@@ -115,6 +122,7 @@ public class SubmitService extends IntentService {
             if (ACTION_SUBMIT.equals(action)) {
 
                 String enterType = intent.getStringExtra(ARG_TYPE_SUBMIT);
+                mShowType_submit = intent.getStringExtra(ARG_TYPE_SHOW_SUBMIT);
 
                 if (mFile == null) {
                     mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenPicture");
@@ -134,7 +142,7 @@ public class SubmitService extends IntentService {
                     builder.setTitle("网络无连接");
                     builder.setMessage("是否保存为草稿");
                     builder.setPositiveButton("保存草稿", (dialog, which) -> {
-                        save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                        save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT, mShowType_submit);
                     });
                     builder.setNegativeButton("取消", (dialog, which) -> {
                         dialog.dismiss();
@@ -147,10 +155,12 @@ public class SubmitService extends IntentService {
             } else {
                 if (ACTION_SAVE.equals(action)) {
                     String enterType = intent.getStringExtra(ARG_TYPE_SAVE);
+                    String showType = intent.getStringExtra(ARG_TYPE_SHOW_SAVE);
+
+                    getListenerData(enterType);
 
                     String saveTime = TimeUtil.getCurrentTimeToDate();
-                    getListenerData(enterType);
-                    save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE);
+                    save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE, showType);
                 }
             }
         }
@@ -200,166 +210,326 @@ public class SubmitService extends IntentService {
     /**
      * 将保存草稿数据或者提交网络的数据保存之后本地服务器
      */
-    private void save2Litepal(String current_time, String lite_type, String action) {
-
+    private void save2Litepal(String current_time, String lite_type, String action, String showType) {
+        int count = 0;
         SupportDraftOrSubmit support = new SupportDraftOrSubmit();
-        int count = TimeUtil.getTimeId();
-        //DataSupport.count(SupportDraftOrSubmit.class);
+        if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(showType)) {
+            count = TimeUtil.getTimeId();
+            Logger.i(count + "++++++++++++count");
+            //DataSupport.count(SupportDraftOrSubmit.class);
 
-        support.setLite_ID(count);
-        support.setLite_type(lite_type);
-        support.setCurrent_time(current_time);
-        //保存数据到表SupportScan
-        SupportScan supportScan = new SupportScan();
-        supportScan.setLite_ID(count);
-        supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
-        supportScan.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
-        supportScan.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
-        supportScan.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
-        supportScan.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
-        supportScan.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
-        supportScan.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
-        supportScan.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
-        supportScan.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
-        supportScan.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
-        supportScan.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
-        supportScan.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
-        supportScan.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
-        supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
-        supportScan.save();
+            support.setLite_ID(count);
+            support.setLite_type(lite_type);
+            support.setCurrent_time(current_time);
+            //保存数据到表SupportScan
+            SupportScan supportScan = new SupportScan();
+            supportScan.setLite_ID(count);
+            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
+            supportScan.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
+            supportScan.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
+            supportScan.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
+            supportScan.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
+            supportScan.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
+            supportScan.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
+            supportScan.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
+            supportScan.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
+            supportScan.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
+            supportScan.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
+            supportScan.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
+            supportScan.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
+            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
+            supportScan.save();
 
-        //保存数据到表SupportDetail
-        SupportDetail supportDetail = new SupportDetail();
-        supportDetail.setLite_ID(count);
-        supportDetail.setNumber(mDetailInfoBean_Q.getNumber());
-        supportDetail.setColor(mDetailInfoBean_Q.getColor());
-        supportDetail.setGoods(mDetailInfoBean_Q.getGoods());
-        supportDetail.setStation(mStation_Q);
-        supportDetail.setRoad(mRoad_Q);
-        supportDetail.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+            //保存数据到表SupportDetail
+            SupportDetail supportDetail = new SupportDetail();
+            supportDetail.setLite_ID(count);
+            supportDetail.setNumber(mDetailInfoBean_Q.getNumber());
+            supportDetail.setColor(mDetailInfoBean_Q.getColor());
+            supportDetail.setGoods(mDetailInfoBean_Q.getGoods());
+            supportDetail.setStation(mStation_Q);
+            supportDetail.setRoad(mRoad_Q);
+            supportDetail.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
 
-        ArrayList<String> picturePath = new ArrayList<>();
-        ArrayList<String> pictureTitle = new ArrayList<>();
-        List<PathTitleBean> path_all = mDetailInfoBean_Q.getPath_and_title();
+            ArrayList<String> picturePath = new ArrayList<>();
+            ArrayList<String> pictureTitle = new ArrayList<>();
+            List<PathTitleBean> path_all = mDetailInfoBean_Q.getPath_and_title();
 
-        if (path_all != null) {
-            for (int i = 0; i < path_all.size(); i++) {
-                picturePath.add(path_all.get(i).getPath());
-                pictureTitle.add(path_all.get(i).getTitle());
-            }
-        }
-
-        supportDetail.setPicturePath(picturePath);
-        supportDetail.setPictureTitle(pictureTitle);
-
-        supportDetail.save();
-
-        //保存数据到表SupportChecked
-        SupportChecked supportChecked = new SupportChecked();
-        supportChecked.setLite_ID(count);
-        supportChecked.setIsRoom(mCheckedBean_Q.getIsRoom());
-        supportChecked.setIsFree(mCheckedBean_Q.getIsFree());
-        supportChecked.setConclusion(mCheckedBean_Q.getConclusion());
-        supportChecked.setDescription(mCheckedBean_Q.getDescription());
-        supportChecked.setSiteChecks(mCheckedBean_Q.getSiteChecks());
-        supportChecked.setSiteLogin(mCheckedBean_Q.getSiteLogin());
-        supportChecked.save();
-
-        if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
-            SupportMedia supportMedia = new SupportMedia();
-            ArrayList<String> photoTypes = new ArrayList<>();
-            ArrayList<String> paths = new ArrayList<>();
-            ArrayList<String> pictureTypes = new ArrayList<>();
-            ArrayList<Long> mDurations = new ArrayList<>();
-            ArrayList<Integer> nums = new ArrayList<>();
-            ArrayList<Integer> mimeTypes = new ArrayList<>();
-            ArrayList<Integer> widths = new ArrayList<>();
-            ArrayList<Integer> heights = new ArrayList<>();
-            ArrayList<Integer> positions = new ArrayList<>();
-            if (mLocalMedias_sanzheng_Q != null && mLocalMedias_sanzheng_Q.size() != 0) {
-                for (int i = 0; i < mLocalMedias_sanzheng_Q.size(); i++) {
-                    LocalMedia media = mLocalMedias_sanzheng_Q.get(i);
-                    paths.add(media.getPath());
-                    pictureTypes.add(media.getPictureType());
-                    mDurations.add(media.getDuration());
-                    nums.add(media.getNum());
-                    heights.add(media.getHeight());
-                    widths.add(media.getWidth());
-                    positions.add(media.getPosition());
-                    mimeTypes.add(media.getMimeType());
-                    photoTypes.add(GlobalManager.PHOTO_TYPE_SANZHENG);
-                }
-            }
-            if (mLocalMedias_cheshen_Q != null && mLocalMedias_cheshen_Q.size() != 0) {
-                for (int i = 0; i < mLocalMedias_cheshen_Q.size(); i++) {
-                    LocalMedia media = mLocalMedias_cheshen_Q.get(i);
-                    paths.add(media.getPath());
-                    pictureTypes.add(media.getPictureType());
-                    mDurations.add(media.getDuration());
-                    nums.add(media.getNum());
-                    heights.add(media.getHeight());
-                    widths.add(media.getWidth());
-                    positions.add(media.getPosition());
-                    mimeTypes.add(media.getMimeType());
-                    photoTypes.add(GlobalManager.PHOTO_TYPE_CHESHEN);
-                }
-            }
-            if (mSelectList_huowu != null && mSelectList_huowu.size() != 0) {
-                for (int i = 0; i < mSelectList_huowu.size(); i++) {
-                    LocalMedia media = mSelectList_huowu.get(i);
-                    paths.add(media.getPath());
-                    pictureTypes.add(media.getPictureType());
-                    mDurations.add(media.getDuration());
-                    nums.add(media.getNum());
-                    heights.add(media.getHeight());
-                    widths.add(media.getWidth());
-                    positions.add(media.getPosition());
-                    mimeTypes.add(media.getMimeType());
-                    photoTypes.add(GlobalManager.PHOTO_TYPE_HUOZHAO);
+            if (path_all != null) {
+                for (int i = 0; i < path_all.size(); i++) {
+                    picturePath.add(path_all.get(i).getPath());
+                    pictureTitle.add(path_all.get(i).getTitle());
                 }
             }
 
-            supportMedia.setPaths(paths);
-            supportMedia.setPhotoTypes(photoTypes);
-            supportMedia.setPictureTypes(pictureTypes);
-            supportMedia.setDurations(mDurations);
-            supportMedia.setNums(nums);
-            supportMedia.setHeights(heights);
-            supportMedia.setWidths(widths);
-            supportMedia.setMimeTypes(mimeTypes);
-            supportMedia.setPositions(positions);
-            supportMedia.setLite_ID(count);
-            supportMedia.save();
+            supportDetail.setPicturePath(picturePath);
+            supportDetail.setPictureTitle(pictureTitle);
 
-            support.setSupportMedia(supportMedia);
-        }
+            supportDetail.save();
 
-        support.setSupportScan(supportScan);
-        support.setSupportDetail(supportDetail);
-        support.setSupportChecked(supportChecked);
+            //保存数据到表SupportChecked
+            SupportChecked supportChecked = new SupportChecked();
+            supportChecked.setLite_ID(count);
+            supportChecked.setIsRoom(mCheckedBean_Q.getIsRoom());
+            supportChecked.setIsFree(mCheckedBean_Q.getIsFree());
+            supportChecked.setConclusion(mCheckedBean_Q.getConclusion());
+            supportChecked.setDescription(mCheckedBean_Q.getDescription());
+            supportChecked.setSiteChecks(mCheckedBean_Q.getSiteChecks());
+            supportChecked.setSiteLogin(mCheckedBean_Q.getSiteLogin());
+            supportChecked.save();
 
-        support.save();
-
-        if (action.equals(ACTION_SUBMIT)) {
             if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
-                SPUtils.add_one(sActivity, SPUtils.MATH_DRAFT_LITE);
-                ToastUtils.singleToast("提交失败并保存至草稿列表");
-            } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
-                SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
-                ToastUtils.singleToast("提交成功并保存至提交列表");
+                SupportMedia supportMedia = new SupportMedia();
+                ArrayList<String> photoTypes = new ArrayList<>();
+                ArrayList<String> paths = new ArrayList<>();
+                ArrayList<String> pictureTypes = new ArrayList<>();
+                ArrayList<Long> mDurations = new ArrayList<>();
+                ArrayList<Integer> nums = new ArrayList<>();
+                ArrayList<Integer> mimeTypes = new ArrayList<>();
+                ArrayList<Integer> widths = new ArrayList<>();
+                ArrayList<Integer> heights = new ArrayList<>();
+                ArrayList<Integer> positions = new ArrayList<>();
+                if (mLocalMedias_sanzheng_Q != null && mLocalMedias_sanzheng_Q.size() != 0) {
+                    for (int i = 0; i < mLocalMedias_sanzheng_Q.size(); i++) {
+                        LocalMedia media = mLocalMedias_sanzheng_Q.get(i);
+                        paths.add(media.getPath());
+                        pictureTypes.add(media.getPictureType());
+                        mDurations.add(media.getDuration());
+                        nums.add(media.getNum());
+                        heights.add(media.getHeight());
+                        widths.add(media.getWidth());
+                        positions.add(media.getPosition());
+                        mimeTypes.add(media.getMimeType());
+                        photoTypes.add(GlobalManager.PHOTO_TYPE_SANZHENG);
+                    }
+                }
+                if (mLocalMedias_cheshen_Q != null && mLocalMedias_cheshen_Q.size() != 0) {
+                    for (int i = 0; i < mLocalMedias_cheshen_Q.size(); i++) {
+                        LocalMedia media = mLocalMedias_cheshen_Q.get(i);
+                        paths.add(media.getPath());
+                        pictureTypes.add(media.getPictureType());
+                        mDurations.add(media.getDuration());
+                        nums.add(media.getNum());
+                        heights.add(media.getHeight());
+                        widths.add(media.getWidth());
+                        positions.add(media.getPosition());
+                        mimeTypes.add(media.getMimeType());
+                        photoTypes.add(GlobalManager.PHOTO_TYPE_CHESHEN);
+                    }
+                }
+                if (mSelectList_huowu != null && mSelectList_huowu.size() != 0) {
+                    for (int i = 0; i < mSelectList_huowu.size(); i++) {
+                        LocalMedia media = mSelectList_huowu.get(i);
+                        paths.add(media.getPath());
+                        pictureTypes.add(media.getPictureType());
+                        mDurations.add(media.getDuration());
+                        nums.add(media.getNum());
+                        heights.add(media.getHeight());
+                        widths.add(media.getWidth());
+                        positions.add(media.getPosition());
+                        mimeTypes.add(media.getMimeType());
+                        photoTypes.add(GlobalManager.PHOTO_TYPE_HUOZHAO);
+                    }
+                }
+
+                supportMedia.setPaths(paths);
+                supportMedia.setPhotoTypes(photoTypes);
+                supportMedia.setPictureTypes(pictureTypes);
+                supportMedia.setDurations(mDurations);
+                supportMedia.setNums(nums);
+                supportMedia.setHeights(heights);
+                supportMedia.setWidths(widths);
+                supportMedia.setMimeTypes(mimeTypes);
+                supportMedia.setPositions(positions);
+                supportMedia.setLite_ID(count);
+                supportMedia.save();
+
+                support.setSupportMedia(supportMedia);
             }
 
-            Intent intent = new Intent("com.example.updateUI");
-            intent.putExtra(ARG_BROADCAST_DRAFT, (int) SPUtils.get(sActivity, SPUtils.MATH_DRAFT_LITE, 0));
-            intent.putExtra(ARG_BROADCAST_SUBMIT, (int) SPUtils.get(sActivity, SPUtils.MATH_SUBMIT_LITE, 0));
-            sendBroadcast(intent);
+            support.setSupportScan(supportScan);
+            support.setSupportDetail(supportDetail);
+            support.setSupportChecked(supportChecked);
 
-        } else if (action.equals(ACTION_SAVE)) {
-            ToastUtils.singleToast("已保存至草稿列表");
-            SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
+            support.save();
+
+            if (action.equals(ACTION_SUBMIT)) {
+                if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
+                    SPUtils.add_one(sActivity, SPUtils.MATH_DRAFT_LITE);
+                    ToastUtils.singleToast("提交失败并保存至草稿列表");
+                } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
+                    SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
+                    ToastUtils.singleToast("提交成功并保存至提交列表");
+                }
+
+            } else if (action.equals(ACTION_SAVE)) {
+                ToastUtils.singleToast("已保存至草稿列表");
+                SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
+            }
+        } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(showType)) {
+            count = ShowActivity.mLite_id;
+            Logger.i(count + "-------------count");
+            //DataSupport.count(SupportDraftOrSubmit.class);
+
+            //support.setLite_ID(count);
+            support.setLite_type(lite_type);
+            //support.setCurrent_time(current_time);
+            //保存数据到表SupportScan
+            SupportScan supportScan = new SupportScan();
+            // supportScan.setLite_ID(count);
+            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
+            supportScan.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
+            supportScan.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
+            supportScan.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
+            supportScan.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
+            supportScan.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
+            supportScan.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
+            supportScan.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
+            supportScan.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
+            supportScan.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
+            supportScan.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
+            supportScan.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
+            supportScan.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
+            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
+            supportScan.updateAll("lite_ID = ?", String.valueOf(count));
+
+            //保存数据到表SupportDetail
+            SupportDetail supportDetail = new SupportDetail();
+            // supportDetail.setLite_ID(count);
+            supportDetail.setNumber(mDetailInfoBean_Q.getNumber());
+            supportDetail.setColor(mDetailInfoBean_Q.getColor());
+            supportDetail.setGoods(mDetailInfoBean_Q.getGoods());
+            supportDetail.setStation(mStation_Q);
+            supportDetail.setRoad(mRoad_Q);
+            supportDetail.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+
+            ArrayList<String> picturePath = new ArrayList<>();
+            ArrayList<String> pictureTitle = new ArrayList<>();
+            List<PathTitleBean> path_all = mDetailInfoBean_Q.getPath_and_title();
+
+            if (path_all != null) {
+                for (int i = 0; i < path_all.size(); i++) {
+                    picturePath.add(path_all.get(i).getPath());
+                    pictureTitle.add(path_all.get(i).getTitle());
+                }
+            }
+
+            supportDetail.setPicturePath(picturePath);
+            supportDetail.setPictureTitle(pictureTitle);
+
+            //supportDetail.save();
+            supportDetail.updateAll("lite_ID = ?", String.valueOf(count));
+
+            //保存数据到表SupportChecked
+            SupportChecked supportChecked = new SupportChecked();
+            // supportChecked.setLite_ID(count);
+            supportChecked.setIsRoom(mCheckedBean_Q.getIsRoom());
+            supportChecked.setIsFree(mCheckedBean_Q.getIsFree());
+            supportChecked.setConclusion(mCheckedBean_Q.getConclusion());
+            supportChecked.setDescription(mCheckedBean_Q.getDescription());
+            supportChecked.setSiteChecks(mCheckedBean_Q.getSiteChecks());
+            supportChecked.setSiteLogin(mCheckedBean_Q.getSiteLogin());
+            //supportChecked.save();
+            supportChecked.updateAll("lite_ID = ?", String.valueOf(count));
+
+            if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
+                SupportMedia supportMedia = new SupportMedia();
+                ArrayList<String> photoTypes = new ArrayList<>();
+                ArrayList<String> paths = new ArrayList<>();
+                ArrayList<String> pictureTypes = new ArrayList<>();
+                ArrayList<Long> mDurations = new ArrayList<>();
+                ArrayList<Integer> nums = new ArrayList<>();
+                ArrayList<Integer> mimeTypes = new ArrayList<>();
+                ArrayList<Integer> widths = new ArrayList<>();
+                ArrayList<Integer> heights = new ArrayList<>();
+                ArrayList<Integer> positions = new ArrayList<>();
+                if (mLocalMedias_sanzheng_Q != null && mLocalMedias_sanzheng_Q.size() != 0) {
+                    for (int i = 0; i < mLocalMedias_sanzheng_Q.size(); i++) {
+                        LocalMedia media = mLocalMedias_sanzheng_Q.get(i);
+                        paths.add(media.getPath());
+                        pictureTypes.add(media.getPictureType());
+                        mDurations.add(media.getDuration());
+                        nums.add(media.getNum());
+                        heights.add(media.getHeight());
+                        widths.add(media.getWidth());
+                        positions.add(media.getPosition());
+                        mimeTypes.add(media.getMimeType());
+                        photoTypes.add(GlobalManager.PHOTO_TYPE_SANZHENG);
+                    }
+                }
+                if (mLocalMedias_cheshen_Q != null && mLocalMedias_cheshen_Q.size() != 0) {
+                    for (int i = 0; i < mLocalMedias_cheshen_Q.size(); i++) {
+                        LocalMedia media = mLocalMedias_cheshen_Q.get(i);
+                        paths.add(media.getPath());
+                        pictureTypes.add(media.getPictureType());
+                        mDurations.add(media.getDuration());
+                        nums.add(media.getNum());
+                        heights.add(media.getHeight());
+                        widths.add(media.getWidth());
+                        positions.add(media.getPosition());
+                        mimeTypes.add(media.getMimeType());
+                        photoTypes.add(GlobalManager.PHOTO_TYPE_CHESHEN);
+                    }
+                }
+                if (mSelectList_huowu != null && mSelectList_huowu.size() != 0) {
+                    for (int i = 0; i < mSelectList_huowu.size(); i++) {
+                        LocalMedia media = mSelectList_huowu.get(i);
+                        paths.add(media.getPath());
+                        pictureTypes.add(media.getPictureType());
+                        mDurations.add(media.getDuration());
+                        nums.add(media.getNum());
+                        heights.add(media.getHeight());
+                        widths.add(media.getWidth());
+                        positions.add(media.getPosition());
+                        mimeTypes.add(media.getMimeType());
+                        photoTypes.add(GlobalManager.PHOTO_TYPE_HUOZHAO);
+                    }
+                }
+
+                supportMedia.setPaths(paths);
+                supportMedia.setPhotoTypes(photoTypes);
+                supportMedia.setPictureTypes(pictureTypes);
+                supportMedia.setDurations(mDurations);
+                supportMedia.setNums(nums);
+                supportMedia.setHeights(heights);
+                supportMedia.setWidths(widths);
+                supportMedia.setMimeTypes(mimeTypes);
+                supportMedia.setPositions(positions);
+                // supportMedia.setLite_ID(count);
+                //supportMedia.save();
+                supportChecked.updateAll("lite_ID=?", String.valueOf(count));
+
+                support.setSupportMedia(supportMedia);
+            }
+
+            support.setSupportScan(supportScan);
+            support.setSupportDetail(supportDetail);
+            support.setSupportChecked(supportChecked);
+
+            //  support.save();
+            support.updateAll("lite_ID = ?", String.valueOf(count));
+
+            if (action.equals(ACTION_SUBMIT)) {
+                if (GlobalManager.TYPE_DRAFT_LITE.equals(lite_type)) {
+                    //SPUtils.add_one(sActivity, SPUtils.MATH_DRAFT_LITE);
+                    ToastUtils.singleToast("提交失败并更新至草稿列表");
+                } else if (GlobalManager.TYPE_SUBMIT_LITE.equals(lite_type)) {
+                    SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
+                    SPUtils.cut_one(sActivity, SPUtils.MATH_DRAFT_LITE);
+                    ToastUtils.singleToast("提交成功并更新至提交列表");
+                }
+
+
+            } else if (action.equals(ACTION_SAVE)) {
+                ToastUtils.singleToast("已更新至草稿列表");
+                //  SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
+            }
         }
-    }
+        Intent intent = new Intent("com.example.updateUI");
+        intent.putExtra(ARG_BROADCAST_DRAFT, (int) SPUtils.get(sActivity, SPUtils.MATH_DRAFT_LITE, 0));
+        intent.putExtra(ARG_BROADCAST_SUBMIT, (int) SPUtils.get(sActivity, SPUtils.MATH_SUBMIT_LITE, 0));
+        sendBroadcast(intent);
 
+    }
 
     private void postPictureAndJson(String postTime) {
 
@@ -476,6 +646,7 @@ public class SubmitService extends IntentService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
+
         sanzheng = getBodyPart1(pathTitle_sanzheng, "sanzheng");
         cheshen = getBodyPart1(pathTitle_cheshen, "cheshen");
         huozhao = getBodyPart1(pathTitle_huozhao, "huozhao");
@@ -501,7 +672,7 @@ public class SubmitService extends IntentService {
             @Override
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
-                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT, mShowType_submit);
                 Logger.i("json未上传成功走了草稿保存的方法");
                 ToastUtils.singleToast("提交失败,已保存至草稿");
             }
@@ -522,7 +693,7 @@ public class SubmitService extends IntentService {
                         @Override
                         public void onError(Throwable e) {
                             Logger.i(e.getMessage());
-                            save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                            save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT, mShowType_submit);
                             Logger.i("json上传成功图片未上传成功走了草稿保存的方法");
                             ToastUtils.singleToast("提交失败,已保存至草稿");
                         }
@@ -535,10 +706,10 @@ public class SubmitService extends IntentService {
                             if (code == 200) {
                                 // ToastUtils.singleToast("图片上传成功");
                                 Logger.i("图片上传成功");
-                                save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT);
+                                save2Litepal(mSubmitTime, GlobalManager.TYPE_SUBMIT_LITE, ACTION_SUBMIT, mShowType_submit);
                                 Logger.i("走了提交保存的方法");
                             } else {
-                                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                                save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT, mShowType_submit);
                                 Logger.i("图片上传返回错误走了草稿保存的方法");
                             }
                         }
@@ -546,7 +717,7 @@ public class SubmitService extends IntentService {
 
                 } else {
                     Logger.i("json上传返回错误走了草稿保存的方法");
-                    save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT);
+                    save2Litepal(mSubmitTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SUBMIT, mShowType_submit);
                 }
                 //  ToastUtils.singleToast("json上传成功");
             }
@@ -560,13 +731,14 @@ public class SubmitService extends IntentService {
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
 
+
         for (int i = 0; i < bitmapList.size(); i++) {
 
             String mFilePath_str_new = null;
             try {
-                Bitmap bitmap = BitmapUtil.convertToBitmap(bitmapList.get(i).getPath(), 600, 960);
+                Bitmap bitmap = BitmapUtil.convertToBitmap(bitmapList.get(i).getPath(), 700, 960);
 
-                mFilePath_str_new = mFilePath_str + "/" + System.currentTimeMillis()
+                mFilePath_str_new = mFilePath_str + "/" + TimeUtil.getCurrentTime()
                         + type + (i + 1) + ".jpg";
 
                 saveFile(bitmap, mFilePath_str_new);

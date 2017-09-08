@@ -97,8 +97,10 @@ public class SettingActivity extends BaseActivity {
         }
         //从app注册时的配置信息中取出数据填充线路以及收费站
         List<String> strListValue = SPListUtil.getStrListValue(mActivity, SPListUtil.APPCONFIGINFO);
-        mTextSettingRoad.setText(strListValue.get(1).toString());
-        mTextSettingStation.setText(strListValue.get(2).toString());
+        if (strListValue.size() == 3) {
+            mTextSettingRoad.setText(strListValue.get(1).toString());
+            mTextSettingStation.setText(strListValue.get(2).toString());
+        }
 
         //初始化车道以及保存改变车道的状态
         mTextSettingLane.setText((String) SPUtils.get(mActivity, SPUtils.TEXTLANE, "66"));
@@ -210,7 +212,7 @@ public class SettingActivity extends BaseActivity {
             for (int i = 0; i < mOperatorList.size(); i++) {
                 //for (int j = 0; j < operatorList.size(); j++) {
                 SupportOperator operator = operatorList.get(i);
-                if (mOperatorList.get(i).getIsCheckSelected()==1) {
+                if (mOperatorList.get(i).getIsCheckSelected() == 1) {
                     operator.setCheck_select(1);
                 } else {
                     operator.setCheck_select(0);

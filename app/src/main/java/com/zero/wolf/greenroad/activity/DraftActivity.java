@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -54,6 +59,7 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     private String mGoodsFilePath;
     private String mFilePath;
     private List<SupportDraftOrSubmit> mDraftList;
+    private PopupWindow mPopup_delete;
 
 
     @Override
@@ -87,8 +93,32 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         mRecyclerViewPreview.addItemDecoration(new RecycleViewDivider(mContext,
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
 
-        mAdapter = new PreviewItemAdapter(mContext, mActivity, (ArrayList) mDraftList, support -> {
-            PreviewDetailActivity.actionStart(mContext,  support,PreviewDetailActivity.ACTION_DRAFT_ITEM);
+       // mAdapter = new MainRecyclerAdapter(mContext, mActivity, (ArrayList) mDraftList);
+          mAdapter = new PreviewItemAdapter(mContext, mActivity, (ArrayList) mDraftList, support -> {
+            PreviewDetailActivity.actionStart(mContext, support, PreviewDetailActivity.ACTION_DRAFT_ITEM);
+        }, new PreviewItemAdapter.onLongItemClick() {
+            @Override
+            public void longClick(View itemView, int lite_ID, int position) {
+//
+                View view = LayoutInflater.from(DraftActivity.this).inflate(R.layout.layout_draft_item_delete, null);
+                Button btn_delete = (Button) view.findViewById(R.id.btn_draft_item_detete);
+                btn_delete.setOnClickListener(v -> {
+                    mDraftList.remove(position);
+                    mAdapter.updateListView(mDraftList);
+                    DataSupport.deleteAll(SupportDraftOrSubmit.class, "lite_ID = ?", String.valueOf(lite_ID));
+                    SPUtils.cut_one(DraftActivity.this,SPUtils.MATH_DRAFT_LITE);
+                    mPopup_delete.dismiss();
+                });
+
+                mPopup_delete = new PopupWindow(DraftActivity.this);
+                mPopup_delete.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                mPopup_delete.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                mPopup_delete.setContentView(view);
+                mPopup_delete.setBackgroundDrawable(new ColorDrawable(0x00000000));
+                mPopup_delete.setOutsideTouchable(true);
+                mPopup_delete.setFocusable(true);
+                mPopup_delete.showAsDropDown(itemView);
+            }
         });
 
         mRecyclerViewPreview.setAdapter(mAdapter);
@@ -175,19 +205,19 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
                 ToastUtils.singleToast("清除七天前记录");
-                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_DRAFT_LITE,SPUtils.MATH_DRAFT_LITE,7,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 7, mAdapter);
                 break;
             case R.id.delete_preview_15:
                 ToastUtils.singleToast("清除15天前记录");
-                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_DRAFT_LITE,SPUtils.MATH_DRAFT_LITE,15,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 15, mAdapter);
                 break;
             case R.id.delete_preview_30:
                 ToastUtils.singleToast("清除30天前记录");
-                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_DRAFT_LITE,SPUtils.MATH_DRAFT_LITE,30,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 30, mAdapter);
                 break;
             case R.id.delete_preview_all:
                 ToastUtils.singleToast("清空所有记录");
-                DeleteHelper.deleteAllInfos(mContext, GlobalManager.TYPE_DRAFT_LITE,SPUtils.MATH_DRAFT_LITE, mAdapter);
+                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, mAdapter);
 
                 break;
             default:

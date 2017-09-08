@@ -155,6 +155,7 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
             case R.id.scan_qr_code:
                 Intent intent = new Intent(getActivity(), CaptureActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SCAN);
+                DetailsFragment.notifyTag(false);
                 break;
             case R.id.btn_edit_able:
                 if (mBtnEditAble.isChecked()) {

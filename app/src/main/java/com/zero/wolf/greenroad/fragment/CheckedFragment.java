@@ -149,7 +149,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
 
         mSiteLogin = (TextView) view.findViewById(R.id.site_login_operator);
 
-
         mTextConclusionView.setOnClickListener(this);
         mSiteLogin.setOnClickListener(this);
 
@@ -271,6 +270,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             case R.id.checked_conclusion_text:
                 ConclusionActivity.actionStart(getContext(),
                         mTextConclusionView.getText().toString().trim());
+                DetailsFragment.notifyTag(false);
                 break;
             /*case R.id.site_check_operator:
                 BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {

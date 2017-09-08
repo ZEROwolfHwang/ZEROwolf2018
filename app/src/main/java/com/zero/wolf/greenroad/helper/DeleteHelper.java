@@ -1,8 +1,10 @@
 package com.zero.wolf.greenroad.helper;
 
 import android.content.Context;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
+import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.PreviewItemAdapter;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
@@ -16,6 +18,7 @@ import com.zero.wolf.greenroad.tools.TimeUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +27,18 @@ import java.util.List;
  */
 
 public class DeleteHelper {
+
+    private static DeleteHelper sHelper;
+    private File mFile;
+
+    public static DeleteHelper getInstance() {
+        if (sHelper == null) {
+            sHelper = new DeleteHelper();
+        }
+        return sHelper;
+
+    }
+
     /**
      * 清除所有的记录
      *
@@ -31,7 +46,8 @@ public class DeleteHelper {
      * @param typeLite
      * @param adapter
      */
-    public static void deleteAllInfos(Context context, String typeLite, String SpUtil_info, PreviewItemAdapter adapter) {
+
+    public void deleteAllInfos(Context context, String typeLite, String SpUtil_info, PreviewItemAdapter adapter) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("清空本地保存的拍摄数据");
         dialog.setMessage("点击“确定”将删除所有拍摄记录" + "\"" +
@@ -52,6 +68,9 @@ public class DeleteHelper {
             List<SupportDraftOrSubmit> supportList =
                     DataSupport.where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
             adapter.updateListView(supportList);
+            if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
+                deleteAllNewPhoto();
+            }
             SPUtils.putAndApply(context, SpUtil_info, 0);
         });
         dialog.setNegativeButton(context.getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
@@ -63,7 +82,7 @@ public class DeleteHelper {
     /**
      * 清除几天之前的记录
      */
-    public static void deleteInfos(Context context, String typeLite, String SpUtil_info, int day, PreviewItemAdapter adapter) {
+    public void deleteInfos(Context context, String typeLite, String SpUtil_info, int day, PreviewItemAdapter adapter) {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("清除" + day + "天之前本地保存的拍摄数据");
@@ -72,6 +91,7 @@ public class DeleteHelper {
         dialog.setCancelable(false);
         dialog.setPositiveButton(context.getString(R.string.dialog_messge_OK), (dialog1, which) -> {
             String currentTimeToDate = TimeUtil.getCurrentTimeToDate();
+            String currentTimeToDelete = TimeUtil.getCurrentTime();
             List<SupportDraftOrSubmit> photoLiteList = DataSupport.where(GlobalManager.LITE_CONDITION, typeLite).
                     find(SupportDraftOrSubmit.class);
 
@@ -80,11 +100,11 @@ public class DeleteHelper {
                 int lite_id = photoLiteList.get(i).getLite_ID();
                 int dayGap = TimeUtil.differentDaysByMillisecond(saveTime, currentTimeToDate);
                 if (dayGap > day) {
-                    DataSupport.deleteAll(SupportDraftOrSubmit.class,"lite_ID = ?", String.valueOf(lite_id));
-                    DataSupport.deleteAll(SupportDetail.class,"lite_ID = ?", String.valueOf(lite_id));
-                    DataSupport.deleteAll(SupportScan.class,"lite_ID = ?", String.valueOf(lite_id));
-                    DataSupport.deleteAll(SupportChecked.class,"lite_ID = ?", String.valueOf(lite_id));
-                    DataSupport.deleteAll(SupportMedia.class,"lite_ID = ?", String.valueOf(lite_id));
+                    DataSupport.deleteAll(SupportDraftOrSubmit.class, "lite_ID = ?", String.valueOf(lite_id));
+                    DataSupport.deleteAll(SupportDetail.class, "lite_ID = ?", String.valueOf(lite_id));
+                    DataSupport.deleteAll(SupportScan.class, "lite_ID = ?", String.valueOf(lite_id));
+                    DataSupport.deleteAll(SupportChecked.class, "lite_ID = ?", String.valueOf(lite_id));
+                    DataSupport.deleteAll(SupportMedia.class, "lite_ID = ?", String.valueOf(lite_id));
                     //删除三张本地照片
                     /*FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
                     FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath2());
@@ -92,6 +112,12 @@ public class DeleteHelper {
                     */
                 }
             }
+
+            if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
+
+                deletePhotoForData(day, currentTimeToDelete);
+            }
+
             List<SupportDraftOrSubmit> supportDraftList = DataSupport.
                     where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
 
@@ -107,5 +133,74 @@ public class DeleteHelper {
         dialog.show();
 
 
+    }
+
+    private void deletePhotoForData(int day, String currentTimeToDelete) {
+        Logger.i("删除提交的照片1");
+        if (mFile == null) {
+            mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenPicture");
+            mFile.mkdirs();
+        }
+        DeleteFileForDay(mFile, day, currentTimeToDelete);
+
+    }
+
+    private void DeleteFileForDay(File file, int day, String currentTimeToDelete) {
+        if (file.exists() == false) {
+            return;
+        } else {
+            if (file.isFile()) {
+                Logger.i("删除提交的照片2");
+                file.delete();
+                return;
+            }
+            if (file.isDirectory()) {
+                File[] childFile = file.listFiles();
+                for (File f : childFile) {
+                    String submitTime = f.getName().substring(0, 14);
+                    int dayGap = TimeUtil.differentDaysByTime(submitTime, currentTimeToDelete);
+                    if (dayGap > day) {
+                        Logger.i("删除提交的照片4");
+//                        DeleteFileForDay(f,day,currentTimeToDelete);
+                        f.delete();
+                    }
+                }
+            }
+        }
+    }
+
+    private void deleteAllNewPhoto() {
+        Logger.i("删除提交的照片1");
+        if (mFile == null) {
+            mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenPicture");
+            mFile.mkdirs();
+        }
+        DeleteFile(mFile);
+    }
+
+    /**
+     * 递归删除文件和文件夹
+     *
+     * @param file 要删除的根目录
+     */
+    public void DeleteFile(File file) {
+        if (file.exists() == false) {
+            return;
+        } else {
+            if (file.isFile()) {
+                file.delete();
+                return;
+            }
+            if (file.isDirectory()) {
+                File[] childFile = file.listFiles();
+                if (childFile == null || childFile.length == 0) {
+                    file.delete();
+                    return;
+                }
+                for (File f : childFile) {
+                    DeleteFile(f);
+                }
+            }
+        }
     }
 }

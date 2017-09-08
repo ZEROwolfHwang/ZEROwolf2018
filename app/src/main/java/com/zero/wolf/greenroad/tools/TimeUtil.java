@@ -29,15 +29,15 @@ public class TimeUtil {
     /**
      * 得到当前的系统时间
      */
-    public static String getCurrentTimeTos() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
+    public static String getCurrentTime() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         Date curDate = new Date(System.currentTimeMillis());
         String shutTime = formatter.format(curDate);
         return shutTime;
     }
 
     public static String getCurrentTimeToDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String curTime = formatter.format(new Date(System.currentTimeMillis()));
         // String shutTime = formatter.format(curDate);
         return curTime;
@@ -58,6 +58,29 @@ public class TimeUtil {
     public static int differentDaysByMillisecond(String time1, String time2) {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            Date date1 = format.parse(time1);
+            Date date2 = format.parse(time2);
+           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
+           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600));//小时
+            int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
+            Logger.i(days + "-----days");
+            return days;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    /**
+     * 通过时间秒毫秒数判断两个时间的间隔
+     *time1 保存在数据库中的时间
+     *time2 当前登陆的时间的时间
+     * @return
+     */
+    public static int differentDaysByTime(String time1, String time2) {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 
         try {
             Date date1 = format.parse(time1);

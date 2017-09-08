@@ -96,7 +96,6 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
 
             mAddCheckItem.setOnClickListener(v -> {
 
-                ToastUtils.singleToast("添加条目" + pos);
                 BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
                     @Override
                     public void convert(BasePhotoViewHolder holder, int position, String s) {
@@ -126,7 +125,6 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
             });
 
             mSiteCheckDelete.setOnClickListener(v -> {
-                ToastUtils.singleToast("删除条目" + pos);
                 mTextList.remove(pos);
 
                 updateListView(mTextList);

@@ -2,6 +2,7 @@ package com.zero.wolf.greenroad.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -47,6 +48,7 @@ import butterknife.Unbinder;
 
 
 public class DetailsFragment extends Fragment {
+    private static boolean tag;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -116,6 +118,7 @@ public class DetailsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }*/
+        tag = true;
     }
 
     @Override
@@ -134,132 +137,145 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        GoodsFragment.setTextChangedFragment(edittext -> {
-            mCarGoods = edittext;
-        });
-
-        PhotoFragment.setBitmapListListener((mSanZhengBitmaps, mCheShenBitmaps, mHuowuBitmaps) -> {
-            mMyBitmaps_sanzheng = mSanZhengBitmaps;
-            mMyBitmaps_cheshen = mCheShenBitmaps;
-            mMyBitmaps_huowu = mHuowuBitmaps;
-            if (mMyBitmaps_sanzheng != null && mMyBitmaps_cheshen != null && mMyBitmaps_huowu != null) {
-                Logger.i(mMyBitmaps_sanzheng.size() + "---" + mMyBitmaps_cheshen.size() + "---" + mMyBitmaps_huowu.size());
-            }
-        });
-
-        if (mMyBitmaps_recycler_all == null) {
-            mMyBitmaps_recycler_all = new ArrayList<>();
-        }
-        if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
-            mMyBitmaps_recycler_all.clear();
-        }
-        mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
-        String title;
-        for (int i = 0; i < 3; i++) {
-            if (i == 0) {
-                title = "三证";
-            } else if (i == 1) {
-                title = "车身车型";
-            } else {
-                title = "货照";
-            }
-            MyBitmap myBitmap = new MyBitmap(mBitmap_add, title);
-            mMyBitmaps_recycler_all.add(myBitmap);
-        }
-
-
-        if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
-
-            if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
-                mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
-            }
-            if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
-                mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
-            }
-            if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
-                mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
-            }
-            if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
-                mAdapter.updateListView(mMyBitmaps_recycler_all);
-                if (mMyBitmaps_recycler_all.size() > 4) {
-                    mRecyclerViewShootPhoto.scrollToPosition(4);
-                }
-            }
-
-            CarNumberFragment.setTextChangedFragment((edittext -> {
-                if (edittext.length() == 7) {
-                    mCarNumber = edittext;
-                    List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
-                    for (int i = 0; i < blackList.size(); i++) {
-                        if (mCarNumber.equals(blackList.get(i).getLicense())) {
-                            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                            Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
-                            r.play();
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("该车牌为黑名单车牌");
-                            builder.setPositiveButton("了解", (dialog, which) -> {
-                                dialog.dismiss();
-                            });
-                            builder.setCancelable(false);
-                            builder.show();
-                        }
-                    }
-                } else {
-                    mCarNumber = "";
-                }
-                Logger.i(mCarNumber + "]]]]]]]]]");
-                mTvChangeNumberDetail.setText(mCarNumber);
+        if (tag) {
+            GoodsFragment.setTextChangedFragment(edittext -> {
+                mCarGoods = edittext;
                 mTvChangeGoodsDetail.setText(mCarGoods);
-            }));
-        } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
-            PreviewDetailActivity.setPictureLisener(myBitmapList -> {
-                mMyBitmaps_recycler_all.addAll(myBitmapList);
             });
-//            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
+
+            PhotoFragment.setBitmapListListener((mSanZhengBitmaps, mCheShenBitmaps, mHuowuBitmaps) -> {
+                mMyBitmaps_sanzheng = mSanZhengBitmaps;
+                mMyBitmaps_cheshen = mCheShenBitmaps;
+                mMyBitmaps_huowu = mHuowuBitmaps;
+                if (mMyBitmaps_sanzheng != null && mMyBitmaps_cheshen != null && mMyBitmaps_huowu != null) {
+                    Logger.i(mMyBitmaps_sanzheng.size() + "---" + mMyBitmaps_cheshen.size() + "---" + mMyBitmaps_huowu.size());
+                }
+            });
+
+            if (mMyBitmaps_recycler_all == null) {
+                mMyBitmaps_recycler_all = new ArrayList<>();
+            }
             if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
-                mAdapter.updateListView(mMyBitmaps_recycler_all);
-                if (mMyBitmaps_recycler_all.size() > 2) {
-                    mRecyclerViewShootPhoto.scrollToPosition(2);
+                mMyBitmaps_recycler_all.clear();
+            }
+            mBitmap_add = BitmapFactory.decodeResource(getResources(), R.drawable.image_photo_add);
+            String title;
+            for (int i = 0; i < 3; i++) {
+                if (i == 0) {
+                    title = "三证";
+                } else if (i == 1) {
+                    title = "车身车型";
+                } else {
+                    title = "货照";
+                }
+                MyBitmap myBitmap = new MyBitmap(mBitmap_add, title);
+                mMyBitmaps_recycler_all.add(myBitmap);
+            }
+            if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+
+                if (mMyBitmaps_sanzheng != null && mMyBitmaps_sanzheng.size() != 0) {
+                    mMyBitmaps_recycler_all.addAll(mMyBitmaps_sanzheng);
+                }
+                if (mMyBitmaps_cheshen != null && mMyBitmaps_cheshen.size() != 0) {
+                    mMyBitmaps_recycler_all.addAll(mMyBitmaps_cheshen);
+                }
+                if (mMyBitmaps_huowu != null && mMyBitmaps_huowu.size() != 0) {
+                    mMyBitmaps_recycler_all.addAll(mMyBitmaps_huowu);
+                }
+                if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
+                    mAdapter.updateListView(mMyBitmaps_recycler_all);
+                    if (mMyBitmaps_recycler_all.size() > 4) {
+                        mRecyclerViewShootPhoto.scrollToPosition(4);
+                    }
+                }
+
+                CarNumberFragment.setTextChangedFragment((edittext -> {
+                    if (edittext.length() == 7) {
+                        mCarNumber = edittext;
+                        checkingBlack(mCarNumber);
+                    } else {
+                        mCarNumber = "";
+                   /* mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
+                    mTvChangeNumberDetail.setText(mCarNumber);*/
+                    }
+                    Logger.i(mCarNumber + "]]]]]]]]]");
+
+                }));
+            } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
+                PreviewDetailActivity.setPictureLisener(myBitmapList -> {
+                    mMyBitmaps_recycler_all.addAll(myBitmapList);
+                });
+//            sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
+                if (mMyBitmaps_recycler_all != null && mMyBitmaps_recycler_all.size() != 0) {
+                    mAdapter.updateListView(mMyBitmaps_recycler_all);
+                    if (mMyBitmaps_recycler_all.size() > 2) {
+                        mRecyclerViewShootPhoto.scrollToPosition(2);
+                    }
+                }
+                Logger.i(sSupportDetail.toString());
+
+                inflateSelected();
+
+                // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
+                String number = sSupportDetail.getNumber();
+                checkingBlack(number);
+                if (number != null && number.length() == 7) {
+                    CarNumberFragment.notifyDataChangeFromDraft(number);
+                }
+                String goodsFromDraft = sSupportDetail.getGoods();
+                mTvChangeGoodsDetail.setText(goodsFromDraft);
+                GoodsFragment.notifyDataChangeFromDraft(goodsFromDraft);
+
+                String color = sSupportDetail.getColor();
+                if (CarColorManager.COLOR_YELLOW.equals(color)) {
+                    mLicense_yellow.setChecked(true);
+                    mCurrent_color = CarColorManager.COLOR_YELLOW;
+                } else if (CarColorManager.COLOR_BLUE.equals(color)) {
+                    mLicense_blue.setChecked(true);
+                    mCurrent_color = CarColorManager.COLOR_BLUE;
+                } else if (CarColorManager.COLOR_BLACK.equals(color)) {
+                    mLicense_black.setChecked(true);
+                    mCurrent_color = CarColorManager.COLOR_BLACK;
+                } else if (CarColorManager.COLOR_GREEN.equals(color)) {
+                    mLicense_green.setChecked(true);
+                    mCurrent_color = CarColorManager.COLOR_GREEN;
+                } else if (CarColorManager.COLOR_WHITE.equals(color)) {
+                    mLicense_white.setChecked(true);
+                    mCurrent_color = CarColorManager.COLOR_WHITE;
                 }
             }
-            Logger.i(sSupportDetail.toString());
-
-            inflateSelected();
-
-            // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
-            String number = sSupportDetail.getNumber();
-            mTvChangeNumberDetail.setText(number);
-            if (number != null && number.length() == 7) {
-                CarNumberFragment.notifyDataChangeFromDraft(number);
-            }
-            String goodsFromDraft = sSupportDetail.getGoods();
-            mTvChangeGoodsDetail.setText(goodsFromDraft);
-            GoodsFragment.notifyDataChangeFromDraft(goodsFromDraft);
-
-            String color = sSupportDetail.getColor();
-            if (CarColorManager.COLOR_YELLOW.equals(color)) {
-                mLicense_yellow.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_YELLOW;
-            } else if (CarColorManager.COLOR_BLUE.equals(color)) {
-                mLicense_blue.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_BLUE;
-            } else if (CarColorManager.COLOR_BLACK.equals(color)) {
-                mLicense_black.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_BLACK;
-            } else if (CarColorManager.COLOR_GREEN.equals(color)) {
-                mLicense_green.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_GREEN;
-            } else if (CarColorManager.COLOR_WHITE.equals(color)) {
-                mLicense_white.setChecked(true);
-                mCurrent_color = CarColorManager.COLOR_WHITE;
-            }
-
-
         }
+        tag = false;
+    }
 
+    /**
+     * 检查返回或者得到的车牌号是否被加入黑名单
+     */
+    private void checkingBlack(String carNumber) {
+        List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+        for (int i = 0; i < blackList.size(); i++) {
+            if (carNumber.equals(blackList.get(i).getLicense())) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+                r.play();
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("该车牌为黑名单车牌");
+                builder.setPositiveButton("了解", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                builder.setCancelable(false);
+                builder.show();
+                mTvChangeNumberDetail.setTextColor(Color.RED);
+                mTvChangeNumberDetail.setText(carNumber);
+                return;
+            } else {
+                mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
+                mTvChangeNumberDetail.setText(carNumber);
+
+            }
+            return;
+        }
     }
 
     /**
@@ -474,12 +490,12 @@ public class DetailsFragment extends Fragment {
         main2Sure.setCarNumber_I(carNumber);
         main2Sure.setGoods_I(goods);
         if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
-            SureGoodsActivity.actionStart(getActivity(), main2Sure, type, sEnterType, sLite_ID);
+            SureGoodsActivity.actionStart((ShowActivity) getActivity(), main2Sure, type, sEnterType, sLite_ID);
             sEnterType = ShowActivity.TYPE_MAIN_ENTER_SHOW;
         } else {
             SureGoodsActivity.actionStart(getActivity(), main2Sure, type, sEnterType);
         }
-
+        tag = true;
     }
 
 
@@ -604,7 +620,12 @@ public class DetailsFragment extends Fragment {
         listener.Selected(mSelectList_sanzheng, mSelectList_cheshen, mSelectList_huowu);
 
     }
+
     public interface SelectedListListener {
         void Selected(List<LocalMedia> medias_sanzheng, List<LocalMedia> medias_cheshen, List<LocalMedia> medias_huozhao);
+    }
+
+    public static void notifyTag(boolean newTag) {
+        tag = newTag;
     }
 }

@@ -83,7 +83,10 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
                 (ArrayList<SupportDraftOrSubmit>) mSubmitList, (support) -> {
             PreviewDetailActivity.actionStart(mContext, support,
                     PreviewDetailActivity.ACTION_SUBMIT_ITEM);
+        },(itemView, lite_ID, position) -> {
+
         });
+
 
         mRecyclerViewPreview.setAdapter(mAdapter);
     }
@@ -138,19 +141,19 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
                 ToastUtils.singleToast("清除七天前记录");
-                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,mAdapter);
                 break;
             case R.id.delete_preview_15:
                 ToastUtils.singleToast("清除15天前记录");
-                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,mAdapter);
                 break;
             case R.id.delete_preview_30:
                 ToastUtils.singleToast("清除30天前记录");
-                DeleteHelper.deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,mAdapter);
                 break;
             case R.id.delete_preview_all:
                 ToastUtils.singleToast("清空所有记录");
-                DeleteHelper.deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,mAdapter);
+                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,mAdapter);
                 break;
 
             default:

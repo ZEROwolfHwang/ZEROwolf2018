@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 
 public class SureGoodsActivity extends BaseActivity {
 
+//    public static final int RESULT_DETAIL = 001;
     private static String ARG_LITE_ID = "arg_lite_id";
     private static String ARG_ENTER_TYPE = "arg_enter_type";
 
@@ -103,8 +104,8 @@ public class SureGoodsActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    public static void actionStart(Context context, SerializableMain2Sure main2Sure, String type, String enterType, int lite_ID) {
-        Intent intent = new Intent(context, SureGoodsActivity.class);
+    public static void actionStart(ShowActivity activity, SerializableMain2Sure main2Sure, String type, String enterType, int lite_ID) {
+        Intent intent = new Intent(activity, SureGoodsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("main2Sure", main2Sure);
         //bundle.putParcelableArrayList("myBitmapList", (ArrayList<? extends Parcelable>) myBitmaps);
@@ -112,7 +113,8 @@ public class SureGoodsActivity extends BaseActivity {
         intent.setType(type);
         intent.putExtra(ARG_LITE_ID, lite_ID);
         intent.putExtra(ARG_ENTER_TYPE, enterType);
-        context.startActivity(intent);
+        activity.startActivity(intent);
+
     }
 
     /**

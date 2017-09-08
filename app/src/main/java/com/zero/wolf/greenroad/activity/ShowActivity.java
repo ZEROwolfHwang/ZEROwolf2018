@@ -90,6 +90,8 @@ public class ShowActivity extends BaseActivity {
 
     private File mFile;
     private static String mFilePath_str;
+    public static String mShowType;
+    public static int mLite_id;
 
     public static void actionStart(Context context, SupportDetail supportDetail, SupportScan supportScan,
                                    SupportChecked supportChecked, int lite_ID) {
@@ -135,18 +137,20 @@ public class ShowActivity extends BaseActivity {
 
     private void getIntentData() {
         Intent intent = getIntent();
+        mShowType = intent.getType();
         if (ACTION_DRAFT_ENTER_SHOW.equals(intent.getAction())) {
             SupportDetail supportDetail = intent.getParcelableExtra(ARG_SUPPORT_DETAIL);
             SupportScan supportScan = intent.getParcelableExtra(ARG_SUPPORT_SCAN);
             SupportChecked supportChecked = intent.getParcelableExtra(ARG_SUPPORT_CHECKED);
-            int lite_ID = intent.getIntExtra(ARG_SUPPORT_MEDIA, 1);
-            Logger.i(lite_ID + "qqq");
+            mLite_id = intent.getIntExtra(ARG_SUPPORT_MEDIA, 1);
+            Logger.i(mLite_id + "qqq");
 
             mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this,
-                    supportDetail, supportScan, supportChecked, lite_ID, intent.getType());
+                    supportDetail, supportScan, supportChecked, mLite_id, mShowType);
 
         } else if (ACTION_MAIN_ENTER_SHOW.equals(intent.getAction())) {
-            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this, intent.getType());
+            mShowType = intent.getType();
+            mPagerAdapter = new ShowViewPagerAdapter(getSupportFragmentManager(), this, mShowType);
         }
         mViewPagerShow.setOffscreenPageLimit(3);//设置viewpager预加载页面数
         mViewPagerShow.setAdapter(mPagerAdapter);  // 给Viewpager设置适配器
@@ -243,10 +247,9 @@ public class ShowActivity extends BaseActivity {
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
                 Logger.i(DetailsFragment.sEnterType);
-                SubmitService.startActionSubmit(this,this,DetailsFragment.sEnterType);
+                SubmitService.startActionSubmit(this,this,DetailsFragment.sEnterType,mShowType);
                 break;
             case R.id.fab_draft:
-                ToastUtils.singleToast("实现保存草稿");
                 mFabDraft.hideButtonInMenu(true);
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
@@ -265,7 +268,7 @@ public class ShowActivity extends BaseActivity {
      * 2.将数据保存到数据库
      */
     private void saveDraft() {
-       SubmitService.startActionSave(this,DetailsFragment.sEnterType);
+       SubmitService.startActionSave(this,DetailsFragment.sEnterType,mShowType);
     }
 
     @Override

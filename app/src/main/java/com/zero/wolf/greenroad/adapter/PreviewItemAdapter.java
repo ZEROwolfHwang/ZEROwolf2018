@@ -31,17 +31,21 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
     private final AppCompatActivity mActivity;
     private final onPreviewItemClick mItemClick;
     private ArrayList<SupportDraftOrSubmit> mPreviewList;
+    private final onLongItemClick mLongItemClick;
     // private final onItemClick mItemClick;
 
 
     public PreviewItemAdapter(Context context, AppCompatActivity activity,
                               ArrayList<SupportDraftOrSubmit> previewList,
-                              onPreviewItemClick onPreviewItemClick) {
+                              onPreviewItemClick onPreviewItemClick,
+                              onLongItemClick longItemClick) {
+
         mContext = context;
         mPreviewList = previewList;
         mActivity = activity;
         //   mItemClick = onItemClick;
         mItemClick = onPreviewItemClick;
+        mLongItemClick = longItemClick;
     }
 
 
@@ -127,11 +131,22 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
             itemView.setOnClickListener(v -> {
                 mItemClick.itemClick(support);
             });
+
+            itemView.setOnLongClickListener(v -> {
+                mLongItemClick.longClick(itemView,support.getLite_ID(),position);
+                return true;
+            });
+            /*itemView.setOnLongClickListener(v -> {
+                mItemClick.itemClick(support);
+            });*/
         }
     }
 
     public interface onPreviewItemClick {
         void itemClick(SupportDraftOrSubmit support);
+    }
+    public interface onLongItemClick {
+        void longClick(View itemView, int lite_ID, int position);
     }
 }
 
