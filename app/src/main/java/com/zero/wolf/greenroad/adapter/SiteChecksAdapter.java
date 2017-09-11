@@ -104,6 +104,11 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
                         textView.setOnClickListener(v1 -> {
                             /*mSiteCheckOperator.setText(s);
                             */
+                            if (mTextList.contains(s)) {
+                                ToastUtils.singleToast("该默认检查人已被选择");
+                                mPopupWindow_add.dismissPopWindow();
+                                return;
+                            }
                             mTextList.add(s);
 //                            notifyDataSetChanged();
                             updateListView(mTextList);
@@ -135,8 +140,14 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
                     @Override
                     public void convert(BasePhotoViewHolder holder, int position, String s) {
                         TextView textView = holder.getView(R.id.text_item_black);
+
                         textView.setText(s);
                         textView.setOnClickListener(v1 -> {
+                            if (mTextList.contains(s)) {
+                                ToastUtils.singleToast("该默认检查人已存在");
+                                mPopupWindow_check.dismissPopWindow();
+                                return;
+                            }
                             mSiteCheckOperator.setText(s);
                             mTextList.remove(pos);
                             mTextList.add(pos, s);

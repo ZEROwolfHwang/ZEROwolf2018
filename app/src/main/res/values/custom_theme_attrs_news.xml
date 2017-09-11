@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主界面三个列表框的字体样式-->
+    <attr name="custom_three_list_text_color" format="color|reference"/>
+    <!-- 主界面三个列表框的背景样式-->
+    <attr name="custom_three_list_background_color" format="color|reference"/>
+    <!-- 主界面三个列表框总体的背景样式样式-->
+    <attr name="custom_three_all_background_color" format="color|reference"/>
+
+    <attr name="custom_shape_background_main_else" format="color|reference"/>
+
+ <!-- 主界面可用空间大小的字体颜色样式-->
+    <attr name="custom_main_room_text_color" format="color|reference"/>
+    <attr name="custom_main_room_left_img" format="color|reference"/>
+    <attr name="custom_main_room_background_1_color" format="color|reference"/>
+    <attr name="custom_main_room_background_2_color" format="color|reference"/>
+
+</resources>

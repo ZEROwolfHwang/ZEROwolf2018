@@ -2,6 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/custom_attr_app_bg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -86,13 +87,13 @@
         android:elevation="@dimen/layout_margin30dp"
         android:text="现场采集"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="24sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margin0dp"
         android:layout_weight="1"
-        android:background="#f0f0f0">
+        android:background="?attr/custom_three_all_background_color">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,7 +106,7 @@
                 android:id="@+id/rl_main_draft"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
-                android:background="#ffffff"
+                android:background="?attr/custom_three_list_background_color"
                 android:elevation="3dp">
 
                 <TextView
@@ -113,20 +114,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/layout_margin20dp"
                     android:text="0"
                     android:textColor="#f64545"
-                    android:textSize="@dimen/text24"/>
+                    android:textSize="@dimen/text28"/>
 
                 <TextView
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/layout_margin10dp"
                     android:text="草稿列表"
-                    android:textColor="#808080"
-                    android:textSize="@dimen/text14"/>
+                    style="@style/three_list_main_text_style"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -135,7 +131,7 @@
                 android:layout_height="100dp"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
                 android:layout_marginRight="@dimen/layout_margin10dp"
-                android:background="#ffffff"
+                android:background="?attr/custom_three_list_background_color"
                 android:elevation="3dp">
 
                 <TextView
@@ -145,16 +141,11 @@
                     android:layout_centerInParent="true"
                     android:text="0"
                     android:textColor="#f64545"
-                    android:textSize="@dimen/text24"/>
+                    android:layout_marginBottom="@dimen/layout_margin20dp"
+                    android:textSize="@dimen/text28"/>
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/layout_margin10dp"
                     android:text="提交列表"
-                    android:textColor="#808080"
-                    android:textSize="@dimen/text14"/>
+                    style="@style/three_list_main_text_style"/>
 
             </RelativeLayout>
 
@@ -162,7 +153,7 @@
                 android:id="@+id/rl_main_blacklist"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
-                android:background="#ffffff"
+                android:background="?attr/custom_three_list_background_color"
                 android:elevation="3dp">
 
                 <TextView
@@ -171,18 +162,13 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="0"
+                    android:layout_marginBottom="@dimen/layout_margin20dp"
                     android:textColor="#f64545"
-                    android:textSize="@dimen/text24"/>
+                    android:textSize="@dimen/text28"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/layout_margin10dp"
                     android:text="黑名单列表"
-                    android:textColor="#808080"
-                    android:textSize="@dimen/text14"/>
+                    style="@style/three_list_main_text_style"/>
 
             </RelativeLayout>
 
@@ -193,23 +179,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:background="#d8d8d8">
+        android:background="?attr/custom_main_room_background_1_color">
 
         <LinearLayout
             android:layout_width="@dimen/layout_margin0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="#b3b3b3">
+            android:background="?attr/custom_main_room_background_2_color">
 
             <TextView
                 android:id="@+id/tv_avail_space"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_margin10dp"
-                android:drawableLeft="@drawable/main_room_left_img"
+                android:drawableLeft="?attr/custom_main_room_left_img"
                 android:gravity="center_vertical"
                 android:text="16G"
-                android:textColor="#4d4d4d"
+                android:textColor="?attr/custom_main_room_text_color"
                 android:textSize="18sp"/>
 
             <TextView
@@ -218,7 +204,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="/24G"
-                android:textColor="#4d4d4d"
+                android:textColor="?attr/custom_main_room_text_color"
                 android:textSize="18sp"/>
 
         </LinearLayout>

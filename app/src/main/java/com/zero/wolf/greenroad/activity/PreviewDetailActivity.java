@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,6 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.BasePhotoAdapter;
 import com.zero.wolf.greenroad.adapter.BasePhotoViewHolder;
 import com.zero.wolf.greenroad.adapter.DetailsRecyclerAdapter;
-import com.zero.wolf.greenroad.bean.PathTitleBean;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
@@ -100,14 +98,11 @@ public class PreviewDetailActivity extends BaseActivity {
     private SupportDraftOrSubmit mCurrentSupport;
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
-    private List<PathTitleBean> mPath_cheshen;
     private static ArrayList<MyBitmap> mBitmapArrayList;
 
-    private Handler mHandler = new Handler();
     private SupportChecked mSupportChecked;
     private BasePhotoAdapter<String> mCheckAdapter;
     private Intent mIntent;
-
 
     public static void actionStart(Context context, SupportDraftOrSubmit support, String action) {
         Intent intent = new Intent(context, PreviewDetailActivity.class);

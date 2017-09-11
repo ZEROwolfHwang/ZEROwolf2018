@@ -1,21 +1,21 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopeer.itemtouchhelperextension.Extension;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.zero.wolf.greenroad.tools.SPUtils;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,40 +27,26 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/9/8.
  */
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    public static final int ITEM_TYPE_RECYCLER_WIDTH = 1000;
-    public static final int ITEM_TYPE_ACTION_WIDTH = 1001;
-    public static final int ITEM_TYPE_ACTION_WIDTH_NO_SPRING = 1002;
-    public static final int ITEM_TYPE_NO_SWIPE = 1003;
-
+public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ItemTouchHelperExtension mItemTouchHelperExtension;
 
     private final Context mContext;
 
 
-    private final AppCompatActivity mActivity;
-
     private ArrayList<SupportDraftOrSubmit> mPreviewList;
+    private final onPreviewItemClick mItemClick;
 
-    // private final onItemClick mItemClick;
 
-
-    public MainRecyclerAdapter(Context context, AppCompatActivity activity,
-                              ArrayList<SupportDraftOrSubmit> previewList
-                            ) {
-
+    public SwipeDeleteAdapter(Context context, onPreviewItemClick onPreviewItemClick) {
+        mPreviewList = new ArrayList<>();
+        mItemClick = onPreviewItemClick;
         mContext = context;
-        mPreviewList = previewList;
-        mActivity = activity;
 
     }
-    public void setDatas(List<SupportDraftOrSubmit> datas) {
+
+    public void updateData(List<SupportDraftOrSubmit> mDatas) {
         mPreviewList.clear();
-        mPreviewList.addAll(datas);
-    }
-
-    public void updateData(List<SupportDraftOrSubmit> datas) {
-        setDatas(datas);
+        mPreviewList.addAll(mDatas);
         notifyDataSetChanged();
     }
 
@@ -75,45 +61,53 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
-        return new ItemSwipeWithActionWidthViewHolder(view);
-
+        return new ItemSwipeWithActionWidthNoSpringViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        ItemBaseViewHolder baseViewHolder = (ItemBaseViewHolder) holder;
-        baseViewHolder.bind(mPreviewList.get(position), position);
 
+        ItemBaseViewHolder baseViewHolder = (ItemBaseViewHolder) holder;
+        baseViewHolder.bind(mPreviewList.get(position));
         baseViewHolder.mViewContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "Item Content click: #" + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                mItemClick.itemClick(mPreviewList.get(position));
             }
         });
+        if (holder instanceof ItemSwipeWithActionWidthViewHolder) {
+            ItemSwipeWithActionWidthViewHolder viewHolder = (ItemSwipeWithActionWidthViewHolder) holder;
 
-        ItemSwipeWithActionWidthViewHolder viewHolder = (ItemSwipeWithActionWidthViewHolder) holder;
-
-        viewHolder.mActionViewDelete.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            viewHolder.mActionViewDelete.setOnClickListener(v -> {
                         doDelete(holder.getAdapterPosition());
+                        mItemTouchHelperExtension.closeOpened();
                     }
-                }
-
-        );
-
+            );
+        }
     }
 
     private void doDelete(int adapterPosition) {
+        DataSupport.deleteAll(SupportDraftOrSubmit.class, "lite_ID = ?",
+                String.valueOf(mPreviewList.get(adapterPosition).getLite_ID()));
+        SPUtils.cut_one(mContext, SPUtils.MATH_DRAFT_LITE);
         mPreviewList.remove(adapterPosition);
-        notifyItemRemoved(adapterPosition);
+        updateListView(mPreviewList);
+//        notifyItemRemoved(adapterPosition);
     }
 
-    public void move(int from, int to) {
-        SupportDraftOrSubmit prev = mPreviewList.remove(from);
-        mPreviewList.add(to > from ? to - 1 : to, prev);
-        notifyItemMoved(from, to);
+    /**
+     * 当ListView数据发生变化时,调用此方法来更新ListView
+     *
+     * @param list
+     */
+    public void updateListView(List<SupportDraftOrSubmit> list) {
+        if (list == null) {
+            this.mPreviewList = new ArrayList<>();
+        } else {
+            this.mPreviewList = (ArrayList<SupportDraftOrSubmit>) list;
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -130,10 +124,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView mPreviewTextLogin;
         @BindView(R.id.preview_text_isFree)
         TextView mPreviewTextIsFree;
-
         @BindView(R.id.preview_text_shutTime)
         TextView mPreviewTextShutTime;
-
         View mViewContent;
         View mActionContainer;
 
@@ -144,7 +136,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mActionContainer = itemView.findViewById(R.id.view_list_repo_action_container);
         }
 
-        public void bind(SupportDraftOrSubmit support, int position) {
+        public void bind(SupportDraftOrSubmit support) {
             String sub_check = support.getSupportChecked().getSiteChecks().get(0).substring(0, 6);
             String check = sub_check;
             String login = support.getSupportChecked().getSiteLogin();
@@ -152,9 +144,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             String shutTime = support.getCurrent_time();
             int isFree = support.getSupportChecked().getIsFree();
 
-            if (position % 2 == 0) {
-                itemView.setBackgroundColor(Color.WHITE);
-            }
+
             if (check != null) {
                 String[] checks = check.split("/");
                 mPreviewTextCheck.setText(checks[0]);
@@ -167,18 +157,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mPreviewTextShutTime.setText(shutTime);
             mPreviewTextIsFree.setText(isFree == 0 ? "否" : "是");
 
-            /*itemView.setOnLongClickListener(v -> {
-                mItemClick.itemClick(support);
-            });*/
-
-            itemView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                        mItemTouchHelperExtension.startDrag(ItemBaseViewHolder.this);
-                    }
-                    return true;
+            itemView.setOnTouchListener((v, event) -> {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mItemTouchHelperExtension.startDrag(ItemBaseViewHolder.this);
                 }
+                return true;
+
             });
         }
     }
@@ -211,11 +195,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    class ItemNoSwipeViewHolder extends ItemBaseViewHolder {
-
-        public ItemNoSwipeViewHolder(View itemView) {
-            super(itemView);
-        }
+    public interface onPreviewItemClick {
+        void itemClick(SupportDraftOrSubmit support);
     }
-
 }

@@ -26,10 +26,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class ScanFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private static final int REQUEST_CODE_SCAN = 901;
 
@@ -41,11 +37,6 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
     @BindView(R.id.btn_edit_able)
     ToggleButton mBtnEditAble;
 
-
-    // TODO: Rename and change types of parameters
-
-
-    private ScanBeanConnectListener mListener;
     private static EditText mTextExportNumber;
     private static EditText mText_table_1;
     private static EditText mText_table_2;

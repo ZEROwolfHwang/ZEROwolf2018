@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
+import com.zero.wolf.greenroad.GreenRoadApplication;
 import com.zero.wolf.greenroad.activity.MainActivity;
 import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.CheckedBean;
@@ -360,7 +361,6 @@ public class SubmitService extends IntentService {
                     SPUtils.add_one(sActivity, SPUtils.MATH_SUBMIT_LITE);
                     ToastUtils.singleToast("提交成功并保存至提交列表");
                 }
-
             } else if (action.equals(ACTION_SAVE)) {
                 ToastUtils.singleToast("已保存至草稿列表");
                 SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
@@ -517,18 +517,16 @@ public class SubmitService extends IntentService {
                     SPUtils.cut_one(sActivity, SPUtils.MATH_DRAFT_LITE);
                     ToastUtils.singleToast("提交成功并更新至提交列表");
                 }
-
-
             } else if (action.equals(ACTION_SAVE)) {
                 ToastUtils.singleToast("已更新至草稿列表");
                 //  SPUtils.add_one(sContext_draft, SPUtils.MATH_DRAFT_LITE);
             }
         }
-        Intent intent = new Intent("com.example.updateUI");
-        intent.putExtra(ARG_BROADCAST_DRAFT, (int) SPUtils.get(sActivity, SPUtils.MATH_DRAFT_LITE, 0));
-        intent.putExtra(ARG_BROADCAST_SUBMIT, (int) SPUtils.get(sActivity, SPUtils.MATH_SUBMIT_LITE, 0));
-        sendBroadcast(intent);
 
+        Intent intent = new Intent("com.example.updateUI");
+        intent.putExtra(ARG_BROADCAST_DRAFT, (int) SPUtils.get(GreenRoadApplication.sApplication, SPUtils.MATH_DRAFT_LITE, 0));
+        intent.putExtra(ARG_BROADCAST_SUBMIT, (int) SPUtils.get(GreenRoadApplication.sApplication, SPUtils.MATH_SUBMIT_LITE, 0));
+        sendBroadcast(intent);
     }
 
     private void postPictureAndJson(String postTime) {

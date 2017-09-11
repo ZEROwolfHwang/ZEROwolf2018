@@ -50,7 +50,6 @@ public class SettingActivity extends BaseActivity {
     private SettingOperatorAdapter mAdapter;
     private ArrayList<SettingOperatorInfo> mOperatorList;
     private String mJob_number_login;
-    private String mOperator_check_name;
     private String mOperator_login_name;
     private List<SupportOperator> mSupportOperators;
 

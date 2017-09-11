@@ -28,7 +28,6 @@ import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,13 +46,7 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
     private SubmitActivity mActivity;
     private Context mContext;
     private List<SupportDraftOrSubmit> mSubmitList;
-
     private PreviewItemAdapter mAdapter;
-    private File mGoodsFile;
-    private String mGoodsFilePath;
-    private String mFilePath;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +79,6 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         },(itemView, lite_ID, position) -> {
 
         });
-
 
         mRecyclerViewPreview.setAdapter(mAdapter);
     }
@@ -141,19 +133,27 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
                 ToastUtils.singleToast("清除七天前记录");
-                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,supportList -> {
+                    mAdapter.updateListView(supportList);
+                });
                 break;
             case R.id.delete_preview_15:
                 ToastUtils.singleToast("清除15天前记录");
-                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,supportList -> {
+                    mAdapter.updateListView(supportList);
+                });
                 break;
             case R.id.delete_preview_30:
                 ToastUtils.singleToast("清除30天前记录");
-                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,mAdapter);
+                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,supportList -> {
+                    mAdapter.updateListView(supportList);
+                });
                 break;
             case R.id.delete_preview_all:
                 ToastUtils.singleToast("清空所有记录");
-                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,mAdapter);
+                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,supportList -> {
+                    mAdapter.updateListView(supportList);
+                });
                 break;
 
             default:

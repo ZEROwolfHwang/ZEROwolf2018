@@ -35,7 +35,6 @@ import com.zero.wolf.greenroad.tools.BitmapUtil;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +47,6 @@ public class PhotoFragment extends Fragment {
     private static final int CHOOSE_CAR_NUMBER = 1 * 991;
     private static final int CHOOSE_CAR_BODY = 1 * 992;
     private static final int CHOOSE_CAR_GOODS = 1 * 993;
-    private static final int CHOOSE_CAR_ALL = 1 * 994;
 
 
     Unbinder unbinder;
@@ -78,13 +76,6 @@ public class PhotoFragment extends Fragment {
     ProgressBar mHuozhaoProgress;
 
 
-    private String mParam1;
-    private String mParam2;
-
-    private long systemTime1;
-    private long systemTime2;
-    private Calendar calendar;
-    public static int REQUEST_SMALL = 100;
 
     private File mFile;
     private String mFilePath_str;
@@ -347,11 +338,6 @@ public class PhotoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("data", "onActivityResult: " + data);
-
-        //关闭相机之后获得时间；2；
-        //  mRlProgressBar.setVisibility(View.VISIBLE);
-        // pb.setVisibility(View.VISIBLE);
-        systemTime2 = getSystemTime();
 
         switch (requestCode) {
             case CHOOSE_CAR_NUMBER:

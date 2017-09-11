@@ -77,12 +77,11 @@
     <attr name="custom_tab_bg_pager_view" format="color|reference"/>
 
     <!-- 控制     三个fragment中车站车牌车货物的图片   format:颜色值、资源引用-->
-    <attr name="custom_car_number_sure" format="color|reference"/>
     <attr name="custom_car_station_main" format="color|reference"/>
-    <attr name="custom_car_goods_sure" format="color|reference"/>
+
 
     <attr name="custom_shape_background_fragment" format="color|reference"/>
-    <attr name="custom_fragment_static_text" format="color|reference"/>
+    <attr name="custom_fragment_text_color_first" format="color|reference"/>
 
     <!-- 控制     三个fragment中车站车牌车货物的三个RecyclerView中的字体颜色   format:颜色值、资源引用-->
     <attr name="custom_item_text_color_number" format="color|reference"/>
@@ -145,5 +144,7 @@
 
  <!-- 文本框的背景样式-->
     <attr name="text_box_bg" format="color|reference"/>
+
+    <attr name="custom_fragment_static_text" format="color|reference"/>
 
 </resources>

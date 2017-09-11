@@ -44,9 +44,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static ToggleButton mToggleIsFree;
 
     private static ToggleButton mToggleIsRoom;
-    private static final String ARG_CONCLUSION = "conclusion";
-    private static final String ARG_DESCRIPTION = "description";
-
 
     private static TextView mTextConclusionView;
     private static EditText mEditDescriptionView;

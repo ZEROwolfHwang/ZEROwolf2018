@@ -71,7 +71,7 @@
 
             <ImageView
                 style="@style/main_left_image_view"
-                android:background="?attr/custom_car_number_sure"/>
+                android:background="@drawable/image_car_number"/>
 
             <LinearLayout
                 style="@style/main_text_layout_bg_station_style">
@@ -122,7 +122,7 @@
 
             <ImageView
                 style="@style/main_left_image_view"
-                android:background="?attr/custom_car_goods_sure"/>
+                android:background="@drawable/image_car_goods"/>
 
             <LinearLayout
                 style="@style/main_text_layout_bg_station_style">

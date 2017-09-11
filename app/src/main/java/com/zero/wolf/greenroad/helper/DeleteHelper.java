@@ -6,7 +6,6 @@ import android.support.v7.app.AlertDialog;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.adapter.PreviewItemAdapter;
 import com.zero.wolf.greenroad.litepalbean.SupportChecked;
 import com.zero.wolf.greenroad.litepalbean.SupportDetail;
 import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
@@ -44,13 +43,12 @@ public class DeleteHelper {
      *
      * @param context
      * @param typeLite
-     * @param adapter
      */
 
-    public void deleteAllInfos(Context context, String typeLite, String SpUtil_info, PreviewItemAdapter adapter) {
+    public void deleteAllInfos(Context context, String typeLite, String SpUtil_info, DataChangeListener listener) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle("清空本地保存的拍摄数据");
-        dialog.setMessage("点击“确定”将删除所有拍摄记录" + "\"" +
+        dialog.setTitle("清空本地保存的草稿数据");
+        dialog.setMessage("点击“确定”将删除所有采集记录" + "\"" +
                 "点击“取消”将取消删除操作");
         dialog.setCancelable(false);
         dialog.setPositiveButton(context.getString(R.string.dialog_messge_OK), (dialog1, which) -> {
@@ -65,13 +63,14 @@ public class DeleteHelper {
 
             FileUtils.deleteJpg(new File(mGoodsFilePath));*/
 
-            List<SupportDraftOrSubmit> supportList =
-                    DataSupport.where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
-            adapter.updateListView(supportList);
             if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
                 deleteAllNewPhoto();
             }
             SPUtils.putAndApply(context, SpUtil_info, 0);
+            List<SupportDraftOrSubmit> supportList =
+                    DataSupport.where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
+            listener.dataChange(supportList);
+
         });
         dialog.setNegativeButton(context.getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
             dialog1.dismiss();
@@ -82,7 +81,7 @@ public class DeleteHelper {
     /**
      * 清除几天之前的记录
      */
-    public void deleteInfos(Context context, String typeLite, String SpUtil_info, int day, PreviewItemAdapter adapter) {
+    public void deleteInfos(Context context, String typeLite, String SpUtil_info, int day, DataChangeListener listener) {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("清除" + day + "天之前本地保存的拍摄数据");
@@ -114,7 +113,6 @@ public class DeleteHelper {
             }
 
             if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
-
                 deletePhotoForData(day, currentTimeToDelete);
             }
 
@@ -123,8 +121,7 @@ public class DeleteHelper {
 
             SortTime sortDraftTime = new SortTime();
             Collections.sort(supportDraftList, sortDraftTime);
-
-            adapter.updateListView(supportDraftList);
+            listener.dataChange(supportDraftList);
             SPUtils.putAndApply(context, SpUtil_info, supportDraftList.size());
         });
         dialog.setNegativeButton(context.getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
@@ -202,5 +199,9 @@ public class DeleteHelper {
                 }
             }
         }
+    }
+
+    public interface DataChangeListener {
+        public void dataChange(List<SupportDraftOrSubmit> supportList);
     }
 }

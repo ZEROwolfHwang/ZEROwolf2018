@@ -15,8 +15,6 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.SpinnerPopupWindow;
-import com.zero.wolf.greenroad.adapter.SpinnerAdapter;
 import com.zero.wolf.greenroad.httpresultbean.HttpResult;
 import com.zero.wolf.greenroad.https.RequestLogin;
 import com.zero.wolf.greenroad.polling.PollingService;
@@ -46,7 +44,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     TextView mLoginRegister;
     @BindView(R.id.rl_progress_login)
     RelativeLayout mRlProgressLogin;
-    private ArrayList<String> mList;
     private Button mBt_login;
     @BindView(R.id.text_user_name)
     EditText mEt_user_name;
@@ -54,10 +51,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     EditText mEt_password;
     @BindView(R.id.check_box_pwd)
     CheckBox mCheckBox;
-    private SpinnerPopupWindow mPopupWindow;
     private boolean mIsConnected;
     private static int TIMEGAP = 10;
-    private SpinnerAdapter mSpinnerAdapter;
     private String macID;
     private LoginActivity mActivity;
 

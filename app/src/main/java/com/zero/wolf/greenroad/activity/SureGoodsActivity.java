@@ -12,14 +12,9 @@ import android.widget.TextView;
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.adapter.SureViewPagerAdapter;
 import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
-import com.zero.wolf.greenroad.fragment.MyBitmap;
 import com.zero.wolf.greenroad.fragment.PhotoFragment;
 import com.zero.wolf.greenroad.manager.GlobalManager;
-import com.zero.wolf.greenroad.smartsearch.SortModel;
 import com.zero.wolf.greenroad.tools.ActionBarTool;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +25,6 @@ public class SureGoodsActivity extends BaseActivity {
     private static String ARG_LITE_ID = "arg_lite_id";
     private static String ARG_ENTER_TYPE = "arg_enter_type";
 
-    private List<SortModel> mGoodsList = new ArrayList<>();
     private SureViewPagerAdapter mPagerAdapter;
 
 
@@ -45,7 +39,6 @@ public class SureGoodsActivity extends BaseActivity {
 
     private String mType;
     private SerializableMain2Sure mMain2Sure;
-    private ArrayList<MyBitmap> mMyBitmaps;
     private int mLite_ID;
     private String mEnterType;
 
