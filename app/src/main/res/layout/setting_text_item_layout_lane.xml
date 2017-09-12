@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="center"
     android:layout_height="55dp"
-    android:background="@drawable/setting_item_change_bg"
+    android:background="?attr/custom_setting_item_change_bg"
     android:orientation="horizontal"
     android:layout_marginTop="@dimen/layout_margin10dp"
     tools:showIn="@layout/activity_setting">
@@ -18,6 +18,7 @@
         android:text="@string/setting_login_lane"
         android:layout_gravity="left"
         android:gravity="center_vertical"
+        android:textColor="?attr/custom_text_color_second"
         android:maxLines="1"
         android:focusable="true"
         android:textSize="@dimen/text18"/>

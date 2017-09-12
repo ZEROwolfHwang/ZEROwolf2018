@@ -1,6 +1,5 @@
 package com.zero.wolf.greenroad.fragment;
 
-import android.content.Context;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,8 +12,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.bean.SerializableMain2Sure;
-import com.zero.wolf.greenroad.interfacy.OnFragmentAttachListener;
 import com.zero.wolf.greenroad.interfacy.TextFragmentListener;
 import com.zero.wolf.greenroad.tools.LicenseKeyboardUtil;
 
@@ -31,21 +28,13 @@ import butterknife.Unbinder;
  */
 
 public class CarNumberFragment extends Fragment {
-
-    public static final String INPUT_LICENSE_COMPLETE = "me.kevingo.licensekeyboard.input.comp";
-    public static final String INPUT_LICENSE_KEY = "LICENSE";
-
     Unbinder unbinder;
-
-
     private static CarNumberFragment sFragment;
-
 
     @BindView(R.id.keyboard_view)
     KeyboardView mKeyboardView;
     private LicenseKeyboardUtil keyboardUtil;
 
-    private OnFragmentAttachListener mListener;
     private static EditText mEtInputBox1;
     private static EditText mEtInputBox2;
     private static EditText mEtInputBox3;
@@ -53,7 +42,6 @@ public class CarNumberFragment extends Fragment {
     private static EditText mEtInputBox5;
     private static EditText mEtInputBox6;
     private static EditText mEtInputBox7;
-    private static SerializableMain2Sure mMain2Sure;
     private static String mNumber_I;
     private static EditText[] mEditTextViews;
 
@@ -136,31 +124,6 @@ public class CarNumberFragment extends Fragment {
 
         keyboardUtil = new LicenseKeyboardUtil(getContext(), view, mEditTextViews, mNumber_I.length() == 7 ? 7 : 0);
         keyboardUtil.showKeyboard();
-
-     /*     //输入车牌完成后的intent过滤器
-        IntentFilter finishFilter = new IntentFilter(INPUT_LICENSE_COMPLETE);
-
-      final BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String license = intent.getStringExtra(INPUT_LICENSE_KEY);
-                if (license != null && license.length() > 0) {
-                    if (keyboardUtil != null) {
-                        keyboardUtil.hideKeyboard();
-                    }
-
-                    AlertDialog alertDialog;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("车牌号为:" + license);
-                    alertDialog = builder.create();
-                    alertDialog.setCancelable(true);
-                    alertDialog.show();
-                }
-                getActivity().unregisterReceiver(this);
-            }
-        };
-        getActivity().registerReceiver(receiver, finishFilter);*/
-
         return view;
     }
 
@@ -182,15 +145,10 @@ public class CarNumberFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
     }
 
     public static void setTextChangedFragment(TextFragmentListener listener) {
@@ -206,22 +164,9 @@ public class CarNumberFragment extends Fragment {
             listener.textChanged(number);
         }
     }
-
     @Override
     public void onPause() {
         super.onPause();
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentAttachListener) {
-            mListener = (OnFragmentAttachListener) context;
-        }/* else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
     }
 
     /**

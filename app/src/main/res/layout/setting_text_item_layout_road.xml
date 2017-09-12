@@ -6,7 +6,7 @@
     android:layout_gravity="center"
     android:layout_height="55dp"
     android:layout_marginTop="@dimen/layout_margin5dp"
-    android:background="@drawable/setting_item_static_bg"
+    android:background="?attr/custom_setting_item_static_bg"
     android:orientation="horizontal"
     tools:showIn="@layout/activity_setting">
 
@@ -18,6 +18,7 @@
         android:text="@string/setting_login_road"
         android:layout_gravity="left"
         android:gravity="center_vertical"
+        android:textColor="?attr/custom_text_color_second"
         android:maxLines="1"
         android:textSize="@dimen/text18"/>
 
@@ -27,7 +28,7 @@
         android:maxLines="1"
         android:id="@+id/text_setting_road"
         android:layout_width="0dp"
-        android:textColor="?attr/custom_attr_setting_text_color"
+        android:textColor="?attr/custom_text_color_first"
         android:text="京沪高速"
         android:textSize="@dimen/text18"
         android:layout_height="match_parent"/>

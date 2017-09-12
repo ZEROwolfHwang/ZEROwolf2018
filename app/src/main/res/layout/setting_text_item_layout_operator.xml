@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="center"
     android:layout_height="55dp"
-    android:background="@drawable/setting_item_change_bg"
+    android:background="?attr/custom_setting_item_change_bg"
     android:orientation="horizontal"
     android:layout_marginTop="@dimen/layout_margin10dp"
     tools:showIn="@layout/activity_setting">
@@ -17,6 +17,7 @@
         android:layout_height="match_parent"
         android:text="@string/setting_operator"
         android:layout_gravity="left"
+        android:textColor="?attr/custom_text_color_second"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textSize="@dimen/text18"

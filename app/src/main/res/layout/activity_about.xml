@@ -37,6 +37,13 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/user_agreement"
+        android:text="用户协议"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin40dp"/>
+
     <LinearLayout
         android:id="@+id/layout_activation_code"
         android:layout_width="wrap_content"
@@ -59,7 +66,6 @@
         <TextView
             android:id="@+id/activity_about_activation_code"
             android:layout_width="wrap_content"
-            android:inputType="numberPassword"
             android:layout_height="wrap_content"
             />
     </LinearLayout>

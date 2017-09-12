@@ -1,6 +1,7 @@
 package com.zero.wolf.greenroad.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.activity.ShowActivity;
 import com.zero.wolf.greenroad.bean.ScanInfoBean;
 import com.zero.wolf.greenroad.litepalbean.SupportScan;
+import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import butterknife.BindView;
@@ -56,6 +58,7 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
     private static String enterType;
     private EditText[] mEditTextsScan;
     private ToggleButton mToggleEditable;
+    private int mThemeTag;
 
     public ScanFragment() {
         // Required empty public constructor
@@ -81,6 +84,8 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mThemeTag = (int) SPUtils.get(getContext(), SPUtils.KEY_THEME_TAG, 1);
+
     }
 
     @Override
@@ -140,7 +145,7 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
     }
 
 
-    @OnClick({R.id.scan_qr_code,R.id.btn_edit_able})
+    @OnClick({R.id.scan_qr_code, R.id.btn_edit_able})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_qr_code:
@@ -152,9 +157,15 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
                 if (mBtnEditAble.isChecked()) {
                     for (int i = 0; i < mEditTextsScan.length; i++) {
                         mEditTextsScan[i].setEnabled(true);
+                        mEditTextsScan[i].setTextColor(Color.BLUE);
                     }
                 } else {
                     for (int i = 0; i < mEditTextsScan.length; i++) {
+                        if (mThemeTag == 1) {
+                            mEditTextsScan[i].setTextColor(Color.DKGRAY);
+                        } else {
+                            mEditTextsScan[i].setTextColor(Color.WHITE);
+                        }
                         mEditTextsScan[i].setEnabled(false);
                     }
                 }
@@ -187,9 +198,7 @@ public class ScanFragment extends Fragment implements CompoundButton.OnCheckedCh
                     Logger.i("解析结果:" + result);
 
                     String[] result_QrCode = result.split(";");
-                   /* for (int i = 0; i < result_QrCode.length; i++) {
-                        Logger.i(result_QrCode[i]);
-                    }*/
+
                     mTextExportNumber.setText(result_QrCode[0]);
 
                     mText_table_1.post(() -> mText_table_1.setText(result_QrCode[1]));

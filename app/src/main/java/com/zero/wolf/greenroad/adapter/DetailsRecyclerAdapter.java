@@ -1,7 +1,7 @@
 package com.zero.wolf.greenroad.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +11,15 @@ import android.widget.TextView;
 
 import com.zero.wolf.greenroad.R;
 import com.zero.wolf.greenroad.fragment.MyBitmap;
+import com.zero.wolf.greenroad.tools.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static org.litepal.LitePalApplication.getContext;
 
 /**
  * @author sineom
@@ -35,12 +38,14 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
     private final itemClickListener mLisener;
 
     private List<MyBitmap> mBitmapList;
+    private int mThemeTag;
 
 
     public DetailsRecyclerAdapter(Context context, List<MyBitmap> myBitmaps, itemClickListener itemClickLisener) {
         mContext = context;
         mBitmapList = myBitmaps;
         mLisener = itemClickLisener;
+        mThemeTag = (int) SPUtils.get(getContext(), SPUtils.KEY_THEME_TAG, 1);
     }
 
     /**
@@ -89,12 +94,17 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
         }
 
         public void bindHolder(int position) {
-            Bitmap bitmap = null;
             if (mBitmapList != null) {
 
                 MyBitmap myBitmap = mBitmapList.get(position);
                 if (myBitmap != null) {
                     mDetailFragmentImage.setImageBitmap(myBitmap.getBm());
+
+                    if (mThemeTag == 1) {
+                        mDetailFragmentText.setTextColor(Color.DKGRAY);
+                    } else {
+                        mDetailFragmentText.setTextColor(Color.WHITE);
+                    }
                     mDetailFragmentText.setText(myBitmap.getTitle());
                 }
                 if (position < 3) {

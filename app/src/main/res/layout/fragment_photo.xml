@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="三证照"
+                android:textColor="?attr/custom_text_color_second"
                 android:textSize="18sp"/>
 
             <TextView
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="@color/color333333"
+                android:textColor="?attr/custom_text_color_first"
                 android:textSize="18sp"/>
 
         </LinearLayout>
@@ -48,14 +49,15 @@
                 android:layout_height="match_parent"/>
             <ProgressBar
                 android:id="@+id/image_sanzheng_recycler_progress"
-                style="@style/fhoto_fragment_progress_style"/>
+                style="@style/photo_fragment_progress_style"/>
         </FrameLayout>
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="12dp"
-        android:background="#f0f0f0"/>
+        android:background="?attr/custom_device_bg_color"
+        />
 
     <LinearLayout
         android:id="@+id/ll_cheshenchexing"
@@ -76,6 +78,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/custom_text_color_second"
                 android:text="车辆照"
                 android:textSize="18sp"/>
 
@@ -83,8 +86,8 @@
                 android:id="@+id/num_text_cheshen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=" / 0"
-                android:textColor="@color/color333333"
+                android:text=""
+                android:textColor="?attr/custom_text_color_first"
                 android:textSize="18sp"/>
 
         </LinearLayout>
@@ -98,7 +101,7 @@
                 android:layout_height="match_parent"/>
             <ProgressBar
                 android:id="@+id/image_cheshen_recycler_progress"
-                style="@style/fhoto_fragment_progress_style"/>
+                style="@style/photo_fragment_progress_style"/>
         </FrameLayout>
 
     </LinearLayout>
@@ -106,7 +109,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="12dp"
-        android:background="#f0f0f0"/>
+        android:background="?attr/custom_device_bg_color"
+        />
 
     <LinearLayout
         android:id="@+id/ll_huowu"
@@ -127,6 +131,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/custom_text_color_second"
                 android:text="货物照"
                 android:textSize="18sp"/>
 
@@ -135,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="@color/color333333"
+                android:textColor="?attr/custom_text_color_first"
                 android:textSize="18sp"/>
 
         </LinearLayout>
@@ -150,7 +155,7 @@
                 android:layout_height="match_parent"/>
             <ProgressBar
                 android:id="@+id/image_huozhao_recycler_progress"
-                style="@style/fhoto_fragment_progress_style"/>
+                style="@style/photo_fragment_progress_style"/>
         </FrameLayout>
     </LinearLayout>
 

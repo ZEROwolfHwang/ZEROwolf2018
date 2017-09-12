@@ -62,10 +62,9 @@
             android:drawableLeft="@drawable/logo_pass_word"
             android:hint="@string/hint_password"
             android:imeActionId="@+id/login"
-            android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
+            android:imeOptions="actionUnspecified"
             android:maxLines="1"
-            android:singleLine="true"
             android:textColorHint="@color/white"/>
 
     </android.support.design.widget.TextInputLayout>

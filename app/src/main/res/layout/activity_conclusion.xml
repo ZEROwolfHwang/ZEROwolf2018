@@ -21,14 +21,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="?attr/custom_attr_app_bg"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/layout_margin10dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_margin10dp"
             android:orientation="vertical">
 
             <TextView
@@ -209,10 +209,10 @@
 
                 <CheckBox
                     android:id="@+id/check_666_002"
-                    android:layout_marginLeft="@dimen/layout_margin5dp"
-                    android:paddingRight="@dimen/layout_margin5dp"
-                    android:paddingLeft="@dimen/layout_margin5dp"
                     style="@style/conclusion_check_box_style"
+                    android:layout_marginLeft="@dimen/layout_margin5dp"
+                    android:paddingLeft="@dimen/layout_margin5dp"
+                    android:paddingRight="@dimen/layout_margin5dp"
                     />
 
 
@@ -245,20 +245,20 @@
 
         <include layout="@layout/device_item_bg_1dp"/>
 
-
+        <Button
+            android:layout_marginTop="@dimen/layout_margin10dp"
+            android:id="@+id/btn_sure_conclusion"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="@dimen/layout_margin10dp"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:background="?attr/custom_sure_button_bg"
+            android:textColor="?attr/custom_sure_button_text"
+            android:elevation="@dimen/layout_margin10dp"
+            android:text="确定检查结论"
+            android:textSize="20sp"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_sure_conclusion"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="@dimen/layout_margin10dp"
-        android:layout_marginRight="@dimen/layout_margin10dp"
-        android:background="@drawable/shape_main_to_show_btn"
-        android:elevation="@dimen/layout_margin10dp"
-        android:text="确定检查结论"
-        android:textColor="@color/white"
-        android:textSize="20sp"/>
 
 </LinearLayout>

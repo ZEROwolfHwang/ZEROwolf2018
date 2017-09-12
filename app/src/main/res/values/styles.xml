@@ -108,8 +108,8 @@
     </style>
 
     <style name="RadioButtonStyle">
-        <item name="android:textColor">@color/license_color_text</item>
-        <item name="android:background">@drawable/rb_bg_selector</item>
+        <item name="android:textColor">?attr/custom_rb_text_color_selector</item>
+        <item name="android:background">?attr/custom_rb_bg_selector</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_weight">1</item>
@@ -157,7 +157,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">?attr/custom_fragment_text_color_first</item>
+        <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:textSize">@dimen/text18</item>
     </style>
 
@@ -175,7 +175,7 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">2</item>
-        <item name="android:textColor">?attr/custom_fragment_text_color_first</item>
+        <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:textSize">@dimen/text18</item>
     </style>
 
@@ -193,7 +193,7 @@
     </style>
 
     <style name="conclusion_check_box_style">
-        <item name="android:background">@drawable/conclusion_check_fragment_box</item>
+        <item name="android:background">?attr/custom_conclusion_rb_bg</item>
         <item name="android:button">@null</item>
         <item name="android:layout_marginLeft">@dimen/layout_margin10dp</item>
         <item name="android:layout_marginRight">@dimen/layout_margin10dp</item>
@@ -201,22 +201,16 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
         <item name="android:textSize">@dimen/text16</item>
+        <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/layout_margin25dp</item>
     </style>
 
-    <style name="conclusion_check_fragment_layout_style">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:orientation">vertical</item>
-    </style>
 
     <style name="number_edit_box_style">
         <item name="android:layout_weight">1</item>
         <item name="android:background">@null</item>
-        <item name="android:textColor">?attr/custom_white_black_text</item>
+        <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:textSize">@dimen/text24</item>
         <item name="android:layout_width">@dimen/layout_margin0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -227,7 +221,7 @@
 
     <!--扫描结果的显示不改变的字体-->
     <style name="scan_code_info_style">
-        <item name="android:textColor">@color/color666666</item>
+        <item name="android:textColor">?attr/custom_text_color_second</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_height">match_parent</item>
@@ -241,7 +235,7 @@
         <item name="android:enabled">false</item>
         <item name="android:background">@null</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/color333333</item>
+        <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_height">match_parent</item>
@@ -311,7 +305,7 @@
     <!--draftActivity列表的text样式-->
     <style name="layout_dragft_activity_style_top">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">#666666</item>
+        <item name="android:textColor">?attr/custom_text_color_second</item>
         <item name="android:layout_width">@dimen/layout_margin0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
@@ -340,7 +334,7 @@
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:textColor">#808080</item>
+        <item name="android:textColor">?attr/custom_text_color_second</item>
         <item name="android:textSize">14sp</item>
     </style>
     <!--Floating的样式-->
@@ -356,7 +350,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/color666666</item>
+        <item name="android:textColor">?attr/custom_text_color_second</item>
         <item name="android:layout_height">match_parent</item>
     </style>
 
@@ -365,7 +359,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/color333333</item>
+        <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:layout_height">match_parent</item>
     </style>
 
@@ -383,7 +377,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_marginTop">15dp</item>
-        <item name="android:background">@drawable/setting_item_change_bg</item>
+        <item name="android:background">@drawable/setting_item_change_bg_day</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:paddingLeft">@dimen/layout_margin10dp</item>
     </style>
@@ -414,8 +408,8 @@
     <style name="RadioButton_goods_style">
         <item name="android:ems">1</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:textColor">@color/color333333</item>
-        <item name="android:background">@drawable/rb_bg_selector</item>
+        <item name="android:textColor">?attr/custom_rb_text_color_selector</item>
+        <item name="android:background">?attr/custom_rb_bg_selector</item>
         <item name="android:layout_width">@dimen/layout_margin0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:button">@null</item>
@@ -424,9 +418,9 @@
         <item name="android:layout_weight">1</item>
     </style>
 
-    <style name="fhoto_fragment_progress_style">
+    <style name="photo_fragment_progress_style">
         <item name="android:visibility">gone</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">?attr/custom_progress_bar</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>

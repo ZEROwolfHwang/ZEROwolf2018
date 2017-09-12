@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.zero.wolf.greenroad.R;
-import com.zero.wolf.greenroad.TestActivity;
 import com.zero.wolf.greenroad.bean.UpdateAppInfo;
 import com.zero.wolf.greenroad.httpresultbean.HttpResultMacInfo;
 import com.zero.wolf.greenroad.https.RequestMacInfo;
@@ -48,8 +47,6 @@ import com.zero.wolf.greenroad.tools.SPUtils;
 import com.zero.wolf.greenroad.tools.ToastUtils;
 import com.zero.wolf.greenroad.update.AppInnerDownLoder;
 import com.zero.wolf.greenroad.update.CheckUpdateUtils;
-import com.zero.wolf.greenroad.update.Subject;
-import com.zero.wolf.greenroad.update.SubscriberOnNextListener;
 
 import org.litepal.crud.DataSupport;
 
@@ -66,8 +63,7 @@ import rx.Subscriber;
  */
 
 public class MainActivity extends BaseActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        SubscriberOnNextListener<List<Subject>> {
+        NavigationView.OnNavigationItemSelectedListener{
 
     @BindView(R.id.toolbar_main)
     Toolbar mToolbarMain;
@@ -316,10 +312,7 @@ public class MainActivity extends BaseActivity implements
                 changeTheme();
                 break;
             case R.id.footer_item_location:
-                ToastUtils.singleToast("在这里做更新位置的处理");
-                Intent intent1 = new Intent(this, TestActivity.class);
-                finish();
-                startActivity(intent1);
+
                 break;
             default:
                 break;
@@ -341,21 +334,24 @@ public class MainActivity extends BaseActivity implements
             updateApp();
         } else if (id == R.id.nav_backup) {
             buckUpApp();
-        } else if (id == R.id.nav_config) {
+        }/* else if (id == R.id.nav_config) {
             //post_not_upload();
-            openConfigLine();
-            Logger.i("点击了代开配置路线的按钮");
-        }
+//            openConfigLine();
+//            Logger.i("点击了代开配置路线的按钮");
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void openConfigLine() {
+    /**
+     * 做配置路线的处理
+     */
+   /* private void openConfigLine() {
         Intent intent = new Intent(MainActivity.this, LineConfigActivity.class);
         startActivity(intent);
-    }
+    }*/
 
 
     /**
@@ -470,11 +466,6 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    @Override
-    public void onNext(List<Subject> subjects) {
-
     }
 
     @Override

@@ -4,9 +4,9 @@
 
     <corners android:radius="5dp"/>
 
-    <solid android:color="#6c065e8d" />
+    <solid android:color="@color/text_box_bg_solid_night" />
     <stroke android:color="@color/text_box_bg_night"
-        android:width="3dp"
+        android:width="2dp"
         />
 
 </shape>

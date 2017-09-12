@@ -83,10 +83,10 @@
         android:layout_marginLeft="@dimen/layout_margin10dp"
         android:layout_marginRight="@dimen/layout_margin10dp"
         android:layout_marginTop="@dimen/layout_margin20dp"
-        android:background="@drawable/shape_main_to_show_btn"
         android:elevation="@dimen/layout_margin30dp"
         android:text="现场采集"
-        android:textColor="@color/white"
+        android:background="?attr/custom_sure_button_bg"
+        android:textColor="?attr/custom_sure_button_text"
         android:textSize="24sp"/>
 
     <LinearLayout
@@ -113,8 +113,8 @@
                     android:id="@+id/tv_math_number_draft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="@dimen/layout_margin20dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/layout_margin25dp"
                     android:text="0"
                     android:textColor="#f64545"
                     android:textSize="@dimen/text28"/>
@@ -138,10 +138,10 @@
                     android:id="@+id/tv_math_number_submit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/layout_margin25dp"
                     android:text="0"
                     android:textColor="#f64545"
-                    android:layout_marginBottom="@dimen/layout_margin20dp"
                     android:textSize="@dimen/text28"/>
                 <TextView
                     android:text="提交列表"
@@ -160,9 +160,9 @@
                     android:id="@+id/tv_math_number_blacklist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:text="0"
-                    android:layout_marginBottom="@dimen/layout_margin20dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/layout_margin25dp"
                     android:textColor="#f64545"
                     android:textSize="@dimen/text28"/>
 

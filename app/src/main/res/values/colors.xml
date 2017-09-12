@@ -34,15 +34,17 @@
 
     <color name="setting_bg_text_item">#7dafd1e1</color>
     <!--自定义输入法的按键背景样式-->
-    <color name="key_bg_night">#3b72df</color>
+    <color name="key_bg_night">#5c5c5c</color>
     <color name="key_bg_day">#f0f0f0</color>
 
     <color name="number_fragment_key_text_night">#dedbff</color>
     <color name="number_fragment_key_text_day">#333333</color>
 
-    <!--文本框的边框颜色-->
+    <!--文本框的边框背景颜色-->
     <color name="text_box_bg_day">#b3b3b3</color>
-    <color name="text_box_bg_night">#b3b3b3</color>
+    <color name="text_box_bg_night">#c9c9c9</color>
+    <color name="text_box_bg_solid_day">#e6e6e6</color>
+    <color name="text_box_bg_solid_night">#404040</color>
 
     <!--字体背景样式的渐变色-->
     <color name="custom_bg_text_big_shape_night">#6969ff</color>
@@ -52,7 +54,7 @@
     <color name="setting_bg_text_item_day">#c8371cc7</color>
     <color name="setting_bg_text_item_night">#cea3a3ae</color>
 
-    <color name="setting_text_color_day">#222226</color>
+    <color name="setting_text_color_day">#2c2c31</color>
     <color name="setting_text_color_night">#ffffff</color>
 
     <!--改变的字体的颜色-->
@@ -64,8 +66,10 @@
     <color name="licence_selected_bg_day">#ff50c6ca</color>
 
     <!--车牌选中与未选中时的字体颜色-->
-    <color name="licence_text_day">#ff333333</color>
+    <color name="licence_text_normal_day">#ff333333</color>
     <color name="licence_selected_text_day">#ffffff</color>
+    <color name="licence_text_normal_night">#d9d7d7</color>
+    <color name="licence_selected_text_night">#ffffff</color>
 
     <!--day主题是全局的颜色-->
     <color name="day_color_green">#ff50c6ca</color>
@@ -73,6 +77,9 @@
 
     <!--车牌未选中时边框的颜色-->
     <color name="licence_text_box_day">#b3b3b3</color>
+    <color name="licence_text_box_night">#9e9e9e</color>
+    <color name="licence_box_back_color_night">#4f5050</color>
+    <color name="licence_box_back_color_day">#ffffff</color>
     <color name="color808080">#808080</color>
     <color name="color333333">#333333</color>
     <color name="color666666">#666666</color>

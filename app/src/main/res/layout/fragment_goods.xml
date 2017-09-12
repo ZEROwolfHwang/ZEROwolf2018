@@ -31,7 +31,7 @@
                 <ImageView
                     android:layout_width="55dp"
                     android:layout_height="55dp"
-                    android:background="?attr/custom_car_goods_sure"
+                    android:background="@drawable/image_car_goods"
                     android:scaleType="fitCenter"/>
 
                 <LinearLayout
@@ -39,7 +39,7 @@
                     android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_marginRight="@dimen/layout_margin10dp"
-                    android:background="@drawable/shape_background_main_else_day"
+                    android:background="?attr/custom_shape_background_main_else"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -51,7 +51,7 @@
                         android:background="@null"
                         android:focusable="true"
                         android:gravity="center"
-                        android:textColor="@color/white_light"
+                        android:textColor="?attr/custom_text_color_first"
                         android:textSize="@dimen/text22"/>
 
                 </LinearLayout>
@@ -135,22 +135,23 @@
 
             <EditText
                 android:padding="@dimen/layout_margin10dp"
-                android:background="@drawable/text_box_bg_day"
+                android:background="?attr/text_box_bg"
+                android:textColor="?attr/custom_text_color_first"
                 android:gravity="top|left"
                 android:id="@+id/edit_text_qita"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"/>
 
             <Button
-                android:layout_marginTop="@dimen/layout_margin10dp"
+                android:layout_marginTop="@dimen/layout_margin20dp"
                 android:id="@+id/btn_sure_qita"
                 android:layout_width="match_parent"
                 android:text="确定其他货物"
-                android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textColor="?attr/custom_sure_button_text"
+                android:textSize="20sp"
                 android:layout_height="55dp"
                 android:layout_below="@id/edit_text_qita"
-                android:background="@drawable/shape_main_to_show_btn"/>
+                android:background="?attr/custom_sure_button_bg"/>
 
         </RelativeLayout>
     </RelativeLayout>

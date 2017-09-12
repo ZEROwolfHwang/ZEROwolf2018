@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="45dp"
-    android:orientation="horizontal"
-    tools:showIn="@layout/fragment_checked">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -21,7 +19,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:text="现场检查人"
-            android:textColor="@color/color808080"
+            android:textColor="?attr/custom_text_color_second"
             android:textSize="18sp"/>
 
         <ImageButton
@@ -41,20 +39,8 @@
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/layout_margin10dp"
         android:gravity="center"
-        android:textColor="@color/color333333"
+        android:textColor="?attr/custom_text_color_first"
         android:textSize="18sp"/>
-<!--
-
-    <TextView
-        android:id="@+id/site_check_delete"
-        android:layout_marginRight="@dimen/layout_margin10dp"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:textColor="@color/red"
-        android:textSize="18sp"
-        android:text="删除"/>
--->
 
     <ImageButton
         android:id="@+id/site_check_delete"

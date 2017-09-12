@@ -96,14 +96,12 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
 
             mAddCheckItem.setOnClickListener(v -> {
 
-                BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
+                BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_check_popup_text, mOperators) {
                     @Override
                     public void convert(BasePhotoViewHolder holder, int position, String s) {
-                        TextView textView = holder.getView(R.id.text_item_black);
+                        TextView textView = holder.getView(R.id.text_item_popup);
                         textView.setText(s);
                         textView.setOnClickListener(v1 -> {
-                            /*mSiteCheckOperator.setText(s);
-                            */
                             if (mTextList.contains(s)) {
                                 ToastUtils.singleToast("该默认检查人已被选择");
                                 mPopupWindow_add.dismissPopWindow();
@@ -136,10 +134,10 @@ public class SiteChecksAdapter extends RecyclerView.Adapter<SiteChecksAdapter.Si
             });
 
             mSiteCheckOperator.setOnClickListener(v -> {
-                BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
+                BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_check_popup_text, mOperators) {
                     @Override
                     public void convert(BasePhotoViewHolder holder, int position, String s) {
-                        TextView textView = holder.getView(R.id.text_item_black);
+                        TextView textView = holder.getView(R.id.text_item_popup);
 
                         textView.setText(s);
                         textView.setOnClickListener(v1 -> {

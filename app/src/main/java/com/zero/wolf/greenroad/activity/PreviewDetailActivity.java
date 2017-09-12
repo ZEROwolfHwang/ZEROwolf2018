@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -71,7 +70,7 @@ public class PreviewDetailActivity extends BaseActivity {
     @BindView(R.id.checked_conclusion_text)
     TextView mCheckedConclusionText;
     @BindView(R.id.checked_description_text)
-    EditText mCheckedDescriptionText;
+    TextView mCheckedDescriptionText;
     @BindView(R.id.pick_001)
     TextView mPick001;
 
@@ -194,9 +193,7 @@ public class PreviewDetailActivity extends BaseActivity {
 
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
                 if (finalPicturePaths != null && finalPicturePaths.size() != 0) {
                     for (int i = 0; i < finalPicturePaths.size(); i++) {
                         Bitmap bitmap = BitmapUtil.convertToBitmap(finalPicturePaths.get(i), 800, 800);
@@ -215,7 +212,7 @@ public class PreviewDetailActivity extends BaseActivity {
                         mDraftSaveEdit.setVisibility(View.GONE);
                     }
                 });
-            }
+
         }).start();
 //        mRecyclerViewShootPhoto.scrollToPosition(3);
         // scrollToPosition(mLayoutManager,3);

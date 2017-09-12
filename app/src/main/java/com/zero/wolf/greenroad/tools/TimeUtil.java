@@ -43,7 +43,7 @@ public class TimeUtil {
         return curTime;
     }
     public static int getTimeId() {
-        SimpleDateFormat formatter = new SimpleDateFormat("MMddmmss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyMMddmmss");
         int curTime = Integer.parseInt(formatter.format(new Date(System.currentTimeMillis())));
         // String shutTime = formatter.format(curDate);
         return curTime;
@@ -62,9 +62,9 @@ public class TimeUtil {
         try {
             Date date1 = format.parse(time1);
             Date date2 = format.parse(time2);
-           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
+            int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
            // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600));//小时
-            int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
+            //int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
             Logger.i(days + "-----days");
             return days;
         } catch (ParseException e) {
@@ -85,9 +85,9 @@ public class TimeUtil {
         try {
             Date date1 = format.parse(time1);
             Date date2 = format.parse(time2);
-           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
+            int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));//天数
            // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600));//小时
-            int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
+           // int days = (int) ((date2.getTime() - date1.getTime()) / (1000*60));//分钟
             Logger.i(days + "-----days");
             return days;
         } catch (ParseException e) {

@@ -11,8 +11,8 @@
         android:layout_marginRight="@dimen/layout_margin10dp"
         android:textSize="16sp"
         android:gravity="center"
-        android:textColor="@color/color333333"
-        android:background="@drawable/goods_fragment_text_bg"
+        android:textColor="?attr/custom_text_color_first"
+        android:background="?attr/custom_text_box_stroke"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <ImageButton

@@ -33,7 +33,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="容积超过80%"
-                    android:textColor="@color/color808080"
+                    android:textColor="?attr/custom_text_color_second"
                     android:textSize="18sp"/>
 
                 <ToggleButton
@@ -64,7 +64,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="是否免费"
-                    android:textColor="@color/color808080"
+                    android:textColor="?attr/custom_text_color_second"
                     android:textSize="18sp"/>
 
                 <ToggleButton
@@ -105,7 +105,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="现场登记人"
-                    android:textColor="@color/color808080"
+                    android:textColor="?attr/custom_text_color_second"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -114,7 +114,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/layout_margin10dp"
                     android:gravity="center"
-                    android:textColor="@color/color333333"
+                    android:textColor="?attr/custom_text_color_first"
                     android:textSize="18sp"/>
 
 
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:text="现场检查结论"
-                    android:textColor="@color/color808080"
+                    android:textColor="?attr/custom_text_color_second"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -146,7 +146,7 @@
                     android:maxLines="3"
                     android:paddingLeft="@dimen/layout_margin5dp"
                     android:paddingRight="@dimen/layout_margin5dp"
-                    android:textColor="@color/color333333"
+                    android:textColor="?attr/custom_text_color_first"
                     android:textSize="@dimen/text18"/>
 
             </LinearLayout>
@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:text="现场检查说明"
-            android:textColor="@color/color808080"
+            android:textColor="?attr/custom_text_color_second"
             android:textSize="@dimen/text18"/>
 
         <EditText
@@ -180,7 +180,7 @@
             android:gravity="top|left"
             android:paddingLeft="@dimen/layout_margin5dp"
             android:paddingRight="@dimen/layout_margin5dp"
-            android:textColor="@color/color333333"
+            android:textColor="?attr/custom_text_color_first"
             android:textSize="@dimen/text18"/>
 
     </LinearLayout>

@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="编辑车牌号"
-            android:textColor="#666666"
+            android:textColor="?attr/custom_text_color_second"
             android:textSize="14sp"/>
 
 
@@ -74,7 +74,7 @@
                 android:background="@drawable/image_car_number"/>
 
             <LinearLayout
-                style="@style/main_text_layout_bg_station_style">
+                style="@style/main_text_layout_bg_else_style">
 
                 <TextView
                     style="@style/main_text_static_tv_style"
@@ -95,7 +95,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margin10dp"
-        android:background="#f0f0f0"/>
+        android:background="?attr/custom_device_bg_color"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="选择货物"
-            android:textColor="#666666"
+            android:textColor="?attr/custom_text_color_second"
             android:textSize="14sp"/>
 
         <LinearLayout
@@ -125,7 +126,7 @@
                 android:background="@drawable/image_car_goods"/>
 
             <LinearLayout
-                style="@style/main_text_layout_bg_station_style">
+                style="@style/main_text_layout_bg_else_style">
 
                 <TextView
                     style="@style/main_text_static_tv_style"
@@ -146,7 +147,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margin10dp"
-        android:background="#f0f0f0"/>
+        android:background="?attr/custom_device_bg_color"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -161,7 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="采集照片"
-            android:textColor="#666666"
+            android:textColor="?attr/custom_text_color_second"
             android:textSize="14sp"/>
 
         <RelativeLayout

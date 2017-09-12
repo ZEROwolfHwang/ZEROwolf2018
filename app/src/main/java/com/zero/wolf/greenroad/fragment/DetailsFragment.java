@@ -35,6 +35,7 @@ import com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.zero.wolf.greenroad.litepalbean.SupportMedia;
 import com.zero.wolf.greenroad.manager.CarColorManager;
 import com.zero.wolf.greenroad.manager.GlobalManager;
+import com.zero.wolf.greenroad.tools.SPUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -49,9 +50,6 @@ import butterknife.Unbinder;
 
 public class DetailsFragment extends Fragment {
     private static boolean tag;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     Unbinder unbinder;
     @BindView(R.id.recycler_view_shoot_photo)
     RecyclerView mRecyclerViewShootPhoto;
@@ -83,12 +81,12 @@ public class DetailsFragment extends Fragment {
     private static RadioGroup mRadioGroupColor;
     public static String sEnterType;
     private static SupportDetail sSupportDetail;
-    private static SupportMedia sSupportMedia;
     private static int sLite_ID;
 
     private static List<LocalMedia> mSelectList_sanzheng;
     private static List<LocalMedia> mSelectList_cheshen;
     private static List<LocalMedia> mSelectList_huowu;
+    private int mThemeTag;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -114,11 +112,8 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     /*   if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
         tag = true;
+        mThemeTag = (int) SPUtils.get(getContext(), SPUtils.KEY_THEME_TAG, 1);
     }
 
     @Override
@@ -195,8 +190,6 @@ public class DetailsFragment extends Fragment {
                         checkingBlack(mCarNumber);
                     } else {
                         mCarNumber = "";
-                   /* mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
-                    mTvChangeNumberDetail.setText(mCarNumber);*/
                     }
                     Logger.i(mCarNumber + "]]]]]]]]]");
 
@@ -218,8 +211,8 @@ public class DetailsFragment extends Fragment {
 
                 // mTvChangeNumberDetail.setText(sSupportDetail.getNumber());
                 String number = sSupportDetail.getNumber();
-                checkingBlack(number);
                 if (number != null && number.length() == 7) {
+                    checkingBlack(number);
                     CarNumberFragment.notifyDataChangeFromDraft(number);
                 }
                 String goodsFromDraft = sSupportDetail.getGoods();
@@ -253,28 +246,41 @@ public class DetailsFragment extends Fragment {
      */
     private void checkingBlack(String carNumber) {
         List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
-        for (int i = 0; i < blackList.size(); i++) {
-            if (carNumber.equals(blackList.get(i).getLicense())) {
-                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
-                r.play();
+        if (blackList != null && blackList.size() != 0) {
+            for (int i = 0; i < blackList.size(); i++) {
+                if (carNumber.equals(blackList.get(i).getLicense())) {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+                    r.play();
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("该车牌为黑名单车牌");
-                builder.setPositiveButton("了解", (dialog, which) -> {
-                    dialog.dismiss();
-                });
-                builder.setCancelable(false);
-                builder.show();
-                mTvChangeNumberDetail.setTextColor(Color.RED);
-                mTvChangeNumberDetail.setText(carNumber);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("该车牌为黑名单车牌");
+                    builder.setPositiveButton("了解", (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+                    builder.setCancelable(false);
+                    builder.show();
+                    mTvChangeNumberDetail.setTextColor(Color.RED);
+                    mTvChangeNumberDetail.setText(carNumber);
+                    return;
+                } else {
+                    if (mThemeTag == 1) {
+                        mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
+                    } else {
+                        mTvChangeNumberDetail.setTextColor(Color.WHITE);
+                    }
+                    mTvChangeNumberDetail.setText(carNumber);
+
+                }
                 return;
-            } else {
-                mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
-                mTvChangeNumberDetail.setText(carNumber);
-
             }
-            return;
+        } else {
+            if (mThemeTag == 1) {
+                mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
+            } else {
+                mTvChangeNumberDetail.setTextColor(Color.WHITE);
+            }
+            mTvChangeNumberDetail.setText(carNumber);
         }
     }
 
@@ -352,11 +358,6 @@ public class DetailsFragment extends Fragment {
                 return localMedia;
             }
         }
-       /* if (mSelectList_sanzheng != null) {
-            for (int i = 0; i < mSelectList_sanzheng.size(); i++) {
-                Logger.i(mSelectList_sanzheng.get(i).toString());
-            }
-        }*/
         return null;
     }
 
@@ -371,10 +372,6 @@ public class DetailsFragment extends Fragment {
         });
 //
         mRecyclerViewShootPhoto.setAdapter(mAdapter);
-        /*mAdapter.updateListView(mMyBitmaps_recycler_all);
-        if (mMyBitmaps_recycler_all.size() > 4) {
-            mRecyclerViewShootPhoto.scrollToPosition(4);
-        }*/
         mRecyclerViewShootPhoto.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -403,9 +400,6 @@ public class DetailsFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-        /*LinearLayoutManager llm = (LinearLayoutManager) mRecyclerViewShootPhoto.getLayoutManager();
-        llm.scrollToPositionWithOffset(3, 0);
-        llm.setStackFromEnd(false);*/
     }
 
 
@@ -595,28 +589,11 @@ public class DetailsFragment extends Fragment {
         mMyBitmaps_recycler_all.clear();
     }
 
-    /*
-
-        public static void setSelectListListener(SelectListListener listener) {
-            if (sSupportMedia != null) {
-                listener.SelectListener(sSupportMedia);
-                Logger.i(sSupportMedia.getPaths().get(0));
-                Logger.i(sSupportMedia.getPaths().get(1));
-                Logger.i(sSupportMedia.getPaths().get(2));
-            }
-        }
-
-        public interface SelectListListener {
-            void SelectListener(SupportMedia supportMedia);
-        }
-    */
     public static void notifyDataChange() {
         mCurrent_color = "";
     }
 
     public static void setSelectedListListener(SelectedListListener listener) {
-        /*if (mSelectList_sanzheng != null && mSelectList_cheshen != null && mSelectList_huowu != null) {
-        }*/
         listener.Selected(mSelectList_sanzheng, mSelectList_cheshen, mSelectList_huowu);
 
     }

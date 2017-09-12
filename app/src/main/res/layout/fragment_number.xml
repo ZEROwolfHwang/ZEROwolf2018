@@ -18,7 +18,7 @@
             android:layout_width="@dimen/layout_margin60dp"
             android:layout_height="@dimen/layout_margin60dp"
             android:layout_marginLeft="@dimen/layout_margin10dp"
-            android:background="?attr/custom_car_number_sure"
+            android:background="@drawable/image_car_goods"
             android:scaleType="fitCenter"/>
 
 
@@ -27,7 +27,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/layout_margin10dp"
-            android:background="@drawable/shape_background_main_else_day"
+            android:background="?attr/custom_shape_background_main_else"
             android:gravity="center"
             android:orientation="horizontal">
 

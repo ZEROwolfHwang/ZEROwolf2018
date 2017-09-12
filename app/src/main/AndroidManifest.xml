@@ -32,19 +32,19 @@
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-     <!--       <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+         <!--   <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.ShowActivity"
@@ -86,35 +86,12 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <receiver android:name=".servicy.NotPostReceiver">
-            <intent-filter>
-                <action android:name="com.zero.wolf.greenroad.servicy.action.TYPE_THREAD"/>
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activity.PreviewDetailActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <!--
-            <service
-            android:name=".polling.LoopService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
-        <service
-            android:name=".polling.PollingService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
-        <service
-            android:name=".polling.LongConnService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
-        -->
         <activity
             android:name=".activity.AddOperatorActivity"
             android:launchMode="singleTask"

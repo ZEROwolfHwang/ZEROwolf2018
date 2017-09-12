@@ -52,7 +52,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.check_box_pwd)
     CheckBox mCheckBox;
     private boolean mIsConnected;
-    private static int TIMEGAP = 10;
+    private static int TIMEGAP = 3;
     private String macID;
     private LoginActivity mActivity;
 

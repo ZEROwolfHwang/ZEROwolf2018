@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="45dp"
-              android:background="#c1fbf0"
+              android:background="?attr/custom_setting_recycler_item_bg"
               android:id="@+id/ll_setting_operator"
               android:orientation="horizontal">
 

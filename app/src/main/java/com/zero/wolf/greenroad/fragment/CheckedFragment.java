@@ -65,7 +65,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private static String sEnterType;
     private static SupportChecked sSupportChecked;
     private List<SupportOperator> mOperatorList;
-    private SpinnerPopupWindow mPopupWindow_check;
     private SpinnerPopupWindow mPopupWindow_login;
     private ArrayList<String> mOperators;
     private int mDimension;
@@ -161,16 +160,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             mCheckOperators = setCheckOperatorInfo("check_select = ?");
             mLoginOperator = setLoginOperatorInfo("login_select = ?");
         }
-     /*   if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
-            ConclusionActivity.notifyDataChangeFromDraft(sSupportChecked.getConclusion());
-            mEditDescriptionView.setText(sSupportChecked.getDescription());
-            //默认是是   是为1   点击是否 否为0（有点绕）
-            mToggleIsRoom.setChecked(sSupportChecked.getIsRoom() == 0 ? true : false);
-            mToggleIsFree.setChecked(sSupportChecked.getIsFree() == 0 ? true : false);
-        } else if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
-            mCheckOperator = setOperatorInfo("check_select = ?", mSiteCheck);
-            mLoginOperator = setOperatorInfo("login_select = ?", mSiteLogin);
-        }*/
         mSiteLogin.setText(mLoginOperator);
     }
 
@@ -269,30 +258,6 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                         mTextConclusionView.getText().toString().trim());
                 DetailsFragment.notifyTag(false);
                 break;
-            /*case R.id.site_check_operator:
-                BasePhotoAdapter<String> adapter_check = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
-                    @Override
-                    public void convert(BasePhotoViewHolder holder, int position, String s) {
-                        TextView textView = holder.getView(R.id.text_item_black);
-                        textView.setText(s);
-                        textView.setOnClickListener(v1 -> {
-                            mSiteCheck.setText(s);
-                            mPopupWindow_check.dismissPopWindow();
-                        });
-                    }
-                };
-
-                mPopupWindow_check = new SpinnerPopupWindow.Builder(getContext())
-                        .setmLayoutManager(null, 0)
-                        .setmAdapter(adapter_check)
-                        .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.DKGRAY))
-                        .setmHeight(800).setmWidth(600)
-                        .setOutsideTouchable(true)
-                        .setFocusable(true)
-                        .build();
-
-                mPopupWindow_check.showPopWindow(v, mDimension);
-                break;*/
             case R.id.site_login_operator:
                 BasePhotoAdapter<String> adapter_login = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
                     @Override

@@ -29,7 +29,6 @@ public class DeleteHelper {
 
     private static DeleteHelper sHelper;
     private File mFile;
-
     public static DeleteHelper getInstance() {
         if (sHelper == null) {
             sHelper = new DeleteHelper();
@@ -54,15 +53,6 @@ public class DeleteHelper {
         dialog.setPositiveButton(context.getString(R.string.dialog_messge_OK), (dialog1, which) -> {
 
             DataSupport.deleteAll(SupportDraftOrSubmit.class, GlobalManager.LITE_CONDITION, typeLite);
-          /*  if (mGoodsFile == null) {
-                mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                mGoodsFile = new File(mFilePath, "GreenShoot");
-                mGoodsFile.mkdirs();
-            }
-            mGoodsFilePath = mGoodsFile.getPath();
-
-            FileUtils.deleteJpg(new File(mGoodsFilePath));*/
-
             if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
                 deleteAllNewPhoto();
             }
@@ -104,21 +94,14 @@ public class DeleteHelper {
                     DataSupport.deleteAll(SupportScan.class, "lite_ID = ?", String.valueOf(lite_id));
                     DataSupport.deleteAll(SupportChecked.class, "lite_ID = ?", String.valueOf(lite_id));
                     DataSupport.deleteAll(SupportMedia.class, "lite_ID = ?", String.valueOf(lite_id));
-                    //删除三张本地照片
-                    /*FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath1());
-                    FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath2());
-                    FileUtils.deleteJpgPreview(photoLiteList.get(i).getPhotoPath3());
-                    */
                 }
             }
 
             if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
                 deletePhotoForData(day, currentTimeToDelete);
             }
-
             List<SupportDraftOrSubmit> supportDraftList = DataSupport.
                     where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
-
             SortTime sortDraftTime = new SortTime();
             Collections.sort(supportDraftList, sortDraftTime);
             listener.dataChange(supportDraftList);
@@ -139,7 +122,6 @@ public class DeleteHelper {
             mFile.mkdirs();
         }
         DeleteFileForDay(mFile, day, currentTimeToDelete);
-
     }
 
     private void DeleteFileForDay(File file, int day, String currentTimeToDelete) {
@@ -202,6 +184,6 @@ public class DeleteHelper {
     }
 
     public interface DataChangeListener {
-        public void dataChange(List<SupportDraftOrSubmit> supportList);
+        void dataChange(List<SupportDraftOrSubmit> supportList);
     }
 }

@@ -27,7 +27,6 @@ public class SDcardSpace {
     public String getAvailSpace() {
         StatFs statFs = new StatFs(path);
         long blockSize;
-        long totalBlocks;
         long availableBlocks;
 
         // 由于API18（Android4.3）以后getBlockSize过时并且改为了getBlockSizeLong
@@ -35,43 +34,17 @@ public class SDcardSpace {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
         {
             blockSize = statFs.getBlockSizeLong();
-            totalBlocks = statFs.getBlockCountLong();
             availableBlocks = statFs.getAvailableBlocksLong();
         }
         else {
             blockSize = statFs.getBlockSize();
-            totalBlocks = statFs.getBlockCount();
             availableBlocks = statFs.getAvailableBlocks();
         }
-
         long result = blockSize * availableBlocks;
         String  availableSize = Formatter.formatFileSize(mContext, result);
         return availableSize;
     }
-    public String getAllSpace() {
-        StatFs statFs = new StatFs(path);
-        long blockSize;
-        long totalBlocks;
-        long availableBlocks;
 
-        // 由于API18（Android4.3）以后getBlockSize过时并且改为了getBlockSizeLong
-// 因此这里需要根据版本号来使用那一套API
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-        {
-            blockSize = statFs.getBlockSizeLong();
-            totalBlocks = statFs.getBlockCountLong();
-            availableBlocks = statFs.getAvailableBlocksLong();
-        }
-        else {
-            blockSize = statFs.getBlockSize();
-            totalBlocks = statFs.getBlockCount();
-            availableBlocks = statFs.getAvailableBlocks();
-        }
-
-        long result = totalBlocks * availableBlocks;
-        String  allSize = Formatter.formatFileSize(mContext, result);
-        return allSize;
-    }
     /**
      * 获得SD卡总大小
      *
