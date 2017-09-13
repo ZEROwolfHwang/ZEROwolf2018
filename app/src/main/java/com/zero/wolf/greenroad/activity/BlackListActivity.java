@@ -53,7 +53,6 @@ public class BlackListActivity extends BaseActivity {
                 R.layout.item_black_text, (ArrayList<SupportBlack>) mSupportBlacks) {
             @Override
             public void convert(BasePhotoViewHolder holder, int position, SupportBlack supportBlack) {
-                ToastUtils.singleToast(supportBlack.getLicense().toString());
                 TextView textView = holder.getView(R.id.text_item_black);
                 textView.setText(supportBlack.getLicense().toString());
             }

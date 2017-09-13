@@ -25,6 +25,8 @@ import com.zero.wolf.greenroad.tools.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,7 +151,7 @@ public class RegisterActivity extends BaseActivity {
                 }
 
                 if (TextUtils.isEmpty(register_psw) || !isPasswordValid(register_psw)) {
-                    mRegisterPsw.setError(getString(R.string.error_invalid_password));
+                    mRegisterPsw.setError("密码必须由大于四位数的数字或英文字母组成");
                     mRegisterPsw.requestFocus();
                     return;
                 }
@@ -231,6 +233,13 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        Pattern pattern = Pattern.compile("^[0-9a-zA-Z_]*$");
+        Matcher matcher = pattern.matcher(password);
+        boolean isMatcher = matcher.matches();
+        Logger.i(isMatcher + "");
+        if (isMatcher && password.length() > 4) {
+            return true;
+        }
+        return false;
     }
 }

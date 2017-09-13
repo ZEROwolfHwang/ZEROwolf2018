@@ -247,33 +247,29 @@ public class DetailsFragment extends Fragment {
     private void checkingBlack(String carNumber) {
         List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
         if (blackList != null && blackList.size() != 0) {
-            for (int i = 0; i < blackList.size(); i++) {
-                if (carNumber.equals(blackList.get(i).getLicense())) {
-                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
-                    r.play();
+            boolean isBlack = isBlack(carNumber, blackList);
+            if (isBlack) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+                r.play();
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("该车牌为黑名单车牌");
-                    builder.setPositiveButton("了解", (dialog, which) -> {
-                        dialog.dismiss();
-                    });
-                    builder.setCancelable(false);
-                    builder.show();
-                    mTvChangeNumberDetail.setTextColor(Color.RED);
-                    mTvChangeNumberDetail.setText(carNumber);
-                    return;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("该车牌为黑名单车牌");
+                builder.setPositiveButton("了解", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                builder.setCancelable(false);
+                builder.show();
+                mTvChangeNumberDetail.setTextColor(Color.RED);
+            } else {
+                if (mThemeTag == 1) {
+                    mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
                 } else {
-                    if (mThemeTag == 1) {
-                        mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
-                    } else {
-                        mTvChangeNumberDetail.setTextColor(Color.WHITE);
-                    }
-                    mTvChangeNumberDetail.setText(carNumber);
-
+                    mTvChangeNumberDetail.setTextColor(Color.WHITE);
                 }
-                return;
             }
+            mTvChangeNumberDetail.setText(carNumber);
+
         } else {
             if (mThemeTag == 1) {
                 mTvChangeNumberDetail.setTextColor(Color.DKGRAY);
@@ -282,6 +278,16 @@ public class DetailsFragment extends Fragment {
             }
             mTvChangeNumberDetail.setText(carNumber);
         }
+    }
+
+    private boolean isBlack(String carNumber, List<SupportBlack> blackList) {
+
+        for (int i = 0; i < blackList.size(); i++) {
+            if (carNumber.equals(blackList.get(i).getLicense())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -600,6 +606,7 @@ public class DetailsFragment extends Fragment {
 
     public interface SelectedListListener {
         void Selected(List<LocalMedia> medias_sanzheng, List<LocalMedia> medias_cheshen, List<LocalMedia> medias_huozhao);
+
     }
 
     public static void notifyTag(boolean newTag) {

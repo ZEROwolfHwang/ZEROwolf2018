@@ -13,6 +13,15 @@
         android:gravity="center"
         android:padding="10dp">
 
+        <TextView
+            android:padding="@dimen/text20"
+            android:paddingTop="@dimen/layout_margin30dp"
+            android:gravity="center"
+            android:text="测试版本\n该版本为测试版本,仅供测试使用\n如发现问题请做记录或截屏\n谢谢合作!"
+            android:textSize="@dimen/text20"
+            android:textColor="@color/red"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
     <FrameLayout

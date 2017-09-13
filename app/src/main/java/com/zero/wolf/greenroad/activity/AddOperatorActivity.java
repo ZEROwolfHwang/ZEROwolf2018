@@ -50,9 +50,7 @@ public class AddOperatorActivity extends BaseActivity {
         initToolbar();
         initView();
     }
-
     private void initView() {
-
         mAddOperatorCheckPerson.setOnClickListener(v -> {
             if (mAddOperatorCheckPerson.isChecked()) {
                 List<SupportOperator> operatorList = DataSupport.
@@ -67,7 +65,6 @@ public class AddOperatorActivity extends BaseActivity {
                 mAddOperatorCheckPerson.setChecked(false);
             }
         });
-
         mSaveOperatorInfoBtn.setOnClickListener(v -> {
             mJob_number = mAddOperatorJobNumber.getText().toString().trim();
             Logger.i(mJob_number.length() + "");
@@ -89,13 +86,11 @@ public class AddOperatorActivity extends BaseActivity {
                     return;
                 }
             }
-
             if ("".equals(mOperator_name)) {
                 mAddOperatorName.setError("请输入姓名");
                 mAddOperatorName.requestFocus();
                 return;
             }
-
             if (mIsLogined) {
                 SupportOperator operator = new SupportOperator();
                 operator.setToDefault("login_select");
@@ -116,8 +111,6 @@ public class AddOperatorActivity extends BaseActivity {
                 operator.setLogin_select(0);
             }
             operator.save();
-            // TODO: 2017/8/4 需要向网络提交本次添加
-
             finish();
         });
     }
@@ -125,7 +118,6 @@ public class AddOperatorActivity extends BaseActivity {
     private void initToolbar() {
 
         setSupportActionBar(mToolbarSettingAdd);
-
 
         TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
         title_text_view.setText(getString(R.string.add_operator));

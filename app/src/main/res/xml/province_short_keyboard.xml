@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="1%p"
     android:keyHeight="8%p"
-    android:keyWidth="13%p"
     android:verticalGap="0.5%p">
-    <Row android:verticalGap="1%p">
+    <Row android:keyWidth="12.857%p">
         <Key
+    android:horizontalGap="2%p"
             android:codes="0"
             android:keyEdgeFlags="left"
             android:keyLabel="粤"
@@ -42,9 +42,9 @@
             />
 
     </Row>
-    <Row android:verticalGap="1%p">
+    <Row android:keyWidth="12.857%p">
         <Key
-
+            android:horizontalGap="2%p"
             android:codes="7"
             android:keyEdgeFlags="left"
             android:keyLabel="冀"
@@ -76,8 +76,9 @@
             />
 
     </Row>
-    <Row android:verticalGap="1%p">
+    <Row android:keyWidth="12.857%p">
         <Key
+            android:horizontalGap="2%p"
             android:codes="14"
             android:keyEdgeFlags="left"
             android:keyLabel="苏"
@@ -109,9 +110,9 @@
             />
 
     </Row>
-    <Row
-        android:verticalGap="1%p">
+    <Row android:keyWidth="12.857%p">
         <Key
+            android:horizontalGap="2%p"
             android:codes="21"
             android:keyEdgeFlags="left"
             android:keyLabel="渝"
@@ -144,8 +145,9 @@
             />
 
     </Row>
-    <Row android:verticalGap="1%p">
+    <Row android:keyWidth="15.1666%p">
         <Key
+            android:horizontalGap="2%p"
             android:codes="28"
             android:keyEdgeFlags="left"
             android:keyLabel="青"
@@ -172,8 +174,6 @@
             />
         <Key
             android:codes="33"
-            android:popupKeyboard="@color/color333333"
-            android:popupCharacters="tai"
             android:keyLabel="台"
             />
     </Row>

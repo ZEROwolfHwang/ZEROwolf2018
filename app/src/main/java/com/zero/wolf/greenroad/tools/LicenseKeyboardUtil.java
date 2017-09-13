@@ -49,7 +49,7 @@ public class LicenseKeyboardUtil {
                 "渝", "川", "贵", "云", "藏", "陕", "甘",
                 "青", "宁", "新", "港", "澳", "台"};
 
-        letterAndDigit = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+        letterAndDigit = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
                 , "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
                 , "K", "L", "M", "N", "O", "P", "Q", "R", "S"
                 , "T", "U", "V", "W", "X", "Y", "Z"};
@@ -85,6 +85,11 @@ public class LicenseKeyboardUtil {
         @Override
         public void onPress(int primaryCode) {
 
+        }
+
+        @Override
+        public void onKey(int primaryCode, int[] keyCodes) {
+
             if (primaryCode == 112) { //xml中定义的删除键值为112
 
                 currentEditText--;
@@ -95,7 +100,6 @@ public class LicenseKeyboardUtil {
                     keyboardView.setKeyboard(k1);
                     currentEditText = 0;
                 }
-
 
             } else { //其它字符按键
                 if (currentEditText == 0) {
@@ -111,7 +115,9 @@ public class LicenseKeyboardUtil {
                     keyboardView.setKeyboard(k2);
                 } else {
                     //第二位必须大写字母
-
+                    if(currentEditText == 1 && !letterAndDigit[primaryCode].matches("[A-Z]{1}")){
+                        return ;
+                    }
                     if (currentEditText == 7) {
                         return;
                     }
@@ -124,11 +130,6 @@ public class LicenseKeyboardUtil {
                     }
                 }
             }
-        }
-
-        @Override
-        public void onKey(int primaryCode, int[] keyCodes) {
-
         }
     };
 

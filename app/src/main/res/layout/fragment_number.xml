@@ -95,10 +95,10 @@
 
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboard_view"
+        android:layout_marginRight="3dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="#00f0eff4"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -106,8 +106,8 @@
         android:keyTextColor="?attr/number_fragment_key_text"
         android:keyTextSize="20sp"
         android:labelTextSize="20sp"
-        android:paddingTop="5dp"
-        android:shadowColor="#ca9d9d"
+        android:layout_marginTop="5dp"
+        android:shadowColor="#e7e7e7"
         android:shadowRadius="1"
         />
 
