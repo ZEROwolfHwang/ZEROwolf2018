@@ -1,38 +1,51 @@
 apply plugin: 'com.android.application'
+apply plugin:'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.zero.wolf.greenroad"
+        applicationId "com.android.htc.greenroad"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        jackOptions.enabled = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    signingConfigs {
+        release {
+            storeFile file("htc.greenroad.jks")
+            storePassword "htcqwertyuiop123"
+            keyAlias "key1"
+            keyPassword "htcqwertyuiop123"
+        }
+    }
+
     buildTypes {
         release {
 
 //            buildConfigField "boolean", "LOG_DEBUG", "true"
-
+            debuggable true
             //混淆
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
 
             //Zipalign优化
-            zipAlignEnabled false
+            zipAlignEnabled true
 
             // 移除无用的resource文件
-            shrinkResources false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            //signingConfig signingConfigs.release
+            zipAlignEnabled false
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -40,6 +53,9 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 
@@ -49,7 +65,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'

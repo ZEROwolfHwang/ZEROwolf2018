@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/layout_margin10dp"
-    tools:context="com.zero.wolf.greenroad.activity.RegisterActivity">
+    tools:context="com.android.htc.greenroad.activity.RegisterActivity">
 
     <!--注册路段-->
     <LinearLayout

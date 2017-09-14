@@ -29,6 +29,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:background="@null"
+        android:inputType="number"
         android:id="@+id/text_setting_lane"
         android:layout_width="0dp"
         android:textColor="?attr/custom_attr_setting_text_color"

@@ -29,31 +29,14 @@
 # 对于一些基本指令的添加
 #
 #############################################
-# 代码混淆压缩比，在0~7之间，默认为5，一般不做修改
--optimizationpasses 5
 
-# 混合时不使用大小写混合，混合后的类名为小写
--dontusemixedcaseclassnames
-
-# 指定不去忽略非公共库的类
--dontskipnonpubliclibraryclasses
-
-# 这句话能够使我们的项目混淆后产生映射文件
-# 包含有类名->混淆后类名的映射关系
--verbose
-
-# 指定不去忽略非公共库的类成员
--dontskipnonpubliclibraryclassmembers
-
-# 不做预校验，preverify是proguard的四个步骤之一，Android不需要preverify，去掉这一步能够加快混淆速度。
--dontpreverify
 
 # 保留Annotation不混淆
 -keepattributes *Annotation*,InnerClasses
 
 # 避免混淆泛型
 -keepattributes Signature
-
+-keepattributes Exceptions
 # 抛出异常时保留代码行号
 -keepattributes SourceFile,LineNumberTable
 
@@ -91,6 +74,19 @@
 # 保留R下面的资源
 -keep class **.R$* {*;}
 
+-keep class org.litepal.** {*;}
+
+-keep class * extends org.litepal.crud.DataSupport {*;}
+
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+#不做预校验，preverify是proguard的四个步骤之一，Android不需要preverify，去掉这一步能够加快混淆速度。
+-dontpreverify
+
 -dontwarn org.hamcrest.**
 -dontwarn android.test.**
 -dontwarn android.support.test.**
@@ -98,7 +94,8 @@
 -keep class org.junit.** { *; }
 -dontwarn org.junit.**
 -keep class junit.** { *; }
--dontwarn junit.** -keep class sun.misc.** { *; }
+-dontwarn junit.**
+-keep class sun.misc.** { *; }
 -dontwarn sun.misc.**
 -dontwarn org.mockito.**
 -dontwarn sun.reflect.**
@@ -147,10 +144,12 @@
 
 #-----------处理实体类---------------
 # 在开发的时候我们可以将所有的实体类放在一个包内，这样我们写一次混淆就行了。
--keep class com.zero.wolf.greenroad.bean.**{ *; }
--keep class com.zero.wolf.greenroad.httpresultbean.**{ *; }
--keep class com.zero.wolf.greenroad.litepalbean.**{ *; }
--keep class com.zero.wolf.greenroad.**{ *; }
+-keep class com.android.htc.greenroad.bean.**{ *; }
+-keep class com.android.htc.greenroad.httpresultbean.**{ *; }
+-keep class com.android.htc.greenroad.litepalbean.**{ *; }
+-keep class com.android.htc.greenroad.https.**{ *; }
+-keep class com.android.htc.greenroad.manager.**{ *; }
+-keep class com.android.htc.greenroad.activity.**{ *; }
 
 # ButterKnife
 -keep public class * implements butterknife.Unbinder {
@@ -165,16 +164,21 @@
 }
 
 -dontwarn okhttp3.**
--dontwarn okio.**
--dontwarn javax.annotation.**
+
+
+#Gson
+-keep class com.idea.fifaalarmclock.entity.***
+-keep class com.google.gson.stream.** { *; }
+
 
 # Retrofit
--keep class retrofit2.** { *; }
--dontwarn retrofit2.**
--keepattributes Signature
--keepattributes Exceptions
 -dontwarn okio.**
 -dontwarn javax.annotation.**
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-dontwarn retrofit2.Platform$Java8
 
 # RxJava RxAndroid
 -dontwarn sun.misc.**
@@ -189,4 +193,14 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 -dontnote rx.internal.util.PlatformDependent
+#
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+#-ignorewarnings
 

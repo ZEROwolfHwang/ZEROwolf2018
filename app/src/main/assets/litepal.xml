@@ -7,13 +7,13 @@
         <version value="4" />
 
         <list>
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportOperator" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportDraftOrSubmit" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportMedia" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportScan" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportDetail" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportChecked" />
-            <mapping class="com.zero.wolf.greenroad.litepalbean.SupportBlack" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportOperator" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportMedia" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportScan" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportDetail" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportChecked" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportBlack" />
 
         </list>
 

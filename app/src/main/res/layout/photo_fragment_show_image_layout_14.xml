@@ -11,7 +11,7 @@
     android:orientation="vertical"
     tools:showIn="@layout/fragment_photo">
 
-    <com.zero.wolf.greenroad.activity.RoundImageView
+    <com.android.htc.greenroad.activity.RoundImageView
         android:id="@+id/image_show_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
