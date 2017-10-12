@@ -19,23 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.compress.Luban;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.activity.ShowActivity;
 import com.android.htc.greenroad.adapter.BasePhotoAdapter;
 import com.android.htc.greenroad.adapter.BasePhotoViewHolder;
 import com.android.htc.greenroad.litepalbean.SupportMedia;
 import com.android.htc.greenroad.tools.BitmapUtil;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.compress.Luban;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -469,28 +467,6 @@ public class PhotoFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
-
-    public long getSystemTime() {
-        //("yyyy年MM月dd日 HH时MM分ss秒"
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        long times = System.currentTimeMillis();
-        System.out.println(times);
-        Date date = new Date(times);
-        String time = sdf.format(date).toString();
-        Log.e("timeintimet", "timeint: " + time.toString());
-        long timeint = 0;
-        try {
-
-            timeint = Long.valueOf(time).longValue();
-
-        } catch (Exception e) {
-            Log.e("exception", "getSystemTime: " + e.toString());
-        }
-
-
-        return timeint;
-    }
-
 
     public static void setBitmapListListener(BitmapListListener listener) {
         ArrayList<MyBitmap> myBitmaps_sanzheng = null;

@@ -133,10 +133,8 @@ public class MainActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         ButterKnife.bind(this);
         mActivity = this;
-
 
         mTvOperatorCheckMain = (TextView) findViewById(R.id.tv_operator_check_main);
         mTvOperatorLoginMain = (TextView) findViewById(R.id.tv_operator_login_main);
@@ -146,13 +144,11 @@ public class MainActivity extends BaseActivity implements
         mTvOperatorCheckMain.setOnClickListener(v -> openSettingActivity());
         mTvOperatorLoginMain.setOnClickListener(v -> openSettingActivity());
 
-
         initSpace();
 
         initData();
         //initSp();
         initView();
-
 
     }
 

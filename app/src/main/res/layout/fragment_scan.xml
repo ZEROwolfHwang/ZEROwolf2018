@@ -58,7 +58,6 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="出口车牌:"/>
-            />
 
             <EditText
                 android:id="@+id/text_table_1"
@@ -67,7 +66,6 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="荷载质量(吨):"/>
-            />
 
             <EditText
                 android:id="@+id/text_table_2"
@@ -82,7 +80,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="整备质量(吨):"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_3"
@@ -91,7 +89,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="称重质量(吨):"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_4"
@@ -106,7 +104,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="收费金额(元):"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_5"
@@ -115,7 +113,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="免费金额(元):"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_6"
@@ -130,7 +128,6 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="入口路段:"/>
-            />
 
             <EditText
                 android:id="@+id/text_table_7"
@@ -139,7 +136,6 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="出口路段:"/>
-            />
 
             <EditText
                 android:id="@+id/text_table_8"
@@ -154,7 +150,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="入口站:"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_9"
@@ -163,7 +159,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="出口站:"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_10"
@@ -178,7 +174,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="入口车道:"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_11"
@@ -187,7 +183,7 @@
             <TextView
                 style="@style/scan_code_info_style"
                 android:text="出口车道:"/>
-            />
+
 
             <EditText
                 android:id="@+id/text_table_12"
