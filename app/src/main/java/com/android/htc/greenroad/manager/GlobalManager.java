@@ -11,6 +11,8 @@ package com.android.htc.greenroad.manager;
  */
 
 public class GlobalManager {
+    public static final String LOGIN2PORT = "login2port";
+    public static final String OTHER2PORT = "main2port";
 
     //public static int REQUEST_IV_CAMERA = 1 * 998;
 

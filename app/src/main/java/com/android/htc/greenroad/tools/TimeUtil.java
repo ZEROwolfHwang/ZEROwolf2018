@@ -43,9 +43,10 @@ public class TimeUtil {
         return curTime;
     }
     public static int getTimeId() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyMMddmmss");
+        SimpleDateFormat formatter = new SimpleDateFormat("MMddHHmmss");
         int curTime = Integer.parseInt(formatter.format(new Date(System.currentTimeMillis())));
         // String shutTime = formatter.format(curDate);
+        Logger.i(curTime+"");
         return curTime;
     }
 

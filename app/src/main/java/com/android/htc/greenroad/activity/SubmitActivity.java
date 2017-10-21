@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.adapter.PreviewItemAdapter;
 import com.android.htc.greenroad.adapter.RecycleViewDivider;
@@ -24,7 +23,7 @@ import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.ActionBarTool;
 import com.android.htc.greenroad.tools.ImageProcessor;
 import com.android.htc.greenroad.tools.SPUtils;
-import com.android.htc.greenroad.tools.ToastUtils;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -132,25 +131,21 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
-                ToastUtils.singleToast("清除七天前记录");
                 DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_15:
-                ToastUtils.singleToast("清除15天前记录");
                 DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_30:
-                ToastUtils.singleToast("清除30天前记录");
                 DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_all:
-                ToastUtils.singleToast("清空所有记录");
                 DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,supportList -> {
                     mAdapter.updateListView(supportList);
                 });

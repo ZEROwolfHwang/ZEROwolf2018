@@ -253,7 +253,7 @@ public class ShowActivity extends BaseActivity {
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
                 Logger.i(DetailsFragment.sEnterType);
-                saveDraft();
+                saveDraft(0);
                 break;
 
             default:
@@ -266,8 +266,8 @@ public class ShowActivity extends BaseActivity {
      * 1.进入草稿的activity并保存
      * 2.将数据保存到数据库
      */
-    private void saveDraft() {
-       SubmitService.startActionSave(this,DetailsFragment.sEnterType,mShowType);
+    private void saveDraft(int id) {
+       SubmitService.startActionSave(this,DetailsFragment.sEnterType,mShowType,id);
     }
 
     @Override
@@ -278,6 +278,7 @@ public class ShowActivity extends BaseActivity {
             mMenuFab.toggle(false);
         } else {
             backToMain();
+
         }
     }
 
@@ -287,27 +288,26 @@ public class ShowActivity extends BaseActivity {
         builder.setMessage("点击确定保存为草稿并退出\n点击直接退出则清空当前采集");
         builder.setNegativeButton("直接退出", (dialog, which) -> {
             dialog.dismiss();
-            notifyDataChangeAndFinish();
             Intent intent = new Intent(ShowActivity.this, MainActivity.class);
             startActivity(intent);
+            mActivity.finish();
         });
 
         builder.setPositiveButton("保存并退出", (dialog, which) -> {
             //在这里做保存草稿的操作
-            saveDraft();
-            notifyDataChangeAndFinish();
+            saveDraft(1);
             Intent intent = new Intent(ShowActivity.this, MainActivity.class);
             startActivity(intent);
+            mActivity.finish();
         });
         builder.show();
     }
 
-    public void notifyDataChangeAndFinish() {
+    public static void notifyDataChangeAndFinish() {
         CarNumberFragment.notifyDataChange();
         GoodsFragment.notifyDataChange();
         PhotoFragment.notifyDataChange();
         ConclusionActivity.notifyDataChange();
         DetailsFragment.notifyDataChange();
-        mActivity.finish();
     }
 }

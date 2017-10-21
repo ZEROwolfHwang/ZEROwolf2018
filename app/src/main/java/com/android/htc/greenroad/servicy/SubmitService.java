@@ -37,6 +37,8 @@ import com.google.gson.Gson;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,6 +77,7 @@ public class SubmitService extends IntentService {
 
     public static final String ARG_TYPE_SHOW_SUBMIT = "arg_type_show_submit";
     public static final String ARG_TYPE_SHOW_SAVE = "arg_type_show_save";
+    public static final String SAVE_OR_BACK = "save_or_back";
 
 
     private String mSubmitTime;
@@ -100,12 +103,14 @@ public class SubmitService extends IntentService {
         sActivity.startService(intent);
     }
 
-    public static void startActionSave(Context context, String enterType, String showType) {
+    public static void startActionSave(Context context, String enterType, String showType,int id) {
         sContext_draft = context;
         Intent intent = new Intent(sContext_draft, SubmitService.class);
         intent.setAction(ACTION_SAVE);
         intent.putExtra(ARG_TYPE_SAVE, enterType);
         intent.putExtra(ARG_TYPE_SHOW_SAVE, showType);
+        intent.putExtra(SAVE_OR_BACK, id);
+
         sContext_draft.startService(intent);
     }
 
@@ -156,11 +161,18 @@ public class SubmitService extends IntentService {
                 if (ACTION_SAVE.equals(action)) {
                     String enterType = intent.getStringExtra(ARG_TYPE_SAVE);
                     String showType = intent.getStringExtra(ARG_TYPE_SHOW_SAVE);
+                    int id = intent.getIntExtra(SAVE_OR_BACK,0);
 
                     getListenerData(enterType);
 
                     String saveTime = TimeUtil.getCurrentTimeToDate();
-                    save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE, showType);
+                    if (id == 0) {
+
+                        save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE, showType);
+                    } else {
+                        save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE, showType);
+                        ShowActivity.notifyDataChangeAndFinish();
+                    }
                 }
             }
         }
@@ -218,6 +230,11 @@ public class SubmitService extends IntentService {
             Logger.i(count + "++++++++++++count");
             //DataSupport.count(SupportDraftOrSubmit.class);
 
+            List<SupportDraftOrSubmit>  draftOrSubmitList = DataSupport.where("lite_ID = ? and lite_type = ?", count + "",lite_type).find(SupportDraftOrSubmit.class);
+            if (draftOrSubmitList.size() != 0) {
+                ToastUtils.singleToast("该存储ID已存在,请再次存储");
+                return;
+            }
             support.setLite_ID(count);
             support.setLite_type(lite_type);
             support.setCurrent_time(current_time);

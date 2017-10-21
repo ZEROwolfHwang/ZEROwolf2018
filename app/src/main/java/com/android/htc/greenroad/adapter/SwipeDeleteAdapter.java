@@ -80,10 +80,11 @@ public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             viewHolder.mActionViewDelete.setOnClickListener(v -> {
                         doDelete(holder.getAdapterPosition());
-                        mItemTouchHelperExtension.closeOpened();
+
                     }
             );
         }
+
     }
 
     private void doDelete(int adapterPosition) {
@@ -93,6 +94,7 @@ public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mPreviewList.remove(adapterPosition);
         updateListView(mPreviewList);
 //        notifyItemRemoved(adapterPosition);
+        mItemTouchHelperExtension.closeOpened();
     }
 
     /**

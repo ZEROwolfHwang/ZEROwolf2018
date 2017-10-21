@@ -13,15 +13,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.SpinnerPopupWindow;
 import com.android.htc.greenroad.adapter.RecycleViewDivider;
 import com.android.htc.greenroad.adapter.SpinnerAdapter;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
 import com.android.htc.greenroad.https.RequestRegistered;
+import com.android.htc.greenroad.litepalbean.SupportLine;
 import com.android.htc.greenroad.tools.SPListUtil;
 import com.android.htc.greenroad.tools.ToastUtils;
+import com.orhanobut.logger.Logger;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +36,21 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Subscriber;
 
+import static com.android.htc.greenroad.R.id.register_code;
+import static com.android.htc.greenroad.R.id.register_psw;
+import static com.android.htc.greenroad.R.id.register_user;
+
 public class RegisterActivity extends BaseActivity {
 
     @BindView(R.id.register_road)
     ImageButton mRegisterRoad;
     @BindView(R.id.register_station)
     ImageButton mRegisterStation;
-    @BindView(R.id.register_code)
+    @BindView(register_code)
     EditText mRegisterCode;
-    @BindView(R.id.register_user)
+    @BindView(register_user)
     EditText mRegisterUser;
-    @BindView(R.id.register_psw)
+    @BindView(register_psw)
     EditText mRegisterPsw;
     @BindView(R.id.register_sure_psw)
     EditText mRegisterSurePsw;
@@ -58,11 +65,13 @@ public class RegisterActivity extends BaseActivity {
     private SpinnerAdapter mAdapter_station;
     private SpinnerPopupWindow mPopupWindow_road;
     private SpinnerPopupWindow mPopupWindow_station;
-    private String[] mRoadList;
-    private String[] mStationList;
     private float mDimension;
     private int mWidth;
     private String macID;
+    private List<SupportLine> mSupportLineList;
+    private ArrayList<String> mRoadList;
+    private String mSelectRoad;
+    private List<String> mStationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +82,23 @@ public class RegisterActivity extends BaseActivity {
         macID = Settings.Secure
                 .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+
         Logger.i(macID);
 
         initData();
     }
 
+
+
     @OnClick({R.id.register_road, R.id.register_station, R.id.btn_sure_register})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.register_road:
+                mTextStationRegister.setText("");
                 mWidth = mTextRoadRegister.getWidth();
                 mAdapter_road = new SpinnerAdapter(this, mRoadList, position -> {
-                    mTextRoadRegister.setText(mRoadList[position]);
+                    mSelectRoad = mRoadList.get(position);
+                    mTextRoadRegister.setText(mSelectRoad);
                     mPopupWindow_road.dismissPopWindow();
                 });
 
@@ -103,8 +117,17 @@ public class RegisterActivity extends BaseActivity {
             case R.id.register_station:
                 int width = mTextStationRegister.getWidth();
 
-                mAdapter_station = new SpinnerAdapter(this, mStationList, position -> {
-                    mTextStationRegister.setText(mStationList[position]);
+                if (mSelectRoad == null || "".equals(mSelectRoad)) {
+                    ToastUtils.singleToast("请确定路段后再选择收费站");
+                    return;
+                }
+                List<SupportLine> supportLines = DataSupport.where("line = ? ", mSelectRoad).find(SupportLine.class);
+                if (supportLines.size() != 0) {
+                    mStationList = supportLines.get(0).getStations();
+                }
+
+                mAdapter_station = new SpinnerAdapter(this, (ArrayList<String>) mStationList, position -> {
+                    mTextStationRegister.setText(mStationList.get(position));
                     mPopupWindow_station.dismissPopWindow();
                 });
 
@@ -129,10 +152,12 @@ public class RegisterActivity extends BaseActivity {
                 String register_psw = mRegisterPsw.getText().toString().trim();
                 String register_sure_psw = mRegisterSurePsw.getText().toString().trim();
 
+
                 if (TextUtils.isEmpty(roadText)) {
                     ToastUtils.singleToast("请确定注册路段");
                     return;
                 }
+
                 if (TextUtils.isEmpty(stationText)) {
                     ToastUtils.singleToast("请确定注册收费站");
                     return;
@@ -175,6 +200,7 @@ public class RegisterActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         Logger.i(e.getMessage());
+                        ToastUtils.singleToast("连接服务器失败,请确定端口是否正确");
                     }
 
                     @Override
@@ -188,9 +214,9 @@ public class RegisterActivity extends BaseActivity {
 
                             List app_config_info = new ArrayList<String>();
 
+                            app_config_info.add(register_user);
                             app_config_info.add(roadText);
                             app_config_info.add(stationText);
-                            app_config_info.add(register_user);
 
                             Logger.i(app_config_info.toString());
                             SPListUtil.putStrListValue(RegisterActivity.this, SPListUtil.APPCONFIGINFO, app_config_info);
@@ -210,22 +236,14 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    private void saveToSpUtil() {
-        List app_config_info = new ArrayList<String>();
-
-        app_config_info.add("163127841234");
-        app_config_info.add("西部沿海");
-        app_config_info.add("广海");
-
-        Logger.i(app_config_info.toString());
-        SPListUtil.putStrListValue(this, SPListUtil.APPCONFIGINFO, app_config_info);
-
-
-    }
-
     private void initData() {
-        mRoadList = getResources().getStringArray(R.array.road_name);
-        mStationList = getResources().getStringArray(R.array.station_name);
+        mSupportLineList = DataSupport.findAll(SupportLine.class);
+        mRoadList = new ArrayList<>();
+        if (mSupportLineList.size() != 0) {
+            for (int s = 0; s < mSupportLineList.size(); s++) {
+                mRoadList.add(mSupportLineList.get(s).getLine());
+            }
+        }
         mDimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120,
                 getResources().getDisplayMetrics());
 

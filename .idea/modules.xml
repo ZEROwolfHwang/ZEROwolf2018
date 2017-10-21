@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ZEROwolf8_17.iml" filepath="$PROJECT_DIR$/ZEROwolf8_17.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ZEROwolf8_19.iml" filepath="$PROJECT_DIR$/ZEROwolf8_19.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZEROwolf10-20.iml" filepath="$PROJECT_DIR$/ZEROwolf10-20.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

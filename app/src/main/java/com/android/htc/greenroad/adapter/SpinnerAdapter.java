@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.interfacy.onItemClick;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 2017/7/27.
  */
@@ -17,9 +19,9 @@ import com.android.htc.greenroad.interfacy.onItemClick;
 public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHolder> {
     private final AppCompatActivity mActivity;
     private final onItemClick mItemClick;
-    private String[] mList;
+    private ArrayList<String> mList;
 
-    public SpinnerAdapter(AppCompatActivity activity, String[] list, onItemClick click) {
+    public SpinnerAdapter(AppCompatActivity activity, ArrayList<String> list, onItemClick click) {
         mItemClick = click;
         mActivity = activity;
         mList = list;
@@ -30,9 +32,9 @@ public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHo
      *
      * @param list
      */
-    public void updateListView(String[] list) {
+    public void updateListView(ArrayList<String> list) {
         if (list == null) {
-            this.mList = new String[]{};
+            this.mList = new ArrayList<>();
         } else {
             this.mList = list;
         }
@@ -49,7 +51,7 @@ public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        holder.tv.setText(mList[position]);
+        holder.tv.setText(mList.get(position));
         holder.tv.setOnClickListener(v -> {
             notifyDataSetChanged();
             mItemClick.itemClick(position);
@@ -58,7 +60,7 @@ public class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return mList.length;
+        return mList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

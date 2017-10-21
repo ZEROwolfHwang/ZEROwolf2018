@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.adapter.ItemTouchHelperCallback;
 import com.android.htc.greenroad.adapter.RecycleViewDivider;
@@ -22,7 +21,7 @@ import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.ActionBarTool;
 import com.android.htc.greenroad.tools.SPUtils;
-import com.android.htc.greenroad.tools.ToastUtils;
+import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 import org.litepal.crud.DataSupport;
 
@@ -104,25 +103,21 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
-                ToastUtils.singleToast("清除七天前记录");
                 DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 7, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_15:
-                ToastUtils.singleToast("清除15天前记录");
                 DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 15, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_30:
-                ToastUtils.singleToast("清除30天前记录");
                 DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 30, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_all:
-                ToastUtils.singleToast("清空所有记录");
                 DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });

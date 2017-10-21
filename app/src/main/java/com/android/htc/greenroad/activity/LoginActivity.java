@@ -1,5 +1,6 @@
 package com.android.htc.greenroad.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +14,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
 import com.android.htc.greenroad.https.RequestLogin;
+import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.polling.PollingService;
 import com.android.htc.greenroad.polling.PollingUtils;
 import com.android.htc.greenroad.presenter.NetWorkManager;
@@ -25,6 +26,7 @@ import com.android.htc.greenroad.tools.SPListUtil;
 import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.TimeUtil;
 import com.android.htc.greenroad.tools.ToastUtils;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.tablemanager.Connector;
 
@@ -110,9 +112,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startMainActivity(v);
                 break;
             case R.id.login_register:
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-
+                LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.LOGIN2PORT);
                 break;
 
             default:
@@ -206,7 +206,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
+                mRlProgressLogin.setVisibility(View.GONE);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                dialog.setTitle("登录失败,网络存在异常");
+                dialog.setIcon(getResources().getDrawable(R.drawable.alert_faild_icon));
+                dialog.setMessage("点击确定重新配置网络端口\n点击取消请尝试再次登录");
+                dialog.setNegativeButton("取消",(dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                });
+                dialog.setPositiveButton("确定",(dialogInterface, i) -> {
+                    LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.OTHER2PORT);
+                    dialogInterface.dismiss();
+                });
+                dialog.show();
                 ToastUtils.singleToast("网络异常,请重新登录");
+
             }
 
             @Override
@@ -251,6 +265,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     mEt_user_name.setError("该终端尚未被注册");
                     mEt_user_name.requestFocus();
                     mRlProgressLogin.setVisibility(View.GONE);
+                } else {
+                    mRlProgressLogin.setVisibility(View.GONE);
+                    ToastUtils.singleToast("网络异常,请重新登录");
                 }
                 //  mRlProgressLogin.setVisibility(View.GONE);
             }

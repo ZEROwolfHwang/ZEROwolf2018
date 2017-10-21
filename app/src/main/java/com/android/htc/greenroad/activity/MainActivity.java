@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.htc.greenroad.manager.GlobalManager;
 import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.bean.UpdateAppInfo;
@@ -330,11 +331,11 @@ public class MainActivity extends BaseActivity implements
             updateApp();
         } else if (id == R.id.nav_backup) {
             buckUpApp();
-        }/* else if (id == R.id.nav_config) {
-            //post_not_upload();
-//            openConfigLine();
+        } else if (id == R.id.nav_config) {
+//            post_not_upload();
+            openConfigLine();
 //            Logger.i("点击了代开配置路线的按钮");
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -344,10 +345,9 @@ public class MainActivity extends BaseActivity implements
     /**
      * 做配置路线的处理
      */
-   /* private void openConfigLine() {
-        Intent intent = new Intent(MainActivity.this, LineConfigActivity.class);
-        startActivity(intent);
-    }*/
+    private void openConfigLine() {
+        LineConfigActivity.actionStart(MainActivity.this, GlobalManager.OTHER2PORT);
+    }
 
 
     /**

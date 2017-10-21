@@ -1,5 +1,7 @@
 package com.android.htc.greenroad.https;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -18,6 +20,8 @@ public class HttpMethods {
 
     //public static final String BASE_URL = "http://192.168.2.122/lvsetondao/index.php/Interfacy/";
    public static final String BASE_URL = "http://greenft.githubshop.com/index.php/Interfacy/";
+//   public static final String BASE_URL = "http://greenft.githubshop."+ SPUtils.get(GreenRoadApplication.sApplication,SPUtils.CONFIG_PORT,"com")+"/index.php/Interfacy/";
+//   public static final String BASE_URL = "http://192.168.98.99:"+ SPUtils.get(GreenRoadApplication.sApplication,SPUtils.CONFIG_PORT,"88")+"/index.php/Interfacy/";
 
     private static final int DEFAULT_TIMEOUT = 5;
 
@@ -34,7 +38,7 @@ public class HttpMethods {
         if (sMethods == null) {
             sMethods = new HttpMethods();
         }
-
+        Logger.i(BASE_URL);
         return sMethods;
     }
 
@@ -64,6 +68,4 @@ public class HttpMethods {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s);
     }
-
-
 }

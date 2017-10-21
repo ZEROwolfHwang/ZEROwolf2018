@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class SPUtils {
     //存储的是草稿以及提交的数量
-    public static final String LINE_CONFIG= "line_config";
 
     public static final String lOGIN_USERNAME = "login_username";
 
@@ -31,6 +30,7 @@ public class SPUtils {
     public static final String ISACTIVATIONSUCCESS= "isactivationsuccess";
 
     public static final String SHAREDPRENAME = "activation";
+    public static final String CONFIG_PORT = "config_port";
 
     /**
      * SharedPreferences存储在sd卡中的文件名字

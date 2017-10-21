@@ -1,11 +1,12 @@
 package com.android.htc.greenroad.https;
 
 import com.android.htc.greenroad.bean.ActivationResult;
-import com.android.htc.greenroad.httpresultbean.HttpResultBlack;
 import com.android.htc.greenroad.bean.UpdateAppInfo;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
-import com.android.htc.greenroad.httpresultbean.HttpResultLoginName;
+import com.android.htc.greenroad.httpresultbean.HttpResultBlack;
 import com.android.htc.greenroad.httpresultbean.HttpResultCode;
+import com.android.htc.greenroad.httpresultbean.HttpResultLineStation;
+import com.android.htc.greenroad.httpresultbean.HttpResultLoginName;
 import com.android.htc.greenroad.httpresultbean.HttpResultMacInfo;
 
 import java.util.List;
@@ -43,25 +44,6 @@ public interface HttpUtilsApi {
                                             @Field("macName") String macName,
                                             @Field("regKey") String regKey);
 
-    /* //更新
-     //TODO:需要添加UBMVersion字段用于区分是哪个版本的更新（xiahua、ruijie、pad等oem版本和分支版本）
-     @Headers("Content-BaseIWBType: application/json;charset=utf-8")
-     @GET("Reg/api/appupdate/update/{cityLanguage}")
-     Observable<UpdateApp> update(@Path("cityLanguage") String language);
-
-     //检测机器是否激活过
-     @Headers("Content-BaseIWBType: application/json;charset=utf-8")
-     @POST("RegSrv/UBMRegService.svc/Android/getregkey")
-     Observable<RequestResult> checkLogin(@Body GetActivationCodeBean body);
-
-     //崩溃日志上传
-     @Headers("Content-BaseIWBType: application/json;charset=utf-8")
-     @POST("RegSrv/UBMLogService.svc/Android/postlog")
-     Observable<RequestResult> updateLog(@Body LogBean LogInfo);*/
-  /*  @FormUrlEncoded
-    @POST("listapi")
-    Call<ResultCar> doPost(@Field("username") String username, @Field("psd") String psd);
-*/
     @FormUrlEncoded
     @POST("Login/listapi")
     Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
@@ -74,29 +56,7 @@ public interface HttpUtilsApi {
     Observable<UpdateAppInfo> update(@Query("appname") String appname,
                                      @Query("appversion") String appversion);
 
-    /*@Multipart
-    @POST("Api/accept")
-    Observable<HttpResultPostImg> postAccept(@Part MultipartBody.Part file);
-*/
-  /*  @Multipart
-    @POST("image")
-    Observable<AcceptResult> postOneImg(@Part MultipartBody.Part file);
-*/
-   /* @Multipart
-    @POST("image")
-    Observable<AcceptResult> postThreeImg(@PartMap Map<String, RequestBody> params);
-*/
-  /*  @Multipart
-    @POST("Api/image")
-    Observable<HttpResultPostImg> postThreeImg(@Part("car_type") String car_type,
-                                               @Part("license_color") String licence_color,
-                                               @Part("shuttime") String shuttime,
-                                               @Part("username") String username,
-                                               @Part("station") String station,
-                                               @Part("license_plate") String license_plate,
-                                               @Part("goods") String goods,
-                                               @Part List<MultipartBody.Part> file);
-*/
+
     @FormUrlEncoded
     @POST("Apionline/online")
     Observable<HttpResultCode> polling(@Field("polling") String polling);
@@ -139,6 +99,9 @@ public interface HttpUtilsApi {
 
     @GET("Api/black")
     Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getBlack();
+
+ @GET("Api/linestations")
+    Observable<HttpResultLineStation<List<HttpResultLineStation.DataBean>>> getLines();
 
     @FormUrlEncoded
     @POST("Api/macInfo")
