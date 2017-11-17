@@ -119,7 +119,7 @@
 
                         <include layout="@layout/device_item_bg_1dp"/>
 
-                        <LinearLayout
+                        <!--<LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:orientation="horizontal">
@@ -133,7 +133,7 @@
                                 style="@style/content_activity_preview_all_detail_style"/>
 
 
-                        </LinearLayout>
+                        </LinearLayout>-->
 
                         <include layout="@layout/device_item_bg_1dp"/>
 
@@ -187,7 +187,7 @@
                         style="@style/preview_activity_text_header_style"
                         android:text="收费信息"/>
 
-                    <LinearLayout
+                   <!-- <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:layout_marginTop="@dimen/layout_margin5dp"
@@ -216,10 +216,11 @@
 
                     </LinearLayout>
 
-                    <include layout="@layout/device_item_bg_1dp"/>
+                    <include layout="@layout/device_item_bg_1dp"/>-->
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         style="@style/ll_scan_item_style">
+
 
                         <TextView
                             style="@style/scan_code_info_style"
@@ -238,11 +239,132 @@
                         <TextView
                             android:id="@+id/text_table_2"
                             style="@style/scan_code_change_info_style"/>
+                    </LinearLayout>-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="是否超限:"/>
+
+                        <TextView
+                            android:id="@+id/text_table_limit"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="出口车牌:"/>
+
+                        <TextView
+                            android:id="@+id/text_table_1"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="称重质量(吨):"/>
+
+                        <TextView
+                            android:id="@+id/text_table_4"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
+                    </LinearLayout>
+
 
                     <include layout="@layout/device_item_bg_1dp"/>
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="收费金额(元):"/>
+
+                        <TextView
+                            android:id="@+id/text_table_5"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
+                    </LinearLayout>
+
+
+                    <include layout="@layout/device_item_bg_1dp"/>
+ <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="免费金额(元):"/>
+
+                        <TextView
+                            android:id="@+id/text_table_6"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
+                    </LinearLayout>
+
+
+                    <include layout="@layout/device_item_bg_1dp"/>
+ <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="出口站:"/>
+
+                        <TextView
+                            android:id="@+id/text_table_10"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
+                    </LinearLayout>
+
+
+                    <include layout="@layout/device_item_bg_1dp"/>
+ <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/title_activity_preview_all_detail_style"
+                            android:text="出口车道:"/>
+
+                        <TextView
+                            android:id="@+id/text_table_12"
+                            style="@style/content_activity_preview_all_detail_style"/>
+
+
+                    </LinearLayout>
+
+
+                    <include layout="@layout/device_item_bg_1dp"/>
+
+                    <!--<LinearLayout
                         style="@style/ll_scan_item_style">
 
                         <TextView
@@ -264,8 +386,8 @@
                             style="@style/scan_code_change_info_style"/>
                     </LinearLayout>
 
-                    <include layout="@layout/device_item_bg_1dp"/>
-
+                    <include layout="@layout/device_item_bg_1dp"/>-->
+<!--
                     <LinearLayout
                         style="@style/ll_scan_item_style">
 
@@ -276,6 +398,7 @@
 
                         <TextView
                             android:id="@+id/text_table_5"
+                            android:inputType="number"
                             style="@style/scan_code_change_info_style"/>
 
                         <TextView
@@ -288,9 +411,9 @@
                             style="@style/scan_code_change_info_style"/>
                     </LinearLayout>
 
-                    <include layout="@layout/device_item_bg_1dp"/>
+                    <include layout="@layout/device_item_bg_1dp"/>-->
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         style="@style/ll_scan_item_style">
 
                         <TextView
@@ -312,9 +435,9 @@
                             style="@style/scan_code_change_info_style"/>
                     </LinearLayout>
 
-                    <include layout="@layout/device_item_bg_1dp"/>
+                    <include layout="@layout/device_item_bg_1dp"/>-->
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         style="@style/ll_scan_item_style">
 
                         <TextView
@@ -336,9 +459,9 @@
                             style="@style/scan_code_change_info_style"/>
                     </LinearLayout>
 
-                    <include layout="@layout/device_item_bg_1dp"/>
+                    <include layout="@layout/device_item_bg_1dp"/>-->
 
-                    <LinearLayout
+                  <!--  <LinearLayout
                         style="@style/ll_scan_item_style">
 
                         <TextView
@@ -360,7 +483,7 @@
                             style="@style/scan_code_change_info_style"/>
                     </LinearLayout>
 
-
+-->
                 </LinearLayout>
 
                 <LinearLayout

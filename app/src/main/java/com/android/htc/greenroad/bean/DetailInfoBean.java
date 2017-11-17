@@ -7,7 +7,6 @@ import java.util.List;
  */
 
 public class DetailInfoBean{
-    private String color;
     private String number;
     private String goods;
     private List<PathTitleBean> mPath_and_title;
@@ -19,19 +18,10 @@ public class DetailInfoBean{
     @Override
     public String toString() {
         return "DetailInfoBean{" +
-                "color='" + color + '\'' +
-                ", number='" + number + '\'' +
+                "number='" + number + '\'' +
                 ", goods='" + goods + '\'' +
                 ", mPath_and_title=" + mPath_and_title +
                 '}';
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public String getNumber() {

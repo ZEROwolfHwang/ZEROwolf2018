@@ -246,7 +246,7 @@ public class ShowActivity extends BaseActivity {
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
                 Logger.i(DetailsFragment.sEnterType);
-                SubmitService.startActionSubmit(this,this,DetailsFragment.sEnterType,mShowType);
+                SubmitService.startActionSubmit(this, this, DetailsFragment.sEnterType, mShowType);
                 break;
             case R.id.fab_draft:
                 mFabDraft.hideButtonInMenu(true);
@@ -290,6 +290,7 @@ public class ShowActivity extends BaseActivity {
             dialog.dismiss();
             Intent intent = new Intent(ShowActivity.this, MainActivity.class);
             startActivity(intent);
+            notifyDataChangeAndFinish();
             mActivity.finish();
         });
 
@@ -309,5 +310,9 @@ public class ShowActivity extends BaseActivity {
         PhotoFragment.notifyDataChange();
         ConclusionActivity.notifyDataChange();
         DetailsFragment.notifyDataChange();
+    }
+
+    public void notifyActivityFinish() {
+        mActivity.finish();
     }
 }

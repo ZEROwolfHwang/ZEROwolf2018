@@ -19,7 +19,7 @@ public class SupportDetail extends DataSupport implements Parcelable{
     private String station;
     private String lane;
     private String road;
-    private String color;
+//    private String color;
     private String number;
     private String goods;
     private List<String> picturePath;
@@ -33,7 +33,7 @@ public class SupportDetail extends DataSupport implements Parcelable{
         station = in.readString();
         lane = in.readString();
         road = in.readString();
-        color = in.readString();
+//        color = in.readString();
         number = in.readString();
         goods = in.readString();
         picturePath = in.createStringArrayList();
@@ -46,7 +46,7 @@ public class SupportDetail extends DataSupport implements Parcelable{
         dest.writeString(station);
         dest.writeString(lane);
         dest.writeString(road);
-        dest.writeString(color);
+//        dest.writeString(color);
         dest.writeString(number);
         dest.writeString(goods);
         dest.writeStringList(picturePath);
@@ -77,7 +77,7 @@ public class SupportDetail extends DataSupport implements Parcelable{
                 ", station='" + station + '\'' +
                 ", lane='" + lane + '\'' +
                 ", road='" + road + '\'' +
-                ", color='" + color + '\'' +
+//                ", color='" + color + '\'' +
                 ", number='" + number + '\'' +
                 ", goods='" + goods + '\'' +
                 ", picturePath=" + picturePath +
@@ -117,13 +117,13 @@ public class SupportDetail extends DataSupport implements Parcelable{
         this.road = road;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
+//    public String getColor() {
+//        return color;
+//    }
+//
+//    public void setColor(String color) {
+//        this.color = color;
+//    }
 
     public String getNumber() {
         return number;

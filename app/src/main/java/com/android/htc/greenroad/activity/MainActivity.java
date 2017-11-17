@@ -28,12 +28,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.htc.greenroad.manager.GlobalManager;
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.bean.UpdateAppInfo;
+import com.android.htc.greenroad.httpresultbean.HttpResultLane;
 import com.android.htc.greenroad.httpresultbean.HttpResultMacInfo;
+import com.android.htc.greenroad.https.RequestLane;
 import com.android.htc.greenroad.https.RequestMacInfo;
+import com.android.htc.greenroad.litepalbean.SupportLane;
 import com.android.htc.greenroad.litepalbean.SupportOperator;
 import com.android.htc.greenroad.servicy.BlackListService;
 import com.android.htc.greenroad.servicy.SubmitService;
@@ -45,9 +46,9 @@ import com.android.htc.greenroad.tools.PermissionUtils;
 import com.android.htc.greenroad.tools.SDcardSpace;
 import com.android.htc.greenroad.tools.SPListUtil;
 import com.android.htc.greenroad.tools.SPUtils;
-import com.android.htc.greenroad.tools.ToastUtils;
 import com.android.htc.greenroad.update.AppInnerDownLoder;
 import com.android.htc.greenroad.update.CheckUpdateUtils;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -64,7 +65,7 @@ import rx.Subscriber;
  */
 
 public class MainActivity extends BaseActivity implements
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.toolbar_main)
     Toolbar mToolbarMain;
@@ -100,12 +101,6 @@ public class MainActivity extends BaseActivity implements
     private static final String TAG = "MainActivity";
     private static final int REQ_0 = 001;
 
-    @BindView(R.id.footer_item_setting)
-    TextView mTv_footer_setting;
-    @BindView(R.id.footer_item_theme)
-    TextView mTv_footer_theme;
-    @BindView(R.id.footer_item_location)
-    TextView mTv_footer_location;
 
     private AppCompatActivity mActivity;
 
@@ -126,6 +121,7 @@ public class MainActivity extends BaseActivity implements
     private String mAllSpace;
     private String macID;
     private MyBroadCaseReceiver mBroadCaseReceiver;
+    private ArrayList<String> mLaneList;
 
 
     @Override
@@ -173,14 +169,12 @@ public class MainActivity extends BaseActivity implements
             case R.id.btn_enter_show:
                 List<SupportOperator> check = DataSupport.where("check_select=?", "1").
                         find(SupportOperator.class);
-                List<SupportOperator> login = DataSupport.where("login_select=?", "1").
-                        find(SupportOperator.class);
 
-                if (check.size() >= 1 && login.size() == 1) {
+                if (check.size() >= 1) {
                     ShowActivity.actionStart(MainActivity.this);
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("确定选择默认检查人/登记人");
+                    builder.setTitle("确定选择默认检查人");
                     builder.setMessage("点击确定进入设置界面添加默认操作员;\n" +
                             "点击取消则回到界面,不可以采集车辆数据");
                     builder.setPositiveButton("确定", (dialog, which) -> {
@@ -252,6 +246,42 @@ public class MainActivity extends BaseActivity implements
                         Logger.i(app_config_info.toString());
                         mTvChangeStationMain.setText(dataBean.getTerminal_road());
                         SPListUtil.putStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO, app_config_info);
+
+                        List<SupportLane> laneList = DataSupport.findAll(SupportLane.class);
+                        if (laneList.size() == 0) {
+                            RequestLane.getInstance().getLanes(new Subscriber<List<HttpResultLane.DataBean>>() {
+                                @Override
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Logger.i(e.getMessage());
+                                }
+
+                                @Override
+                                public void onNext(List<HttpResultLane.DataBean> dataBeen) {
+                                    if (mLaneList == null) {
+
+                                        mLaneList = new ArrayList<>();
+                                    } else {
+                                        mLaneList.clear();
+                                    }
+                                    Logger.i(dataBeen.size() + "");
+                                    for (int i = 0; i < dataBeen.size(); i++) {
+                                        Logger.i(dataBeen.get(i).getLane());
+                                        mLaneList.add(dataBeen.get(i).getLane());
+                                    }
+                                    DataSupport.deleteAll(SupportLane.class);
+                                    SupportLane supportLane = new SupportLane();
+                                    supportLane.setLane(mLaneList);
+                                    supportLane.save();
+                                    SPUtils.putAndApply(mActivity, SPUtils.TEXTLANE, dataBeen.get(0).getLane());
+                                }
+
+                            }, dataBean.getTerminal_site());
+                        }
                     } else {
                         SPListUtil.putStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO, null);
                     }
@@ -266,6 +296,7 @@ public class MainActivity extends BaseActivity implements
         if (new_ListValue.size() == 3) {
             mTvChangeStationMain.setText(new_ListValue.get(2));
         }
+
     }
 
 
@@ -297,28 +328,6 @@ public class MainActivity extends BaseActivity implements
     }
 
 
-    @OnClick({R.id.footer_item_setting,
-            R.id.footer_item_theme, R.id.footer_item_location})
-    public void onFooterClick(View view) {
-        switch (view.getId()) {
-            case R.id.footer_item_setting:
-                Intent intent = new Intent(this, SettingActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.footer_item_theme:
-                changeTheme();
-                break;
-            case R.id.footer_item_location:
-
-                break;
-            default:
-                break;
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-    }
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -329,24 +338,18 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.nav_update) {
             Logger.i("点击了更新按钮");
             updateApp();
+        } else if (id == R.id.nav_setting) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_theme) {
+            changeTheme();
         } else if (id == R.id.nav_backup) {
             buckUpApp();
-        } else if (id == R.id.nav_config) {
-//            post_not_upload();
-            openConfigLine();
-//            Logger.i("点击了代开配置路线的按钮");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    /**
-     * 做配置路线的处理
-     */
-    private void openConfigLine() {
-        LineConfigActivity.actionStart(MainActivity.this, GlobalManager.OTHER2PORT);
     }
 
 
@@ -364,9 +367,8 @@ public class MainActivity extends BaseActivity implements
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-
                 Intent intent = new Intent(getContext(), AnimatorActivity.class);
-                finish();
+                MainActivity.this.finish();
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
@@ -404,13 +406,6 @@ public class MainActivity extends BaseActivity implements
         mActivity.startActivity(intent);
     }
 
-    /**
-     * 刷新当前页面的数据
-     */
-    private void refresh() {
-        onResume();
-    }
-
 
     //在onResume()方法注册
     @Override
@@ -420,7 +415,7 @@ public class MainActivity extends BaseActivity implements
 
         setOperatorInfo("check_select = ?", mTvOperatorCheckMain);
         setOperatorInfo("login_select = ?", mTvOperatorLoginMain);
-        mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+        mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "X08"));
 
         mTvMathNumberDraft.setText(SPUtils.get(this, SPUtils.MATH_DRAFT_LITE, 0) + "");
         mTvMathNumberSubmit.setText(SPUtils.get(this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
@@ -442,7 +437,7 @@ public class MainActivity extends BaseActivity implements
                 if (i == 0) {
                     operator = job_number + "/" + operator_name;
                 } else {
-                    operator=operator+"\n"+job_number + "/" + operator_name;
+                    operator = operator + "\n" + job_number + "/" + operator_name;
                 }
             }
         } else {
@@ -630,11 +625,6 @@ public class MainActivity extends BaseActivity implements
     }
 
 
-    @OnClick(R.id.footer_item_setting)
-    public void onSetting(View view) {
-        ToastUtils.singleToast("点击了设置");
-    }
-
     @Override
     protected void onDestroy() {
 
@@ -653,13 +643,14 @@ public class MainActivity extends BaseActivity implements
     public static void notifyAndRefreshMath() {
         //  mTvMathNumberSubmit.setText(SPUtils.get(MainActivity.this, SPUtils.MATH_SUBMIT_LITE, 0) + "");
     }
+
     class MyBroadCaseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intent) {
             int draft = intent.getIntExtra(SubmitService.ARG_BROADCAST_DRAFT, 0);
             int submit = intent.getIntExtra(SubmitService.ARG_BROADCAST_SUBMIT, 0);
-            mTvMathNumberDraft.setText(draft+"");
-            mTvMathNumberSubmit.setText(submit+"");
+            mTvMathNumberDraft.setText(draft + "");
+            mTvMathNumberSubmit.setText(submit + "");
         }
     }
 

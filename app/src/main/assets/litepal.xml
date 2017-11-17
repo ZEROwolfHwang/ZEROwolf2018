@@ -4,10 +4,11 @@
         <dbname value="green" />
 
 
-        <version value="1" />
+        <version value="11" />
 
         <list>
             <mapping class="com.android.htc.greenroad.litepalbean.SupportOperator" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportMedia" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportScan" />
@@ -15,6 +16,7 @@
             <mapping class="com.android.htc.greenroad.litepalbean.SupportChecked" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportBlack" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportLine" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportLane" />
 
         </list>
 

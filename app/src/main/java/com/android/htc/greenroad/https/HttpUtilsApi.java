@@ -5,6 +5,7 @@ import com.android.htc.greenroad.bean.UpdateAppInfo;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
 import com.android.htc.greenroad.httpresultbean.HttpResultBlack;
 import com.android.htc.greenroad.httpresultbean.HttpResultCode;
+import com.android.htc.greenroad.httpresultbean.HttpResultLane;
 import com.android.htc.greenroad.httpresultbean.HttpResultLineStation;
 import com.android.htc.greenroad.httpresultbean.HttpResultLoginName;
 import com.android.htc.greenroad.httpresultbean.HttpResultMacInfo;
@@ -88,6 +89,7 @@ public interface HttpUtilsApi {
             @Field("register_psw") String psw,
             @Field("register_mac") String macId
     );
+
     @FormUrlEncoded
     @POST("Login/login")
     Observable<HttpResult> postLogin(
@@ -100,8 +102,18 @@ public interface HttpUtilsApi {
     @GET("Api/black")
     Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getBlack();
 
- @GET("Api/linestations")
+//    @Headers({
+//            "Content-Type: application/json;charset=utf-8",
+//            "Accept: application/json"
+//    })
+    @GET("Api/linestations")
     Observable<HttpResultLineStation<List<HttpResultLineStation.DataBean>>> getLines();
+//  @GET("Api/linestations")
+//    Call<HttpResultLineStation> getLines();
+
+    @FormUrlEncoded
+    @POST("Api/lane")
+    Observable<HttpResultLane<List<HttpResultLane.DataBean>>> getLanes(@Field("station") String station);
 
     @FormUrlEncoded
     @POST("Api/macInfo")

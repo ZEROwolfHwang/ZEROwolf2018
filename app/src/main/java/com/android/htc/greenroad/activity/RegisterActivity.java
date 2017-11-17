@@ -18,9 +18,13 @@ import com.android.htc.greenroad.SpinnerPopupWindow;
 import com.android.htc.greenroad.adapter.RecycleViewDivider;
 import com.android.htc.greenroad.adapter.SpinnerAdapter;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
+import com.android.htc.greenroad.httpresultbean.HttpResultLane;
+import com.android.htc.greenroad.https.RequestLane;
 import com.android.htc.greenroad.https.RequestRegistered;
+import com.android.htc.greenroad.litepalbean.SupportLane;
 import com.android.htc.greenroad.litepalbean.SupportLine;
 import com.android.htc.greenroad.tools.SPListUtil;
+import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.ToastUtils;
 import com.orhanobut.logger.Logger;
 
@@ -89,7 +93,6 @@ public class RegisterActivity extends BaseActivity {
     }
 
 
-
     @OnClick({R.id.register_road, R.id.register_station, R.id.btn_sure_register})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -125,6 +128,15 @@ public class RegisterActivity extends BaseActivity {
                 if (supportLines.size() != 0) {
                     mStationList = supportLines.get(0).getStations();
                 }
+//                if (mStationList == null) {
+//
+//                    mStationList = new ArrayList<>();
+//                } else {
+//                    mStationList.clear();
+//                }
+//                mStationList.add("玛多收费站");
+//                mStationList.add("铁盖收费站");
+//                mStationList.add("塔拉收费站");
 
                 mAdapter_station = new SpinnerAdapter(this, (ArrayList<String>) mStationList, position -> {
                     mTextStationRegister.setText(mStationList.get(position));
@@ -220,6 +232,33 @@ public class RegisterActivity extends BaseActivity {
 
                             Logger.i(app_config_info.toString());
                             SPListUtil.putStrListValue(RegisterActivity.this, SPListUtil.APPCONFIGINFO, app_config_info);
+
+                            RequestLane.getInstance().getLanes(new Subscriber<List<HttpResultLane.DataBean>>() {
+                                @Override
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Logger.i(e.getMessage());
+                                }
+
+                                @Override
+                                public void onNext(List<HttpResultLane.DataBean> dataBeen) {
+                                    ArrayList<String> laneList = new ArrayList<>();
+                                    for (int i = 0; i < dataBeen.size(); i++) {
+                                        Logger.i(dataBeen.get(i).toString());
+                                        laneList.add(dataBeen.get(i).getLane());
+                                    }
+                                    DataSupport.deleteAll(SupportLine.class);
+                                    SupportLane supportLane = new SupportLane();
+                                    supportLane.setLane(laneList);
+                                    supportLane.save();
+                                    SPUtils.putAndApply(RegisterActivity.this, SPUtils.TEXTLANE, dataBeen.get(0).getLane());
+                                }
+                            },stationText);
+
                         } else {
                             ToastUtils.singleToast(httpResult.getMsg());
 
@@ -238,7 +277,13 @@ public class RegisterActivity extends BaseActivity {
 
     private void initData() {
         mSupportLineList = DataSupport.findAll(SupportLine.class);
-        mRoadList = new ArrayList<>();
+        if (mRoadList == null) {
+
+            mRoadList = new ArrayList<>();
+        } else {
+            mRoadList.clear();
+
+        }
         if (mSupportLineList.size() != 0) {
             for (int s = 0; s < mSupportLineList.size(); s++) {
                 mRoadList.add(mSupportLineList.get(s).getLine());
@@ -247,6 +292,7 @@ public class RegisterActivity extends BaseActivity {
         mDimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120,
                 getResources().getDisplayMetrics());
 
+//        mRoadList.add("共玉高速");
 
     }
 

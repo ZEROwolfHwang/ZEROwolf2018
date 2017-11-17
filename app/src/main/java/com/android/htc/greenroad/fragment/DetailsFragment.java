@@ -19,8 +19,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.luck.picture.lib.entity.LocalMedia;
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.activity.PreviewDetailActivity;
 import com.android.htc.greenroad.activity.ShowActivity;
@@ -33,9 +31,10 @@ import com.android.htc.greenroad.litepalbean.SupportBlack;
 import com.android.htc.greenroad.litepalbean.SupportDetail;
 import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.android.htc.greenroad.litepalbean.SupportMedia;
-import com.android.htc.greenroad.manager.CarColorManager;
 import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.SPUtils;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -56,7 +55,7 @@ public class DetailsFragment extends Fragment {
     private static TextView mTvChangeNumberDetail;
     private static TextView mTvChangeGoodsDetail;
 
-    private static String mCurrent_color;
+    private static String mCurrent_color ;
     @BindView(R.id.activity_recycler_left)
     ImageView mRecyclerLeft;
     @BindView(R.id.activity_recycler_right)
@@ -123,7 +122,7 @@ public class DetailsFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         initView(view);
 
-        initRadioColor();
+//        initRadioColor();
         initRecyclerView();
         return view;
     }
@@ -219,23 +218,23 @@ public class DetailsFragment extends Fragment {
                 mTvChangeGoodsDetail.setText(goodsFromDraft);
                 GoodsFragment.notifyDataChangeFromDraft(goodsFromDraft);
 
-                String color = sSupportDetail.getColor();
-                if (CarColorManager.COLOR_YELLOW.equals(color)) {
-                    mLicense_yellow.setChecked(true);
-                    mCurrent_color = CarColorManager.COLOR_YELLOW;
-                } else if (CarColorManager.COLOR_BLUE.equals(color)) {
-                    mLicense_blue.setChecked(true);
-                    mCurrent_color = CarColorManager.COLOR_BLUE;
-                } else if (CarColorManager.COLOR_BLACK.equals(color)) {
-                    mLicense_black.setChecked(true);
-                    mCurrent_color = CarColorManager.COLOR_BLACK;
-                } else if (CarColorManager.COLOR_GREEN.equals(color)) {
-                    mLicense_green.setChecked(true);
-                    mCurrent_color = CarColorManager.COLOR_GREEN;
-                } else if (CarColorManager.COLOR_WHITE.equals(color)) {
-                    mLicense_white.setChecked(true);
-                    mCurrent_color = CarColorManager.COLOR_WHITE;
-                }
+//                String color = sSupportDetail.getColor();
+//                if (CarColorManager.COLOR_YELLOW.equals(color)) {
+//                    mLicense_yellow.setChecked(true);
+//                    mCurrent_color = CarColorManager.COLOR_YELLOW;
+//                } else if (CarColorManager.COLOR_BLUE.equals(color)) {
+//                    mLicense_blue.setChecked(true);
+//                    mCurrent_color = CarColorManager.COLOR_BLUE;
+//                } else if (CarColorManager.COLOR_BLACK.equals(color)) {
+//                    mLicense_black.setChecked(true);
+//                    mCurrent_color = CarColorManager.COLOR_BLACK;
+//                } else if (CarColorManager.COLOR_GREEN.equals(color)) {
+//                    mLicense_green.setChecked(true);
+//                    mCurrent_color = CarColorManager.COLOR_GREEN;
+//                } else if (CarColorManager.COLOR_WHITE.equals(color)) {
+//                    mLicense_white.setChecked(true);
+//                    mCurrent_color = CarColorManager.COLOR_WHITE;
+//                }
             }
         }
         tag = false;
@@ -278,6 +277,11 @@ public class DetailsFragment extends Fragment {
             }
             mTvChangeNumberDetail.setText(carNumber);
         }
+        notifyScanNumberChange(carNumber);
+    }
+
+    private void notifyScanNumberChange(String carNumber) {
+        ScanFragment.notifyNumberChange(carNumber);
     }
 
     private boolean isBlack(String carNumber, List<SupportBlack> blackList) {
@@ -413,18 +417,18 @@ public class DetailsFragment extends Fragment {
 
         mTvChangeNumberDetail = (TextView) view.findViewById(R.id.tv_change_number_detail);
         mTvChangeGoodsDetail = (TextView) view.findViewById(R.id.tv_change_goods_detail);
-        mRadioGroupColor = (RadioGroup) view.findViewById(R.id.radio_group_color);
+//        mRadioGroupColor = (RadioGroup) view.findViewById(R.id.radio_group_color);
 
 
-        mLicense_yellow = (RadioButton) view.findViewById(R.id.license_yellow);
-        mLicense_blue = (RadioButton) view.findViewById(R.id.license_blue);
-        mLicense_black = (RadioButton) view.findViewById(R.id.license_black);
-        mLicense_green = (RadioButton) view.findViewById(R.id.license_green);
-        mLicense_white = (RadioButton) view.findViewById(R.id.license_white);
+//        mLicense_yellow = (RadioButton) view.findViewById(R.id.license_yellow);
+//        mLicense_blue = (RadioButton) view.findViewById(R.id.license_blue);
+//        mLicense_black = (RadioButton) view.findViewById(R.id.license_black);
+//        mLicense_green = (RadioButton) view.findViewById(R.id.license_green);
+//        mLicense_white = (RadioButton) view.findViewById(R.id.license_white);
 
     }
 
-    private void initRadioColor() {
+    /*private void initRadioColor() {
 
         mRadioGroupColor.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
@@ -453,7 +457,7 @@ public class DetailsFragment extends Fragment {
                     break;
             }
         });
-    }
+    }*/
 
     @OnClick({R.id.tv_change_number_detail, R.id.tv_change_goods_detail,
             R.id.activity_recycler_left, R.id.activity_recycler_right})
@@ -577,7 +581,6 @@ public class DetailsFragment extends Fragment {
         String goods = mTvChangeGoodsDetail.getText().toString().trim();
 
         DetailInfoBean bean = new DetailInfoBean();
-        bean.setColor(mCurrent_color);
         bean.setNumber(number);
         bean.setGoods(goods);
         bean.setPath_and_title(pathTitleList);

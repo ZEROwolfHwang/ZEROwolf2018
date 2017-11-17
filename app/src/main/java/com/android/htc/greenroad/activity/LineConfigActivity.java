@@ -3,7 +3,6 @@ package com.android.htc.greenroad.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,11 +37,12 @@ public class LineConfigActivity extends BaseActivity {
     private String mConfigPort;
     private String mType;
 
-    public static void actionStart(Context context,String type){
+    public static void actionStart(Context context, String type) {
         Intent intent = new Intent(context, LineConfigActivity.class);
         intent.setType(type);
         context.startActivity(intent);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,28 +52,31 @@ public class LineConfigActivity extends BaseActivity {
         //initToolbar();
 
         getIntentData();
-        initView();
+
+        mBtnSureLine.setOnClickListener(view -> {
+            mConfigPort = mTextLineConfig.getText().toString();
+            // if (!TextUtils.isEmpty(mConfigPort)) {
+              SPUtils.putAndApply(this, SPUtils.CONFIG_PORT, mConfigPort);
+            if (GlobalManager.LOGIN2PORT.equals(mType)) {
+                mRlProgressPort.setVisibility(View.VISIBLE);
+                initLine();
+
+            } else {
+                finish();
+            }
+            //  }
+        });
+//        initView();
     }
 
     private void getIntentData() {
         Intent intent = getIntent();
         mType = intent.getType();
-
-    }
-
-    private void initView() {
-        mConfigPort = mTextLineConfig.getText().toString();
-        mBtnSureLine.setOnClickListener(view -> {
-            if (TextUtils.isEmpty(mConfigPort)) {
-                SPUtils.putAndApply(this, SPUtils.CONFIG_PORT, mConfigPort);
-                if (GlobalManager.LOGIN2PORT.equals(mType)) {
-                    mRlProgressPort.setVisibility(View.VISIBLE);
-                    initLine();
-                } else {
-                    finish();
-                }
-            }
-        });
+        if (GlobalManager.LOGIN2PORT.equals(mType)) {
+            mBtnSureLine.setText("申请注册");
+        } else {
+            mBtnSureLine.setText("确定配置");
+        }
     }
 
     /**
@@ -96,6 +99,7 @@ public class LineConfigActivity extends BaseActivity {
             @Override
             public void onNext(List<HttpResultLineStation.DataBean> dataBeen) {
                 DataSupport.deleteAll(SupportLine.class);
+                ToastUtils.singleToast(dataBeen.get(0).getLine() + ""+dataBeen.get(0).getStations());
                 for (int i = 0; i < dataBeen.size(); i++) {
                     Logger.i(dataBeen.get(i).getLine() + "");
                     Logger.i(dataBeen.get(i).getStations() + "");
@@ -116,17 +120,5 @@ public class LineConfigActivity extends BaseActivity {
         });
     }
 
-    /*private void initToolbar() {
-
-        setSupportActionBar(mToolbarLineConfig);
-
-
-        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
-        title_text_view.setText("配置线路");
-
-        mToolbarLineConfig.setNavigationIcon(R.drawable.back_up_logo);
-
-        mToolbarLineConfig.setNavigationOnClickListener(v -> finish());
-    }*/
 
 }

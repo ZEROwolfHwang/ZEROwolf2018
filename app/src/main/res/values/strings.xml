@@ -66,4 +66,9 @@
     <string name="add_operator">新增检查人/登记人</string>
     <string name="delete">删除</string>
 
+
+
+    <!--abcdefghijklmnopqrstuvwxyz-->
+    <string name="alphabet_and_number">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
+    <string name="alphabet_and_point">.0123456789</string>
 </resources>

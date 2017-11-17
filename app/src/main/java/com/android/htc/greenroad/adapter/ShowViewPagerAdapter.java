@@ -96,7 +96,7 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "登记信息";
+                return "检查信息";
             case 1:
                 return "收费信息";
             case 2:

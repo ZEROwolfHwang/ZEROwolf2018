@@ -4,7 +4,7 @@ package com.android.htc.greenroad.httpresultbean;
  * Created by Administrator on 2017/7/5.
  */
 
-public class HttpResultLineStation<T> {
+public class HttpResultLane<T> {
 
     /**
      * code : 300
@@ -43,31 +43,20 @@ public class HttpResultLineStation<T> {
 
     public static class DataBean<T> {
 
-        private String line;
-        private String stations;
+        private String lane;
 
-
-        public void setStations(String stations) {
-            this.stations = stations;
+        public String getLane() {
+            return lane;
         }
 
-        public String getStations() {
-            return stations;
-        }
-
-        public void setLine(String line) {
-            this.line = line;
-        }
-
-        public String getLine() {
-            return line;
+        public void setLane(String lane) {
+            this.lane = lane;
         }
 
         @Override
         public String toString() {
             return "DataBean{" +
-                    "line='" + line + '\'' +
-                    ", stations='" + stations + '\'' +
+                    "lane='" + lane + '\'' +
                     '}';
         }
     }

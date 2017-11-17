@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:checkableBehavior="single">
     <group>
-    <item
-            android:id="@+id/nav_config"
-            android:icon="@drawable/post_not_send"
-            android:title="配置">
-        </item>
+
+        <item
+            android:id="@+id/nav_theme"
+            android:icon="@drawable/update_app"
+            android:title="主题"/>
 
         <item
             android:id="@+id/nav_update"
@@ -17,6 +17,10 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/about_app"
             android:title="@string/about_app"/>
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/update_app"
+            android:title="设置"/>
         <item
             android:id="@+id/nav_backup"
             android:icon="@drawable/back_up_logo"

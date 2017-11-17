@@ -1,25 +1,30 @@
 package com.android.htc.greenroad.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
+import com.android.htc.greenroad.SpinnerPopupWindow;
+import com.android.htc.greenroad.adapter.RecycleViewDivider;
 import com.android.htc.greenroad.adapter.SettingOperatorAdapter;
+import com.android.htc.greenroad.adapter.SpinnerAdapter;
 import com.android.htc.greenroad.bean.SettingOperatorInfo;
-import com.android.htc.greenroad.interfacy.TextChangeWatcher;
+import com.android.htc.greenroad.litepalbean.SupportLane;
 import com.android.htc.greenroad.litepalbean.SupportOperator;
 import com.android.htc.greenroad.tools.ActionBarTool;
 import com.android.htc.greenroad.tools.SPListUtil;
 import com.android.htc.greenroad.tools.SPUtils;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -41,10 +46,13 @@ public class SettingActivity extends BaseActivity {
     TextView mTextSettingStation;
     @BindView(R.id.setting_recycler_view)
     RecyclerView mSettingRecyclerView;
-    @BindView(R.id.text_setting_lane)
-    EditText mTextSettingLane;
+
     @BindView(R.id.text_setting_add_selection)
     TextView mTextSettingAddSelection;
+    @BindView(R.id.text_setting_lane)
+    TextView mTextSettingLane;
+    @BindView(R.id.btn_setting_lane)
+    ImageButton mBtnSettingLane;
 
     private SettingActivity mActivity;
     private SettingOperatorAdapter mAdapter;
@@ -52,6 +60,11 @@ public class SettingActivity extends BaseActivity {
     private String mJob_number_login;
     private String mOperator_login_name;
     private List<SupportOperator> mSupportOperators;
+    private int mWidth;
+    private SpinnerAdapter mAdapterLane;
+    private SpinnerPopupWindow mPopupWindow;
+    private float mDimension;
+    private ArrayList<String> mLaneList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +93,11 @@ public class SettingActivity extends BaseActivity {
      * 初始化工作人员信息
      */
     private void initData() {
+
+        mDimension = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200,
+                getResources().getDisplayMetrics());
+
+
         mSupportOperators = DataSupport.findAll(SupportOperator.class);
         Logger.i(mSupportOperators.toString());
 
@@ -101,15 +119,37 @@ public class SettingActivity extends BaseActivity {
             mTextSettingStation.setText(strListValue.get(2).toString());
         }
 
-        //初始化车道以及保存改变车道的状态
-        mTextSettingLane.setText((String) SPUtils.get(mActivity, SPUtils.TEXTLANE, "66"));
-        mTextSettingLane.setSelection(mTextSettingLane.getText().length());
-        mTextSettingLane.addTextChangedListener(new TextChangeWatcher(editable -> {
-            String laneText = mTextSettingLane.getText().toString().trim();
-            if (!"".equals(laneText)) {
-                SPUtils.putAndApply(mActivity, SPUtils.TEXTLANE, laneText);
-            }
-        }));
+        List<SupportLane> laneList = DataSupport.findAll(SupportLane.class);
+        if (mLaneList == null) {
+            mLaneList = new ArrayList<>();
+        } else {
+            mLaneList.clear();
+        }
+
+        if (laneList != null && laneList.size() != 0) {
+            mLaneList.addAll(laneList.get(0).getLane());
+        }
+        mTextSettingLane.setText(SPUtils.get(mActivity,SPUtils.TEXTLANE,"X08")+"");
+        mBtnSettingLane.setOnClickListener(view -> {
+            mWidth = mTextSettingLane.getWidth();
+            mAdapterLane = new SpinnerAdapter(this, mLaneList, position -> {
+                mTextSettingLane.setText(mLaneList.get(position));
+                mPopupWindow.dismissPopWindow();
+                SPUtils.putAndApply(mActivity, SPUtils.TEXTLANE, mLaneList.get(position));
+            });
+
+            mPopupWindow = new SpinnerPopupWindow.Builder(SettingActivity.this)
+                    .setmLayoutManager(null, 0)
+                    .setmAdapter(mAdapterLane)
+                    .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.GRAY))
+                    .setmHeight(400).setmWidth(mWidth)
+                    .setOutsideTouchable(true)
+                    .setFocusable(true)
+                    .build();
+
+            mPopupWindow.showPopWindow(view, (int) mDimension);
+
+        });
     }
 
 

@@ -223,23 +223,30 @@
     <style name="scan_code_info_style">
         <item name="android:textColor">?attr/custom_text_color_second</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical|left</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">10</item>
+        <item name="android:layout_weight">5</item>
         <item name="android:textSize">15sp</item>
+    </style>
+    <!--扫描结果的显示改变的字体-->
+    <!--扫描结果的显示不改变的字体-->
+    <style name="ll_scan_code_info_style">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
     </style>
     <!--扫描结果的显示改变的字体-->
 
     <style name="scan_code_change_info_style">
         <item name="android:maxLines">1</item>
-        <item name="android:enabled">false</item>
         <item name="android:background">@null</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">?attr/custom_text_color_first</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">9</item>
+        <item name="android:layout_weight">5</item>
     </style>
 
     <dimen name="layout_margin80dp">80dp</dimen>

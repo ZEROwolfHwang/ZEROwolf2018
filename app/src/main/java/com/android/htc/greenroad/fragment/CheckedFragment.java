@@ -157,6 +157,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             mCheckOperators = sSupportChecked.getSiteChecks();
             mLoginOperator = sSupportChecked.getSiteLogin();
         } else if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+            ConclusionActivity.notifyDataChangeFromDraft("符合绿通放行规定;");
             mCheckOperators = setCheckOperatorInfo("check_select = ?");
             mLoginOperator = setLoginOperatorInfo("login_select = ?");
         }
@@ -172,7 +173,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             String mOperator_name = operatorList.get(0).getOperator_name();
             return mJob_number + "/" + mOperator_name;
         }
-        return "500001/苏三";
+        return "无/无";
     }
 
     private List<String> setCheckOperatorInfo(String condition) {
@@ -259,7 +260,10 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
                 DetailsFragment.notifyTag(false);
                 break;
             case R.id.site_login_operator:
-                BasePhotoAdapter<String> adapter_login = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, mOperators) {
+                ArrayList<String> LoginList = new ArrayList<>();
+                LoginList.addAll(mOperators);
+                LoginList.add("无/无");
+                BasePhotoAdapter<String> adapter_login = new BasePhotoAdapter<String>(getContext(), R.layout.item_black_text, LoginList) {
                     @Override
                     public void convert(BasePhotoViewHolder holder, int position, String s) {
                         TextView textView = holder.getView(R.id.text_item_black);

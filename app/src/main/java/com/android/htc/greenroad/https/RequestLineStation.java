@@ -7,7 +7,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 import static com.android.htc.greenroad.https.RequestBlackList.sRequestBlackList;
 
@@ -38,20 +37,8 @@ public class RequestLineStation {
 
     public void getLineStation(Subscriber<List<HttpResultLineStation.DataBean>> subscriber) {
         Observable<List<HttpResultLineStation.DataBean>> observable = HttpMethods.getInstance().getApi().getLines()
-                .map(new Func1<HttpResultLineStation<List<HttpResultLineStation.DataBean>>, List<HttpResultLineStation.DataBean>>() {
-                    @Override
-                    public List<HttpResultLineStation.DataBean> call(HttpResultLineStation<List<HttpResultLineStation.DataBean>> listHttpResultLineStation) {
-                        return listHttpResultLineStation.getData();
-                    }
-                })
+                .map(listHttpResultLineStation -> listHttpResultLineStation.getData())
                 ;
-//                .map(new HttpNumberFunc<>());
-                /*.map(new Func1<HttpResultLineStation<List<HttpResultLineStation.DataBean>>, List<HttpResultBlack.DataBean>>() {
-                    @Override
-                    public List<HttpResultBlack.DataBean> call(HttpResultBlack<List<HttpResultBlack.DataBean>> listHttpResultBlack) {
-                        return listHttpResultBlack.getData();
-                    }
-                });*/
 
         HttpMethods.getInstance().toSubscribe(observable,subscriber);
 

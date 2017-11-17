@@ -103,7 +103,7 @@ public class SubmitService extends IntentService {
         sActivity.startService(intent);
     }
 
-    public static void startActionSave(Context context, String enterType, String showType,int id) {
+    public static void startActionSave(Context context, String enterType, String showType, int id) {
         sContext_draft = context;
         Intent intent = new Intent(sContext_draft, SubmitService.class);
         intent.setAction(ACTION_SAVE);
@@ -161,13 +161,12 @@ public class SubmitService extends IntentService {
                 if (ACTION_SAVE.equals(action)) {
                     String enterType = intent.getStringExtra(ARG_TYPE_SAVE);
                     String showType = intent.getStringExtra(ARG_TYPE_SHOW_SAVE);
-                    int id = intent.getIntExtra(SAVE_OR_BACK,0);
+                    int id = intent.getIntExtra(SAVE_OR_BACK, 0);
 
                     getListenerData(enterType);
 
                     String saveTime = TimeUtil.getCurrentTimeToDate();
                     if (id == 0) {
-
                         save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE, showType);
                     } else {
                         save2Litepal(saveTime, GlobalManager.TYPE_DRAFT_LITE, ACTION_SAVE, showType);
@@ -230,7 +229,7 @@ public class SubmitService extends IntentService {
             Logger.i(count + "++++++++++++count");
             //DataSupport.count(SupportDraftOrSubmit.class);
 
-            List<SupportDraftOrSubmit>  draftOrSubmitList = DataSupport.where("lite_ID = ? and lite_type = ?", count + "",lite_type).find(SupportDraftOrSubmit.class);
+            List<SupportDraftOrSubmit> draftOrSubmitList = DataSupport.where("lite_ID = ? and lite_type = ?", count + "", lite_type).find(SupportDraftOrSubmit.class);
             if (draftOrSubmitList.size() != 0) {
                 ToastUtils.singleToast("该存储ID已存在,请再次存储");
                 return;
@@ -241,27 +240,20 @@ public class SubmitService extends IntentService {
             //保存数据到表SupportScan
             SupportScan supportScan = new SupportScan();
             supportScan.setLite_ID(count);
-            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
             supportScan.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
-            supportScan.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
-            supportScan.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
             supportScan.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
             supportScan.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
             supportScan.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
-            supportScan.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
-            supportScan.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
-            supportScan.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
             supportScan.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
-            supportScan.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
             supportScan.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
-            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
+            supportScan.setIsLimit(mScanInfoBean_Q.getIsLimit());
             supportScan.save();
 
             //保存数据到表SupportDetail
             SupportDetail supportDetail = new SupportDetail();
             supportDetail.setLite_ID(count);
             supportDetail.setNumber(mDetailInfoBean_Q.getNumber());
-            supportDetail.setColor(mDetailInfoBean_Q.getColor());
+//            supportDetail.setColor(mDetailInfoBean_Q.getColor());
             supportDetail.setGoods(mDetailInfoBean_Q.getGoods());
             supportDetail.setStation(mStation_Q);
             supportDetail.setRoad(mRoad_Q);
@@ -396,27 +388,20 @@ public class SubmitService extends IntentService {
             //保存数据到表SupportScan
             SupportScan supportScan = new SupportScan();
             // supportScan.setLite_ID(count);
-            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
             supportScan.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
-            supportScan.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
-            supportScan.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
             supportScan.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
             supportScan.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
             supportScan.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
-            supportScan.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
-            supportScan.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
-            supportScan.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
             supportScan.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
-            supportScan.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
             supportScan.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
-            supportScan.setScan_code(mScanInfoBean_Q.getScan_code());
+            supportScan.setIsLimit(mScanInfoBean_Q.getIsLimit());
             supportScan.updateAll("lite_ID = ?", String.valueOf(count));
 
             //保存数据到表SupportDetail
             SupportDetail supportDetail = new SupportDetail();
             // supportDetail.setLite_ID(count);
             supportDetail.setNumber(mDetailInfoBean_Q.getNumber());
-            supportDetail.setColor(mDetailInfoBean_Q.getColor());
+//            supportDetail.setColor(mDetailInfoBean_Q.getColor());
             supportDetail.setGoods(mDetailInfoBean_Q.getGoods());
             supportDetail.setStation(mStation_Q);
             supportDetail.setRoad(mRoad_Q);
@@ -553,64 +538,62 @@ public class SubmitService extends IntentService {
 
         PostInfo info = new PostInfo();
 
-        //从扫描中拿到的数据
-        if (mScanInfoBean_Q != null) {
-            info.setNumber(mDetailInfoBean_Q.getNumber());
-            info.setColor(mDetailInfoBean_Q.getColor());
-            info.setGoods(mDetailInfoBean_Q.getGoods());
 
-            // 从主界面拿到的信息
-            info.setRoad(mRoad_Q);
-            info.setStation(mStation_Q);
-            info.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+        info.setNumber(mDetailInfoBean_Q.getNumber());
+        info.setGoods(mDetailInfoBean_Q.getGoods());
 
-            //从checkedFragment中拿到的数据
-            List<String> siteChecks = mCheckedBean_Q.getSiteChecks();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < siteChecks.size(); i++) {
-                if (i == 0) {
-                    builder.append(siteChecks.get(i));
-                } else {
-                    builder.append("-" + siteChecks.get(i));
-                }
+        // 从主界面拿到的信息
+        info.setRoad(mRoad_Q);
+        info.setStation(mStation_Q);
+        info.setLane((String) SPUtils.get(this, SPUtils.TEXTLANE, "66"));
+
+        //从checkedFragment中拿到的数据
+        List<String> siteChecks = mCheckedBean_Q.getSiteChecks();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < siteChecks.size(); i++) {
+            if (i == 0) {
+                builder.append(siteChecks.get(i));
+            } else {
+                builder.append("-" + siteChecks.get(i));
             }
-            info.setIsFree(mCheckedBean_Q.getIsFree());
-            info.setIsRoom(mCheckedBean_Q.getIsRoom());
-            info.setConclusion(mCheckedBean_Q.getConclusion());
-            info.setDescription(mCheckedBean_Q.getDescription());
-            info.setSiteCheck(builder.toString());
-            info.setSiteLogin(mCheckedBean_Q.getSiteLogin());
-
-
-            //扫描的到的信息
-            info.setScan_code(mScanInfoBean_Q.getScan_code());
-            info.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
-            info.setScan_02Q(mScanInfoBean_Q.getScan_02Q());
-            info.setScan_03Q(mScanInfoBean_Q.getScan_03Q());
-            info.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
-            info.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
-            info.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
-            info.setScan_07Q(mScanInfoBean_Q.getScan_07Q());
-            info.setScan_08Q(mScanInfoBean_Q.getScan_08Q());
-            info.setScan_09Q(mScanInfoBean_Q.getScan_09Q());
-            info.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
-            info.setScan_11Q(mScanInfoBean_Q.getScan_11Q());
-            info.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
-            info.setScan_code(mScanInfoBean_Q.getScan_code());
-            info.setCurrent_time(postTime);
-
-        } else {
-            ToastUtils.singleToast("请扫描二维码");
         }
+        info.setIsFree(mCheckedBean_Q.getIsFree());
+        info.setIsRoom(mCheckedBean_Q.getIsRoom());
+        info.setConclusion(mCheckedBean_Q.getConclusion());
+        info.setDescription(mCheckedBean_Q.getDescription());
+        info.setSiteCheck(builder.toString());
+        info.setSiteLogin(mCheckedBean_Q.getSiteLogin());
 
-        if (info.getColor() == null || "".equals(info.getColor())) {
-            ToastUtils.singleToast("请确定车牌颜色");
-            return;
-        }
+
+        //扫描的到的信息
+        info.setScan_01Q(mScanInfoBean_Q.getScan_01Q());
+        info.setScan_04Q(mScanInfoBean_Q.getScan_04Q());
+        info.setScan_05Q(mScanInfoBean_Q.getScan_05Q());
+        info.setScan_06Q(mScanInfoBean_Q.getScan_06Q());
+        info.setScan_10Q(mScanInfoBean_Q.getScan_10Q());
+        info.setScan_12Q(mScanInfoBean_Q.getScan_12Q());
+        info.setLimit(mScanInfoBean_Q.getIsLimit());
+        info.setCurrent_time(postTime);
+
+
         if (info.getNumber() == null || "".equals(info.getNumber())) {
             ToastUtils.singleToast("请确定车牌号");
             return;
         }
+
+        if (info.getScan_04Q() == null || "".equals(info.getScan_04Q())) {
+            ToastUtils.singleToast("请确定称重质量");
+            return;
+        }
+        if (info.getScan_06Q() == null || "".equals(info.getScan_06Q())) {
+            ToastUtils.singleToast("请确定免费金额");
+            return;
+        }
+        if (info.getScan_12Q() == null || "".equals(info.getScan_12Q())) {
+            ToastUtils.singleToast("请确定出口车道");
+            return;
+        }
+
         if (info.getGoods() == null || "".equals(info.getGoods())) {
             ToastUtils.singleToast("请确定货物名称");
             return;
@@ -619,18 +602,11 @@ public class SubmitService extends IntentService {
             ToastUtils.singleToast("请确定现场检查人");
             return;
         }
-        if (info.getSiteLogin() == null || "".equals(info.getSiteLogin())) {
-            ToastUtils.singleToast("请确定现场登记人");
-            return;
-        }
         if (info.getConclusion() == null || "".equals(info.getConclusion())) {
             ToastUtils.singleToast("请确定选择检查结论");
             return;
         }
-        if (info.getScan_code() == null || "".equals(info.getScan_code())) {
-            ToastUtils.singleToast("请扫描出口流水号二维码得到更多的信息");
-            return;
-        }
+
 
         ArrayList<PathTitleBean> pathTitle_sanzheng = new ArrayList<>();
         ArrayList<PathTitleBean> pathTitle_cheshen = new ArrayList<>();
@@ -664,6 +640,7 @@ public class SubmitService extends IntentService {
         }
 
         sActivity.notifyDataChangeAndFinish();
+        sActivity.notifyActivityFinish();
         Intent intent = new Intent(sActivity, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

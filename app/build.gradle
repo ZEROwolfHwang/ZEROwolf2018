@@ -8,7 +8,7 @@ android {
         applicationId "com.android.htc.greenroad"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
+        versionCode 12
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -82,7 +82,7 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     compile 'com.zhengliang:shadow-view:1.0.1'
     compile 'com.android.support:support-v4:25.3.1'
-    compile 'cn.yipianfengye.android:zxing-library:2.2'
+//    compile 'cn.yipianfengye.android:zxing-library:2.2'
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
     compile 'com.github.clans:fab:1.6.4'
     testCompile 'junit:junit:4.12'

@@ -42,44 +42,6 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer">
 
-        <LinearLayout
-            android:id="@+id/ll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="@dimen/layout_margin20dp"
-            android:clickable="true"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/footer_item_setting"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/footer_item_setting"
-                android:gravity="left|center_vertical"
-                android:text="@string/action_settings"/>
-
-            <TextView
-                android:id="@+id/footer_item_theme"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/footer_item_theme"
-                android:gravity="left|center_vertical"
-                android:text="@string/theme_app"/>
-
-            <TextView
-                android:id="@+id/footer_item_location"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/footer_item_location"
-                android:gravity="left|center_vertical"
-                android:text="位置"/>
-
-        </LinearLayout>
-
 
     </android.support.design.widget.NavigationView>
 

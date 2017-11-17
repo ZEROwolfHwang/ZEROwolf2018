@@ -23,20 +23,38 @@
         android:focusable="true"
         android:textSize="@dimen/text18"/>
 
+<!--
+    <TextView
+        style="@style/register_activity_tv_title_style"
+        android:text="注册收费站"/>
+-->
 
-    <EditText
-        android:layout_weight="1"
-        android:gravity="center"
-        android:maxLines="1"
-        android:background="@null"
-        android:inputType="number"
-        android:id="@+id/text_setting_lane"
+
+    <FrameLayout
         android:layout_width="0dp"
-        android:textColor="?attr/custom_attr_setting_text_color"
-        android:textSize="@dimen/text18"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
 
+        <TextView
+            android:background="@null"
+            android:inputType="number"
+            android:id="@+id/text_setting_lane"
+            android:textColor="?attr/custom_attr_setting_text_color"
+            android:textSize="@dimen/text18"
+            android:text="11"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:maxLines="1"/>
 
-
+        <ImageButton
+            android:id="@+id/btn_setting_lane"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="@dimen/layout_margin10dp"
+            android:background="@drawable/pop_drop_down"/>
+    </FrameLayout>
 
 </LinearLayout>

@@ -41,30 +41,30 @@ public class PreviewDetailActivity extends BaseActivity {
     Toolbar mToolbarPreviewDetail;
     @BindView(R.id.detail_activity_recycler_photo)
     RecyclerView mDetailActivityRecyclerPhoto;
-    @BindView(R.id.export_number)
-    TextView mExportNumber;
+    //    @BindView(R.id.export_number)
+//    TextView mExportNumber;
     @BindView(R.id.text_table_1)
     TextView mTextTable1;
-    @BindView(R.id.text_table_2)
-    TextView mTextTable2;
-    @BindView(R.id.text_table_3)
-    TextView mTextTable3;
+    //    @BindView(R.id.text_table_2)
+//    TextView mTextTable2;
+//    @BindView(R.id.text_table_3)
+//    TextView mTextTable3;
     @BindView(R.id.text_table_4)
     TextView mTextTable4;
     @BindView(R.id.text_table_5)
     TextView mTextTable5;
     @BindView(R.id.text_table_6)
     TextView mTextTable6;
-    @BindView(R.id.text_table_7)
-    TextView mTextTable7;
-    @BindView(R.id.text_table_8)
-    TextView mTextTable8;
-    @BindView(R.id.text_table_9)
-    TextView mTextTable9;
+    //    @BindView(R.id.text_table_7)
+//    TextView mTextTable7;
+//    @BindView(R.id.text_table_8)
+//    TextView mTextTable8;
+//    @BindView(R.id.text_table_9)
+//    TextView mTextTable9;
     @BindView(R.id.text_table_10)
     TextView mTextTable10;
-    @BindView(R.id.text_table_11)
-    TextView mTextTable11;
+    //    @BindView(R.id.text_table_11)
+//    TextView mTextTable11;
     @BindView(R.id.text_table_12)
     TextView mTextTable12;
     @BindView(R.id.checked_conclusion_text)
@@ -78,8 +78,8 @@ public class PreviewDetailActivity extends BaseActivity {
     TextView mPick003;
     @BindView(R.id.pick_004)
     TextView mPick004;
-    @BindView(R.id.pick_005)
-    TextView mPick005;
+    /* @BindView(R.id.pick_005)
+     TextView mPick005;*/
     @BindView(R.id.pick_006)
     TextView mPick006;
     @BindView(R.id.check_001)
@@ -94,6 +94,8 @@ public class PreviewDetailActivity extends BaseActivity {
     RecyclerView mRecyclerSiteCheckPreview;
     @BindView(R.id.detail_activity_recycler_progress)
     ProgressBar mDetailActivityRecyclerProgress;
+    @BindView(R.id.text_table_limit)
+    TextView mTextTableLimit;
     private SupportDraftOrSubmit mCurrentSupport;
     private LinearLayoutManager mLayoutManager;
     private DetailsRecyclerAdapter mAdapter;
@@ -194,24 +196,24 @@ public class PreviewDetailActivity extends BaseActivity {
         });
 
         new Thread(() -> {
-                if (finalPicturePaths != null && finalPicturePaths.size() != 0) {
-                    for (int i = 0; i < finalPicturePaths.size(); i++) {
-                        Bitmap bitmap = BitmapUtil.convertToBitmap(finalPicturePaths.get(i), 800, 800);
-                        String title = finalPictureTitles.get(i);
-                        MyBitmap myBitmap = new MyBitmap(finalPicturePaths.get(i), bitmap, title);
-                        mBitmapArrayList.add(myBitmap);
-                    }
+            if (finalPicturePaths != null && finalPicturePaths.size() != 0) {
+                for (int i = 0; i < finalPicturePaths.size(); i++) {
+                    Bitmap bitmap = BitmapUtil.convertToBitmap(finalPicturePaths.get(i), 800, 800);
+                    String title = finalPictureTitles.get(i);
+                    MyBitmap myBitmap = new MyBitmap(finalPicturePaths.get(i), bitmap, title);
+                    mBitmapArrayList.add(myBitmap);
                 }
-                runOnUiThread(() -> {
-                    mDetailActivityRecyclerProgress.setVisibility(View.GONE);
-                    mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
-                    if (ACTION_DRAFT_ITEM.equals(mIntent.getAction())) {
-                        mDraftSaveEdit.setAnimation(new AlphaAnimation(0, 1));
-                        mDraftSaveEdit.setVisibility(View.VISIBLE);
-                    } else if (ACTION_SUBMIT_ITEM.equals(mIntent.getAction())) {
-                        mDraftSaveEdit.setVisibility(View.GONE);
-                    }
-                });
+            }
+            runOnUiThread(() -> {
+                mDetailActivityRecyclerProgress.setVisibility(View.GONE);
+                mDetailActivityRecyclerPhoto.setAdapter(mAdapter);
+                if (ACTION_DRAFT_ITEM.equals(mIntent.getAction())) {
+                    mDraftSaveEdit.setAnimation(new AlphaAnimation(0, 1));
+                    mDraftSaveEdit.setVisibility(View.VISIBLE);
+                } else if (ACTION_SUBMIT_ITEM.equals(mIntent.getAction())) {
+                    mDraftSaveEdit.setVisibility(View.GONE);
+                }
+            });
 
         }).start();
 //        mRecyclerViewShootPhoto.scrollToPosition(3);
@@ -227,26 +229,18 @@ public class PreviewDetailActivity extends BaseActivity {
 
         //采集信息的条目
         mPick001.setText(supportDetail.getLane());
-        //  mPick002.setText(supportChecked.getSiteChecks().toString());
         mPick003.setText(mSupportChecked.getSiteLogin());
         mPick004.setText(supportDetail.getNumber());
-        mPick005.setText(supportDetail.getColor());
         mPick006.setText(supportDetail.getGoods());
 
         //扫描的条目
-        mExportNumber.setText(supportScan.getScan_code());
         mTextTable1.setText(supportScan.getScan_01Q());
-        mTextTable2.setText(supportScan.getScan_02Q());
-        mTextTable3.setText(supportScan.getScan_03Q());
         mTextTable4.setText(supportScan.getScan_04Q());
         mTextTable5.setText(supportScan.getScan_05Q());
         mTextTable6.setText(supportScan.getScan_06Q());
-        mTextTable7.setText(supportScan.getScan_07Q());
-        mTextTable8.setText(supportScan.getScan_08Q());
-        mTextTable9.setText(supportScan.getScan_09Q());
         mTextTable10.setText(supportScan.getScan_10Q());
-        mTextTable11.setText(supportScan.getScan_11Q());
         mTextTable12.setText(supportScan.getScan_12Q());
+        mTextTableLimit.setText(supportScan.getIsLimit() == 0 ? "否" : "是");
 
         //检查结论的条目
         mCheck001.setText(mSupportChecked.getIsRoom() == 0 ? "否" : "是");
@@ -260,6 +254,7 @@ public class PreviewDetailActivity extends BaseActivity {
         SupportDetail supportDetail = mCurrentSupport.getSupportDetail();
         SupportScan supportScan = mCurrentSupport.getSupportScan();
         SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
+
 
 
 

@@ -22,19 +22,13 @@ public class PostInfo {
     private String description;
 
     private String current_time;
-    private String scan_code;
     private String scan_01Q;
-    private String scan_02Q;
-    private String scan_03Q;
     private String scan_04Q;
     private String scan_05Q;
     private String scan_06Q;
-    private String scan_07Q;
-    private String scan_08Q;
-    private String scan_09Q;
     private String scan_10Q;
-    private String scan_11Q;
     private String scan_12Q;
+    private int limit;
 
     @Override
     public String toString() {
@@ -52,20 +46,22 @@ public class PostInfo {
                 ", conclusion='" + conclusion + '\'' +
                 ", description='" + description + '\'' +
                 ", current_time='" + current_time + '\'' +
-                ", scan_code='" + scan_code + '\'' +
                 ", scan_01Q='" + scan_01Q + '\'' +
-                ", scan_02Q='" + scan_02Q + '\'' +
-                ", scan_03Q='" + scan_03Q + '\'' +
                 ", scan_04Q='" + scan_04Q + '\'' +
                 ", scan_05Q='" + scan_05Q + '\'' +
                 ", scan_06Q='" + scan_06Q + '\'' +
-                ", scan_07Q='" + scan_07Q + '\'' +
-                ", scan_08Q='" + scan_08Q + '\'' +
-                ", scan_09Q='" + scan_09Q + '\'' +
                 ", scan_10Q='" + scan_10Q + '\'' +
-                ", scan_11Q='" + scan_11Q + '\'' +
                 ", scan_12Q='" + scan_12Q + '\'' +
+                ", limit=" + limit +
                 '}';
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public String getCurrent_time() {
@@ -76,13 +72,6 @@ public class PostInfo {
         this.current_time = current_time;
     }
 
-    public String getScan_code() {
-        return scan_code;
-    }
-
-    public void setScan_code(String scan_code) {
-        this.scan_code = scan_code;
-    }
 
     public String getScan_01Q() {
         return scan_01Q;
@@ -90,22 +79,6 @@ public class PostInfo {
 
     public void setScan_01Q(String scan_01Q) {
         this.scan_01Q = scan_01Q;
-    }
-
-    public String getScan_02Q() {
-        return scan_02Q;
-    }
-
-    public void setScan_02Q(String scan_02Q) {
-        this.scan_02Q = scan_02Q;
-    }
-
-    public String getScan_03Q() {
-        return scan_03Q;
-    }
-
-    public void setScan_03Q(String scan_03Q) {
-        this.scan_03Q = scan_03Q;
     }
 
     public String getScan_04Q() {
@@ -132,44 +105,12 @@ public class PostInfo {
         this.scan_06Q = scan_06Q;
     }
 
-    public String getScan_07Q() {
-        return scan_07Q;
-    }
-
-    public void setScan_07Q(String scan_07Q) {
-        this.scan_07Q = scan_07Q;
-    }
-
-    public String getScan_08Q() {
-        return scan_08Q;
-    }
-
-    public void setScan_08Q(String scan_08Q) {
-        this.scan_08Q = scan_08Q;
-    }
-
-    public String getScan_09Q() {
-        return scan_09Q;
-    }
-
-    public void setScan_09Q(String scan_09Q) {
-        this.scan_09Q = scan_09Q;
-    }
-
     public String getScan_10Q() {
         return scan_10Q;
     }
 
     public void setScan_10Q(String scan_10Q) {
         this.scan_10Q = scan_10Q;
-    }
-
-    public String getScan_11Q() {
-        return scan_11Q;
-    }
-
-    public void setScan_11Q(String scan_11Q) {
-        this.scan_11Q = scan_11Q;
     }
 
     public String getScan_12Q() {

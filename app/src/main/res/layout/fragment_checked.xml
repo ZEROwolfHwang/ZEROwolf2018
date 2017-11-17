@@ -84,6 +84,7 @@
 
 
             <android.support.v7.widget.RecyclerView
+                android:layout_marginRight="@dimen/layout_margin10dp"
                 android:id="@+id/recycle_site_check_operator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -94,6 +95,7 @@
 
 
             <LinearLayout
+                android:layout_marginRight="@dimen/layout_margin10dp"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:orientation="horizontal">
@@ -110,10 +112,11 @@
 
                 <TextView
                     android:id="@+id/site_login_operator"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/layout_margin10dp"
-                    android:gravity="center"
+                    android:gravity="center|right"
                     android:textColor="?attr/custom_text_color_first"
                     android:textSize="18sp"/>
 
