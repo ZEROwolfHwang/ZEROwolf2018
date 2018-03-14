@@ -1,14 +1,9 @@
 package com.android.htc.greenroad;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.SystemClock;
+import android.support.multidex.MultiDex;
 
 import com.android.htc.greenroad.interfacy.ThemeChangeObserver;
-import com.android.htc.greenroad.polling.LoopService;
 
 import org.litepal.LitePal;
 
@@ -45,6 +40,7 @@ public class GreenRoadApplication extends Application {
             startLongConn();
         }*/
         //startLongConn();
+        MultiDex.install(this);
     }
 /*
 
@@ -57,12 +53,12 @@ public class GreenRoadApplication extends Application {
 
         //quitLongConn();
 
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, LoopService.class);
-        intent.setAction(LoopService.ACTION);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        long triggerAtTime = SystemClock.elapsedRealtime();
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 60 * 1000, pendingIntent);
+//        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(this, LoopService.class);
+//        intent.setAction(LoopService.ACTION);
+//        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        long triggerAtTime = SystemClock.elapsedRealtime();
+//        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 60 * 1000, pendingIntent);
 
     }
 

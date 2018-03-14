@@ -1,7 +1,7 @@
 package com.android.htc.greenroad.https;
 
 
-import com.android.htc.greenroad.httpresultbean.HttpResultCode;
+import com.android.htc.greenroad.httpresultbean.HttpResultPolling;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -31,8 +31,8 @@ public class RequestPolling {
         return sPolling;
     }
 
-    public void postPolling(Subscriber<HttpResultCode> subscriber, String polling) {
-        Observable<HttpResultCode> observable = HttpMethods.getInstance().getApi().polling(polling);
+    public void postPolling(Subscriber<HttpResultPolling> subscriber, String pollingList) {
+        Observable<HttpResultPolling> observable = HttpMethods.getInstance().getApi().polling(pollingList);
 
         HttpMethods.getInstance().toSubscribe(observable,subscriber);
 

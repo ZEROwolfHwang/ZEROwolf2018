@@ -1,15 +1,28 @@
 apply plugin: 'com.android.application'
-apply plugin:'me.tatarka.retrolambda'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    buildToolsVersion '26.0.2'
+
+    //无法在虚拟机上运行(报错INSTALL_FAILED_NO_MATCHING_ABIS when install apk 未解决)
+//    splits {
+//        abi {
+//            enable true
+//            reset()
+//            include 'x86', 'armeabi-v7a', 'x86_64'
+//            universalApk true
+//        }
+//    }
+
     defaultConfig {
+        multiDexEnabled true
+
         applicationId "com.android.htc.greenroad"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 12
-        versionName "1.0.0"
+        versionCode 9
+        versionName "1.9.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -21,9 +34,9 @@ android {
     signingConfigs {
         release {
             storeFile file("htc.greenroad.jks")
-            storePassword "htcqwertyuiop123"
-            keyAlias "key1"
-            keyPassword "htcqwertyuiop123"
+            storePassword "hcc0196610599"
+            keyAlias "key0"
+            keyPassword "hcc0196610599"
         }
     }
 
@@ -57,6 +70,7 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
+
 }
 
 
@@ -89,4 +103,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.belerweb:pinyin4j:2.5.0'
     compile 'com.loopeer.library:itemtouchhelperextension:1.0.5'
+    compile project(path: ':ocrplateidlibrary')
+    compile 'com.android.support:multidex:1.0.0'
 }

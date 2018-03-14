@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/ll_sanzheng"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="140dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
@@ -22,10 +22,11 @@
             android:layout_marginBottom="@dimen/layout_margin5dp"
             android:orientation="horizontal">
 
+                <!--android:text="三证照"-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="三证照"
+                android:text="照片"
                 android:textColor="?attr/custom_text_color_second"
                 android:textSize="18sp"/>
 
@@ -53,7 +54,7 @@
         </FrameLayout>
     </LinearLayout>
 
-    <TextView
+    <!--<TextView
         android:layout_width="match_parent"
         android:layout_height="12dp"
         android:background="?attr/custom_device_bg_color"
@@ -157,6 +158,6 @@
                 android:id="@+id/image_huozhao_recycler_progress"
                 style="@style/photo_fragment_progress_style"/>
         </FrameLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 
 </LinearLayout>

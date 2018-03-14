@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="45dp"
-              android:background="?attr/custom_setting_recycler_item_bg"
+              android:background="@color/white"
               android:id="@+id/ll_setting_operator"
               android:orientation="horizontal">
 
+              <!--android:background="?attr/custom_setting_recycler_item_bg"-->
     <TextView
         android:id="@+id/text_setting_recycler_job_number"
         android:layout_width="0dp"

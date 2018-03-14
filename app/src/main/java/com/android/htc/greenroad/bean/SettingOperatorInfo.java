@@ -5,10 +5,19 @@ package com.android.htc.greenroad.bean;
  */
 
 public class SettingOperatorInfo {
+    private String username;
     private int isLoginSelected;
     private int isCheckSelected;
     private String job_number;
     private String operator_name;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public int getIsLoginSelected() {
         return isLoginSelected;
@@ -45,7 +54,8 @@ public class SettingOperatorInfo {
     @Override
     public String toString() {
         return "SettingOperatorInfo{" +
-                "isLoginSelected=" + isLoginSelected +
+                "username='" + username + '\'' +
+                ", isLoginSelected=" + isLoginSelected +
                 ", isCheckSelected=" + isCheckSelected +
                 ", job_number='" + job_number + '\'' +
                 ", operator_name='" + operator_name + '\'' +

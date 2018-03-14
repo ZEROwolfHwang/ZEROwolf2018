@@ -129,8 +129,8 @@ public class SpinnerPopupWindow {
 
         if (null == mDrawable)
             mDrawable = new BitmapDrawable();
-
         mPopWindow.setBackgroundDrawable(mDrawable);
+//        mPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
 

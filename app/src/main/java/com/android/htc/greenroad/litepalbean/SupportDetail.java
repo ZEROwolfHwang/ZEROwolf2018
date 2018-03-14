@@ -22,6 +22,10 @@ public class SupportDetail extends DataSupport implements Parcelable{
 //    private String color;
     private String number;
     private String goods;
+    private String detail_weight;
+    private String detail_free;
+    private String detail_export;
+    private String detail_carType;
     private List<String> picturePath;
     private List<String> pictureTitle;
 
@@ -33,9 +37,12 @@ public class SupportDetail extends DataSupport implements Parcelable{
         station = in.readString();
         lane = in.readString();
         road = in.readString();
-//        color = in.readString();
         number = in.readString();
         goods = in.readString();
+        detail_weight = in.readString();
+        detail_free = in.readString();
+        detail_export = in.readString();
+        detail_carType = in.readString();
         picturePath = in.createStringArrayList();
         pictureTitle = in.createStringArrayList();
     }
@@ -46,9 +53,12 @@ public class SupportDetail extends DataSupport implements Parcelable{
         dest.writeString(station);
         dest.writeString(lane);
         dest.writeString(road);
-//        dest.writeString(color);
         dest.writeString(number);
         dest.writeString(goods);
+        dest.writeString(detail_weight);
+        dest.writeString(detail_free);
+        dest.writeString(detail_export);
+        dest.writeString(detail_carType);
         dest.writeStringList(picturePath);
         dest.writeStringList(pictureTitle);
     }
@@ -77,12 +87,23 @@ public class SupportDetail extends DataSupport implements Parcelable{
                 ", station='" + station + '\'' +
                 ", lane='" + lane + '\'' +
                 ", road='" + road + '\'' +
-//                ", color='" + color + '\'' +
                 ", number='" + number + '\'' +
                 ", goods='" + goods + '\'' +
+                ", detail_weight='" + detail_weight + '\'' +
+                ", detail_free='" + detail_free + '\'' +
+                ", detail_export='" + detail_export + '\'' +
+                ", detail_carType='" + detail_carType + '\'' +
                 ", picturePath=" + picturePath +
                 ", pictureTitle=" + pictureTitle +
                 '}';
+    }
+
+    public String getDetail_carType() {
+        return detail_carType;
+    }
+
+    public void setDetail_carType(String detail_carType) {
+        this.detail_carType = detail_carType;
     }
 
     public int getLite_ID() {
@@ -117,14 +138,6 @@ public class SupportDetail extends DataSupport implements Parcelable{
         this.road = road;
     }
 
-//    public String getColor() {
-//        return color;
-//    }
-//
-//    public void setColor(String color) {
-//        this.color = color;
-//    }
-
     public String getNumber() {
         return number;
     }
@@ -139,6 +152,30 @@ public class SupportDetail extends DataSupport implements Parcelable{
 
     public void setGoods(String goods) {
         this.goods = goods;
+    }
+
+    public String getDetail_weight() {
+        return detail_weight;
+    }
+
+    public void setDetail_weight(String detail_weight) {
+        this.detail_weight = detail_weight;
+    }
+
+    public String getDetail_free() {
+        return detail_free;
+    }
+
+    public void setDetail_free(String detail_free) {
+        this.detail_free = detail_free;
+    }
+
+    public String getDetail_export() {
+        return detail_export;
+    }
+
+    public void setDetail_export(String detail_export) {
+        this.detail_export = detail_export;
     }
 
     public List<String> getPicturePath() {

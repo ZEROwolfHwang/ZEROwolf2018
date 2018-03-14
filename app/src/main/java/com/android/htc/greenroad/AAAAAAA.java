@@ -440,14 +440,14 @@ public class AAAAAAA {
     }
 
     @OnClick({R.id.footer_item_setting,
-            R.id.footer_item_theme, R.id.footer_item_location})
+            R.id.nav_theme, R.id.footer_item_location})
     public void onFooterClick(View view) {
         switch (view.getId()) {
             case R.id.footer_item_setting:
                 Intent intent = new Intent(this, SettingActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.footer_item_theme:
+            case R.id.nav_theme:
                 changeTheme();
                 break;
             case R.id.footer_item_location:

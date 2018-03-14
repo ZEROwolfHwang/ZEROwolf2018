@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.htc.greenroad.R;
@@ -30,6 +31,7 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
 
     private final AppCompatActivity mActivity;
     private final onPreviewItemClick mItemClick;
+
     private ArrayList<SupportDraftOrSubmit> mPreviewList;
     private final onLongItemClick mLongItemClick;
     // private final onItemClick mItemClick;
@@ -91,8 +93,8 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
         TextView mPreviewTextCheck;
         @BindView(R.id.preview_text_login)
         TextView mPreviewTextLogin;
-        @BindView(R.id.preview_text_isFree)
-        TextView mPreviewTextIsFree;
+        @BindView(R.id.preview_img_isPass)
+        ImageView mPreviewImgIsPass;
 
         @BindView(R.id.preview_text_shutTime)
         TextView mPreviewTextShutTime;
@@ -111,7 +113,7 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
             String login = support.getSupportChecked().getSiteLogin();
             String car_number = support.getSupportDetail().getNumber();
             String shutTime = support.getCurrent_time();
-            int isFree = support.getSupportChecked().getIsFree();
+            int yesOrNot = support.getIsPass();
 
             if (position % 2 == 0) {
                 itemView.setBackgroundColor(Color.WHITE);
@@ -126,14 +128,18 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
             }
             mPreviewTextCarNumber.setText(car_number);
             mPreviewTextShutTime.setText(shutTime);
-            mPreviewTextIsFree.setText(isFree == 0 ? "否" : "是");
+//            mPreviewTextIsFree.setText(yesOrNot == 0 ? "否" : "是");
+            mPreviewImgIsPass.setImageDrawable(yesOrNot == 0
+                    ? mActivity.getResources().getDrawable(R.drawable.ispass_not)
+                    : mActivity.getResources().getDrawable(R.drawable.ispass_yes));
+
 
             itemView.setOnClickListener(v -> {
                 mItemClick.itemClick(support);
             });
 
             itemView.setOnLongClickListener(v -> {
-                mLongItemClick.longClick(itemView,support.getLite_ID(),position);
+                mLongItemClick.longClick(itemView, support.getLite_ID(), position);
                 return true;
             });
             /*itemView.setOnLongClickListener(v -> {
@@ -145,6 +151,7 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
     public interface onPreviewItemClick {
         void itemClick(SupportDraftOrSubmit support);
     }
+
     public interface onLongItemClick {
         void longClick(View itemView, int lite_ID, int position);
     }

@@ -2,32 +2,29 @@ package com.android.htc.greenroad.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
 import com.android.htc.greenroad.https.RequestLogin;
+import com.android.htc.greenroad.litepalbean.TeamItem;
+import com.android.htc.greenroad.litepalbean.TeamOperator;
 import com.android.htc.greenroad.manager.GlobalManager;
-import com.android.htc.greenroad.polling.PollingService;
-import com.android.htc.greenroad.polling.PollingUtils;
 import com.android.htc.greenroad.presenter.NetWorkManager;
-import com.android.htc.greenroad.tools.DevicesInfoUtils;
+import com.android.htc.greenroad.tools.PermissionUtils;
 import com.android.htc.greenroad.tools.SPListUtil;
 import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.TimeUtil;
 import com.android.htc.greenroad.tools.ToastUtils;
 import com.orhanobut.logger.Logger;
 
+import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
@@ -40,10 +37,6 @@ import rx.Subscriber;
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
 
-    @BindView(R.id.login_version)
-    TextView mLoginVersion;
-    @BindView(R.id.login_register)
-    TextView mLoginRegister;
     @BindView(R.id.rl_progress_login)
     RelativeLayout mRlProgressLogin;
     private Button mBt_login;
@@ -55,8 +48,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     CheckBox mCheckBox;
     private boolean mIsConnected;
     private static int TIMEGAP = 3;
-    private String macID;
     private LoginActivity mActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +65,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void initData() {
         Connector.getDatabase();
-
+        PermissionUtils.verifyStoragePermissions(mActivity);
         // TODO: 2017/8/5 客户端的认证信息，移至注册账号是的返回储存
 
-        macID = Settings.Secure
-                .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        mLoginVersion.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
+//        mLoginVersion.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
 
 
     }
@@ -88,7 +78,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mBt_login = (Button) findViewById(R.id.bt_login);
 
         mBt_login.setOnClickListener(mActivity);
-        mLoginRegister.setOnClickListener(mActivity);
+//        mLoginRegister.setOnClickListener(mActivity);
 
 
     }
@@ -111,9 +101,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             case R.id.bt_login:
                 startMainActivity(v);
                 break;
-            case R.id.login_register:
-                LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.LOGIN2PORT);
-                break;
 
             default:
                 break;
@@ -122,12 +109,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void startMainActivity(View view) {
-
+        PermissionUtils.verifyStoragePermissions(mActivity);
         String username = mEt_user_name.getText().toString().trim();
         String password = mEt_password.getText().toString().trim();
-
+//        String username = "qqqq";
+//        String password = "123456";
         // Check for a valid email address.
-        if (TextUtils.isEmpty(username)) {
+       /* if (TextUtils.isEmpty(username)) {
             mEt_user_name.setError(getString(R.string.error_field_required));
             mEt_user_name.requestFocus();
             return;
@@ -136,17 +124,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             mEt_password.setError(getString(R.string.error_invalid_password));
             mEt_password.requestFocus();
             return;
-        }
+        }*/
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
 
-        // InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        // imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-        mRlProgressLogin.setVisibility(View.VISIBLE);
+//        mRlProgressLogin.setVisibility(View.VISIBLE);
 
         mIsConnected = NetWorkManager.isnetworkConnected(this);
+        // TODO: 2018/2/4
         if (mIsConnected) {
-            loginFromNet(username, password);
+
+            SPUtils.putAndApply(this, SPUtils.CONFIG_PORT, "greenft.githubshop.com");
+
+//            if (false) {
+//                LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.OTHER2PORT);
+//                return;
+//            }
+//            loginFromNet(username, password);
+            loginFromNet("qqqq", "123456");
+//            loginTrueValue(username);
+
+//            login2MainActivity(username);
+
         } else {
             List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
             if (loginList == null || loginList.size() == 0) {
@@ -158,6 +157,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
     }
+
 
     /**
      * 根据有无网络连接判断时间差内登陆的情形
@@ -196,7 +196,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      * @param password
      */
     private void loginFromNet(String username, String password) {
-
         Subscriber<HttpResult> subscriber = new Subscriber<HttpResult>() {
             @Override
             public void onCompleted() {
@@ -211,10 +210,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 dialog.setTitle("登录失败,网络存在异常");
                 dialog.setIcon(getResources().getDrawable(R.drawable.alert_faild_icon));
                 dialog.setMessage("点击确定重新配置网络端口\n点击取消请尝试再次登录");
-                dialog.setNegativeButton("取消",(dialogInterface, i) -> {
+                dialog.setNegativeButton("取消", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                 });
-                dialog.setPositiveButton("确定",(dialogInterface, i) -> {
+                dialog.setPositiveButton("确定", (dialogInterface, i) -> {
                     LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.OTHER2PORT);
                     dialogInterface.dismiss();
                 });
@@ -229,22 +228,43 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 String msg = httpResult.getMsg();
                 Logger.i(code + msg);
                 if (code == 200) {
-                    if (mCheckBox.isChecked()) {
-                       /* List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
-                        if (loginList != null && loginList.size() == 3) {*/
-                        ArrayList<String> list = new ArrayList<>();
-                        list.add(username);
-                        list.add(password);
-                        list.add(TimeUtil.getCurrentTimeToDate());
-                        SPListUtil.putStrListValue(LoginActivity.this, SPListUtil.LOGINNFO, list);
-
-                        SPUtils.putAndApply(LoginActivity.this, SPUtils.lOGIN_USERNAME, username);
-                        // startPollingService(username);
+                    getTeamInfo();
+                    String line = httpResult.getData().getLine();
+                    String station = httpResult.getData().getStation();
+                    List<String> laneList = httpResult.getData().getLanes();
+                    for (int i = 0; i < laneList.size(); i++) {
+                        Logger.i(laneList.get(i));
+                    }
+                    Logger.i(httpResult.getData().toString());
+                    SPUtils.putAndApply(LoginActivity.this, GlobalManager.USERNAME, username);
+//                    if (itemList.size() == 0) {
+                    List<TeamItem> itemList = DataSupport.where("username=?", username).find(TeamItem.class);
+                    if (itemList.size() != 0) {
+                        TeamItem teamItem = new TeamItem();
+//                    teamItem.setUsername(username);
+                        teamItem.setLine(line);
+                        teamItem.setStation(station);
+                        teamItem.setLanes(laneList);
+                        teamItem.setDefaultLane(laneList.get(0));
+                        teamItem.updateAll("username = ?", username);
                     } else {
-                        SPListUtil.remove(LoginActivity.this, SPListUtil.LOGINNFO);
-                        SPUtils.remove(LoginActivity.this, SPUtils.lOGIN_USERNAME);
+                        TeamItem teamItem = new TeamItem();
+                        teamItem.setUsername(username);
+                        teamItem.setLine(line);
+                        teamItem.setStation(station);
+                        teamItem.setLanes(laneList);
+                        teamItem.setDefaultLane(laneList.get(0));
+                        teamItem.save();
+                    }
+
+                    List<TeamItem> all = DataSupport.findAll(TeamItem.class);
+                    Logger.i(all.size() + "");
+                    for (int i = 0; i < all.size(); i++) {
+                        Logger.i(all.get(i).toString());
+                        Logger.i(all.get(i).getUsername());
                     }
                     login2MainActivity();
+
                 } else if (code == 201) {
                     mEt_user_name.setError("账号不存在");
                     mEt_user_name.requestFocus();
@@ -273,22 +293,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         };
         RequestLogin.getInstance().
-                postLogin(subscriber, username, password, macID);
+                postLogin(subscriber, username, password);
 
     }
 
-   /* */
-
     /**
-     * 登陆成功开启服务
-     *
-     * @param username
+     * 登陆成功返回该用户所有的需要的信息Info
      */
-    private void startPollingService(String username) {
-        Logger.i("loginActivity界面登陆成功启动服务");
-        //LoopService.startLoopService(this,username);
-        PollingUtils.startPollingService(this, 5, PollingService.class, PollingService.ACTION);
-
+    private void getTeamInfo() {
+        TeamOperator teamOperator = new TeamOperator();
+        TeamItem teamItem = new TeamItem();
     }
 
     /**
@@ -296,8 +310,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      */
     private void login2MainActivity() {
 
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
+        MainActivity.actionStart(LoginActivity.this, GlobalManager.LOGINTOMAIN);
         finish();
         //  mRlProgressLogin.setVisibility(View.GONE);
     }
@@ -305,5 +318,60 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    private void loginTrueValue(String username) {
+        if ("qqqq".equals(username)) {
+            SPUtils.putAndApply(this, GlobalManager.USERNAME, username);
+            List<TeamItem> itemList = DataSupport.where("username=?", username).find(TeamItem.class);
+            if (itemList.size() == 0) {
+                TeamItem teamItem = new TeamItem();
+                teamItem.setUsername(username);
+                teamItem.setLine("上杭线");
+                teamItem.setStation("安庆收费站");
+                //登陆成功再做一个路线的请求
+                ArrayList<String> lanes = new ArrayList<>();
+                lanes.add("X01");
+                lanes.add("X02");
+                lanes.add("X03");
+                teamItem.setLanes(lanes);
+
+                teamItem.setDefaultLane("X01");
+
+                teamItem.save();
+
+            }
+
+
+            login2MainActivity();
+        } else {
+            List<TeamItem> itemList = DataSupport.where("username=?", username).find(TeamItem.class);
+            SPUtils.putAndApply(this, GlobalManager.USERNAME, username);
+            if (itemList.size() == 0) {
+                TeamItem teamItem = new TeamItem();
+                teamItem.setUsername(username);
+                teamItem.setLine("京东线");
+                teamItem.setStation("上海收费站");
+//                    if (itemList.get(0).getLine() == null) {
+
+                ArrayList<String> lanes = new ArrayList<>();
+                lanes.add("A01");
+                lanes.add("A02");
+                lanes.add("A03");
+                teamItem.setLanes(lanes);
+
+                teamItem.setDefaultLane("A01");
+
+//                    }
+                teamItem.save();
+            }
+        }
     }
 }

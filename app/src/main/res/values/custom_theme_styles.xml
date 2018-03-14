@@ -49,7 +49,7 @@
         <!-- __________________  tab __________________ -->
 
         <item name="custom_tab_text_color">@color/tab_text_color_day</item>
-        <item name="custom_tab_text_color_selected">@color/day_color_green</item>
+        <item name="custom_tab_text_color_selected">@color/white</item>
         <item name="custom_tab_bg_pager_view">@color/tab_bg_view_pager_day</item>
 
         <!-- __________________  showActivity __________________ -->
@@ -264,7 +264,7 @@
 
     <!-- ToolBar的背景颜色-->
     <color name="toolbar_color_night">#181919</color>
-    <color name="toolbar_color_day">#50C6CA</color>
+    <color name="toolbar_color_day">#2da4f3</color>
 
     <!--一级字体的颜色-->
     <color name="first_text_color_day">#292929</color>
@@ -314,18 +314,18 @@
 
     <!--背景颜色-->
     <color name="bg_app_night">#1e1e1e</color>
-    <color name="bg_app_day">#ffffff</color>
+    <color name="bg_app_day">#f6f6f9</color>
 
     <!--tablayout的背景颜色-->
     <color name="tab_bg_view_pager_night">#333333</color>
     <color name="tab_bg_view_pager_day">#ffffff</color>
 
     <!--tabLayoutw文字选中与未选中的字体颜色-->
-    <color name="tab_text_color_day">#666666</color>
-    <color name="tab_text_color_night">#afafaf</color>
+    <color name="tab_text_color_day">@color/white</color>
+    <color name="tab_text_color_night">@color/white</color>
 
     <color name="tab_text_color_selected_day">#66ccaa</color>
-    <color name="tab_text_color_selected_night">@color/day_color_green</color>
+    <color name="tab_text_color_selected_night">@color/white</color>
 
     <!--分隔横条的背景颜色-->
     <color name="device_bg_color_day">#e4e4e4</color>

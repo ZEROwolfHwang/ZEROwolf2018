@@ -20,34 +20,39 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
+    <!-- android:icon="@drawable/logo_green_road" -->
     <application
-        android:name="com.android.htc.greenroad.GreenRoadApplication"
+        android:name=".GreenRoadApplication"
         android:allowBackup="true"
-        android:icon="@drawable/logo_green_road"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.android.htc.greenroad.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--    <intent-filter>
+
+            <!--
+                <intent-filter>
                     <action android:name="android.intent.action.MAIN"/>
                     <category android:name="android.intent.category.LAUNCHER"/>
-                </intent-filter>-->
+                </intent-filter>
+            -->
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.ShowActivity"
+            android:name=".activity.ShowActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:launchMode="singleTop"
@@ -55,49 +60,42 @@
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.SureGoodsActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden">
-        </activity>
-        <activity
-            android:name="com.android.htc.greenroad.activity.AboutActivity"
+            android:name=".activity.AboutActivity"
             android:theme="@style/ActivityAboutStyle">
         </activity>
-        <activity
-            android:name="com.android.htc.greenroad.activity.ActivationCodeActivity"
-            android:theme="@style/MyDialogStyle">
-        </activity>
-        <activity android:name="com.android.htc.greenroad.activity.AnimatorActivity">
+        <activity android:name=".activity.AnimatorActivity">
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.SettingActivity"
+            android:name=".activity.SettingActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.DraftActivity"
+            android:name=".activity.ConfigActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.SubmitActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
-            android:name="com.android.htc.greenroad.activity.PreviewDetailActivity"
+            android:name=".activity.DraftActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-
         <activity
-            android:name="com.android.htc.greenroad.activity.AddOperatorActivity"
+            android:name=".activity.SubmitActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activity.PreviewDetailActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name="com.android.htc.greenroad.TestActivity">
+        <activity
+            android:name=".activity.AddOperatorActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".TestActivity">
         </activity>
 
         <provider
@@ -111,32 +109,71 @@
         </provider>
 
         <activity
-            android:name="com.android.htc.greenroad.activity.ConclusionActivity"
+            android:name=".activity.ConclusionActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name="com.android.htc.greenroad.activity.RegisterActivity">
-        </activity>
+        <!-- <activity android:name="com.android.htc.greenroad.activity.RegisterActivity"> -->
+        <!-- </activity> -->
 
         <service
-            android:name="com.android.htc.greenroad.servicy.SubmitService"
+            android:name=".servicy.SubmitIntentService"
             android:exported="false">
         </service>
 
         <activity
-            android:name="com.android.htc.greenroad.activity.LineConfigActivity"
+            android:name=".activity.LineConfigActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.android.htc.greenroad.activity.BlackListActivity"
+            android:name=".activity.BlackListActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <service
-            android:name="com.android.htc.greenroad.servicy.BlackListService"
+            android:name=".servicy.BlackListService"
             android:exported="false">
+        </service>
+
+        <activity android:name=".activity.license.LicenseActivity">
+        </activity>
+        <activity android:name=".activity.license.MemoryCameraActivity">
+        </activity>
+        <activity android:name=".activity.license.PermissionActivity">
+        </activity>
+        <activity android:name=".activity.GoodsDemoActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".activity.NotificationActivity">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <receiver android:name=".activity.NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".servicy.PollingIntentService"
+            android:exported="false">
+        </service>
+        <service
+            android:name=".servicy.PollingService"
+            android:enabled="true"
+            android:exported="true">
         </service>
     </application>
 

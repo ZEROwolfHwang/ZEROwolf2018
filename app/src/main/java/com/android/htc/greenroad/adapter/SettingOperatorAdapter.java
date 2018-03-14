@@ -1,6 +1,5 @@
 package com.android.htc.greenroad.adapter;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,11 @@ import android.widget.TextView;
 
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.activity.SettingActivity;
-import com.android.htc.greenroad.bean.SettingOperatorInfo;
+import com.android.htc.greenroad.litepalbean.SupportOperator;
 import com.android.htc.greenroad.tools.ToastUtils;
+import com.orhanobut.logger.Logger;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +29,21 @@ import butterknife.ButterKnife;
 public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperatorAdapter.SettingOperatorHolder> {
 
     private final SettingActivity mActivity;
-    private ArrayList<SettingOperatorInfo> mList;
+    private ArrayList<SupportOperator> mList;
     private final OnCheckSeleckedListener mCheckListener;
-    private final OnLoginSeleckedListener mLoginListener;
+    //    private final OnLoginSeleckedListener mLoginListener;
     private final OnItemDeletListener mDeletListener;
+    private final String mUsername;
 
 
-    public SettingOperatorAdapter(SettingActivity settingActivity, ArrayList<SettingOperatorInfo> list,
+    public SettingOperatorAdapter(String username, SettingActivity settingActivity, ArrayList<SupportOperator> list,
                                   OnCheckSeleckedListener onCheckSeleckedListener,
-                                  OnLoginSeleckedListener onLoginSeleckedListener,
                                   OnItemDeletListener deletListener) {
         mActivity = settingActivity;
         mList = list;
+        mUsername = username;
         mCheckListener = onCheckSeleckedListener;
-        mLoginListener = onLoginSeleckedListener;
+//        mLoginListener = onLoginSeleckedListener;
         mDeletListener = deletListener;
     }
 
@@ -50,11 +53,11 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
      *
      * @param list
      */
-    public void updateListView(List<SettingOperatorInfo> list) {
+    public void updateListView(List<SupportOperator> list) {
         if (list == null) {
             this.mList = new ArrayList<>();
         } else {
-            this.mList = (ArrayList<SettingOperatorInfo>) list;
+            this.mList = (ArrayList<SupportOperator>) list;
         }
         notifyDataSetChanged();
     }
@@ -67,9 +70,10 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
         return new SettingOperatorHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(SettingOperatorHolder holder, int position) {
-        SettingOperatorInfo info = mList.get(position);
+        SupportOperator info = mList.get(position);
         holder.bindHolder(info, position);
 
     }
@@ -99,29 +103,29 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindHolder(SettingOperatorInfo info, int position) {
-
-            if (position % 2 == 0) {
-                mLlSettingOperator.setBackgroundColor(Color.WHITE);
-
-            }
+        public void bindHolder(SupportOperator info, int position) {
+//            if (position % 2 == 0) {
+//                mLlSettingOperator.setBackgroundColor(Color.WHITE);
+//
+//            }
 
             String job_number = info.getJob_number();
             mTextSettingRecyclerJobNumber.setText(job_number);
             mTextSettingRecyclerName.setText(info.getOperator_name());
 
-            mOperatorCheckSelect.setChecked(info.getIsCheckSelected() == 0 ? false : true);
-            mOperatorLoginSelect.setChecked(info.getIsLoginSelected() == 0 ? false : true);
+            mOperatorCheckSelect.setChecked(info.getCheck_select() == 0 ? false : true);
+            mOperatorLoginSelect.setChecked(info.getLogin_select() == 0 ? false : true);
             mOperatorCheckSelect.setOnClickListener(v -> {
-               /* for (SettingOperatorInfo operatorInfo : mList) {
-                    if (operatorInfo.getIsCheckSelected()==1) {
-                        operatorInfo.setIsCheckSelected(0);
+               /* for (SupportOperator operatorInfo : mList) {
+                    if (operatorInfo.getCheck_select()==1) {
+                        operatorInfo.setCheck_select(0);
                     }
                 }*/
                 if (mOperatorCheckSelect.isChecked()) {
+                    Logger.t("zero").i("选中");
                     int length = 0;
                     for (int i = 0; i < mList.size(); i++) {
-                        if (mList.get(i).getIsCheckSelected() == 1) {
+                        if (mList.get(i).getCheck_select() == 1) {
                             length += 1;
                         }
                     }
@@ -130,25 +134,54 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
                         ToastUtils.singleToast("最多只能添加三个默认检查人");
                         return;
                     } else {
-                        info.setIsCheckSelected(1);
+                        info.setCheck_select(1);
+                        List<SupportOperator> supportOperators = DataSupport
+                                .where("username =?  and job_number = ?", mUsername, job_number)
+                                .find(SupportOperator.class);
+                        SupportOperator operator = new SupportOperator();
+                        operator.setCheck_select(1);//但是这种用法有一点需要注意，就是如果我们想把某一条数据修改成默认值，比如说将评论数修改成0，只是调用updateNews.setCommentCount(0)这样是不能修改成功的，因为即使不调用这行代码，commentCount的值也默认是0。所以如果想要将某一列的数据修改成默认值的话，还需要借助setToDefault()方法。
+                        operator.updateAll("username = ? and job_number = ?", mUsername, job_number);
+
                     }
 
                 } else {
-                    info.setIsCheckSelected(0);
+                    Logger.t("zero").i("取消选中");
+                    info.setCheck_select(0);
+                    SupportOperator operator = new SupportOperator();
+//                    operator.setCheck_select(0);
+                    operator.setToDefault("check_select");
+                    operator.updateAll("username = ? and job_number = ?", mUsername, job_number);
+
                 }
                 notifyDataSetChanged();
 
                 mCheckListener.checkListener();
             });
             mOperatorLoginSelect.setOnClickListener(v -> {
-                for (SettingOperatorInfo operatorInfo : mList) {
-                    if (operatorInfo.getIsLoginSelected() == 1)
-                        operatorInfo.setIsLoginSelected(0);
-                }
-                info.setIsLoginSelected(1);
-                notifyDataSetChanged();
+                if (info.getLogin_select() == 0) {
+                    for (SupportOperator operatorInfo : mList) {
+//                    if (operatorInfo.getLogin_select() == 1)
+                        operatorInfo.setLogin_select(0);
+                    }
+                    info.setLogin_select(1);
+                    //将数据库所有的登录人都置为0
+                    SupportOperator operator = new SupportOperator();
+//                    operator.setCheck_select(0);
+                    operator.setToDefault("login_select");
+                    operator.updateAll("username = ? ", mUsername);
 
-                mLoginListener.loginListener(info);
+                    //将数据库当前选中登录人都置为1
+                    SupportOperator supportOperator = new SupportOperator();
+//                    operator.setCheck_select(0);
+                    supportOperator.setLogin_select(1);
+                    supportOperator.updateAll("username = ? and job_number = ?", mUsername, job_number);
+
+                    notifyDataSetChanged();
+                }else {
+                    mOperatorLoginSelect.setChecked(true);
+                }
+
+
             });
             //点击了删除的按钮
             mTextSettingRecyclerDelete.setOnClickListener(v -> {
@@ -162,7 +195,7 @@ public class SettingOperatorAdapter extends RecyclerView.Adapter<SettingOperator
     }
 
     public interface OnLoginSeleckedListener {
-        void loginListener(SettingOperatorInfo info);
+        void loginListener(SupportOperator info);
     }
 
     public interface OnItemDeletListener {

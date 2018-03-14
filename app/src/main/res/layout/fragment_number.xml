@@ -23,7 +23,8 @@
 
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/layout_margin10dp"
@@ -89,7 +90,13 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
+        <Button
+            android:text="识别"
+            android:id="@+id/btn_license_identify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

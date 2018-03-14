@@ -32,10 +32,10 @@ public class RequestLogin {
     }
 
     public void postLogin(Subscriber<HttpResult> subscriber,
-                               String name, String psw, String macId
+                               String name, String psw
                                ) {
         Observable<HttpResult> observable = HttpMethods.getInstance().
-                getApi().postLogin(name,psw,macId);
+                getApi().postLogin(name,psw);
 
         HttpMethods.getInstance().toSubscribe(observable, subscriber);
 

@@ -5,13 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.android.htc.greenroad.activity.ShowActivity;
 import com.android.htc.greenroad.fragment.CheckedFragment;
 import com.android.htc.greenroad.fragment.DetailsFragment;
 import com.android.htc.greenroad.fragment.ScanFragment;
 import com.android.htc.greenroad.litepalbean.SupportChecked;
 import com.android.htc.greenroad.litepalbean.SupportDetail;
 import com.android.htc.greenroad.litepalbean.SupportScan;
+import com.android.htc.greenroad.manager.GlobalManager;
 
 /**
  * Created by Administrator on 2017/7/17.
@@ -48,7 +48,7 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
-        if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(enterType)) {
+        if (GlobalManager.TYPE_MAIN_ENTER_SHOW.equals(enterType)) {
 
             switch (position) {
                 case 0:
@@ -65,13 +65,13 @@ public class ShowViewPagerAdapter extends FragmentPagerAdapter {
                     fragment = DetailsFragment.newInstance(enterType);
                     break;
             }
-        } else if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
+        } else if (GlobalManager.TYPE_DRAFT_ENTER_SHOW.equals(enterType)) {
             switch (position) {
                 case 0:
                     fragment = DetailsFragment.newInstance(enterType,mSupportDetail,mLite_ID);
                     break;
                 case 1:
-                    fragment = ScanFragment.newInstance(enterType,mSupportScan);
+                    fragment = ScanFragment.newInstance(enterType,mSupportScan,mSupportDetail);
                     break;
                 case 2:
                     fragment = CheckedFragment.newInstance(enterType,mSupportChecked);

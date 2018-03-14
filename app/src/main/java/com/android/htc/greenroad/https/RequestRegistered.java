@@ -33,10 +33,10 @@ public class RequestRegistered {
 
     public void postRegistered(Subscriber<HttpResult> subscriber,
                                String road, String station, String code,
-                               String name, String psw, String macId
+                               String name, String psw
                                ) {
         Observable<HttpResult> observable = HttpMethods.getInstance().
-                getApi().postRegistered(road,station,code,name,psw,macId);
+                getApi().postRegistered(road,station,code,name,psw);
 
         HttpMethods.getInstance().toSubscribe(observable, subscriber);
 

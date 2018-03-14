@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SupportMedia extends DataSupport implements Parcelable {
     private int lite_ID;
-    private List<String> photoTypes;
+
     private List<String> pictureTypes;
     private List<String> paths;
 
@@ -29,7 +29,6 @@ public class SupportMedia extends DataSupport implements Parcelable {
 
     protected SupportMedia(Parcel in) {
         lite_ID = in.readInt();
-        photoTypes = in.createStringArrayList();
         pictureTypes = in.createStringArrayList();
         paths = in.createStringArrayList();
     }
@@ -37,7 +36,6 @@ public class SupportMedia extends DataSupport implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(lite_ID);
-        dest.writeStringList(photoTypes);
         dest.writeStringList(pictureTypes);
         dest.writeStringList(paths);
     }
@@ -63,7 +61,6 @@ public class SupportMedia extends DataSupport implements Parcelable {
     public String toString() {
         return "SupportMedia{" +
                 "lite_ID=" + lite_ID +
-                ", photoTypes=" + photoTypes +
                 ", pictureTypes=" + pictureTypes +
                 ", paths=" + paths +
                 ", mDurations=" + mDurations +
@@ -81,14 +78,6 @@ public class SupportMedia extends DataSupport implements Parcelable {
 
     public void setLite_ID(int lite_ID) {
         this.lite_ID = lite_ID;
-    }
-
-    public List<String> getPhotoTypes() {
-        return photoTypes;
-    }
-
-    public void setPhotoTypes(List<String> photoTypes) {
-        this.photoTypes = photoTypes;
     }
 
     public List<String> getPictureTypes() {

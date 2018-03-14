@@ -31,9 +31,9 @@ public class RequestMacInfo {
         return sRequestMacInfo;
     }
 
-    public void getMacInfo(Subscriber<HttpResultMacInfo> subscriber,String macId) {
+    public void getMacInfo(Subscriber<HttpResultMacInfo> subscriber,String userName) {
         Observable<HttpResultMacInfo> observable = HttpMethods.getInstance().
-                getApi().getMacInfo(macId);
+                getApi().getMacInfo(userName);
 
         HttpMethods.getInstance().toSubscribe(observable,subscriber);
 

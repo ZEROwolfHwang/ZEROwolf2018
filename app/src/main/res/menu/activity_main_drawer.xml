@@ -4,10 +4,10 @@
     android:checkableBehavior="single">
     <group>
 
-        <item
-            android:id="@+id/nav_theme"
-            android:icon="@drawable/update_app"
-            android:title="主题"/>
+        <!--<item-->
+            <!--android:id="@+id/nav_theme"-->
+            <!--android:icon="@drawable/nav_theme"-->
+            <!--android:title="主题"/>-->
 
         <item
             android:id="@+id/nav_update"
@@ -19,11 +19,16 @@
             android:title="@string/about_app"/>
         <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/update_app"
+            android:icon="@drawable/menu_setting"
             android:title="设置"/>
+<item
+            android:id="@+id/nav_config"
+            android:icon="@drawable/menu_setting"
+            android:title="配置"/>
+
         <item
             android:id="@+id/nav_backup"
-            android:icon="@drawable/back_up_logo"
+            android:icon="@drawable/nav_back"
             android:title="@string/back_up_app"/>
     </group>
 

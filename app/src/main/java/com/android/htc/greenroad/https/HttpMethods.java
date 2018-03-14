@@ -62,7 +62,7 @@ public class HttpMethods {
         if (sMethods == null) {
             sMethods = new HttpMethods();
         }
-        Logger.i(BASE_url);
+//        Logger.i(BASE_url);
         return sMethods;
     }
 

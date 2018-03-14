@@ -4,9 +4,10 @@ import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.htc.greenroad.R;
+import com.android.htc.greenroad.fragment.DetailsFragment;
 
 /**
  * Created by Administrator on 2017/8/8.
@@ -18,18 +19,20 @@ public class LicenseKeyboardUtil {
     private Keyboard k2;// 数字字母键盘
     private String provinceShort[];
     private String letterAndDigit[];
-    private EditText edits[];
+    private TextView edits[];
 
-    private final Context mCtx;
+    private final Context mContext;
     private int currentEditText;//默认当前光标在第一个EditText
+    private final DetailsFragment mFragment;
 
 
-    public LicenseKeyboardUtil(Context ctx, View view, EditText edits[], int numberLength) {
-        mCtx = ctx;
+    public LicenseKeyboardUtil(Context context, DetailsFragment detailsFragment, View view, TextView[] edits, int numberLength) {
+        mFragment = detailsFragment;
+        mContext = context;
         this.edits = edits;
         currentEditText = numberLength;
-        k1 = new Keyboard(mCtx, R.xml.province_short_keyboard);
-        k2 = new Keyboard(mCtx, R.xml.lettersanddigit_keyboard);
+        k1 = new Keyboard(mContext, R.xml.province_short_keyboard);
+        k2 = new Keyboard(mContext, R.xml.lettersanddigit_keyboard);
         keyboardView = (KeyboardView) (view.findViewById(R.id.keyboard_view));
         if (currentEditText == 0) {
             keyboardView.setKeyboard(k1);
@@ -47,7 +50,7 @@ public class LicenseKeyboardUtil {
                 "冀", "晋", "蒙", "辽", "吉", "黑", "沪",
                 "苏", "浙", "皖", "鲁", "豫", "鄂", "桂",
                 "渝", "川", "贵", "云", "藏", "陕", "甘",
-                "青", "宁", "新", "港", "澳", "台"};
+                "青", "宁", "新", "港", "澳", "无"};
 
         letterAndDigit = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
                 , "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
@@ -107,26 +110,33 @@ public class LicenseKeyboardUtil {
                     // 按下一个按键后,设置相应的EditText的值
                     // 然后切换为字母数字键盘
                     //currentEditText+1
-                    edits[0].setText(provinceShort[primaryCode]);
+                    if (primaryCode != 33) {
+
+                        edits[0].setText(provinceShort[primaryCode]);
                 /*    edits[0].setFocusable(true);
                     edits[0].setSelection(1);*/
-                    currentEditText = 1;
-                    //切换为字母数字键盘
-                    keyboardView.setKeyboard(k2);
+                        currentEditText = 1;
+                        //切换为字母数字键盘
+                        keyboardView.setKeyboard(k2);
+                    } else {
+                        edits[0].setText(provinceShort[primaryCode]);
+                        currentEditText = 0;
+                        mFragment.closeLicense();
+                    }
                 } else {
                     //第二位必须大写字母
-                    if(currentEditText == 1 && !letterAndDigit[primaryCode].matches("[A-Z]{1}")){
-                        return ;
+                    if (currentEditText == 1 && !letterAndDigit[primaryCode].matches("[A-Z]{1}")) {
+                        return;
                     }
-                    if (currentEditText == 7) {
+                    if (currentEditText == 8) {
                         return;
                     }
                     edits[currentEditText].setText(letterAndDigit[primaryCode]);
          /*           edits[currentEditText].setFocusable(true);
                     edits[currentEditText].setSelection(1);*/
                     currentEditText++;
-                    if (currentEditText > 7) {
-                        currentEditText = 7;
+                    if (currentEditText > 8) {
+                        currentEditText = 8;
                     }
                 }
             }

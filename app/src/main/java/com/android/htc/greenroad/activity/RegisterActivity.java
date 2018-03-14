@@ -3,7 +3,6 @@ package com.android.htc.greenroad.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -18,13 +17,9 @@ import com.android.htc.greenroad.SpinnerPopupWindow;
 import com.android.htc.greenroad.adapter.RecycleViewDivider;
 import com.android.htc.greenroad.adapter.SpinnerAdapter;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
-import com.android.htc.greenroad.httpresultbean.HttpResultLane;
-import com.android.htc.greenroad.https.RequestLane;
 import com.android.htc.greenroad.https.RequestRegistered;
-import com.android.htc.greenroad.litepalbean.SupportLane;
 import com.android.htc.greenroad.litepalbean.SupportLine;
 import com.android.htc.greenroad.tools.SPListUtil;
-import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.ToastUtils;
 import com.orhanobut.logger.Logger;
 
@@ -71,7 +66,6 @@ public class RegisterActivity extends BaseActivity {
     private SpinnerPopupWindow mPopupWindow_station;
     private float mDimension;
     private int mWidth;
-    private String macID;
     private List<SupportLine> mSupportLineList;
     private ArrayList<String> mRoadList;
     private String mSelectRoad;
@@ -82,12 +76,6 @@ public class RegisterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-
-        macID = Settings.Secure
-                .getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-
-        Logger.i(macID);
 
         initData();
     }
@@ -233,31 +221,31 @@ public class RegisterActivity extends BaseActivity {
                             Logger.i(app_config_info.toString());
                             SPListUtil.putStrListValue(RegisterActivity.this, SPListUtil.APPCONFIGINFO, app_config_info);
 
-                            RequestLane.getInstance().getLanes(new Subscriber<List<HttpResultLane.DataBean>>() {
-                                @Override
-                                public void onCompleted() {
-
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    Logger.i(e.getMessage());
-                                }
-
-                                @Override
-                                public void onNext(List<HttpResultLane.DataBean> dataBeen) {
-                                    ArrayList<String> laneList = new ArrayList<>();
-                                    for (int i = 0; i < dataBeen.size(); i++) {
-                                        Logger.i(dataBeen.get(i).toString());
-                                        laneList.add(dataBeen.get(i).getLane());
-                                    }
-                                    DataSupport.deleteAll(SupportLine.class);
-                                    SupportLane supportLane = new SupportLane();
-                                    supportLane.setLane(laneList);
-                                    supportLane.save();
-                                    SPUtils.putAndApply(RegisterActivity.this, SPUtils.TEXTLANE, dataBeen.get(0).getLane());
-                                }
-                            },stationText);
+//                            RequestLane.getInstance().getLanes(new Subscriber<List<HttpResultLane.DataBean>>() {
+//                                @Override
+//                                public void onCompleted() {
+//
+//                                }
+//
+//                                @Override
+//                                public void onError(Throwable e) {
+//                                    Logger.i(e.getMessage());
+//                                }
+//
+//                                @Override
+//                                public void onNext(List<HttpResultLane.DataBean> dataBeen) {
+//                                    ArrayList<String> laneList = new ArrayList<>();
+//                                    DataSupport.deleteAll(SupportLane.class);
+//                                    for (int i = 0; i < dataBeen.size(); i++) {
+//                                        Logger.i(dataBeen.get(i).toString());
+//                                        laneList.add(dataBeen.get(i).getLane());
+//                                    SupportLane supportLane = new SupportLane();
+//                                    supportLane.setLane(dataBeen.get(i).getLane());
+//                                    supportLane.save();
+//                                    }
+//                                    SPUtils.putAndApply(RegisterActivity.this, SPUtils.TEXTLANE, dataBeen.get(0).getLane());
+//                                }
+//                            },stationText);
 
                         } else {
                             ToastUtils.singleToast(httpResult.getMsg());
@@ -266,7 +254,7 @@ public class RegisterActivity extends BaseActivity {
                     }
                 };
                 RequestRegistered.getInstance().postRegistered(subscriber, roadText, stationText,
-                        register_code, register_user, register_psw, macID);
+                        register_code, register_user, register_psw);
 
                 break;
 

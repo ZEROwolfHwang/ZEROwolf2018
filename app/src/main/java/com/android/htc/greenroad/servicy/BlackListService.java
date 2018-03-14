@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.TextView;
 
+import com.android.htc.greenroad.tools.SPUtils;
 import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.httpresultbean.HttpResultBlack;
 import com.android.htc.greenroad.https.RequestBlackList;
@@ -20,7 +21,7 @@ import rx.Subscriber;
 public class BlackListService extends IntentService {
 
     private static final String ACTION_BLACK_LIST = "com.zero.wolf.greenroad.blacklistservice.action.FOO";
-    private static final String ACTION_BAZ = "com.zero.wolf.greenroad.blacklistservice.action.BAZ";
+    private static final String ACTION_BLACK_SUBMIT = "com.zero.wolf.greenroad.blacklistservice.action.BAZ";
     private static Context sContext;
     private static TextView sNumberBlacklist;
 
@@ -40,10 +41,11 @@ public class BlackListService extends IntentService {
     }
 
     public static void startActionBaz(Context context) {
+        sContext = context;
         Intent intent = new Intent(context, BlackListService.class);
-        intent.setAction(ACTION_BAZ);
+        intent.setAction(ACTION_BLACK_SUBMIT);
 
-        context.startService(intent);
+        sContext.startService(intent);
     }
 
     @Override
@@ -64,6 +66,7 @@ public class BlackListService extends IntentService {
                         public void onError(Throwable e) {
                             Logger.i(e.getMessage());
                             List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
+                            SPUtils.putAndApply(getApplicationContext(), SPUtils.COUNT_BLACKLIST, supportBlacks.size());
                             sNumberBlacklist.setText(supportBlacks.size() + "");
                         }
 
@@ -71,17 +74,19 @@ public class BlackListService extends IntentService {
                         public void onNext(List<HttpResultBlack.DataBean> dataBeen) {
                             List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
                             if (supportBlacks.size() == dataBeen.size()) {
+                                SPUtils.putAndApply(getApplicationContext(), SPUtils.COUNT_BLACKLIST, supportBlacks.size());
                                 sNumberBlacklist.setText(supportBlacks.size() + "");
                                 return;
                             } else {
                                 DataSupport.deleteAll(SupportBlack.class);
                                 for (int i = 0; i < dataBeen.size(); i++) {
-                                    Logger.i(dataBeen.get(i).getPlate_number());
+//                                    Logger.i(dataBeen.get(i).getPlate_number());
                                     SupportBlack supportBlack = new SupportBlack();
                                     supportBlack.setLicense(dataBeen.get(i).getPlate_number());
                                     supportBlack.save();
                                 }
                                 List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+                                SPUtils.putAndApply(getApplicationContext(), SPUtils.COUNT_BLACKLIST, blackList.size());
                                 sNumberBlacklist.setText(blackList.size() + "");
                             }
                         }
@@ -92,8 +97,10 @@ public class BlackListService extends IntentService {
                     List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
                     sNumberBlacklist.post(() -> sNumberBlacklist.setText(supportBlacks.size() + ""));
                 }
+
             }
         }
     }
+
 
 }

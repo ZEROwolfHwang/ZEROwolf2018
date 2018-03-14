@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.htc.greenroad.R;
-import com.android.htc.greenroad.tools.CommonUtils;
 import com.android.htc.greenroad.bean.SerializableGoods;
+import com.android.htc.greenroad.tools.ImageUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,17 +85,18 @@ public class SureGoodsAdapter extends RecyclerView.Adapter<SureGoodsAdapter.Sure
         public void bindHolder(final SerializableGoods model, int position) {
 
             String scientificname = model.getScientific_name();
-            if (scientificname.length() > 3) {
-                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,6));
+//            if (scientificname.length() > 3) {
+//                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,6));
+//                scientific_textView.setText(scientificname);
+//            } else {
+//                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,8));
+//            }
                 scientific_textView.setText(scientificname);
-            } else {
-                scientific_textView.setTextSize(CommonUtils.sp2px(mContext,8));
-                scientific_textView.setText(scientificname);
-            }
          //   alias.setText(model.getAlias());
 
             String bitmapUrl = model.getBitmapUrl();
-            Bitmap bitmap = getImageFromAssetsFile(bitmapUrl);
+//            Logger.i(bitmapUrl);
+            Bitmap bitmap = ImageUtils.getLoacalBitmap(bitmapUrl);
 
             mImageView.setImageBitmap(bitmap);
          //   mImageView.setBackground(mContext.getResources().getDrawable(R.drawable.demo));

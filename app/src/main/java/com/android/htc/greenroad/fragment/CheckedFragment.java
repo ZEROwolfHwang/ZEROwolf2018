@@ -14,11 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.SpinnerPopupWindow;
 import com.android.htc.greenroad.activity.ConclusionActivity;
-import com.android.htc.greenroad.activity.ShowActivity;
 import com.android.htc.greenroad.adapter.BasePhotoAdapter;
 import com.android.htc.greenroad.adapter.BasePhotoViewHolder;
 import com.android.htc.greenroad.adapter.RecycleViewDivider;
@@ -26,6 +24,9 @@ import com.android.htc.greenroad.adapter.SiteChecksAdapter;
 import com.android.htc.greenroad.bean.CheckedBean;
 import com.android.htc.greenroad.litepalbean.SupportChecked;
 import com.android.htc.greenroad.litepalbean.SupportOperator;
+import com.android.htc.greenroad.manager.GlobalManager;
+import com.android.htc.greenroad.tools.SPUtils;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -69,6 +70,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     private ArrayList<String> mOperators;
     private int mDimension;
     private SiteChecksAdapter mChecksAdapter;
+    private String mUsername;
 
 
     public CheckedFragment() {
@@ -125,6 +127,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initData() {
+        mUsername = (String) SPUtils.get(getActivity(), GlobalManager.USERNAME, "qqqq");
         mOperatorList = DataSupport.findAll(SupportOperator.class);
         mOperators = new ArrayList<>();
         for (int i = 0; i < mOperatorList.size(); i++) {
@@ -148,7 +151,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
         mTextConclusionView.setOnClickListener(this);
         mSiteLogin.setOnClickListener(this);
 
-        if (ShowActivity.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
+        if (GlobalManager.TYPE_DRAFT_ENTER_SHOW.equals(sEnterType)) {
             ConclusionActivity.notifyDataChangeFromDraft(sSupportChecked.getConclusion());
             mEditDescriptionView.setText(sSupportChecked.getDescription());
             //默认是是   是为1   点击是否 否为0（有点绕）
@@ -156,17 +159,17 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
             mToggleIsFree.setChecked(sSupportChecked.getIsFree() == 0 ? true : false);
             mCheckOperators = sSupportChecked.getSiteChecks();
             mLoginOperator = sSupportChecked.getSiteLogin();
-        } else if (ShowActivity.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
+        } else if (GlobalManager.TYPE_MAIN_ENTER_SHOW.equals(sEnterType)) {
             ConclusionActivity.notifyDataChangeFromDraft("符合绿通放行规定;");
-            mCheckOperators = setCheckOperatorInfo("check_select = ?");
-            mLoginOperator = setLoginOperatorInfo("login_select = ?");
+            mCheckOperators = setCheckOperatorInfo("check_select = ? and username = ?");
+            mLoginOperator = setLoginOperatorInfo("login_select = ? and username = ?");
         }
         mSiteLogin.setText(mLoginOperator);
     }
 
 
     private String setLoginOperatorInfo(String condition) {
-        List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
+        List<SupportOperator> operatorList = DataSupport.where(condition, "1",mUsername).find(SupportOperator.class);
         if (operatorList.size() != 0) {
             Logger.i(operatorList.toString());
             String mJob_number = operatorList.get(0).getJob_number();
@@ -177,7 +180,7 @@ public class CheckedFragment extends Fragment implements View.OnClickListener {
     }
 
     private List<String> setCheckOperatorInfo(String condition) {
-        List<SupportOperator> operatorList = DataSupport.where(condition, "1").find(SupportOperator.class);
+        List<SupportOperator> operatorList = DataSupport.where(condition, "1",mUsername).find(SupportOperator.class);
         List<String> checkList = null;
         if (checkList == null) {
             checkList = new ArrayList<>();

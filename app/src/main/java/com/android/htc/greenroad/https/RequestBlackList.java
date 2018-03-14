@@ -7,7 +7,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Func1;
 
 /**
  * @author sineom
@@ -37,12 +36,7 @@ public class RequestBlackList {
     public void getBlackList(Subscriber<List<HttpResultBlack.DataBean>> subscriber) {
         Observable<List<HttpResultBlack.DataBean>> observable = HttpMethods.getInstance().getApi().getBlack()
 //                .map(new HttpNumberFunc<>());
-                .map(new Func1<HttpResultBlack<List<HttpResultBlack.DataBean>>, List<HttpResultBlack.DataBean>>() {
-                    @Override
-                    public List<HttpResultBlack.DataBean> call(HttpResultBlack<List<HttpResultBlack.DataBean>> listHttpResultBlack) {
-                        return listHttpResultBlack.getData();
-                    }
-                });
+                .map(listHttpResultBlack -> listHttpResultBlack.getData());
 
         HttpMethods.getInstance().toSubscribe(observable,subscriber);
 

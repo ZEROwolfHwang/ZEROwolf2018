@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="90dp"
+              android:layout_width="80dp"
              android:layout_gravity="center_horizontal"
-              android:layout_height="45dp">
+              android:layout_height="50dp">
 
     <TextView
         android:id="@+id/text_goods"
@@ -11,8 +11,8 @@
         android:layout_marginRight="@dimen/layout_margin10dp"
         android:textSize="16sp"
         android:gravity="center"
-        android:textColor="?attr/custom_text_color_first"
-        android:background="?attr/custom_text_box_stroke"
+        android:textColor="@color/white"
+        android:background="@drawable/license_color_day_selected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <ImageButton

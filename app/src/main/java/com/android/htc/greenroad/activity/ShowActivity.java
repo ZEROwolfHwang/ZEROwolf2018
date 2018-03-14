@@ -2,44 +2,47 @@ package com.android.htc.greenroad.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.adapter.ShowViewPagerAdapter;
 import com.android.htc.greenroad.bean.CheckedBean;
 import com.android.htc.greenroad.bean.DetailInfoBean;
 import com.android.htc.greenroad.bean.ScanInfoBean;
-import com.android.htc.greenroad.fragment.CarNumberFragment;
 import com.android.htc.greenroad.fragment.DetailsFragment;
-import com.android.htc.greenroad.fragment.GoodsFragment;
-import com.android.htc.greenroad.fragment.PhotoFragment;
+import com.android.htc.greenroad.httpresultbean.HttpResultBlack;
+import com.android.htc.greenroad.https.RequestSubmitBlackList;
 import com.android.htc.greenroad.litepalbean.SupportChecked;
 import com.android.htc.greenroad.litepalbean.SupportDetail;
 import com.android.htc.greenroad.litepalbean.SupportScan;
-import com.android.htc.greenroad.servicy.SubmitService;
-import com.android.htc.greenroad.tools.ActionBarTool;
+import com.android.htc.greenroad.manager.GlobalManager;
+import com.android.htc.greenroad.presenter.NetWorkManager;
+import com.android.htc.greenroad.servicy.SubmitIntentService;
 import com.android.htc.greenroad.tools.PermissionUtils;
-import com.android.htc.greenroad.tools.SPListUtil;
+import com.android.htc.greenroad.tools.ToastUtils;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscriber;
 
 /**
  * Created by Administrator on 2017/6/20.
@@ -47,6 +50,8 @@ import butterknife.OnClick;
 
 public class ShowActivity extends BaseActivity {
 
+    public static final int RESULT_CODE_LICENSE = 00 * 1;
+    public static final String LICENSE_NUMBER = "license_number";
     private static String ARG_SUPPORT_SCAN = "arg_support_scan";
     private static String ARG_SUPPORT_DETAIL = "arg_support_detail";
     private static String ARG_SUPPORT_CHECKED = "arg_support_checked";
@@ -54,16 +59,15 @@ public class ShowActivity extends BaseActivity {
     private static String ARG_STATION = "arg_station";
 
     private static String ACTION_MAIN_ENTER_SHOW = "action_main_enter_show";
-    public static String TYPE_MAIN_ENTER_SHOW = "type_main_enter_show";
 
     private static String ACTION_DRAFT_ENTER_SHOW = "action_draft_enter_show";
-    public static String TYPE_DRAFT_ENTER_SHOW = "type_draft_enter_show";
-    @BindView(R.id.tab_show)
-    TabLayout mTabShow;
+
+    public static String ACTION_MEMORY_ENTER_SHOW = "action_memory_enter_show";
+    private static TabLayout mTabShow;
     @BindView(R.id.view_pager_show)
     ViewPager mViewPagerShow;
-    @BindView(R.id.toolbar_show)
-    Toolbar mToolbarShow;
+    //    @BindView(R.id.toolbar_show)
+//    Toolbar mToolbarShow;
     @BindView(R.id.fab_draft)
     FloatingActionButton mFabDraft;
     @BindView(R.id.fab_submit)
@@ -80,17 +84,18 @@ public class ShowActivity extends BaseActivity {
 
 
     private static CheckedBean mCheckedBean_Q;
-    private static String mStation_Q;
-    private static String mRoad_Q;
+//    private static String mStation_Q;
+//    private static String mRoad_Q;
     private Handler mUiHandler = new Handler();
     private static List<LocalMedia> mLocalMedias_sanzheng_Q;
     private static List<LocalMedia> mLocalMedias_cheshen_Q;
     private static List<LocalMedia> mLocalMedias_huozhao_Q;
 
     private File mFile;
-    private static String mFilePath_str;
     public static String mShowType;
     public static int mLite_id;
+    private boolean mBlackTag;
+    private ArrayList<String> mLicenseList;
 
     public static void actionStart(Context context, SupportDetail supportDetail, SupportScan supportScan,
                                    SupportChecked supportChecked, int lite_ID) {
@@ -102,14 +107,21 @@ public class ShowActivity extends BaseActivity {
         intent.putExtra(ARG_SUPPORT_CHECKED, supportChecked);
         intent.putExtra(ARG_SUPPORT_MEDIA, lite_ID);
 
-        intent.setType(TYPE_DRAFT_ENTER_SHOW);
+        intent.setType(GlobalManager.TYPE_DRAFT_ENTER_SHOW);
         context.startActivity(intent);
     }
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, ShowActivity.class);
         intent.setAction(ACTION_MAIN_ENTER_SHOW);
-        intent.setType(TYPE_MAIN_ENTER_SHOW);
+        intent.setType(GlobalManager.TYPE_MAIN_ENTER_SHOW);
+        context.startActivity(intent);
+    }
+
+    public static void actionStart(Context context, String action, String type) {
+        Intent intent = new Intent(context, ShowActivity.class);
+        intent.setAction(action);
+        intent.setType(type);
         context.startActivity(intent);
     }
 
@@ -123,14 +135,13 @@ public class ShowActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         mActivity = this;
+
+        mTabShow = (TabLayout) findViewById(R.id.tab_show);
+
         initFab();
         initData();
 
         getIntentData();
-
-
-        initView();
-
 
     }
 
@@ -182,60 +193,15 @@ public class ShowActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
-        mRoad_Q = strListValue.get(1).toString();
-        mStation_Q = strListValue.get(2).toString();
+//        List<String> strListValue = SPListUtil.getStrListValue(getContext(), SPListUtil.APPCONFIGINFO);
+//        mRoad_Q = strListValue.get(1).toString();
+//        mStation_Q = strListValue.get(2).toString();
     }
 
     private void initData() {
         PermissionUtils.verifyStoragePermissions(mActivity);
-        if (mFile == null) {
-            mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenShoot");
-            mFile.mkdirs();
-        }
-        mFilePath_str = mFile.getPath();
-
-
     }
 
-    private void initView() {
-
-        setSupportActionBar(mToolbarShow);
-
-        TextView title_text_view = ActionBarTool.getInstance(mActivity, 991).getTitle_text_view();
-        title_text_view.setText("车辆采集");
-
-        mToolbarShow.setNavigationIcon(R.drawable.back_up_logo);
-
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);//将actionbar原有的标题去掉（这句一般是用在xml方法一实现）
-        mToolbarShow.setNavigationOnClickListener(v -> backToMain());
-
-    }
-
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.show, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_draft:
-                ToastUtils.singleToast("实现保存草稿");
-                saveDraft();
-
-                break;
-            case R.id.menu_submit:
-                ToastUtils.singleToast("向服务端提交采集的数据");
-                submit2Service();
-                break;
-
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 
     @OnClick({R.id.fab_submit, R.id.fab_draft})
     public void onClick(View view) {
@@ -246,7 +212,120 @@ public class ShowActivity extends BaseActivity {
                 mFabSubmit.hideButtonInMenu(true);
                 mMenuFab.toggle(false);
                 Logger.i(DetailsFragment.sEnterType);
-                SubmitService.startActionSubmit(this, this, DetailsFragment.sEnterType, mShowType);
+
+                DetailsFragment.setDetailsConnectListener((bean) -> {
+                    mDetailInfoBean_Q = bean;
+                });
+                String licence = mDetailInfoBean_Q.getNumber();
+                if (licence.length() < 7) {
+                    if (!"无".equals(licence)) {
+                        ToastUtils.singleToast("车牌号的长度至少7位");
+                        return;
+                    } else {
+                        SubmitIntentService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+                        return;
+                    }
+                }
+                String licence_header = licence.substring(0, 2);
+                Logger.i(licence_header);
+                if (NetWorkManager.isnetworkConnected(getApplicationContext())) {
+                    Logger.i("有网加载黑名单数据的服务");
+
+//                    RequestSubmitBlackList.getInstance().getBlackList(new
+                    RequestSubmitBlackList.getInstance().getBlackList(new Subscriber<List<HttpResultBlack.DataBean>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Logger.i(e.getMessage());
+                            ToastUtils.singleToast("网络异常,请检查服务器...");
+                        }
+
+                        @Override
+                        public void onNext(List<HttpResultBlack.DataBean> dataBeans) {
+//                            List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
+
+                            if (mLicenseList == null) {
+                                mLicenseList = new ArrayList<>();
+                            } else {
+                                mLicenseList.clear();
+                            }
+                            Logger.i(dataBeans.toString());
+                            if (dataBeans.size() == 1 && "kong".equals(dataBeans.get(0))) {
+                                SubmitIntentService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+                            } else {
+                                for (int i = 0; i < dataBeans.size(); i++) {
+                                    mLicenseList.add(dataBeans.get(i).getPlate_number());
+                                }
+
+                                boolean isBlack = isBlack(licence, mLicenseList);
+                                if (isBlack) {
+                                    DetailsFragment.notifyChangeTextColor();
+                                    mBlackTag = false;
+                                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                                    r.play();
+
+                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(ShowActivity.this);
+                                    builder1.setTitle("该车牌为黑名单车牌" + "\n" + "不可以提交,请保存为草稿");
+                                    builder1.setPositiveButton("了解", (dialog, which) -> {
+                                        dialog.dismiss();
+                                    });
+                                    builder1.setCancelable(false);
+                                    builder1.show();
+                                } else {
+                                    mBlackTag = true;
+                                    SubmitIntentService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+                                }
+                            }
+                        }
+                    }, licence_header);
+                } else {
+                    Logger.i("无网未加载黑名单数据");
+                    SubmitIntentService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+                }
+                    /*RequestBlackList.getInstance().getBlackList(new Subscriber<List<HttpResultBlack.DataBean>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Logger.i(e.getMessage());
+                            ToastUtils.singleToast("网络异常,请检查服务器...");
+                        }
+
+                        @Override
+                        public void onNext(List<HttpResultBlack.DataBean> dataBeen) {
+                            List<SupportBlack> supportBlacks = DataSupport.findAll(SupportBlack.class);
+                            if (supportBlacks.size() == dataBeen.size()) {
+                                mBlackTag = true;
+//                                SubmitService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+                                justifyBlackSubmit();
+//                                return;
+                            } else {
+                                DataSupport.deleteAll(SupportBlack.class);
+                                for (int i = 0; i < dataBeen.size(); i++) {
+                                    Logger.i(dataBeen.get(i).getPlate_number());
+                                    SupportBlack supportBlack = new SupportBlack();
+                                    supportBlack.setLicense(dataBeen.get(i).getPlate_number());
+                                    supportBlack.save();
+                                }
+                                justifyBlackSubmit();
+
+                            }
+                        }
+
+                    });
+                } else {
+                    Logger.i("无网未加载黑名单数据");
+                    SubmitService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+                }*/
+
                 break;
             case R.id.fab_draft:
                 mFabDraft.hideButtonInMenu(true);
@@ -260,6 +339,33 @@ public class ShowActivity extends BaseActivity {
                 break;
         }
     }
+/*
+    private void justifyBlackSubmit() {
+        List<SupportBlack> blackList = DataSupport.findAll(SupportBlack.class);
+        if (blackList != null && blackList.size() != 0) {
+            boolean isBlack = isBlack(mDetailInfoBean_Q.getNumber(), blackList);
+            if (isBlack) {
+                DetailsFragment.notifyChangeTextColor();
+                mBlackTag = false;
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                r.play();
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(ShowActivity.this);
+                builder1.setTitle("该车牌为黑名单车牌" + "\n" + "不可以提交,请保存为草稿");
+                builder1.setPositiveButton("了解", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                builder1.setCancelable(false);
+                builder1.show();
+//                return;
+            } else {
+                mBlackTag = true;
+                SubmitService.startActionSubmit(ShowActivity.this, ShowActivity.this, DetailsFragment.sEnterType, mShowType);
+//                return;
+            }
+        }
+    }*/
 
     /**
      * 保存草稿
@@ -267,7 +373,7 @@ public class ShowActivity extends BaseActivity {
      * 2.将数据保存到数据库
      */
     private void saveDraft(int id) {
-       SubmitService.startActionSave(this,DetailsFragment.sEnterType,mShowType,id);
+        SubmitIntentService.startActionSave(this, DetailsFragment.sEnterType, mShowType, id);
     }
 
     @Override
@@ -305,14 +411,31 @@ public class ShowActivity extends BaseActivity {
     }
 
     public static void notifyDataChangeAndFinish() {
-        CarNumberFragment.notifyDataChange();
-        GoodsFragment.notifyDataChange();
-        PhotoFragment.notifyDataChange();
         ConclusionActivity.notifyDataChange();
         DetailsFragment.notifyDataChange();
     }
 
     public void notifyActivityFinish() {
         mActivity.finish();
+    }
+
+    private boolean isBlack(String carNumber, ArrayList<String> blackList) {
+
+        for (int i = 0; i < blackList.size(); i++) {
+            if (carNumber.equals(blackList.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void setTabLayoutCanClick(boolean canClick) {
+        LinearLayout tabStrip = (LinearLayout) mTabShow.getChildAt(0);
+        for (int i = 0; i < tabStrip.getChildCount(); i++) {
+            View tabView = tabStrip.getChildAt(i);
+            if (tabView != null) {
+                tabView.setClickable(canClick);
+            }
+        }
     }
 }

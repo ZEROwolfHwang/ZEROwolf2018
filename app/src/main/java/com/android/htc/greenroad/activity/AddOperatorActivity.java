@@ -7,11 +7,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.litepalbean.SupportOperator;
+import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.ActionBarTool;
+import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.ToastUtils;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -39,6 +41,7 @@ public class AddOperatorActivity extends BaseActivity {
     private String mOperator_name;
     private boolean mIsLogined;
     private boolean mIsChecked;
+    private String mUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class AddOperatorActivity extends BaseActivity {
         setContentView(R.layout.activity_add_operator);
         ButterKnife.bind(this);
         mActivity = this;
+        mUsername = (String) SPUtils.get(this, GlobalManager.USERNAME, "qqqq");
 
         initToolbar();
         initView();
@@ -54,7 +58,7 @@ public class AddOperatorActivity extends BaseActivity {
         mAddOperatorCheckPerson.setOnClickListener(v -> {
             if (mAddOperatorCheckPerson.isChecked()) {
                 List<SupportOperator> operatorList = DataSupport.
-                        where("check_select = ?", "1").find(SupportOperator.class);
+                        where("check_select = ? and username = ?", "1",mUsername).find(SupportOperator.class);
                 if (operatorList.size() > 2) {
                     mAddOperatorCheckPerson.setChecked(false);
                     ToastUtils.singleToast("最多只能添加三个默认检查人");
@@ -77,7 +81,7 @@ public class AddOperatorActivity extends BaseActivity {
                 mAddOperatorJobNumber.requestFocus();
                 return;
             }
-            List<SupportOperator> jobNumberList = DataSupport.select("job_number").find(SupportOperator.class);
+            List<SupportOperator> jobNumberList = DataSupport.select("job_number").where("username = ? ",mUsername).find(SupportOperator.class);
             for (int i = 0; i < jobNumberList.size(); i++) {
                 String job_number = jobNumberList.get(i).getJob_number();
                 if (mJob_number.equals(job_number)) {
@@ -86,6 +90,7 @@ public class AddOperatorActivity extends BaseActivity {
                     return;
                 }
             }
+
             if ("".equals(mOperator_name)) {
                 mAddOperatorName.setError("请输入姓名");
                 mAddOperatorName.requestFocus();
@@ -94,10 +99,11 @@ public class AddOperatorActivity extends BaseActivity {
             if (mIsLogined) {
                 SupportOperator operator = new SupportOperator();
                 operator.setToDefault("login_select");
-                operator.updateAll();
+                operator.updateAll("username = ?", mUsername);
             }
 
             SupportOperator operator = new SupportOperator();
+            operator.setUsername(mUsername);
             operator.setJob_number(mJob_number);
             operator.setOperator_name(mOperator_name);
             if (mAddOperatorCheckPerson.isChecked()) {

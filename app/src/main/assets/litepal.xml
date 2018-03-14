@@ -4,11 +4,11 @@
         <dbname value="green" />
 
 
-        <version value="11" />
+        <!--<version value="8" />-->
+        <version value="26" />
 
         <list>
             <mapping class="com.android.htc.greenroad.litepalbean.SupportOperator" />
-            <mapping class="com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportMedia" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportScan" />
@@ -16,8 +16,12 @@
             <mapping class="com.android.htc.greenroad.litepalbean.SupportChecked" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportBlack" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportLine" />
-            <mapping class="com.android.htc.greenroad.litepalbean.SupportLane" />
+            <mapping class="com.android.htc.greenroad.litepalbean.TeamItem" />
+            <mapping class="com.android.htc.greenroad.litepalbean.TeamOperator" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportGoods" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportLocalGoods" />
 
         </list>
+            <!--<mapping class="com.android.htc.greenroad.litepalbean.SupportLane" />-->
 
 </litepal>

@@ -18,11 +18,6 @@
         android:text="保存时间"
         style="@style/layout_dragft_activity_style_content"/>
     <TextView
-        android:id="@+id/preview_text_isFree"
-        android:layout_weight="3"
-        android:text="是"
-        style="@style/layout_dragft_activity_style_content"/>
-    <TextView
         android:layout_weight="3"
         android:text="检查人"
         android:id="@+id/preview_text_check"
@@ -33,6 +28,19 @@
         android:text="登记人"
         style="@style/layout_dragft_activity_style_content"/>
 
+    <LinearLayout
+        android:layout_weight="3"
+        android:padding="16dp"
+        style="@style/layout_dragft_activity_style_content"
+        >
+
+    <ImageView
+        android:layout_height="match_parent"
+        android:id="@+id/preview_img_isPass"
+        android:layout_width="match_parent"
+        android:background="@drawable/ispass_yes"
+        />
+    </LinearLayout>
 </LinearLayout>
 
 

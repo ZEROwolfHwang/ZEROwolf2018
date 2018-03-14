@@ -15,11 +15,13 @@ public class SPUtils {
     //存储的是草稿以及提交的数量
 
     public static final String lOGIN_USERNAME = "login_username";
+    public static final String TEAMID = "teamid";
+    public static final String COUNT_BLACKLIST = "count_blacklist";
 
-    public static final String MATH_DRAFT_LITE = "math_draft_lite";
-    public static final String MATH_SUBMIT_LITE = "math_submit_lite";
+//    public static final String MATH_DRAFT_LITE = "math_draft_lite";
+//    public static final String MATH_SUBMIT_LITE = "math_submit_lite";
 
-    public static final String TEXTLANE= "textlane";
+//    public static final String TEXTLANE= "textlane";
     public static final String CHECKOPERATOR = "checkoperator";
 
     public static final String KEY_THEME_TAG = "GreenRoad_ThemeTag";

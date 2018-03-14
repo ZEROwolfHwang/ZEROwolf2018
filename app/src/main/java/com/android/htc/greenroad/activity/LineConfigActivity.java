@@ -12,7 +12,6 @@ import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.httpresultbean.HttpResultLineStation;
 import com.android.htc.greenroad.https.RequestLineStation;
 import com.android.htc.greenroad.litepalbean.SupportLine;
-import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.ToastUtils;
 import com.orhanobut.logger.Logger;
@@ -57,13 +56,19 @@ public class LineConfigActivity extends BaseActivity {
             mConfigPort = mTextLineConfig.getText().toString();
             // if (!TextUtils.isEmpty(mConfigPort)) {
               SPUtils.putAndApply(this, SPUtils.CONFIG_PORT, mConfigPort);
-            if (GlobalManager.LOGIN2PORT.equals(mType)) {
-                mRlProgressPort.setVisibility(View.VISIBLE);
-                initLine();
+//            if (GlobalManager.LOGIN2PORT.equals(mType)) {
+//                mRlProgressPort.setVisibility(View.VISIBLE);
+//                initLine();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
 
-            } else {
-                finish();
-            }
+                this.finish();
+
+//            } else {
+//                Intent intent = new Intent(this, LoginActivity.class);
+//                startActivity(intent);
+//                this.finish();
+//            }
             //  }
         });
 //        initView();
@@ -72,11 +77,11 @@ public class LineConfigActivity extends BaseActivity {
     private void getIntentData() {
         Intent intent = getIntent();
         mType = intent.getType();
-        if (GlobalManager.LOGIN2PORT.equals(mType)) {
-            mBtnSureLine.setText("申请注册");
-        } else {
+//        if (GlobalManager.LOGIN2PORT.equals(mType)) {
+//            mBtnSureLine.setText("申请注册");
+//        } else {
             mBtnSureLine.setText("确定配置");
-        }
+//        }
     }
 
     /**
@@ -99,7 +104,6 @@ public class LineConfigActivity extends BaseActivity {
             @Override
             public void onNext(List<HttpResultLineStation.DataBean> dataBeen) {
                 DataSupport.deleteAll(SupportLine.class);
-                ToastUtils.singleToast(dataBeen.get(0).getLine() + ""+dataBeen.get(0).getStations());
                 for (int i = 0; i < dataBeen.size(); i++) {
                     Logger.i(dataBeen.get(i).getLine() + "");
                     Logger.i(dataBeen.get(i).getStations() + "");
@@ -114,7 +118,7 @@ public class LineConfigActivity extends BaseActivity {
                     supportLine.save();
                 }
                 mRlProgressPort.setVisibility(View.GONE);
-                Intent intent = new Intent(LineConfigActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(LineConfigActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

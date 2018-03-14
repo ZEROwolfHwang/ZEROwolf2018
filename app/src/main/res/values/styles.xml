@@ -151,14 +151,13 @@
     </style>
 
     <style name="main_text_static_tv_style">
-        <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_weight">1.5</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">?attr/custom_text_color_first</item>
-        <item name="android:textSize">@dimen/text18</item>
+        <item name="android:textColor">?attr/custom_text_color_second</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="main_text_static_iv_style">
@@ -208,10 +207,12 @@
 
 
     <style name="number_edit_box_style">
+        <item name="android:focusable">false</item>
+        <item name="android:enabled">false</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@null</item>
+        <!--<item name="android:background">@null</item>-->
         <item name="android:textColor">?attr/custom_text_color_first</item>
-        <item name="android:textSize">@dimen/text24</item>
+        <item name="android:textSize">@dimen/text20</item>
         <item name="android:layout_width">@dimen/layout_margin0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
@@ -415,11 +416,14 @@
     <style name="RadioButton_goods_style">
         <item name="android:ems">1</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:textColor">?attr/custom_rb_text_color_selector</item>
-        <item name="android:background">?attr/custom_rb_bg_selector</item>
+        <item name="android:textColor">@color/licence_text_normal_day</item>
+        <!--<item name="android:textColor">?attr/custom_rb_text_color_selector</item>-->
+        <!--<item name="android:background">?attr/custom_rb_bg_selector</item>-->
+        <item name="android:background">@drawable/license_color_normal_day</item>
         <item name="android:layout_width">@dimen/layout_margin0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:button">@null</item>
+        <item name="android:typeface">serif</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/text16</item>
         <item name="android:layout_weight">1</item>
@@ -434,12 +438,48 @@
     </style>
 
     <style name="three_list_main_text_style">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">@dimen/layout_margin10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/layout_margin10dp</item>
         <item name="android:textColor">?attr/custom_three_list_text_color</item>
         <item name="android:textSize">@dimen/text14</item>
+    </style>
+
+    <!--以下是DetailsFragment中收费信息的style-->
+    <style name="detail_fragment_text_ll_styles">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">@dimen/layout_margin0dp</item>
+        <item name="android:layout_marginRight">@dimen/layout_margin5dp</item>
+        <item name="android:layout_marginLeft">@dimen/layout_margin5dp</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="detail_fragment_text_text_styles">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+    <style name="detail_fragment_text_edit_styles">
+        <item name="android:textColor">?attr/custom_text_color_first</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+    <style name="detail_fragment_text_device_styles">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">@dimen/layout_margin10dp</item>
+        <item name="android:layout_marginRight">@dimen/layout_margin10dp</item>
+        <item name="android:background">?attr/custom_device_bg_color</item>
     </style>
 </resources>

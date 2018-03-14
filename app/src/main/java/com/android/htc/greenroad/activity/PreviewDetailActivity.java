@@ -78,8 +78,8 @@ public class PreviewDetailActivity extends BaseActivity {
     TextView mPick003;
     @BindView(R.id.pick_004)
     TextView mPick004;
-    /* @BindView(R.id.pick_005)
-     TextView mPick005;*/
+     @BindView(R.id.pick_005)
+     TextView mPick005;
     @BindView(R.id.pick_006)
     TextView mPick006;
     @BindView(R.id.check_001)
@@ -110,6 +110,7 @@ public class PreviewDetailActivity extends BaseActivity {
         intent.setAction(action);
         intent.putExtra(SUPPORTDRAFT_ITEM, support);
         context.startActivity(intent);
+
     }
 
     @Override
@@ -163,7 +164,7 @@ public class PreviewDetailActivity extends BaseActivity {
 
         }
         mToolbarPreviewDetail.setNavigationIcon(R.drawable.back_up_logo);
-        mToolbarPreviewDetail.setNavigationOnClickListener(v -> finish());
+        mToolbarPreviewDetail.setNavigationOnClickListener(v -> backToDraft());
 
     }
 
@@ -231,15 +232,16 @@ public class PreviewDetailActivity extends BaseActivity {
         mPick001.setText(supportDetail.getLane());
         mPick003.setText(mSupportChecked.getSiteLogin());
         mPick004.setText(supportDetail.getNumber());
+        mPick005.setText(supportDetail.getDetail_carType());
         mPick006.setText(supportDetail.getGoods());
 
         //扫描的条目
-        mTextTable1.setText(supportScan.getScan_01Q());
-        mTextTable4.setText(supportScan.getScan_04Q());
+        mTextTable1.setText(supportDetail.getNumber());
+        mTextTable4.setText(supportDetail.getDetail_weight());
         mTextTable5.setText(supportScan.getScan_05Q());
-        mTextTable6.setText(supportScan.getScan_06Q());
+        mTextTable6.setText(supportDetail.getDetail_free());
         mTextTable10.setText(supportScan.getScan_10Q());
-        mTextTable12.setText(supportScan.getScan_12Q());
+        mTextTable12.setText(supportDetail.getLane());
         mTextTableLimit.setText(supportScan.getIsLimit() == 0 ? "否" : "是");
 
         //检查结论的条目
@@ -255,29 +257,31 @@ public class PreviewDetailActivity extends BaseActivity {
         SupportScan supportScan = mCurrentSupport.getSupportScan();
         SupportChecked supportChecked = mCurrentSupport.getSupportChecked();
 
-
-
-
-     /*   SupportMedia supportMedia = mCurrentSupport.getSupportMedia();
-        for (int i = 0; i < supportMedia.getPaths().size(); i++) {
-            Logger.init("media");
-            Logger.i(supportMedia.getPaths().get(i) + "---" +
-                    supportMedia.getDurations().get(i) + "---" +
-                    supportMedia.getHeights().get(i) + "---" +
-                    supportMedia.getMimeTypes().get(i) + "---" +
-                    supportMedia.getNums().get(i) + "---" +
-                    supportMedia.getPictureTypes().get(i) + "---" +
-                    supportMedia.getPositions().get(i) + "---" +
-                    supportMedia.getWidths().get(i));
-        }*/
         ShowActivity.actionStart(PreviewDetailActivity.this, supportDetail, supportScan, supportChecked, mCurrentSupport.getLite_ID());
+        PreviewDetailActivity.this.finish();
+
     }
 
-    public static void setPictureLisener(PictureListener listener) {
+    public static void setPictureListener(PictureListener listener) {
         listener.onPicture(mBitmapArrayList);
     }
 
     public interface PictureListener {
         void onPicture(List<MyBitmap> myBitmapList);
+    }
+
+    @Override
+    public void onBackPressed() {
+        backToDraft();
+    }
+
+    public void backToDraft() {
+        if (ACTION_DRAFT_ITEM.equals(mIntent.getAction())) {
+            Intent intent = new Intent(PreviewDetailActivity.this, DraftActivity.class);
+            startActivity(intent);
+            PreviewDetailActivity.this.finish();
+        } else if (ACTION_SUBMIT_ITEM.equals(mIntent.getAction())) {
+            finish();
+        }
     }
 }

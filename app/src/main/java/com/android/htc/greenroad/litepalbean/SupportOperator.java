@@ -8,10 +8,33 @@ import org.litepal.crud.DataSupport;
 
 public class SupportOperator extends DataSupport {
 
+
+
+    private String username;
     private String job_number;
     private String operator_name;
     private int check_select;
     private int login_select;
+
+
+    @Override
+    public String toString() {
+        return "SupportOperator{" +
+                "username=" + username +
+                ", job_number='" + job_number + '\'' +
+                ", operator_name='" + operator_name + '\'' +
+                ", check_select=" + check_select +
+                ", login_select=" + login_select +
+                '}';
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public int getCheck_select() {
         return check_select;
@@ -45,11 +68,5 @@ public class SupportOperator extends DataSupport {
         this.operator_name = operator_name;
     }
 
-    @Override
-    public String toString() {
-        return "SupportOperator{" +
-                "job_number='" + job_number + '\'' +
-                ", operator_name='" + operator_name + '\'' +
-                '}';
-    }
+
 }

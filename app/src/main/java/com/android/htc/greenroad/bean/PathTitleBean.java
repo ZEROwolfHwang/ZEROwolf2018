@@ -15,6 +15,9 @@ public class PathTitleBean {
         this.title = title;
     }
 
+    public PathTitleBean() {
+    }
+
     @Override
     public String toString() {
         return "PathTitleBean{" +

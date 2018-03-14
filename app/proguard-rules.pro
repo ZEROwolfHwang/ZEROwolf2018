@@ -203,4 +203,8 @@
     public static int e(...);
 }
 #-ignorewarnings
+-ignorewarnings
 
+-keep class * {
+    public private *;
+}

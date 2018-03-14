@@ -35,10 +35,13 @@ public class RequestPicture {
     }
 
     public void postPicture(Subscriber<HttpResultCode> subscriber, String submit_time,
-                            List<MultipartBody.Part> sanzheng,List<MultipartBody.Part> cheshen,
-                            List<MultipartBody.Part> huozhao) {
+                            List<MultipartBody.Part> sanzheng
+//                            List<MultipartBody.Part> cheshen,
+//                            List<MultipartBody.Part> huozhao
+    ) {
         Observable<HttpResultCode> observable = HttpMethods.getInstance().
-                getApi().postPicture(submit_time,sanzheng,cheshen,huozhao);
+//                getApi().postPicture(submit_time,sanzheng,cheshen,huozhao);
+                getApi().postPicture(submit_time,sanzheng);
 
         HttpMethods.getInstance().toSubscribe(observable, subscriber);
 

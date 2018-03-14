@@ -14,63 +14,196 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:elevation="3dp"
-            android:gravity="center">
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:descendantFocusability="afterDescendants"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="#014bc1"/>
+
+            <TextView
+                style="@style/main_text_static_tv_style"
+                android:layout_gravity="right"
+                android:layout_marginLeft="15dp"
+                android:drawableLeft="@drawable/image_goods"
+                android:drawablePadding="5dp"
+                android:text="登记站"/>
 
             <ImageView
-                style="@style/main_left_image_view"
-                android:background="@drawable/image_station"/>
+                style="@style/main_text_static_iv_style"/>
 
-            <LinearLayout
-                style="@style/main_text_layout_bg_station_style">
+            <TextView
+                android:id="@+id/tv_change_station_main"
+                style="@style/main_text_change_tv_style"/>
 
-                <TextView
-                    style="@style/main_text_static_tv_style"
-                    android:text="登记站"/>
-
-                <ImageView
-                    style="@style/main_text_static_iv_style"/>
-
-                <TextView
-                    android:id="@+id/tv_change_station_main"
-                    style="@style/main_text_change_tv_style"/>
-
-            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="@dimen/layout_margin5dp"
-            android:elevation="3dp"
-            android:gravity="center">
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:descendantFocusability="afterDescendants"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="#37ac00"/>
+
+            <TextView
+                style="@style/main_text_static_tv_style"
+                android:layout_gravity="right"
+                android:layout_marginLeft="15dp"
+                android:drawableLeft="@drawable/image_lane"
+                android:drawablePadding="5dp"
+                android:text="登记车道"/>
 
             <ImageView
-                style="@style/main_left_image_view"
-                android:background="@drawable/image_lane"/>
+                style="@style/main_text_static_iv_style"/>
 
-            <LinearLayout
-                style="@style/main_text_layout_bg_else_style">
+            <TextView
+                android:id="@+id/tv_change_lane_main"
+                style="@style/main_text_change_tv_style"/>
 
-                <TextView
-                    style="@style/main_text_static_tv_style"
-                    android:text="登记车道"/>
-
-                <ImageView
-                    style="@style/main_text_static_iv_style"/>
-
-                <TextView
-                    android:id="@+id/tv_change_lane_main"
-                    style="@style/main_text_change_tv_style"/>
-
-            </LinearLayout>
 
         </LinearLayout>
 
-        <include layout="@layout/layout_check_operator_main"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:descendantFocusability="afterDescendants"
+            android:gravity="center_vertical"
+            >
 
-        <include layout="@layout/layout_login_operator"/>
+            <TextView
+
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="#b000cf"/>
+
+            <TextView
+                style="@style/main_text_static_tv_style"
+                android:layout_gravity="right"
+                android:layout_marginLeft="15dp"
+                android:drawableLeft="@drawable/image_operator_check"
+                android:drawablePadding="5dp"
+                android:text="检查人"/>
+
+            <ImageView
+                style="@style/main_text_static_iv_style"/>
+
+            <TextView
+                android:id="@+id/tv_operator_check_main"
+                style="@style/main_text_change_tv_style"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:descendantFocusability="afterDescendants"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="#d77300"/>
+
+            <TextView
+                style="@style/main_text_static_tv_style"
+                android:layout_gravity="right"
+                android:layout_marginLeft="15dp"
+                android:drawableLeft="@drawable/image_operator_login"
+                android:drawablePadding="5dp"
+                android:text="登记人"/>
+
+            <ImageView
+                style="@style/main_text_static_iv_style"/>
+
+            <TextView
+                android:id="@+id/tv_operator_login_main"
+                style="@style/main_text_change_tv_style"/>
+
+
+        </LinearLayout>
+
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:elevation="3dp"-->
+        <!--android:gravity="center">-->
+
+        <!--<ImageView-->
+        <!--style="@style/main_left_image_view"-->
+        <!--android:background="@drawable/image_station"/>-->
+
+        <!--<LinearLayout-->
+        <!--style="@style/main_text_layout_bg_station_style">-->
+
+        <!--<TextView-->
+        <!--style="@style/main_text_static_tv_style"-->
+        <!--android:text="登记站"/>-->
+
+        <!--<ImageView-->
+        <!--style="@style/main_text_static_iv_style"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_change_station_main"-->
+        <!--style="@style/main_text_change_tv_style"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_marginTop="@dimen/layout_margin5dp"-->
+        <!--android:elevation="3dp"-->
+        <!--android:gravity="center">-->
+
+        <!--<ImageView-->
+        <!--style="@style/main_left_image_view"-->
+        <!--android:background="@drawable/image_lane"/>-->
+
+        <!--<LinearLayout-->
+        <!--style="@style/main_text_layout_bg_else_style">-->
+
+        <!--<TextView-->
+        <!--style="@style/main_text_static_tv_style"-->
+        <!--android:text="登记车道"/>-->
+
+        <!--<ImageView-->
+        <!--style="@style/main_text_static_iv_style"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_change_lane_main"-->
+        <!--style="@style/main_text_change_tv_style"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<include layout="@layout/layout_check_operator_main"/>-->
+
+        <!--<include layout="@layout/layout_login_operator"/>-->
 
 
     </LinearLayout>
@@ -79,101 +212,200 @@
         android:id="@+id/btn_enter_show"
         android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:layout_marginBottom="@dimen/layout_margin20dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="@dimen/layout_margin10dp"
         android:layout_marginRight="@dimen/layout_margin10dp"
-        android:layout_marginTop="@dimen/layout_margin20dp"
+        android:layout_marginTop="15dp"
+        android:background="?attr/custom_sure_button_bg"
         android:elevation="@dimen/layout_margin30dp"
         android:text="现场采集"
-        android:background="?attr/custom_sure_button_bg"
         android:textColor="?attr/custom_sure_button_text"
         android:textSize="24sp"/>
 
     <LinearLayout
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margin0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:background="?attr/custom_three_all_background_color">
+        android:orientation="horizontal"
+        >
+
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/rl_main_draft"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="@dimen/layout_margin10dp">
+            android:background="@color/white"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/rl_main_draft"
-                android:layout_width="110dp"
-                android:layout_height="100dp"
-                android:background="?attr/custom_three_list_background_color"
-                android:elevation="3dp">
+            <TextView
 
-                <TextView
-                    android:id="@+id/tv_math_number_draft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/layout_margin25dp"
-                    android:text="0"
-                    android:textColor="#f64545"
-                    android:textSize="@dimen/text28"/>
+                style="@style/three_list_main_text_style"
+                android:text="草稿列表"/>
 
-                <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="?attr/custom_three_list_text_color"/>
 
-                    android:text="草稿列表"
-                    style="@style/three_list_main_text_style"/>
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_math_number_draft"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/day_color_green"
+                android:textSize="@dimen/text28"/>
 
-            <RelativeLayout
-                android:id="@+id/rl_main_submit"
-                android:layout_width="110dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="@dimen/layout_margin10dp"
-                android:layout_marginRight="@dimen/layout_margin10dp"
-                android:background="?attr/custom_three_list_background_color"
-                android:elevation="3dp">
-
-                <TextView
-                    android:id="@+id/tv_math_number_submit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/layout_margin25dp"
-                    android:text="0"
-                    android:textColor="#f64545"
-                    android:textSize="@dimen/text28"/>
-                <TextView
-                    android:text="提交列表"
-                    style="@style/three_list_main_text_style"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_main_blacklist"
-                android:layout_width="110dp"
-                android:layout_height="100dp"
-                android:background="?attr/custom_three_list_background_color"
-                android:elevation="3dp">
-
-                <TextView
-                    android:id="@+id/tv_math_number_blacklist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/layout_margin25dp"
-                    android:textColor="#f64545"
-                    android:textSize="@dimen/text28"/>
-
-                <TextView
-                    android:text="黑名单列表"
-                    style="@style/three_list_main_text_style"/>
-
-            </RelativeLayout>
-
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="查看"
+                android:textColor="@color/day_color_green"
+                android:textSize="14sp"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rl_main_submit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+
+                style="@style/three_list_main_text_style"
+                android:text="提交列表"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="?attr/custom_three_list_text_color"/>
+
+            <TextView
+                android:id="@+id/tv_math_number_submit"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/day_color_green"
+                android:textSize="@dimen/text28"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="查看"
+                android:textColor="@color/day_color_green"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rl_main_blacklist"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+
+                style="@style/three_list_main_text_style"
+                android:text="黑名单列表"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="?attr/custom_three_list_text_color"/>
+
+            <TextView
+                android:id="@+id/tv_math_number_blacklist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/day_color_green"
+                android:textSize="@dimen/text28"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="查看"
+                android:textColor="@color/day_color_green"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_main_submit"-->
+        <!--android:layout_width="110dp"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:layout_marginLeft="@dimen/layout_margin10dp"-->
+        <!--android:layout_marginRight="@dimen/layout_margin10dp"-->
+        <!--android:background="@color/white"-->
+        <!--android:elevation="3dp">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_math_number_submit"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="@dimen/layout_margin25dp"-->
+        <!--android:text="0"-->
+        <!--android:textColor="#f64545"-->
+        <!--android:textSize="@dimen/text28"/>-->
+        <!--<TextView-->
+        <!--android:text="提交列表"-->
+        <!--style="@style/three_list_main_text_style"/>-->
+
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_main_blacklist"-->
+        <!--android:layout_width="110dp"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:background="@color/white"-->
+        <!--android:elevation="3dp">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_math_number_blacklist"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="0"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="@dimen/layout_margin25dp"-->
+        <!--android:textColor="#f64545"-->
+        <!--android:textSize="@dimen/text28"/>-->
+
+        <!--<TextView-->
+        <!--android:text="黑名单列表"-->
+        <!--style="@style/three_list_main_text_style"/>-->
+
+        <!--</RelativeLayout>-->
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -214,4 +446,5 @@
             android:layout_height="match_parent"
             android:layout_weight="1"/>
     </LinearLayout>
+
 </LinearLayout>

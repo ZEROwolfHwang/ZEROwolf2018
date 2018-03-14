@@ -1,17 +1,18 @@
 package com.android.htc.greenroad.https;
 
-import com.android.htc.greenroad.bean.ActivationResult;
+import com.android.htc.greenroad.Moviebean;
 import com.android.htc.greenroad.bean.UpdateAppInfo;
 import com.android.htc.greenroad.httpresultbean.HttpResult;
 import com.android.htc.greenroad.httpresultbean.HttpResultBlack;
 import com.android.htc.greenroad.httpresultbean.HttpResultCode;
+import com.android.htc.greenroad.httpresultbean.HttpResultGoods;
 import com.android.htc.greenroad.httpresultbean.HttpResultLane;
 import com.android.htc.greenroad.httpresultbean.HttpResultLineStation;
 import com.android.htc.greenroad.httpresultbean.HttpResultLoginName;
 import com.android.htc.greenroad.httpresultbean.HttpResultMacInfo;
+import com.android.htc.greenroad.httpresultbean.HttpResultPolling;
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -23,7 +24,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -37,44 +37,29 @@ import rx.Observable;
  */
 public interface HttpUtilsApi {
 
-    //激活码
-
-    @FormUrlEncoded
-    @POST("Api/activation")
-    Observable<ActivationResult> activation(@Field("macID") String macId,
-                                            @Field("macName") String macName,
-                                            @Field("regKey") String regKey);
-
     @FormUrlEncoded
     @POST("Login/listapi")
     Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
-
-    @GET("Api/number")
-    Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getNumberInfo();
-
 
     @GET("Apiversion/update")
     Observable<UpdateAppInfo> update(@Query("appname") String appname,
                                      @Query("appversion") String appversion);
 
 
-    @FormUrlEncoded
-    @POST("Apionline/online")
-    Observable<HttpResultCode> polling(@Field("polling") String polling);
+//    @FormUrlEncoded
+//    @POST("Api/polling")
+//    Observable<HttpResultPolling> polling(@Field("polling") int[] pollingList);
+ @FormUrlEncoded
+    @POST("Api/polling")
+    Observable<HttpResultPolling> polling(@Field("polling") String pollingList);
 
-    //@Headers({"Content-type:application/json;charset=UTF-8"})
-    @Multipart
-    @POST("task")
-    Observable<HttpResultCode> task(@PartMap Map<String, RequestBody> partMap,
-                                    @Part List<MultipartBody.Part> file);
 
     @Multipart
     @POST("Api/picture")
     Observable<HttpResultCode> postPicture(
             @Part("post_time") String postTime,
-            @Part List<MultipartBody.Part> sanzheng,
-            @Part List<MultipartBody.Part> cheshen,
-            @Part List<MultipartBody.Part> huozhao);
+            @Part List<MultipartBody.Part> sanzheng
+    );
 
     @POST("Api/json")
     Observable<HttpResultCode> postJson(@Body RequestBody info);
@@ -86,30 +71,25 @@ public interface HttpUtilsApi {
             @Field("register_station") String station,
             @Field("register_code") String code,
             @Field("register_name") String name,
-            @Field("register_psw") String psw,
-            @Field("register_mac") String macId
+            @Field("register_psw") String psw
     );
 
     @FormUrlEncoded
     @POST("Login/login")
     Observable<HttpResult> postLogin(
             @Field("login_name") String name,
-            @Field("login_psw") String psw,
-            @Field("login_mac") String macId
+            @Field("login_psw") String psw
     );
 
 
     @GET("Api/black")
     Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getBlack();
 
-//    @Headers({
-//            "Content-Type: application/json;charset=utf-8",
-//            "Accept: application/json"
-//    })
+    @GET("Api/submit_black")
+    Observable<HttpResultBlack<List<HttpResultBlack.DataBean>>> getSubmitBlack(@Query("licence_header") String appname);
+
     @GET("Api/linestations")
     Observable<HttpResultLineStation<List<HttpResultLineStation.DataBean>>> getLines();
-//  @GET("Api/linestations")
-//    Call<HttpResultLineStation> getLines();
 
     @FormUrlEncoded
     @POST("Api/lane")
@@ -118,5 +98,18 @@ public interface HttpUtilsApi {
     @FormUrlEncoded
     @POST("Api/macInfo")
     Observable<HttpResultMacInfo> getMacInfo(@Field("macId") String macId);
+
+    //http://localhost:3000/data/read?type=goods
+    @GET("read")
+    Observable<HttpResultGoods> getGoods(@Query("type") String type);
+
+    @GET("top250")
+    Observable<Moviebean> getMovies(@Query("start") int start, @Query("count") int count);
+
+    //    start=0&count=10
+    @FormUrlEncoded
+    @POST("Api/goods")
+    Observable<HttpResultGoods> postGoods(@Field("markTime") String markTime);
+//    start=0&count=10
 
 }

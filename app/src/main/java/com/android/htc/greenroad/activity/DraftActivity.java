@@ -46,13 +46,14 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     public ItemTouchHelperExtension mItemTouchHelper;
     public ItemTouchHelperExtension.Callback mCallback;
     private SwipeDeleteAdapter mRecyclerAdapter;
+    private String mUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draft);
         ButterKnife.bind(this);
-
+        mUsername = (String) SPUtils.get(this, GlobalManager.USERNAME, "qqqq");
         mActivity = this;
         mContext = this;
         initToolbar();
@@ -74,6 +75,8 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 LinearLayoutManager.HORIZONTAL, 10, Color.WHITE));
         mRecyclerAdapter = new SwipeDeleteAdapter(this, support -> {
             PreviewDetailActivity.actionStart(mContext, support, PreviewDetailActivity.ACTION_DRAFT_ITEM);
+            this.finish();
+
         });
         mRecyclerViewPreview.setAdapter(mRecyclerAdapter);
         mRecyclerAdapter.updateData(mDraftList);
@@ -86,7 +89,8 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void initData() {
-        mDraftList = DataSupport.where("lite_type=?", GlobalManager.TYPE_DRAFT_LITE).find(SupportDraftOrSubmit.class);
+        mDraftList = DataSupport.where("lite_type=? and username = ?", GlobalManager.TYPE_DRAFT_LITE,mUsername).find(SupportDraftOrSubmit.class);
+//        SPUtils.putAndApply(this,SPUtils.MATH_DRAFT_LITE,mDraftList.size());
         SortTime sortDraftTime = new SortTime();
         Collections.sort(mDraftList, sortDraftTime);
     }
@@ -103,22 +107,22 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
-                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 7, supportList -> {
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, 7, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_15:
-                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 15, supportList -> {
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, 15, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_30:
-                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, 30, supportList -> {
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_DRAFT_LITE, 30, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_all:
-                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_DRAFT_LITE, SPUtils.MATH_DRAFT_LITE, supportList -> {
+                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_DRAFT_LITE, supportList -> {
                     mRecyclerAdapter.updateListView(supportList);
                 });
 
@@ -146,4 +150,6 @@ public class DraftActivity extends BaseActivity implements View.OnClickListener 
                 break;
         }
     }
+
+
 }

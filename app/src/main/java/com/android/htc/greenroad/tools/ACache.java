@@ -8,8 +8,6 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.orhanobut.logger.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,6 +41,10 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ACache {
 
+    public static final String TYPR_COUNT = "缓存类型数";
+    public static final String ITEM_COUNT = "缓存总条目";
+    public static final String ALL_ACACHE = "总缓存";
+    public static final String Type_ACACHE = "单类总条目";
     public static final String GOODSACACHE_All = "goodsacache_all";
     public static final String GOODSACACHE_SHUCAI = "goodsacache_shucai";
     public static final String GOODSACACHE_SHUIGUO = "goodsacache_shuiguo";
@@ -449,7 +451,7 @@ public class ACache {
             oos = new ObjectOutputStream(baos);
             oos.writeObject(value);
             byte[] data = baos.toByteArray();
-            Logger.i(data.toString());
+//            Logger.i(data.toString());
             if (saveTime != -1) {
                 put(key, data, saveTime);
             } else {

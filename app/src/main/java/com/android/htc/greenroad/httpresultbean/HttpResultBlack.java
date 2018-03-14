@@ -42,6 +42,15 @@ public class HttpResultBlack<T> {
         this.data = data;
     }
 
+    @Override
+    public String toString() {
+        return "HttpResultBlack{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
+
     public static class DataBean {
 
         private String plate_number;

@@ -11,12 +11,20 @@ package com.android.htc.greenroad.manager;
  */
 
 public class GlobalManager {
+
+    public static final String LOGINTOMAIN = "logintomain";
+    public static final String USERNAME = "username";
+    public static final String ELSETOMAIN = "elsetomain";
+
+    public static String TYPE_DRAFT_ENTER_SHOW = "type_draft_enter_show";
+    public static String TYPE_MAIN_ENTER_SHOW = "type_main_enter_show";
+
     public static final String LOGIN2PORT = "login2port";
     public static final String OTHER2PORT = "main2port";
 
     //public static int REQUEST_IV_CAMERA = 1 * 998;
 
-    public static String LITE_CONDITION = "lite_type=?";
+    public static String LITE_CONDITION = "username = ? and lite_type = ?";
     public static String TYPE_DRAFT_LITE = "type_draft_lite";
     public static String TYPE_SUBMIT_LITE = "type_submit_lite";
     public static String ENTERTYPE_NUMBER = "entertype_number";

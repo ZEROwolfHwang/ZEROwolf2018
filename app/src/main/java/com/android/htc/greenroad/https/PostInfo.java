@@ -11,7 +11,9 @@ public class PostInfo {
     private String siteLogin;
     private String station;
     private String lane;
+    private String carType;
     private String road;
+    private int liteId;
 
     private String color;
     private String number;
@@ -37,7 +39,9 @@ public class PostInfo {
                 ", siteLogin='" + siteLogin + '\'' +
                 ", station='" + station + '\'' +
                 ", lane='" + lane + '\'' +
+                ", carType='" + carType + '\'' +
                 ", road='" + road + '\'' +
+                ", liteId='" + liteId + '\'' +
                 ", color='" + color + '\'' +
                 ", number='" + number + '\'' +
                 ", goods='" + goods + '\'' +
@@ -54,6 +58,22 @@ public class PostInfo {
                 ", scan_12Q='" + scan_12Q + '\'' +
                 ", limit=" + limit +
                 '}';
+    }
+
+    public int getLiteId() {
+        return liteId;
+    }
+
+    public void setLiteId(int liteId) {
+        this.liteId = liteId;
+    }
+
+    public String getCarType() {
+        return carType;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
     }
 
     public int getLimit() {

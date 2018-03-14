@@ -41,18 +41,22 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
     Toolbar mToolbarPreview;
     @BindView(R.id.recycler_view_preview)
     RecyclerView mRecyclerViewPreview;
+    @BindView(R.id.text_free_or_pass)
+    TextView mTextFreeOrPass;
 
     private SubmitActivity mActivity;
     private Context mContext;
     private List<SupportDraftOrSubmit> mSubmitList;
     private PreviewItemAdapter mAdapter;
+    private String mUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draft);
         ButterKnife.bind(this);
-
+        mUsername = (String) SPUtils.get(this, GlobalManager.USERNAME, "qqqq");
+        mTextFreeOrPass.setText("通过审核");
         mActivity = this;
         mContext = this;
 
@@ -75,7 +79,7 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
                 (ArrayList<SupportDraftOrSubmit>) mSubmitList, (support) -> {
             PreviewDetailActivity.actionStart(mContext, support,
                     PreviewDetailActivity.ACTION_SUBMIT_ITEM);
-        },(itemView, lite_ID, position) -> {
+        }, (itemView, lite_ID, position) -> {
 
         });
 
@@ -85,7 +89,9 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
     private void initData() {
         mSubmitList = DataSupport.
-                where(GlobalManager.LITE_CONDITION,GlobalManager.TYPE_SUBMIT_LITE).find(SupportDraftOrSubmit.class);
+                where(GlobalManager.LITE_CONDITION, mUsername, GlobalManager.TYPE_SUBMIT_LITE).find(SupportDraftOrSubmit.class);
+
+//        SPUtils.putAndApply(this,SPUtils.MATH_SUBMIT_LITE,mSubmitList.size());
 
         for (int i = 0; i < mSubmitList.size(); i++) {
             Logger.i("------------" + mSubmitList.get(i).toString());
@@ -131,22 +137,22 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_preview_7:
-                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,7,supportList -> {
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_SUBMIT_LITE, 7, supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_15:
-                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,15,supportList -> {
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_SUBMIT_LITE, 15, supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_30:
-                DeleteHelper.getInstance().deleteInfos(this,GlobalManager.TYPE_SUBMIT_LITE,SPUtils.MATH_SUBMIT_LITE,30,supportList -> {
+                DeleteHelper.getInstance().deleteInfos(this, GlobalManager.TYPE_SUBMIT_LITE, 30, supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;
             case R.id.delete_preview_all:
-                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, SPUtils.MATH_SUBMIT_LITE,supportList -> {
+                DeleteHelper.getInstance().deleteAllInfos(mContext, GlobalManager.TYPE_SUBMIT_LITE, supportList -> {
                     mAdapter.updateListView(supportList);
                 });
                 break;

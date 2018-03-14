@@ -33,10 +33,7 @@
             android:layout_weight="4"
             android:text="保存时间"
             style="@style/layout_dragft_activity_style_top"/>
-        <TextView
-            android:layout_weight="3"
-            android:text="是否收费"
-            style="@style/layout_dragft_activity_style_top"/>
+
         <TextView
             android:layout_weight="3"
             android:text="检查人"
@@ -44,6 +41,11 @@
         <TextView
             android:layout_weight="3"
             android:text="登记人"
+            style="@style/layout_dragft_activity_style_top"/>
+        <TextView
+            android:id="@+id/text_free_or_pass"
+            android:layout_weight="3"
+            android:text="是否收费"
             style="@style/layout_dragft_activity_style_top"/>
 
 

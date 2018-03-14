@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GreenRoad</string>
+    <string name="app_name">绿色通道</string>
     <string name="hint_password">请输入密码</string>
     <string name="hint_username">请输入账号</string>
     <string name="login">登录</string>
@@ -60,6 +60,7 @@
     <string name="setting_login_station">默认登记站</string>
     <string name="text_selection">选择</string>
     <string name="setting_default">默认设置</string>
+    <string name="config_default">默认配置</string>
     <string name="setting_login_lane">默认车道</string>
     <string name="setting_operator">检查人/登记人</string>
     <string name="add">添加</string>
@@ -67,8 +68,9 @@
     <string name="delete">删除</string>
 
 
-
     <!--abcdefghijklmnopqrstuvwxyz-->
     <string name="alphabet_and_number">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
     <string name="alphabet_and_point">.0123456789</string>
+
+
 </resources>

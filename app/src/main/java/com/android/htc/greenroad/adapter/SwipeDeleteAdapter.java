@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loopeer.itemtouchhelperextension.Extension;
-import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
-import com.android.htc.greenroad.tools.SPUtils;
+import com.loopeer.itemtouchhelperextension.Extension;
+import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 
 import org.litepal.crud.DataSupport;
 
@@ -90,7 +90,7 @@ public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void doDelete(int adapterPosition) {
         DataSupport.deleteAll(SupportDraftOrSubmit.class, "lite_ID = ?",
                 String.valueOf(mPreviewList.get(adapterPosition).getLite_ID()));
-        SPUtils.cut_one(mContext, SPUtils.MATH_DRAFT_LITE);
+//        SPUtils.cut_one(mContext, SPUtils.MATH_DRAFT_LITE);
         mPreviewList.remove(adapterPosition);
         updateListView(mPreviewList);
 //        notifyItemRemoved(adapterPosition);
@@ -124,8 +124,8 @@ public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView mPreviewTextCheck;
         @BindView(R.id.preview_text_login)
         TextView mPreviewTextLogin;
-        @BindView(R.id.preview_text_isFree)
-        TextView mPreviewTextIsFree;
+        @BindView(R.id.preview_img_isPass)
+        ImageView mPreviewImgIsFree;
         @BindView(R.id.preview_text_shutTime)
         TextView mPreviewTextShutTime;
         View mViewContent;
@@ -157,7 +157,11 @@ public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             mPreviewTextCarNumber.setText(car_number);
             mPreviewTextShutTime.setText(shutTime);
-            mPreviewTextIsFree.setText(isFree == 0 ? "否" : "是");
+//            mPreviewImgIsFree.setText(isFree == 0 ? "否" : "是");
+            mPreviewImgIsFree.setImageDrawable(isFree == 0
+                    ? mContext.getResources().getDrawable(R.drawable.ispass_not)
+                    : mContext.getResources().getDrawable(R.drawable.ispass_yes));
+
 
             itemView.setOnTouchListener((v, event) -> {
                 if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {

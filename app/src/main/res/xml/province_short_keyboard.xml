@@ -145,7 +145,7 @@
             />
 
     </Row>
-    <Row android:keyWidth="15.1666%p">
+    <Row android:keyWidth="12.857%p">
         <Key
             android:horizontalGap="2%p"
             android:codes="28"
@@ -173,8 +173,11 @@
             android:popupCharacters="澳"
             />
         <Key
+            android:keyEdgeFlags="right"
+            android:keyWidth="26.750%p"
             android:codes="33"
-            android:keyLabel="台"
+            android:keyLabel="无"
             />
     </Row>
+
 </Keyboard>

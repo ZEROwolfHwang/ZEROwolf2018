@@ -63,16 +63,17 @@
 
     <!--车牌选中与未选中时的背景颜色-->
     <color name="licence_bg_day">#00f</color>
-    <color name="licence_selected_bg_day">#ff50c6ca</color>
+    <color name="licence_selected_bg_day">#2DA4F3</color>
 
     <!--车牌选中与未选中时的字体颜色-->
     <color name="licence_text_normal_day">#ff333333</color>
+    <color name="licence_text_normal_day1">#717171</color>
     <color name="licence_selected_text_day">#ffffff</color>
     <color name="licence_text_normal_night">#d9d7d7</color>
     <color name="licence_selected_text_night">#ffffff</color>
 
     <!--day主题是全局的颜色-->
-    <color name="day_color_green">#ff50c6ca</color>
+    <color name="day_color_green">#2DA4F3</color>
     <color name="day_color_white">#ffffff</color>
 
     <!--车牌未选中时边框的颜色-->

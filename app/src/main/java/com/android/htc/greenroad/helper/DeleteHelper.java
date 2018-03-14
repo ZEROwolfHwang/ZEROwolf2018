@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
-import com.orhanobut.logger.Logger;
 import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.litepalbean.SupportChecked;
 import com.android.htc.greenroad.litepalbean.SupportDetail;
@@ -14,6 +13,7 @@ import com.android.htc.greenroad.litepalbean.SupportScan;
 import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.SPUtils;
 import com.android.htc.greenroad.tools.TimeUtil;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -29,6 +29,7 @@ public class DeleteHelper {
 
     private static DeleteHelper sHelper;
     private File mFile;
+
     public static DeleteHelper getInstance() {
         if (sHelper == null) {
             sHelper = new DeleteHelper();
@@ -44,7 +45,8 @@ public class DeleteHelper {
      * @param typeLite
      */
 
-    public void deleteAllInfos(Context context, String typeLite, String SpUtil_info, DataChangeListener listener) {
+    public void deleteAllInfos(Context context, String typeLite, DataChangeListener listener) {
+        String username = (String) SPUtils.get(context, GlobalManager.USERNAME, "qqqq");
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("清空本地保存的草稿数据");
         dialog.setMessage("点击“确定”将删除所有采集记录" + "\"" +
@@ -52,13 +54,13 @@ public class DeleteHelper {
         dialog.setCancelable(false);
         dialog.setPositiveButton(context.getString(R.string.dialog_messge_OK), (dialog1, which) -> {
 
-            DataSupport.deleteAll(SupportDraftOrSubmit.class, GlobalManager.LITE_CONDITION, typeLite);
+            DataSupport.deleteAll(SupportDraftOrSubmit.class, GlobalManager.LITE_CONDITION, username, typeLite);
             if (GlobalManager.TYPE_SUBMIT_LITE.equals(typeLite)) {
                 deleteAllNewPhoto();
             }
-            SPUtils.putAndApply(context, SpUtil_info, 0);
+//            SPUtils.putAndApply(context, SpUtil_info, 0);
             List<SupportDraftOrSubmit> supportList =
-                    DataSupport.where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
+                    DataSupport.where(GlobalManager.LITE_CONDITION, username, typeLite).find(SupportDraftOrSubmit.class);
             listener.dataChange(supportList);
 
         });
@@ -71,7 +73,8 @@ public class DeleteHelper {
     /**
      * 清除几天之前的记录
      */
-    public void deleteInfos(Context context, String typeLite, String SpUtil_info, int day, DataChangeListener listener) {
+    public void deleteInfos(Context context, String typeLite, int day, DataChangeListener listener) {
+        String username = (String) SPUtils.get(context, GlobalManager.USERNAME, "qqqq");
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("清除" + day + "天之前本地保存的拍摄数据");
@@ -81,7 +84,7 @@ public class DeleteHelper {
         dialog.setPositiveButton(context.getString(R.string.dialog_messge_OK), (dialog1, which) -> {
             String currentTimeToDate = TimeUtil.getCurrentTimeToDate();
             String currentTimeToDelete = TimeUtil.getCurrentTime();
-            List<SupportDraftOrSubmit> photoLiteList = DataSupport.where(GlobalManager.LITE_CONDITION, typeLite).
+            List<SupportDraftOrSubmit> photoLiteList = DataSupport.where(GlobalManager.LITE_CONDITION, username, typeLite).
                     find(SupportDraftOrSubmit.class);
 
             for (int i = 0; i < photoLiteList.size(); i++) {
@@ -101,11 +104,11 @@ public class DeleteHelper {
                 deletePhotoForData(day, currentTimeToDelete);
             }
             List<SupportDraftOrSubmit> supportDraftList = DataSupport.
-                    where(GlobalManager.LITE_CONDITION, typeLite).find(SupportDraftOrSubmit.class);
+                    where(GlobalManager.LITE_CONDITION, username, typeLite).find(SupportDraftOrSubmit.class);
             SortTime sortDraftTime = new SortTime();
             Collections.sort(supportDraftList, sortDraftTime);
             listener.dataChange(supportDraftList);
-            SPUtils.putAndApply(context, SpUtil_info, supportDraftList.size());
+//            SPUtils.putAndApply(context, SpUtil_info, supportDraftList.size());
         });
         dialog.setNegativeButton(context.getString(R.string.dialog_message_Cancel), (dialog1, which) -> {
             dialog1.dismiss();
