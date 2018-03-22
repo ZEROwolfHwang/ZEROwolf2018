@@ -12,7 +12,11 @@ import java.util.Map;
  */
 
 public class SPUtils {
+    //标记时间
+    public static final String MARK_TIME = "mark_time";
+
     //存储的是草稿以及提交的数量
+    public static final String CURRENT_SHIFT = "current_shift";//班次
 
     public static final String lOGIN_USERNAME = "login_username";
     public static final String TEAMID = "teamid";

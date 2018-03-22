@@ -15,7 +15,7 @@
         android:layout_weight="1"
         android:layout_marginLeft="@dimen/layout_margin20dp"
         android:layout_height="match_parent"
-        android:text="@string/setting_login_lane"
+        android:text="@string/setting_current_shift"
         android:layout_gravity="left"
         android:gravity="center_vertical"
         android:textColor="?attr/custom_text_color_second"
@@ -39,17 +39,17 @@
         <TextView
             android:background="@null"
             android:inputType="number"
-            android:id="@+id/text_setting_lane"
+            android:id="@+id/text_setting_shift"
             android:textColor="?attr/custom_attr_setting_text_color"
             android:textSize="@dimen/text18"
-            android:text="11"
+            android:text="早班"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:maxLines="1"/>
 
         <ImageButton
-            android:id="@+id/btn_setting_lane"
+            android:id="@+id/btn_setting_shift"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical|right"

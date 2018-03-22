@@ -20,9 +20,11 @@ public class CheckUpdateUtils {
      * 检查更新
      */
     @SuppressWarnings("unused")
-    public static void checkUpdate(String appCode, String curVersion, final CheckCallBack updateCallback) {
+//    public static void checkUpdate(String appCode, String curVersion, final CheckCallBack updateCallback) {
+    public static void checkUpdate(String curVersion, final CheckCallBack updateCallback) {
         Observable<UpdateAppInfo> observable = HttpMethods.getInstance()
-                .getApi().update("GreenRoad.apk", curVersion);
+//                .getApi().update("GreenRoad.apk", curVersion);
+                .getApi().update(curVersion);
         HttpMethods.getInstance().toSubscribe(observable, new Subscriber<UpdateAppInfo>() {
             @Override
             public void onCompleted() {

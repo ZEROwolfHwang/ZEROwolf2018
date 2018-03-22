@@ -65,13 +65,13 @@
                 android:layout_marginLeft="15dp"
                 android:drawableLeft="@drawable/image_lane"
                 android:drawablePadding="5dp"
-                android:text="登记车道"/>
+                android:text="班次"/>
 
             <ImageView
                 style="@style/main_text_static_iv_style"/>
 
             <TextView
-                android:id="@+id/tv_change_lane_main"
+                android:id="@+id/tv_change_shift_main"
                 style="@style/main_text_change_tv_style"/>
 
 

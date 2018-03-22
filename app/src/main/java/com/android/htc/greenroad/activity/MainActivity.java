@@ -36,6 +36,7 @@ import com.android.htc.greenroad.R;
 import com.android.htc.greenroad.bean.UpdateAppInfo;
 import com.android.htc.greenroad.httpresultbean.HttpResultGoods;
 import com.android.htc.greenroad.https.RequestGoods;
+import com.android.htc.greenroad.litepalbean.SupportCarTypeAndConfig;
 import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.android.htc.greenroad.litepalbean.SupportGoods;
 import com.android.htc.greenroad.litepalbean.SupportLocalGoods;
@@ -88,8 +89,8 @@ public class MainActivity extends BaseActivity implements
     NavigationView mNavView;
     @BindView(R.id.tv_change_station_main)
     TextView mTvChangeStationMain;
-    @BindView(R.id.tv_change_lane_main)
-    TextView mTvChangeLaneMain;
+    @BindView(R.id.tv_change_shift_main)
+    TextView mTvChangeShiftMain;
     @BindView(R.id.tv_operator_check_main)
     TextView mTvOperatorCheckMain;
     @BindView(R.id.tv_operator_login_main)
@@ -143,12 +144,12 @@ public class MainActivity extends BaseActivity implements
                 mLlMainContain.setVisibility(View.VISIBLE);
                 ToastUtils.singleToast("货物信息更新完成");
                 break;
-            case 2:
-//                ToastUtils.singleToast("未加载图片数据直接进入主界面");
-                Logger.i("未加载图片数据直接进入主界面");
-                mRlProgressLogin.setVisibility(View.GONE);
-                mLlMainContain.setVisibility(View.VISIBLE);
-                break;
+//            case 2:
+////                ToastUtils.singleToast("未加载图片数据直接进入主界面");
+//                Logger.i("未加载图片数据直接进入主界面");
+//                mRlProgressLogin.setVisibility(View.GONE);
+//                mLlMainContain.setVisibility(View.VISIBLE);
+//                break;
 
         }
         return false;
@@ -186,7 +187,7 @@ public class MainActivity extends BaseActivity implements
         mTvOperatorLoginMain = (TextView) findViewById(R.id.tv_operator_login_main);
         mTvMathNumberSubmit = (TextView) findViewById(R.id.tv_math_number_submit);
 
-        mTvChangeLaneMain.setOnClickListener(v -> openSettingActivity());
+        mTvChangeShiftMain.setOnClickListener(v -> openSettingActivity());
         mTvOperatorCheckMain.setOnClickListener(v -> openSettingActivity());
         mTvOperatorLoginMain.setOnClickListener(v -> openSettingActivity());
 
@@ -215,16 +216,17 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case R.id.btn_enter_show:
+                String currentShift = mTvChangeShiftMain.getText().toString();
                 List<SupportOperator> check = DataSupport.where("check_select=? and username = ?", "1", mUsername).
                         find(SupportOperator.class);
 
-                if (check.size() >= 1) {
+                if (check.size() >= 1 && !"".equals(currentShift) && currentShift != null) {
                     ShowActivity.actionStart(MainActivity.this);
                     MainActivity.this.finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("确定选择默认检查人");
-                    builder.setMessage("点击确定进入设置界面添加默认操作员;\n" +
+                    builder.setTitle("确定选择默认检查人以及班次");
+                    builder.setMessage("点击确定进入设置界面添加默认操作员以及班次;\n" +
                             "点击取消则回到界面,不可以采集车辆数据");
                     builder.setPositiveButton("确定", (dialog, which) -> {
                         openSettingActivity();
@@ -260,7 +262,6 @@ public class MainActivity extends BaseActivity implements
         // TODO: 2018/2/4 拿到登录的班次的信息
         initGoodData(mUsername);
         initConfigView();
-
 
 
 //        List<String> strListValue = SPListUtil.getStrListValue(MainActivity.this, SPListUtil.APPCONFIGINFO);
@@ -320,7 +321,7 @@ public class MainActivity extends BaseActivity implements
 //                                            Logger.i(dataBeen.get(i).getLane());
 //                                        }
 //                                        SPUtils.putAndApply(mActivity, SPUtils.TEXTLANE, dataBeen.get(0).getLane());
-//                                        mTvChangeLaneMain.setText(dataBeen.get(0).getLane());
+//                                        mTvChangeShiftMain.setText(dataBeen.get(0).getLane());
 //                                    }
 //                                }
 //                            }, dataBean.getTerminal_site());
@@ -342,15 +343,15 @@ public class MainActivity extends BaseActivity implements
 
     private void initConfigView() {
         if (GlobalManager.LOGINTOMAIN.equals(getIntent().getType())) {
-            Logger.i("加载了黑名单列表");
+//            Logger.i("加载了黑名单列表");
             BlackListService.startActionBlack(this, mTvMathNumberBlacklist);
         }
-        Logger.i(SPUtils.get(this, SPUtils.COUNT_BLACKLIST, 0) + "");
+//        Logger.i(SPUtils.get(this, SPUtils.COUNT_BLACKLIST, 0) + "");
         mTvMathNumberBlacklist.setText(SPUtils.get(this, SPUtils.COUNT_BLACKLIST, 0) + "");
 
 
 //
-//        mTvChangeLaneMain.setText(teamItems.get(0).getLanes().get(0));
+//        mTvChangeShiftMain.setText(teamItems.get(0).getLanes().get(0));
 
     }
 
@@ -392,9 +393,6 @@ public class MainActivity extends BaseActivity implements
             updateApp();
         } else if (id == R.id.nav_setting) {
             Intent intent = new Intent(this, SettingActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_config) {
-            Intent intent = new Intent(this, ConfigActivity.class);
             startActivity(intent);
         }
 
@@ -451,11 +449,13 @@ public class MainActivity extends BaseActivity implements
      * 退出程序
      */
     private void buckUpApp() {
+        Intent intent1 = new Intent(this, PollingService.class);
+        stopService(intent1);
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
-        Intent intent1 = new Intent(this, PollingService.class);
-        stopService(intent1);
+        SPUtils.putAndApply(mActivity, SPUtils.CURRENT_SHIFT, "");
         MainActivity.this.finish();
     }
 
@@ -475,7 +475,7 @@ public class MainActivity extends BaseActivity implements
 
         setOperatorInfo("check_select = ? and username = ?", mTvOperatorCheckMain);
         setOperatorInfo("login_select = ? and username = ?", mTvOperatorLoginMain);
-//        mTvChangeLaneMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "X08"));
+//        mTvChangeShiftMain.setText((String) SPUtils.get(this, SPUtils.TEXTLANE, "X08"));
 
         List<SupportDraftOrSubmit> drafts = DataSupport.where("username = ? and lite_type = ?", mUsername, GlobalManager.TYPE_DRAFT_LITE).find(SupportDraftOrSubmit.class);
         List<SupportDraftOrSubmit> submits = DataSupport.where("username = ? and lite_type = ?", mUsername, GlobalManager.TYPE_SUBMIT_LITE).find(SupportDraftOrSubmit.class);
@@ -485,12 +485,14 @@ public class MainActivity extends BaseActivity implements
         List<TeamItem> teamItems = DataSupport.where("username = ?", mUsername).find(TeamItem.class);
         if (teamItems.size() != 0) {
             mTvChangeStationMain.setText(teamItems.get(0).getStation());
-            mTvChangeLaneMain.setText(teamItems.get(0).getDefaultLane());
-
-        } else {
-            mTvChangeLaneMain.setText("A01");
         }
-
+        String currentShift = (String) SPUtils.get(this, SPUtils.CURRENT_SHIFT, "");
+        Logger.i("currentShift" + currentShift);
+        mTvChangeShiftMain.setText(currentShift);
+//        if (currentShift == null || "".equals(currentShift)) {
+//            mTvChangeShiftMain.setText("早班");
+//        } else {
+//        }
         //注册广播，接收service中启动的线程发送过来的信息，同时更新UI
         IntentFilter filter = new IntentFilter("com.example.updateUI");
         mBroadCaseReceiver = new MyBroadCaseReceiver();
@@ -514,7 +516,7 @@ public class MainActivity extends BaseActivity implements
         } else {
             operator = "无/无";
         }
-        Logger.i(operator);
+//        Logger.i(operator);
         if (operatorList.size() == 3) {
 //            textView.setTextSize(CommonUtils.sp2px(this, 7));
             textView.setTextSize(15);
@@ -558,7 +560,7 @@ public class MainActivity extends BaseActivity implements
      */
     private void updateApp() {
         String version = DevicesInfoUtils.getInstance().getVersion(mActivity);
-        CheckUpdateUtils.checkUpdate("GreenRoad.apk", version,
+        CheckUpdateUtils.checkUpdate( version,
                 new CheckUpdateUtils.CheckCallBack() {
                     @Override
                     public void onSuccess(UpdateAppInfo updateInfo) {
@@ -635,7 +637,7 @@ public class MainActivity extends BaseActivity implements
                     return;
                 }
                 AppInnerDownLoder.downLoadApk(context, downUrl, appName);
-                //  DownLoadApk.download(MainActivity.this,downUrl,updateinfo,appName);
+//                  DownLoadApk.download(MainActivity.this,downUrl,updateinfo,appName);
             }
         }).setNegativeButton("暂不更新", new DialogInterface.OnClickListener() {
             @Override
@@ -762,71 +764,136 @@ public class MainActivity extends BaseActivity implements
                 ToastUtils.singleToast("加载货物信息失败,请检查网络是否连接连接正常");
             }
 
+            /**
+             * @param goodsBean
+             * code == 200 货物改变配置不变
+             * code == 201 货物不变配置改变
+             * code == 202 货物配置都改变
+             * code == 203 货物配置都不改变
+             */
             @Override
             public void onNext(HttpResultGoods goodsBean) {
                 int code = goodsBean.getCode();
-                Logger.i(code + "");
+                Logger.i("根据标记请求网络货物等返回的数据" + "-----" + code + "-----"  + goodsBean.toString());
+
                 if (code == 200) {
                     mRlProgressLogin.setVisibility(View.VISIBLE);
                     mLlMainContain.setVisibility(View.GONE);
 
-                    Logger.i(goodsBean.toString());
+                    dealWithGoodData(goodsBean.getData_goods(), username);
+                } else if (code == 201) {
+                    dealWithConfigData(goodsBean.getData_config());
+                } else if (code == 202) {
+                    mRlProgressLogin.setVisibility(View.VISIBLE);
+                    mLlMainContain.setVisibility(View.GONE);
 
-                    List<HttpResultGoods.DataBean.SubjectsBean> subjectsBeanList = goodsBean.getData().getSubjects();
-                    List<String> goodsTypeList = goodsBean.getData().getGoodsTypeList();
-                    List<String> carTypeList = goodsBean.getData().getCarTypeList();
-                    for (int i = 0; i < goodsTypeList.size(); i++) {
-                        Logger.i(goodsTypeList.get(i));
-                    }
-                    String markTime = goodsBean.getData().getMarkTime();
-                    Logger.i(markTime + "");
-                    DataSupport.deleteAll(SupportGoods.class);
-                    for (int i = 0; i < subjectsBeanList.size(); i++) {
-                        SupportGoods supportGoods = new SupportGoods();
-                        supportGoods.setName(subjectsBeanList.get(i).getName());
-                        supportGoods.setPinyin(subjectsBeanList.get(i).getPinyin());
-                        supportGoods.setType(subjectsBeanList.get(i).getType());
-                        supportGoods.setImageUrl(subjectsBeanList.get(i).getImageUrl());
-                        supportGoods.setSortId(subjectsBeanList.get(i).getSortId());
-                        supportGoods.save();
-                    }
-//                    List<SupportGoods> supportGoodsList = DataSupport.findAll(SupportGoods.class);
+                    dealWithGoodData(goodsBean.getData_goods(), username);
+                    dealWithConfigData(goodsBean.getData_config());
+                } else if (code == 203) {
+                    Logger.i("数据库货物与配置都没有改变");
 
-                    SupportGoods supportGoods = new SupportGoods();
-                    supportGoods.setMarkTime(markTime);
-                    supportGoods.setGoodsTypeList(goodsTypeList);
-                    supportGoods.setCarTypeList(carTypeList);
-                    supportGoods.updateAll();
-                    savePicture(username);
-                } else if (code == 300) {
-                    Logger.i("货物数据没有改变");
-                    Message msg = Message.obtain();
-                    msg.what = 2;
-//                    msg.obj = username;
-                    mHandler.sendMessage(msg);
+
                 }
             }
         };
         SupportGoods firstGoods = DataSupport.findFirst(SupportGoods.class);
-        List<SupportGoods> all = DataSupport.findAll(SupportGoods.class);
-        Logger.i(all.size()+"数据库中货物的条目111111");
+//        List<SupportGoods> all = DataSupport.findAll(SupportGoods.class);
+//        Logger.i(all.size() + "数据库中货物的条目111111");
+
+        SupportCarTypeAndConfig firstConfig = DataSupport.findFirst(SupportCarTypeAndConfig.class);
 
         if (firstGoods != null) {
             String markTime = firstGoods.getMarkTime();
-            Logger.i(markTime + "数据库中货物的条目2222222");
-            RequestGoods.getInstance().postGoods(subscriber, markTime);
+            Logger.i("数据库货物标记" + markTime);
+            if (firstConfig != null) {
+                Logger.i("走了标记111111111111");
+                String markTime_config = firstConfig.getMarkTime_config();
+                Logger.i("数据库配置标记" + markTime_config);
+                RequestGoods.getInstance().postGoods(subscriber, markTime, markTime_config);
+            } else {
+                Logger.i("走了标记222222222222");
+                RequestGoods.getInstance().postGoods(subscriber, markTime, "");
+            }
         } else {
-            RequestGoods.getInstance().postGoods(subscriber, "");
+            if (firstConfig != null) {
+                Logger.i("走了标记333333333333");
+                String markTime_config = firstConfig.getMarkTime_config();
+                Logger.i("数据库配置标记" + markTime_config);
+                RequestGoods.getInstance().postGoods(subscriber, "", markTime_config);
+            } else {
+                Logger.i("走了标记444444444444");
+                Logger.i("本地无标记时间");
+                RequestGoods.getInstance().postGoods(subscriber, "", "");
+            }
+        }
+    }
+
+    /**
+     * 处理返回的配置json数据
+     * @param
+     */
+    private void dealWithConfigData(HttpResultGoods.DataConfigBean dataConfig) {
+
+        Logger.i("走了修改配置的方法");
+
+        DataSupport.deleteAll(SupportCarTypeAndConfig.class);
+        SupportCarTypeAndConfig config = new SupportCarTypeAndConfig();
+        config.setMarkTime_config(dataConfig.getMarkTime_config());
+        config.setCarTypeList(dataConfig.getCarTypeList());
+        config.setConfigMustList(dataConfig.getConfigList());
+        config.save();
+
+        List<SupportCarTypeAndConfig> all = DataSupport.findAll(SupportCarTypeAndConfig.class);
+        for (int i = 0; i < all.size(); i++) {
+            Logger.i(all.get(i).toString());
         }
 
+//        Message msg = Message.obtain();
+//        msg.what = 2;
+////                    msg.obj = username;
+//        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 处理返回的货物json数据
+     *
+     * @param
+     */
+    private void dealWithGoodData(HttpResultGoods.DataGoodsBean dataGoods, String username) {
+        Logger.i("走了修改货物的方法");
+        List<HttpResultGoods.DataGoodsBean.SubjectsBean> subjectsBeanList = dataGoods.getSubjects();
+        List<String> goodsTypeList = dataGoods.getGoodsTypeList();
+        for (int i = 0; i < goodsTypeList.size(); i++) {
+            Logger.i(goodsTypeList.get(i));
+        }
+        String markTime = dataGoods.getMarkTime();
+        Logger.i(markTime + "");
+        DataSupport.deleteAll(SupportGoods.class);
+        for (int i = 0; i < subjectsBeanList.size(); i++) {
+            SupportGoods supportGoods = new SupportGoods();
+            supportGoods.setName(subjectsBeanList.get(i).getName());
+            supportGoods.setPinyin(subjectsBeanList.get(i).getPinyin());
+            supportGoods.setType(subjectsBeanList.get(i).getType());
+            supportGoods.setImageUrl(subjectsBeanList.get(i).getImageUrl());
+            supportGoods.setSortId(subjectsBeanList.get(i).getSortId());
+            supportGoods.save();
+        }
+//                    List<SupportGoods> supportGoodsList = DataSupport.findAll(SupportGoods.class);
+
+        SupportGoods supportGoods = new SupportGoods();
+        supportGoods.setMarkTime(markTime);
+        supportGoods.setGoodsTypeList(goodsTypeList);
+//                    supportGoods.setCarTypeList(carTypeList);
+        supportGoods.updateAll();
+        savePicture();
     }
 
     /**
      * 将拿到的数据解析保存图片到本地并重新生成数据库
      *
-     * @param username
+     * @param
      */
-    private void savePicture(String username) {
+    private void savePicture() {
 
         if (mFile == null) {
             mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "GreenGoods");

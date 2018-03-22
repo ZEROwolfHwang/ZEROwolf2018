@@ -33,9 +33,9 @@
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -67,11 +67,6 @@
         </activity>
         <activity
             android:name=".activity.SettingActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".activity.ConfigActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -143,18 +138,12 @@
         </activity>
         <activity android:name=".activity.license.PermissionActivity">
         </activity>
-        <activity android:name=".activity.GoodsDemoActivity">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN"/> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-            <!-- </intent-filter> -->
-        </activity>
         <activity android:name=".activity.NotificationActivity">
+
             <!--<intent-filter>-->
             <!--<action android:name="android.intent.action.MAIN"/>-->
+
 
             <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
@@ -175,6 +164,32 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity
+            android:name=".servicy.ShowNotificationActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="">
+        </activity>
+
+        <receiver android:name=".update.ApkInstallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+            </intent-filter>
+        </receiver>
+
+
+
+        <!--解决android 7.0 以上版本自动更新不安装问题-->
+        <provider
+            android:name=".servicy.MyFileProvider"
+            android:authorities="com.android.htc.greenroad.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
 </manifest>

@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 /**
  * User: Losileeya (847457332@qq.com)
  * Date: 2016-09-27
@@ -20,9 +22,10 @@ import android.widget.Toast;
 public class ApkInstallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)){
-              long downloadApkId =intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-              installApk(context, downloadApkId);
+        if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+            Logger.i("走了静态广播的方法");
+            long downloadApkId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            installApk(context, downloadApkId);
         }
     }
 
@@ -32,19 +35,21 @@ public class ApkInstallReceiver extends BroadcastReceiver {
     private void installApk(Context context, long downloadApkId) {
         // 获取存储ID
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        long downId =sp.getLong(DownloadManager.EXTRA_DOWNLOAD_ID,-1L);
-        if(downloadApkId == downId){
-            DownloadManager downManager= (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        long downId = sp.getLong(DownloadManager.EXTRA_DOWNLOAD_ID, -1L);
+        if (downloadApkId == downId) {
+            Logger.i("走了静态广播安装apk的方法");
+            DownloadManager downManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
             Uri downloadFileUri = downManager.getUriForDownloadedFile(downloadApkId);
             if (downloadFileUri != null) {
-            Intent install= new Intent(Intent.ACTION_VIEW);
-            install.setDataAndType(downloadFileUri, "application/vnd.android.package-archive");
-            install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(install);
-            }else{
+                Intent install = new Intent(Intent.ACTION_VIEW);
+                install.setDataAndType(downloadFileUri, "application/vnd.android.package-archive");
+                install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(install);
+            } else {
                 Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show();
             }
         }
+        Logger.i("没走静态广播安装apk的方法");
 
 
     }

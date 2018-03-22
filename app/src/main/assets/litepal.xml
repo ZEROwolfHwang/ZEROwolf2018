@@ -5,7 +5,7 @@
 
 
         <!--<version value="8" />-->
-        <version value="26" />
+        <version value="33" />
 
         <list>
             <mapping class="com.android.htc.greenroad.litepalbean.SupportOperator" />
@@ -19,6 +19,7 @@
             <mapping class="com.android.htc.greenroad.litepalbean.TeamItem" />
             <mapping class="com.android.htc.greenroad.litepalbean.TeamOperator" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportGoods" />
+            <mapping class="com.android.htc.greenroad.litepalbean.SupportCarTypeAndConfig" />
             <mapping class="com.android.htc.greenroad.litepalbean.SupportLocalGoods" />
 
         </list>

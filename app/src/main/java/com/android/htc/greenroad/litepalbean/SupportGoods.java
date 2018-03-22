@@ -11,7 +11,6 @@ import java.util.List;
 public class SupportGoods extends DataSupport {
     private String markTime;
     private List<String> goodsTypeList;
-    private List<String> carTypeList;
     private String name;
     private String pinyin;
     private String imageUrl;
@@ -24,7 +23,6 @@ public class SupportGoods extends DataSupport {
         return "SupportGoods{" +
                 "markTime='" + markTime + '\'' +
                 ", goodsTypeList=" + goodsTypeList +
-                ", carTypeList=" + carTypeList +
                 ", name='" + name + '\'' +
                 ", pinyin='" + pinyin + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
@@ -33,13 +31,6 @@ public class SupportGoods extends DataSupport {
                 '}';
     }
 
-    public List<String> getCarTypeList() {
-        return carTypeList;
-    }
-
-    public void setCarTypeList(List<String> carTypeList) {
-        this.carTypeList = carTypeList;
-    }
 
     public String getMarkTime() {
         return markTime;

@@ -43,7 +43,7 @@
     <!--文本框的边框背景颜色-->
     <color name="text_box_bg_day">#b3b3b3</color>
     <color name="text_box_bg_night">#c9c9c9</color>
-    <color name="text_box_bg_solid_day">#e6e6e6</color>
+    <color name="text_box_bg_solid_day">#efefef</color>
     <color name="text_box_bg_solid_night">#404040</color>
 
     <!--字体背景样式的渐变色-->

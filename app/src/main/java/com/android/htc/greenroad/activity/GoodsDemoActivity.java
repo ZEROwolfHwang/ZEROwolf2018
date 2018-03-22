@@ -1,3 +1,4 @@
+/*
 package com.android.htc.greenroad.activity;
 
 import android.os.Bundle;
@@ -126,3 +127,4 @@ public class GoodsDemoActivity extends BaseActivity {
     }
 
 }
+*/

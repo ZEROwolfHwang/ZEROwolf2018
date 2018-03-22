@@ -54,7 +54,7 @@ public class BlackListService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_BLACK_LIST.equals(action)) {
                 if (NetWorkManager.isnetworkConnected(sContext)) {
-                Logger.i("有网加载黑名单数据的服务");
+//                Logger.i("有网加载黑名单数据的服务");
 
                     RequestBlackList.getInstance().getBlackList(new Subscriber<List<HttpResultBlack.DataBean>>() {
                         @Override

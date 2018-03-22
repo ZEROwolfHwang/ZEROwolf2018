@@ -50,6 +50,7 @@ import com.android.htc.greenroad.bean.PathTitleBean;
 import com.android.htc.greenroad.bean.SerializableGoods;
 import com.android.htc.greenroad.interfacy.TextChangeWatcher;
 import com.android.htc.greenroad.litepalbean.SupportBlack;
+import com.android.htc.greenroad.litepalbean.SupportCarTypeAndConfig;
 import com.android.htc.greenroad.litepalbean.SupportDetail;
 import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
 import com.android.htc.greenroad.litepalbean.SupportGoods;
@@ -95,9 +96,9 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
 
 
     private ArrayList<SerializableGoods> mGoodsAllList = new ArrayList<>();
-
     ArrayList<ArrayList<SerializableGoods>> All_GoodsList = new ArrayList<ArrayList<SerializableGoods>>();
-    private int mCurrenntType = 0; //标记当前指向货物的类型
+    private int mCurrentType = 0; //标记当前指向货物的类型
+    private int mLastType = 0; //标记当前指向货物的类型
     private static final int CHOOSE_CAR_FROM_PICTURE = 1 * 911;
     private static boolean tag;
     Unbinder unbinder;
@@ -183,6 +184,7 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
     private String[] carTypes = {"大卡车", "大卡车B", "大卡车C", "大卡车D", "大卡车E", "大卡车F", "车型A", "车型B", "车型C", "车型D", "车型E", "车型F", "车型G", "车型H"
             , "货车", "小轿车", "电动汽车", "拖拉机拖拉机"};
     private String mCurrentCarType;
+    private ArrayList<String> mMustList;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -371,10 +373,13 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
 
                         mGoodsMore.setText("更多 >>");
-                        mCurrenntType = finalI;
-                        mCurrentGoodsList = All_GoodsList.get(mCurrenntType);
+                        mCurrentType = finalI;
+                        mLastType = mCurrentType;
+                        Logger.i("mLastType   " + mLastType + "mCurrentType" + mCurrentType);
+
+                        mCurrentGoodsList = All_GoodsList.get(mCurrentType);
                         mGoodsAdapter.updateListView(mCurrentGoodsList);
-//                        Logger.i("第" + mCurrenntType + "种类型" + typeList.get(mCurrenntType));
+//                        Logger.i("第" + mCurrentType + "种类型" + typeList.get(mCurrentType));
 
                         setButtonStyle(view1, finalI);
                     });
@@ -397,14 +402,20 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
 
-                            mCurrenntType = finalI;
-                            Logger.i("第" + mCurrenntType + "种类型" + typeList.get(mCurrenntType));
-                            mCurrentGoodsList = All_GoodsList.get(mCurrenntType);
+                            mCurrentType = finalI;
+                            mLastType = mCurrentType;
+                            Logger.i("mLastType   " + mLastType + "mCurrentType" + mCurrentType);
+
+                            mCurrentGoodsList = All_GoodsList.get(mCurrentType);
                             mGoodsAdapter.updateListView(mCurrentGoodsList);
                             setButtonStyle(view1, finalI);
                         });
                     } else {
-                        mCurrenntType = finalI;
+                        mLastType = mCurrentType;
+
+                        mCurrentType = finalI;
+                        Logger.i("mLastType   " + mLastType + "mLastType  " + mCurrentType);
+
                         mButtonList.get(i).setOnClickListener(view1 -> {
                             openQiTa();
                             setButtonStyle(view1, finalI);
@@ -599,30 +610,76 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         mDetailTextExport = (EditText) view.findViewById(R.id.detail_text_export);
         mDetailTextCar = (EditText) view.findViewById(R.id.detail_text_car);
 
-        mDetailTextWeight.addTextChangedListener(new TextChangeWatcher(editable -> {
-            notifyScanWeightChange(String.valueOf(editable));
-        }));
-        mDetailTextFree.addTextChangedListener(new TextChangeWatcher(editable -> {
-            notifyScanFreeChange(String.valueOf(editable));
-        }));
-
-        List<TeamItem> teamItemList = DataSupport.where("username = ? ", mUsername).find(TeamItem.class);
-        if (teamItemList.size() > 0) {
-
-            mDetailTextExport.setText(teamItemList.get(0).getDefaultLane());
+        //动态修改必须提交项
+        SupportCarTypeAndConfig supportConfig = DataSupport.findFirst(SupportCarTypeAndConfig.class);
+        Logger.i("supportConfig" + "---------" + supportConfig.toString());
+        List<String> configMustList = supportConfig.getConfigMustList();
+//        initMustItem(configMustList);
+        if (mMustList == null) {
+            mMustList = new ArrayList<>();
         } else {
-            mDetailTextExport.setText("A01");
+            mMustList.clear();
         }
 
-        mDetailTextExport.setOnClickListener(view1 -> {
-            selectExportOrCarText(view1, "export", mDetailTextExport);
-        });
+        if (configMustList != null) {
+            mMustList.addAll(configMustList);
+        } else {
+            mMustList.add("h");//如果为空则添一条不相关的字符串,避免报错
+        }
+        if (!mMustList.contains("称重质量")) {
+            mDetailTextWeight.setFocusable(false);
+            mDetailTextWeight.setFocusableInTouchMode(false);
+        } else {
+            mDetailTextWeight.addTextChangedListener(new TextChangeWatcher(editable -> {
+                notifyScanWeightChange(String.valueOf(editable));
+            }));
+        }
+        if (!mMustList.contains("免费金额")) {
+            mDetailTextFree.setFocusable(false);
+            mDetailTextFree.setFocusableInTouchMode(false);
+        } else {
+            mDetailTextFree.addTextChangedListener(new TextChangeWatcher(editable -> {
+                notifyScanFreeChange(String.valueOf(editable));
+            }));
+        }
+        if (mMustList.contains("出口车道")) {
+            List<TeamItem> teamItemList = DataSupport.where("username = ? ", mUsername).find(TeamItem.class);
+            if (teamItemList.size() > 0) {
+                mDetailTextExport.setText(teamItemList.get(0).getDefaultLane());
+            } else {
+                mDetailTextExport.setText("A01");
+            }
+            mDetailTextExport.setOnClickListener(view1 -> {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+                selectExportOrCarText(view1, "export", mDetailTextExport);
+            });
+        } else {
+            mDetailTextExport.setText("");
+        }
+        if (mMustList.contains("车型")) {
 
-        mDetailTextCar.setText(carTypes[0]);
-        mCurrentCarType = carTypes[0];
-        mDetailTextCar.setOnClickListener(view1 -> {
-            selectExportOrCarText(view1, "car", mDetailTextCar);
-        });
+            SupportCarTypeAndConfig firstConfig = DataSupport.findFirst(SupportCarTypeAndConfig.class);
+            if (firstConfig != null) {
+                List<String> carTypeList = firstConfig.getCarTypeList();
+                if (carTypeList != null && carTypeList.size() != 0) {
+                    mDetailTextCar.setText(carTypeList.get(0));
+                    mCurrentCarType = carTypeList.get(0);
+                } else {
+                    mDetailTextCar.setText("货车");
+                }
+            } else {
+                mDetailTextCar.setText("货车");
+            }
+            mDetailTextCar.setOnClickListener(view1 -> {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
+
+                selectExportOrCarText(view1, "car", mDetailTextCar);
+            });
+        } else {
+            mDetailTextCar.setText("");
+        }
 
         mEtInputBox1 = (TextView) view.findViewById(R.id.et_input_box_1);
         mEtInputBox2 = (TextView) view.findViewById(R.id.et_input_box_2);
@@ -648,6 +705,29 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         });
     }
 
+//    private void initMustItem(List<String> configMustList) {
+
+//
+//        if (!configMustList.contains("车型")) {
+//            mDetailTextCar.setFocusable(false);
+//
+//            mDetailTextCar.setFocusableInTouchMode(false);
+////            mDetailTextCar.setClickable(false);
+//        }
+//        if (!configMustList.contains("出口")) {
+//            mDetailTextExport.setFocusable(false);
+//
+//            mDetailTextExport.setFocusableInTouchMode(false);
+////            mDetailTextExport.setClickable(false);
+//        }
+
+
+//        boolean lane = configMustList.contains("车道");
+//        boolean goods = configMustList.contains("货物");
+//        Logger.i("车道" + lane + "-----" + "货物" + goods);
+//
+//    }
+
     private void selectExportOrCarText(View view, String type, EditText editText) {
         int mWidth = mDetailTextExport.getWidth();
         ArrayList<String> arrayList = new ArrayList<>();
@@ -660,11 +740,18 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
                 arrayList.add("A01");
             }
         } else if ("car".equals(type)) {
-            for (int i = 0; i < carTypes.length; i++) {
-                arrayList.add(carTypes[i]);
+            SupportCarTypeAndConfig firstConfig = DataSupport.findFirst(SupportCarTypeAndConfig.class);
+            if (firstConfig != null) {
+                List<String> carTypeList = firstConfig.getCarTypeList();
+                if (carTypeList != null && carTypeList.size() != 0) {
+                    arrayList.addAll(carTypeList);
+                } else {
+                    arrayList.add("货车");
+                }
+            } else {
+                arrayList.add("货车");
             }
         }
-
 
         SpinnerAdapter mAdapterLane = new SpinnerAdapter((AppCompatActivity) getActivity(), arrayList, position -> {
             String title = arrayList.get(position);
@@ -969,7 +1056,9 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         }
         SpinnerAdapter mAdapterType = new SpinnerAdapter((AppCompatActivity) getActivity(), moreTypeList, (int position) -> {
             String typeString = moreTypeList.get(position);
-            mCurrenntType = 6 + position;
+
+            mCurrentType = 6 + position;
+
 
             mGoodsMore.setText(typeString + " >>");
 
@@ -980,11 +1069,15 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
             mGoodsMore.setTextColor(getActivity().getResources().getColor(R.color.day_color_white));
             mGoodsMore.setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
 
-            if (mCurrenntType < typeList.size() - 1) {
+            if (mCurrentType < typeList.size() - 1) { //当前货种类为非"其他"的更多里面的项
+                mLastType = mCurrentType;           //不能是最后一位
+                Logger.i("mLastType   " + mLastType + "mLastType  " + mCurrentType);
+
                 closeQiTa(true);
-                mCurrentGoodsList = All_GoodsList.get(mCurrenntType);
+                mCurrentGoodsList = All_GoodsList.get(mCurrentType);
                 mGoodsAdapter.updateListView(mCurrentGoodsList);
             } else {
+                //记录打开其他之前所在的货物位置
                 openQiTa();
             }
             mPopupWindow.dismissPopWindow();
@@ -1047,18 +1140,39 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
 //        mLlGoodsHidePart.setVisibility(View.GONE);
         String goodString = mGoodEditText.getText().toString().trim();
 
+        Logger.i("在其他按钮上");
+        closeQiTa(false);
+//                mCurrentType = mLastType;
+        Logger.i("mLastType   " + mLastType + "mCurrentType  " + mCurrentType);
+
+
         if ("".equals(goodString)) {
             mGoodsAdapter.updateListView(mCurrentGoodsList);
             mLlGoodsHidePart.setVisibility(View.VISIBLE);
         } else {
             Logger.i(goodString);
-            if (mCurrenntType == mTypeList.size()) {
+
+            // mCurrentType 所有的货种都包括(从0开始)   mTypeList 少一个其他
+            if (mCurrentType == mTypeList.size()) {
                 Logger.i("在其他按钮上");
                 closeQiTa(false);
-                mCurrenntType = 0;
-                mButtonList.get(0).setTextColor(getActivity().getResources().getColor(R.color.licence_selected_text_day));
-                mButtonList.get(0).setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
-                mGoodsAdapter.updateListView(All_GoodsList.get(0));
+//                mCurrentType = mLastType;
+                Logger.i("mLastType   " + mLastType + "mLastType  " + mCurrentType);
+//                if (mLastType < 6) {
+//
+//                    mButtonList.get(mCurrentType).setTextColor(getActivity().getResources().getColor(R.color.licence_selected_text_day));
+//                    mButtonList.get(mCurrentType).setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
+//                } else {
+//
+//                    mGoodsMore.setText(mTypeList.get(mLastType) + " >>");
+//
+//                    mGoodsMore.setTextColor(getActivity().getResources().getColor(R.color.day_color_white));
+//                    mGoodsMore.setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
+//
+////                    mButtonList.get(mCurrentType).setTextColor(getActivity().getResources().getColor(R.color.licence_selected_text_day));
+////                    mButtonList.get(mCurrentType).setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
+//                }
+                mGoodsAdapter.updateListView(All_GoodsList.get(mLastType));
             } else {
                 closeQiTa(true);
             }
@@ -1131,9 +1245,9 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         int allCount = 0;
         for (int i = 0; i < All_GoodsList.size(); i++) {
             ACache.get(getActivity()).put(ACache.Type_ACACHE + i, All_GoodsList.get(i));
-            allCount += All_GoodsList.get(i).size();
+//            allCount += All_GoodsList.get(i).size();
         }
-        ACache.get(getActivity()).put(ACache.ITEM_COUNT, allCount + "");
+//        ACache.get(getActivity()).put(ACache.MARK_TIME, allCount + "");
         ACache.get(getActivity()).put(ACache.TYPR_COUNT, All_GoodsList.size() + "");
         ACache.get(getActivity()).put(ACache.ALL_ACACHE, mGoodsAllList);
 
@@ -1326,45 +1440,62 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         mTypeList = DataSupport.findFirst(SupportGoods.class).getGoodsTypeList();
 
         String typeCount = ACache.get(getActivity()).getAsString(ACache.TYPR_COUNT);
-        String allCount = ACache.get(getActivity()).getAsString(ACache.ITEM_COUNT);
-        Logger.i(typeCount + "---" + allCount);
+//        String allCount = ACache.get(getActivity()).getAsString(ACache.MARK_TIME);
+//        Logger.i(typeCount + "---" + allCount);
         if (mGoodsAllList != null && mGoodsAllList.size() != 0) {
             mGoodsAllList.clear();
         }
-        if (allCount != null && (all.size() + "").equals(allCount) && typeCount != null) {
-            Logger.i("直接走的缓存");
-            for (int i = 0; i < Integer.parseInt(typeCount); i++) {
-                ArrayList<SerializableGoods> mAsObject_Type = (ArrayList<SerializableGoods>) ACache
-                        .get(getActivity()).getAsObject(ACache.Type_ACACHE + i);
-                All_GoodsList.add(mAsObject_Type);
-            }
-            ArrayList<SerializableGoods> mAsObject_All = (ArrayList<SerializableGoods>) ACache
-                    .get(getActivity()).getAsObject(ACache.ALL_ACACHE);
-            mGoodsAllList.addAll(mAsObject_All);
-        } else {
-            Logger.i("重新加载数据未走缓存");
-            for (int i = 0; i < mTypeList.size(); i++) {
-                ArrayList<String> goodPinyinList = new ArrayList<>();
-                ArrayList<String> goodNameList = new ArrayList<>();
-                ArrayList<Integer> goodSortIdList = new ArrayList<>();
-                ArrayList<String> goodIamgeUrlList = new ArrayList<>();
-
-                List<SupportLocalGoods> goodsList = DataSupport.where("type = ?", mTypeList.get(i)).find(SupportLocalGoods.class);
-                for (int j = 0; j < goodsList.size(); j++) {
-                    goodPinyinList.add(goodsList.get(j).getPinyin());
-                    goodNameList.add(goodsList.get(j).getName());
-                    goodSortIdList.add(goodsList.get(j).getSortId());
-                    goodIamgeUrlList.add(goodsList.get(j).getImageUrl());
+        String markTime = DataSupport.findFirst(SupportGoods.class).getMarkTime();
+        String mark = (String) SPUtils.get(getActivity(), SPUtils.MARK_TIME, "");
+        if (markTime != null && !"".equals(markTime) && markTime.equals(mark)) {
+            try {
+                Logger.i("直接走的缓存");
+                Logger.i(Integer.parseInt(typeCount) + "");
+                for (int i = 0; i < Integer.parseInt(typeCount); i++) {
+                    ArrayList<SerializableGoods> mAsObject_Type = (ArrayList<SerializableGoods>) ACache
+                            .get(getActivity()).getAsObject(ACache.Type_ACACHE + i);
+                    All_GoodsList.add(mAsObject_Type);
                 }
-                All_GoodsList.add(getGoodsTypeList(goodIamgeUrlList, goodPinyinList, goodNameList, goodSortIdList));
+                ArrayList<SerializableGoods> mAsObject_All = (ArrayList<SerializableGoods>) ACache
+                        .get(getActivity()).getAsObject(ACache.ALL_ACACHE);
+                mGoodsAllList.addAll(mAsObject_All);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                refreshGoodData(markTime);
             }
-            for (int i = 0; i < All_GoodsList.size(); i++) {
-                mGoodsAllList.addAll(All_GoodsList.get(i));
-            }
+        } else {
+            //记录标记时间
+
+            refreshGoodData(markTime);
+
         }
 
 
         mCurrentGoodsList = All_GoodsList.get(0);
+    }
+
+    private void refreshGoodData(String markTime) {
+        Logger.i("重新加载数据未走缓存");
+        SPUtils.putAndApply(getActivity(), SPUtils.MARK_TIME, markTime);
+
+        for (int i = 0; i < mTypeList.size(); i++) {
+            ArrayList<String> goodPinyinList = new ArrayList<>();
+            ArrayList<String> goodNameList = new ArrayList<>();
+            ArrayList<Integer> goodSortIdList = new ArrayList<>();
+            ArrayList<String> goodIamgeUrlList = new ArrayList<>();
+
+            List<SupportLocalGoods> goodsList = DataSupport.where("type = ?", mTypeList.get(i)).find(SupportLocalGoods.class);
+            for (int j = 0; j < goodsList.size(); j++) {
+                goodPinyinList.add(goodsList.get(j).getPinyin());
+                goodNameList.add(goodsList.get(j).getName());
+                goodSortIdList.add(goodsList.get(j).getSortId());
+                goodIamgeUrlList.add(goodsList.get(j).getImageUrl());
+            }
+            All_GoodsList.add(getGoodsTypeList(goodIamgeUrlList, goodPinyinList, goodNameList, goodSortIdList));
+        }
+        for (int i = 0; i < All_GoodsList.size(); i++) {
+            mGoodsAllList.addAll(All_GoodsList.get(i));
+        }
     }
 
     private ArrayList<SerializableGoods> getGoodsTypeList(ArrayList<String> goods_urls, ArrayList<String> goods_pinyins,
@@ -1416,7 +1547,19 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
                 mLlGoodsHidePart.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mGoodEditText.getWindowToken(), 0); //强制隐藏键盘
-
+                if (mTypeList.size() < 6) {
+//                    closeQiTa(false);
+                    mButtonList.get(mTypeList.size()).setTextColor(getActivity().getResources().getColor(R.color.licence_text_normal_day));
+                    mButtonList.get(mTypeList.size()).setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_normal_day));
+                }
+                if (mLastType < 6) {
+                    mButtonList.get(mLastType).setTextColor(getActivity().getResources().getColor(R.color.licence_selected_text_day));
+                    mButtonList.get(mLastType).setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
+                } else {
+                    mGoodsMore.setText(mTypeList.get(mLastType) + " >>");
+                    mGoodsMore.setTextColor(getActivity().getResources().getColor(R.color.day_color_white));
+                    mGoodsMore.setBackground(getActivity().getResources().getDrawable(R.drawable.license_color_day_selected));
+                }
                 updateTextListView(mGoodsTextList);
             }
         });

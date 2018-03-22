@@ -1,8 +1,8 @@
 package com.android.htc.greenroad.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -61,6 +61,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         initData();
         initView();
 
+
+
     }
 
     private void initData() {
@@ -69,8 +71,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // TODO: 2017/8/5 客户端的认证信息，移至注册账号是的返回储存
 
 //        mLoginVersion.setText("e绿通 V" + DevicesInfoUtils.getInstance().getVersion(mActivity));
-
-
     }
 
     private void initView() {
@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
-        String user = (String) SPUtils.get(this, SPUtils.lOGIN_USERNAME, "");
+        String user = (String) SPUtils.get(this, GlobalManager.USERNAME, "");
         mEt_user_name.setText(user);
         if (user != null && !"".equals(user)) {
             mCheckBox.setChecked(true);
@@ -115,7 +115,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //        String username = "qqqq";
 //        String password = "123456";
         // Check for a valid email address.
-       /* if (TextUtils.isEmpty(username)) {
+        if (TextUtils.isEmpty(username)) {
             mEt_user_name.setError(getString(R.string.error_field_required));
             mEt_user_name.requestFocus();
             return;
@@ -124,7 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             mEt_password.setError(getString(R.string.error_invalid_password));
             mEt_password.requestFocus();
             return;
-        }*/
+        }
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0); //强制隐藏键盘
 
@@ -134,26 +134,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // TODO: 2018/2/4
         if (mIsConnected) {
 
-            SPUtils.putAndApply(this, SPUtils.CONFIG_PORT, "greenft.githubshop.com");
-
-//            if (false) {
-//                LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.OTHER2PORT);
-//                return;
-//            }
-//            loginFromNet(username, password);
-            loginFromNet("qqqq", "123456");
-//            loginTrueValue(username);
-
-//            login2MainActivity(username);
+            loginFromNet(username, password);
+//            loginFromNet("qqqq", "123456");
 
         } else {
-            List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
-            if (loginList == null || loginList.size() == 0) {
-                ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
-            } else if (loginList.size() == 3) {
-                getTimeGap(loginList, username, password);
-            }
-            mRlProgressLogin.setVisibility(View.GONE);
+            ToastUtils.singleToast("当前网络无连接,请检查网络连接状态");
+//            List<String> loginList = SPListUtil.getStrListValue(mActivity, SPListUtil.LOGINNFO);
+//            if (loginList == null || loginList.size() == 0) {
+//                ToastUtils.singleToast("本地无账号缓存，请连接网络登录");
+//            } else if (loginList.size() == 3) {
+//                getTimeGap(loginList, username, password);
+//            }
+//            mRlProgressLogin.setVisibility(View.GONE);
         }
 
     }
@@ -206,18 +198,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onError(Throwable e) {
                 Logger.i(e.getMessage());
                 mRlProgressLogin.setVisibility(View.GONE);
-                AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
-                dialog.setTitle("登录失败,网络存在异常");
-                dialog.setIcon(getResources().getDrawable(R.drawable.alert_faild_icon));
-                dialog.setMessage("点击确定重新配置网络端口\n点击取消请尝试再次登录");
-                dialog.setNegativeButton("取消", (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                });
-                dialog.setPositiveButton("确定", (dialogInterface, i) -> {
-                    LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.OTHER2PORT);
-                    dialogInterface.dismiss();
-                });
-                dialog.show();
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+//                dialog.setTitle("登录失败,网络存在异常");
+//                dialog.setIcon(getResources().getDrawable(R.drawable.alert_faild_icon));
+//                dialog.setMessage("点击确定重新配置网络端口\n点击取消请尝试再次登录");
+//                dialog.setNegativeButton("取消", (dialogInterface, i) -> {
+//                    dialogInterface.dismiss();
+//                });
+//                dialog.setPositiveButton("确定", (dialogInterface, i) -> {
+//                    LineConfigActivity.actionStart(LoginActivity.this, GlobalManager.OTHER2PORT);
+//                    dialogInterface.dismiss();
+//                });
+//                dialog.show();
                 ToastUtils.singleToast("网络异常,请重新登录");
 
             }
@@ -226,15 +218,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onNext(HttpResult httpResult) {
                 int code = httpResult.getCode();
                 String msg = httpResult.getMsg();
-                Logger.i(code + msg);
+                Logger.i(code + msg+httpResult.toString());
                 if (code == 200) {
-                    getTeamInfo();
+//                    getTeamInfo();
                     String line = httpResult.getData().getLine();
                     String station = httpResult.getData().getStation();
                     List<String> laneList = httpResult.getData().getLanes();
-                    for (int i = 0; i < laneList.size(); i++) {
-                        Logger.i(laneList.get(i));
-                    }
+//                    for (int i = 0; i < laneList.size(); i++) {
+//                        Logger.i(laneList.get(i));
+//                    }
                     Logger.i(httpResult.getData().toString());
                     SPUtils.putAndApply(LoginActivity.this, GlobalManager.USERNAME, username);
 //                    if (itemList.size() == 0) {
@@ -257,12 +249,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         teamItem.save();
                     }
 
-                    List<TeamItem> all = DataSupport.findAll(TeamItem.class);
-                    Logger.i(all.size() + "");
-                    for (int i = 0; i < all.size(); i++) {
-                        Logger.i(all.get(i).toString());
-                        Logger.i(all.get(i).getUsername());
-                    }
+//                    List<TeamItem> all = DataSupport.findAll(TeamItem.class);
+//                    Logger.i(all.size() + "");
+//                    for (int i = 0; i < all.size(); i++) {
+//                        Logger.i(all.get(i).toString());
+//                        Logger.i(all.get(i).getUsername());
+//                    }
                     login2MainActivity();
 
                 } else if (code == 201) {

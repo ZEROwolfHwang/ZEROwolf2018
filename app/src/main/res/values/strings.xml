@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">绿色通道</string>
+    <!--<string name="app_name">GreenRoad</string>-->
     <string name="hint_password">请输入密码</string>
     <string name="hint_username">请输入账号</string>
     <string name="login">登录</string>
@@ -56,12 +57,15 @@
     <string name="shoot_video">录制视频</string>
     <string name="nav_preview">预览</string>
     <string name="preview_photo">预览信息</string>
-    <string name="setting_login_road">默认登记路段</string>
-    <string name="setting_login_station">默认登记站</string>
+    <string name="setting_login_road">登记路段</string>
+    <string name="setting_login_station">登记站</string>
     <string name="text_selection">选择</string>
     <string name="setting_default">默认设置</string>
     <string name="config_default">默认配置</string>
+    <string name="check_isPass">审核通过</string>
+    <string name="check_notPass">审核不通过</string>
     <string name="setting_login_lane">默认车道</string>
+    <string name="setting_current_shift">班次</string>
     <string name="setting_operator">检查人/登记人</string>
     <string name="add">添加</string>
     <string name="add_operator">新增检查人/登记人</string>

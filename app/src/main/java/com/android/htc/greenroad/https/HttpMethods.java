@@ -1,7 +1,5 @@
 package com.android.htc.greenroad.https;
 
-import com.android.htc.greenroad.GreenRoadApplication;
-import com.android.htc.greenroad.tools.SPUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.BufferedReader;
@@ -54,10 +52,10 @@ public class HttpMethods {
 
     //获取单例
     public static HttpMethods getInstance(){
-        BASE_url = "http://"+ SPUtils.get(GreenRoadApplication.sApplication,SPUtils.CONFIG_PORT,"88")+"/Interfacy/";
+//        BASE_url = "http://"+ SPUtils.get(GreenRoadApplication.sApplication,SPUtils.CONFIG_PORT,"88")+"/Interfacy/";
 
 
-//        BASE_url = "http://greenft.githubshop.com/index.php/Interfacy/";
+        BASE_url = "http://greenft.githubshop.com/index.php/Interfacy/";
 //        BASE_url = "http://192.168.15.200:88/Interfacy/";
         if (sMethods == null) {
             sMethods = new HttpMethods();

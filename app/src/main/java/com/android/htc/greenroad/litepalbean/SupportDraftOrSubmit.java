@@ -16,7 +16,8 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
     private int lite_ID;
     private String current_time;
     private String current_date;
-    private int isPass;
+    private int isPass;// 0 : 待审核(默认状态)  1: 审核通过   2 审核不通过
+    private String message;     //审核失败的原因   只有提交后的数据才有
 
     private SupportDetail mSupportDetail;
     private SupportScan mSupportScan;
@@ -34,29 +35,11 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
         current_time = in.readString();
         current_date = in.readString();
         isPass = in.readInt();
+        message = in.readString();
         mSupportDetail = in.readParcelable(SupportDetail.class.getClassLoader());
         mSupportScan = in.readParcelable(SupportScan.class.getClassLoader());
         mSupportChecked = in.readParcelable(SupportChecked.class.getClassLoader());
         mSupportMedia = in.readParcelable(SupportMedia.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(username);
-        dest.writeString(lite_type);
-        dest.writeInt(lite_ID);
-        dest.writeString(current_time);
-        dest.writeString(current_date);
-        dest.writeInt(isPass);
-        dest.writeParcelable(mSupportDetail, flags);
-        dest.writeParcelable(mSupportScan, flags);
-        dest.writeParcelable(mSupportChecked, flags);
-        dest.writeParcelable(mSupportMedia, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<SupportDraftOrSubmit> CREATOR = new Creator<SupportDraftOrSubmit>() {
@@ -71,6 +54,14 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
         }
     };
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "SupportDraftOrSubmit{" +
@@ -80,6 +71,7 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
                 ", current_time='" + current_time + '\'' +
                 ", current_date='" + current_date + '\'' +
                 ", isPass=" + isPass +
+                ", message='" + message + '\'' +
                 ", mSupportDetail=" + mSupportDetail +
                 ", mSupportScan=" + mSupportScan +
                 ", mSupportChecked=" + mSupportChecked +
@@ -167,4 +159,23 @@ public class SupportDraftOrSubmit extends DataSupport implements Parcelable{
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(username);
+        parcel.writeString(lite_type);
+        parcel.writeInt(lite_ID);
+        parcel.writeString(current_time);
+        parcel.writeString(current_date);
+        parcel.writeInt(isPass);
+        parcel.writeString(message);
+        parcel.writeParcelable(mSupportDetail, i);
+        parcel.writeParcelable(mSupportScan, i);
+        parcel.writeParcelable(mSupportChecked, i);
+        parcel.writeParcelable(mSupportMedia, i);
+    }
 }

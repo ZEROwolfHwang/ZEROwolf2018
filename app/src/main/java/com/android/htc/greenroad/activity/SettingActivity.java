@@ -46,10 +46,10 @@ public class SettingActivity extends BaseActivity {
 
     @BindView(R.id.text_setting_add_selection)
     TextView mTextSettingAddSelection;
-    @BindView(R.id.text_setting_lane)
-    TextView mTextSettingLane;
-    @BindView(R.id.btn_setting_lane)
-    ImageButton mBtnSettingLane;
+    @BindView(R.id.text_setting_shift)
+    TextView mTextSettingShift;
+    @BindView(R.id.btn_setting_shift)
+    ImageButton mBtnSettingShift;
 
     private SettingActivity mActivity;
     private SettingOperatorAdapter mAdapter;
@@ -63,6 +63,7 @@ public class SettingActivity extends BaseActivity {
     private float mDimension;
     private ArrayList<String> mLaneList;
     private String mUsername;
+    private ArrayList<String> mShiftList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,12 @@ public class SettingActivity extends BaseActivity {
         if (teamItems.size() != 0) {
             mTextSettingRoad.setText(teamItems.get(0).getLine());
             mTextSettingStation.setText(teamItems.get(0).getStation());
+        }
+      /*
+      List<TeamItem> teamItems = DataSupport.where("username = ?", mUsername).find(TeamItem.class);
+        if (teamItems.size() != 0) {
+            mTextSettingRoad.setText(teamItems.get(0).getLine());
+            mTextSettingStation.setText(teamItems.get(0).getStation());
 
             List<String> laneList = teamItems.get(0).getLanes();
             if (mLaneList == null) {
@@ -131,31 +138,44 @@ public class SettingActivity extends BaseActivity {
             } else {
                 mLaneList.add("A01");
             }
-            mTextSettingLane.setText(teamItems.get(0).getDefaultLane());
+            mTextSettingShift.setText(teamItems.get(0).getDefaultLane());
         } else {
 
-            mTextSettingLane.setText("A01");
+            mTextSettingShift.setText("A01");
+        }*/
+        String currentShift = (String) SPUtils.get(this, SPUtils.CURRENT_SHIFT, "");
+        mTextSettingShift.setText(currentShift);
+//        if (currentShift == null || "".equals(currentShift)) {
+//        } else {
+//            mTextSettingShift.setText(currentShift);
+//        }
+        if (mShiftList == null) {
+            mShiftList = new ArrayList<>();
+        } else {
+            mShiftList.clear();
         }
+        mShiftList.add("早班");
+        mShiftList.add("中班");
+        mShiftList.add("晚班");
 
-
-//        mTextSettingLane.setText(SPUtils.get(mActivity, SPUtils.TEXTLANE, "X08") + "");
-        mBtnSettingLane.setOnClickListener(view -> {
-            mWidth = mTextSettingLane.getWidth();
-            mAdapterLane = new SpinnerAdapter(this, mLaneList, position -> {
-                mTextSettingLane.setText(mLaneList.get(position));
+//        mTextSettingShift.setText(SPUtils.get(mActivity, SPUtils.TEXTLANE, "X08") + "");
+        mBtnSettingShift.setOnClickListener(view -> {
+            mWidth = mTextSettingShift.getWidth();
+            mAdapterLane = new SpinnerAdapter(this, mShiftList, position -> {
+                mTextSettingShift.setText(mShiftList.get(position));
                 mPopupWindow.dismissPopWindow();
-//                SPUtils.putAndApply(mActivity, SPUtils.TEXTLANE, mLaneList.get(position));
-                TeamItem teamItem = new TeamItem();
-                teamItem.setDefaultLane(mLaneList.get(position));
-                teamItem.updateAll("username = ?", mUsername);
+                SPUtils.putAndApply(mActivity, SPUtils.CURRENT_SHIFT, mShiftList.get(position));
+//                TeamItem teamItem = new TeamItem();
+//                teamItem.setDefaultLane(mShiftList.get(position));
+//                teamItem.updateAll("username = ?", mUsername);
             });
 
             mPopupWindow = new SpinnerPopupWindow.Builder(SettingActivity.this)
                     .setmLayoutManager(null, 0)
                     .setmAdapter(mAdapterLane)
 //                    .setmItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, 5, Color.GRAY))
-                    .setmHeight(200*(mLaneList.size()))
-                    .setmWidth((int) (mWidth*0.8))
+                    .setmHeight(200 * (mShiftList.size()))
+                    .setmWidth((int) (mWidth * 0.8))
                     .setOutsideTouchable(true)
                     .setFocusable(true)
                     .build();
@@ -172,7 +192,7 @@ public class SettingActivity extends BaseActivity {
     private void initRecyclerView() {
 
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        mAdapter = new SettingOperatorAdapter(mUsername,this, mOperatorList, () -> {
+        mAdapter = new SettingOperatorAdapter(mUsername, this, mOperatorList, () -> {
             for (int i = 0; i < mOperatorList.size(); i++) {
                 if (mOperatorList.get(i).getCheck_select() == 1) {
                     Logger.i(mOperatorList.get(i).getJob_number());
@@ -182,7 +202,7 @@ public class SettingActivity extends BaseActivity {
             for (int i = 0; i < supportOperators.size(); i++) {
 
                 if (supportOperators.get(i).getCheck_select() == 1) {
-                    Logger.i(supportOperators.get(i).getJob_number()+"数据库");
+                    Logger.i(supportOperators.get(i).getJob_number() + "数据库");
                 }
             }
         },
@@ -193,19 +213,19 @@ public class SettingActivity extends BaseActivity {
 //
 //        },
                 position -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-            builder.setTitle("是否确定删除该检查人/登记人");
-            builder.setPositiveButton(R.string.dialog_messge_OK, (dialog, which) -> {
-                DataSupport.deleteAll(SupportOperator.class, "job_number = ?",
-                        mOperatorList.get(position).getJob_number());
-                mOperatorList.remove(position);
-                //mAdapter.notifyItemRemoved(position);
-                mAdapter.updateListView(mOperatorList);
-            });
-            builder.setNegativeButton(R.string.dialog_message_Cancel,
-                    (dialog, which) -> dialog.dismiss());
-            builder.show();
-        });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                    builder.setTitle("是否确定删除该检查人/登记人");
+                    builder.setPositiveButton(R.string.dialog_messge_OK, (dialog, which) -> {
+                        DataSupport.deleteAll(SupportOperator.class, "job_number = ?",
+                                mOperatorList.get(position).getJob_number());
+                        mOperatorList.remove(position);
+                        //mAdapter.notifyItemRemoved(position);
+                        mAdapter.updateListView(mOperatorList);
+                    });
+                    builder.setNegativeButton(R.string.dialog_message_Cancel,
+                            (dialog, which) -> dialog.dismiss());
+                    builder.show();
+                });
 
         mSettingRecyclerView.setLayoutManager(manager);
         mSettingRecyclerView.setAdapter(mAdapter);
@@ -226,7 +246,7 @@ public class SettingActivity extends BaseActivity {
 
 
     @OnClick({R.id.text_setting_add_selection,
-            R.id.text_setting_lane,
+            R.id.text_setting_shift,
             R.id.text_setting_road})
     public void onclick(View view) {
         switch (view.getId()) {

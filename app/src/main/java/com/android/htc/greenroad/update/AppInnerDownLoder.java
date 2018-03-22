@@ -8,7 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import com.orhanobut.logger.Logger;
@@ -50,6 +52,7 @@ public class AppInnerDownLoder {
                 try {
                     Logger.i("走了downLoadApk().run()方法");
                     Thread.sleep(5000);
+                    Logger.i("appName:" + appName);
                     File file = downloadFile(downURL, appName, pd);
                     installApk(mContext, file);
                     // 结束掉进度条对话框
@@ -75,7 +78,6 @@ public class AppInnerDownLoder {
         // 如果相等的话表示当前的sdcard挂载在手机上并且是可用的
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
-
             URL url = new URL(path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(5000);
@@ -114,13 +116,29 @@ public class AppInnerDownLoder {
      * 安装apk
      */
     private static void installApk(Context mContext, File file) {
-        Logger.i("走了installApk()方法");
-        Uri fileUri = Uri.fromFile(file);
-        Intent it = new Intent();
-        it.setAction(Intent.ACTION_VIEW);
-        it.setDataAndType(fileUri, "application/vnd.android.package-archive");
-        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 防止打不开应用
-        mContext.startActivity(it);
+        Logger.i("走了installApk()方法1");
+        if (Build.VERSION.SDK_INT >= 24) {//判读版本是否在7.0以上
+            Uri apkUri = FileProvider.getUriForFile(mContext, "com.android.htc.greenroad.fileprovider", file);//在AndroidManifest中的android:authorities值
+            Intent install = new Intent(Intent.ACTION_VIEW);
+            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
+            install.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            mContext.startActivity(install);
+        } else {
+            Uri fileUri = Uri.fromFile(file);
+            Intent install = new Intent(Intent.ACTION_VIEW);
+            install.setDataAndType(fileUri, "application/vnd.android.package-archive");
+            install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(install);
+        }
+
+//        Uri fileUri = Uri.fromFile(file);
+//        Intent it = new Intent();
+//        it.setAction(Intent.ACTION_VIEW);
+//        it.setDataAndType(fileUri, "application/vnd.android.package-archive");
+//        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 防止打不开应用
+//        mContext.startActivity(it);
+
     }
 
     /**

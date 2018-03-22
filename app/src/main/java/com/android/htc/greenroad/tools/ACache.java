@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ACache {
 
     public static final String TYPR_COUNT = "缓存类型数";
-    public static final String ITEM_COUNT = "缓存总条目";
+    public static final String MARK_TIME = "标记时间";
     public static final String ALL_ACACHE = "总缓存";
     public static final String Type_ACACHE = "单类总条目";
     public static final String GOODSACACHE_All = "goodsacache_all";

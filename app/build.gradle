@@ -17,11 +17,10 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-
         applicationId "com.android.htc.greenroad"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 9
+        versionCode 11
         versionName "1.9.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

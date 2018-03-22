@@ -31,9 +31,9 @@ public class RequestGoods {
         return sRequestGoods;
     }
 
-    public void postGoods(Subscriber<HttpResultGoods> subscriber,String markTime) {
+    public void postGoods(Subscriber<HttpResultGoods> subscriber,String markTime,String markTime_config) {
         Observable<HttpResultGoods> observable = HttpMethods.getInstance().
-                getApi().postGoods(markTime);
+                getApi().postGoods(markTime,markTime_config);
 
         HttpMethods.getInstance().toSubscribe(observable, subscriber);
 

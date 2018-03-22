@@ -130,8 +130,9 @@ public class PreviewItemAdapter extends RecyclerView.Adapter<PreviewItemAdapter.
             mPreviewTextShutTime.setText(shutTime);
 //            mPreviewTextIsFree.setText(yesOrNot == 0 ? "否" : "是");
             mPreviewImgIsPass.setImageDrawable(yesOrNot == 0
-                    ? mActivity.getResources().getDrawable(R.drawable.ispass_not)
-                    : mActivity.getResources().getDrawable(R.drawable.ispass_yes));
+                    ? mActivity.getResources().getDrawable(R.drawable.check_wait)                  //待审核状态
+                    : yesOrNot == 1 ? mActivity.getResources().getDrawable(R.drawable.check_pass)   //通过状态
+                    : mActivity.getResources().getDrawable(R.drawable.check_pass));                 //审核失败状态
 
 
             itemView.setOnClickListener(v -> {

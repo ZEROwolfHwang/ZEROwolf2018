@@ -23,7 +23,6 @@ import com.android.htc.greenroad.manager.GlobalManager;
 import com.android.htc.greenroad.tools.ActionBarTool;
 import com.android.htc.greenroad.tools.ImageProcessor;
 import com.android.htc.greenroad.tools.SPUtils;
-import com.orhanobut.logger.Logger;
 
 import org.litepal.crud.DataSupport;
 
@@ -93,16 +92,16 @@ public class SubmitActivity extends BaseActivity implements View.OnClickListener
 
 //        SPUtils.putAndApply(this,SPUtils.MATH_SUBMIT_LITE,mSubmitList.size());
 
-        for (int i = 0; i < mSubmitList.size(); i++) {
-            Logger.i("------------" + mSubmitList.get(i).toString());
-
-        }
+//        for (int i = 0; i < mSubmitList.size(); i++) {
+//            Logger.i("------------" + mSubmitList.get(i).toString());
+//
+//        }
         SortTime sortDraftTime = new SortTime();
 
         Collections.sort(mSubmitList, sortDraftTime);
-        for (int i = 0; i < mSubmitList.size(); i++) {
-            Logger.i("++++++++++++" + mSubmitList.get(i).toString());
-        }
+//        for (int i = 0; i < mSubmitList.size(); i++) {
+//            Logger.i("++++++++++++" + mSubmitList.get(i).toString());
+//        }
     }
 
     private void initToolbar() {

@@ -159,8 +159,8 @@ public class SwipeDeleteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mPreviewTextShutTime.setText(shutTime);
 //            mPreviewImgIsFree.setText(isFree == 0 ? "否" : "是");
             mPreviewImgIsFree.setImageDrawable(isFree == 0
-                    ? mContext.getResources().getDrawable(R.drawable.ispass_not)
-                    : mContext.getResources().getDrawable(R.drawable.ispass_yes));
+                    ? mContext.getResources().getDrawable(R.drawable.check_notpass)
+                    : mContext.getResources().getDrawable(R.drawable.check_pass));
 
 
             itemView.setOnTouchListener((v, event) -> {

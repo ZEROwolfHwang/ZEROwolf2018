@@ -41,9 +41,10 @@ public interface HttpUtilsApi {
     @POST("Login/listapi")
     Call<HttpResultLoginName> login(@Field("name") String name, @Field("password") String password);
 
-    @GET("Apiversion/update")
-    Observable<UpdateAppInfo> update(@Query("appname") String appname,
-                                     @Query("appversion") String appversion);
+   @GET("Apiversion/update")
+   Observable<UpdateAppInfo> update(
+           @Query("appversion") String appversion);
+//            @Query("appname") String appname,
 
 
 //    @FormUrlEncoded
@@ -109,7 +110,13 @@ public interface HttpUtilsApi {
     //    start=0&count=10
     @FormUrlEncoded
     @POST("Api/goods")
-    Observable<HttpResultGoods> postGoods(@Field("markTime") String markTime);
+    Observable<HttpResultGoods> postGoods(@Field("markTime") String markTime,@Field("markTime_config")String markTime_config);
 //    start=0&count=10
 
+
+//   @FormUrlEncoded
+   @GET("FirstServlet")
+   Observable<HttpResultPolling> doPost();
+//   Observable<HttpResultPolling> doPost(@Field("id") String id);
+//
 }

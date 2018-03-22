@@ -20,6 +20,7 @@ import com.android.htc.greenroad.httpresultbean.HttpResultCode;
 import com.android.htc.greenroad.https.PostInfo;
 import com.android.htc.greenroad.https.RequestJson;
 import com.android.htc.greenroad.https.RequestPicture;
+import com.android.htc.greenroad.litepalbean.SupportCarTypeAndConfig;
 import com.android.htc.greenroad.litepalbean.SupportChecked;
 import com.android.htc.greenroad.litepalbean.SupportDetail;
 import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
@@ -89,6 +90,7 @@ public class SubmitIntentService extends IntentService {
     private static ArrayList<String> mNew_path_list;
     private boolean mBlackTag;
     private String mUsername;
+    private ArrayList mMustList;
 
     public SubmitIntentService() {
         super("SubmitService");
@@ -542,19 +544,50 @@ public class SubmitIntentService extends IntentService {
             }
         }
 
-//        if (info.getScan_04Q() == null || "".equals(info.getScan_04Q())) {
-//            ToastUtils.singleToast("请确定称重质量");
-//            return;
+        //动态修改必须提交项
+        SupportCarTypeAndConfig supportConfig = DataSupport.findFirst(SupportCarTypeAndConfig.class);
+        Logger.i("supportConfig" + "---------" + supportConfig.toString());
+        List<String> configMustList = supportConfig.getConfigMustList();
+//        initMustItem(configMustList);
+        if (mMustList == null) {
+            mMustList = new ArrayList<>();
+        } else {
+            mMustList.clear();
+        }
+
+        if (configMustList != null) {
+            mMustList.addAll(configMustList);
+        } else {
+            mMustList.add("h");//如果为空则添一条不相关的字符串,避免报错
+        }
+//        if (mMustList.contains("称重质量")) {
+//            if (info.getScan_04Q() == null || "".equals(info.getScan_04Q())) {
+//                ToastUtils.singleToast("请确定称重质量");
+//                return;
+//            }
+////            mDetailTextWeight.setFocusable(false);
+////            mDetailTextWeight.setFocusableInTouchMode(false);
+//        } else {
+//            mDetailTextWeight.addTextChangedListener(new TextChangeWatcher(editable -> {
+//                notifyScanWeightChange(String.valueOf(editable));
+//            }));
 //        }
-//        if (info.getScan_06Q() == null || "".equals(info.getScan_06Q())) {
-//            ToastUtils.singleToast("请确定免费金额");
-//            return;
-//        }
-        if (info.getScan_12Q() == null || "".equals(info.getScan_12Q())) {
+
+        if (mMustList.contains("称重质量")&&(info.getScan_04Q() == null || "".equals(info.getScan_04Q()))) {
+            ToastUtils.singleToast("请确定称重质量");
+            return;
+        }
+        if (mMustList.contains("免费金额")&&(info.getScan_06Q() == null || "".equals(info.getScan_06Q()))) {
+            ToastUtils.singleToast("请确定免费金额");
+            return;
+        }
+
+        if (mMustList.contains("出口车道")&&(info.getScan_12Q() == null || "".equals(info.getScan_12Q()))) {
+
             ToastUtils.singleToast("请确定出口车道");
             return;
         }
-        if (info.getCarType() == null || "".equals(info.getCarType())) {
+        if (mMustList.contains("车型")&&(info.getCarType() == null || "".equals(info.getCarType()))) {
             ToastUtils.singleToast("请确定车型");
             return;
         }

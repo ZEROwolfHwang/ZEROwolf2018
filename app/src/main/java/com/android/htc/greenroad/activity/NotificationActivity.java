@@ -10,7 +10,11 @@ import android.support.v7.app.NotificationCompat;
 import android.widget.Button;
 
 import com.android.htc.greenroad.R;
+import com.android.htc.greenroad.litepalbean.SupportDraftOrSubmit;
+import com.android.htc.greenroad.servicy.ShowNotificationActivity;
 import com.orhanobut.logger.Logger;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.Random;
 
@@ -42,14 +46,16 @@ public class NotificationActivity extends BaseActivity {
             builder.setAutoCancel(true);
 
             //正常通知点击会跳转到MainActivity intent携带的参数可以自己获取
-            Intent intentClick = new Intent(this, MainActivity.class);
+            Intent intentClick = new Intent(this, ShowNotificationActivity.class);
+            SupportDraftOrSubmit first = DataSupport.findFirst(SupportDraftOrSubmit.class);
+            intentClick.putExtra("data", first);
             intentClick.putExtra("title", "通知标题");
             intentClick.putExtra("message", "通知内容。。。。。。");
-            PendingIntent pendingIntentClick = PendingIntent.getBroadcast(this, 0,
+            PendingIntent pendingIntentClick = PendingIntent.getActivity(this, 0,
                     intentClick, PendingIntent.FLAG_ONE_SHOT);
 
             //滑动清除和点击删除事件
-            Intent intentCancel = new Intent(this, NotificationBroadcastReceiver.class);
+            Intent intentCancel = new Intent(this, ShowNotificationActivity.class);
             intentCancel.setAction("notification_cancelled");
             intentCancel.putExtra("type", 3);
             intentCancel.putExtra("message", "message");
