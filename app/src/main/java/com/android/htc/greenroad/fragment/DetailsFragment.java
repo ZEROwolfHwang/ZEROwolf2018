@@ -898,7 +898,6 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
             mGoodsRlGoodsAll.setVisibility(View.VISIBLE);
         }
     }
-
     /**
      * 关闭货物的视图
      *
@@ -958,7 +957,6 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         ShowActivity.setTabLayoutCanClick(true);
         mShowViewPager.setNeedScroll(true);
     }
-
 
     /**
      * 对扫描二维码后的信息进行解析
