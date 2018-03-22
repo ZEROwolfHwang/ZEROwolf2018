@@ -943,7 +943,6 @@ public class DetailsFragment extends Fragment implements TextChangeWatcher.After
         mGoodEditText.setText("");
         mLlGoodsHidePart.setVisibility(View.VISIBLE);
     }
-
     /**
      * 打开货物时禁止ViewPager滑动
      */
